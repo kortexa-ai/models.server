@@ -1,7 +1,7 @@
 {
   "name": "Qwen 3.5 27B",
   "id": "qwen-3.5-27b",
-  "host": "192.168.2.6",
+  "host": "192.168.2.7",
   "port": 2026,
   "hf_model": "mlx-community/Qwen3.5-27B-4bit",
   "backend": "mlx-vlm"

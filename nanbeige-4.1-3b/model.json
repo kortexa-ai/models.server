@@ -1,7 +1,7 @@
 {
   "name": "Nanbeige 4.1 3B",
   "id": "nanbeige4.1-3b",
-  "host": "192.168.2.6",
+  "host": "192.168.2.7",
   "port": 2025,
   "hf_model": "mlx-community/Nanbeige4.1-3B-8bit",
   "backend": "mlx-lm"
