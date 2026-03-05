@@ -3,12 +3,11 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-if [[ ! -d ".venv" ]]; then
-    echo "Virtual environment not found. Run ./setup.sh first."
-    exit 1
+# venv only required on macOS (mlx-vlm/mlx-lm); Linux uses llama-server
+if [[ -d ".venv" ]]; then
+    source .venv/bin/activate
 fi
 
-source .venv/bin/activate
 
 MODEL="mlx-community/Nanbeige4.1-3B-8bit"
 PORT=2025
