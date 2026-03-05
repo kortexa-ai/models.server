@@ -1,5 +1,5 @@
 [Unit]
-Description=Qwen 3.5 2B LLM
+Description=Qwen 3.5 27B LLM
 After=network.target
 
 StartLimitIntervalSec=120
@@ -11,11 +11,11 @@ Type=simple
 User=francip
 Group=francip
 
-WorkingDirectory=/home/francip/src/models.server/qwen-3.5-2b
+WorkingDirectory=/home/francip/src/models.server/qwen-3.5-27b
 
 Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 
-ExecStart=/home/francip/src/models.server/qwen-3.5-2b/run.sh
+ExecStart=/home/francip/src/models.server/qwen-3.5-27b/run.sh
 
 Restart=always
 RestartSec=15

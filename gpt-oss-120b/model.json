@@ -1,0 +1,8 @@
+{
+  "name": "GPT OSS 120B",
+  "id": "gpt-oss-120b",
+  "host": "192.168.2.6",
+  "port": 2023,
+  "hf_model": "unsloth/gpt-oss-120b-GGUF:Q8_K_XL",
+  "backend": "llama-server"
+}

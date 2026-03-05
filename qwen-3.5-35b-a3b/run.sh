@@ -1,0 +1,39 @@
+#!/bin/bash
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+if [[ ! -d ".venv" ]]; then
+    echo "Virtual environment not found. Run ./setup.sh first."
+    exit 1
+fi
+
+source .venv/bin/activate
+
+MODEL_MLX="mlx-community/Qwen3.5-35B-A3B-4bit"
+PORT=2027
+HOST="0.0.0.0"
+
+OS="$(uname -s)"
+
+if [[ "$OS" == "Darwin" ]]; then
+    # macOS - use mlx-vlm
+    # Model is loaded on first request via the "model" field in the request body.
+    # Clients should send model="mlx-community/Qwen3.5-35B-A3B-4bit"
+    echo "Starting mlx-vlm server on port $PORT..."
+    python -m mlx_vlm.server \
+        --host "$HOST" \
+        --port "$PORT" \
+        "$@"
+else
+    # Linux - use llama-server with GGUF
+    QUANT="UD-Q8_K_XL"
+    CACHE_TYPE="q8_0"
+    echo "Starting llama-server on port $PORT..."
+    llama-server -hf unsloth/Qwen3.5-35B-A3B-GGUF:$QUANT --alias qwen-3.5-35b-a3b --host "$HOST" --port $PORT \
+        --jinja -ngl 99 --threads -1 \
+        --temp 1.0 --top-p 0.95 --min-p 0.01 --top-k 40 \
+        --flash-attn on \
+        --cache-type-k $CACHE_TYPE --cache-type-v $CACHE_TYPE \
+        "$@"
+fi
