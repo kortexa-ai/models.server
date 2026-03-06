@@ -18,6 +18,6 @@ fi
 llama-server -hf LiquidAI/LFM2-24B-A2B-GGUF:$QUANT --alias lfm-2-24b-a2b --host 0.0.0.0 --port 2028 \
     --jinja -ngl 99 --threads -1 \
     --temp 1.0 --top-p 0.95 --min-p 0.01 --top-k 40 \
-    --flash-attn on \
+    --no-mmap --flash-attn on \
     --cache-type-k $CACHE_TYPE --cache-type-v $CACHE_TYPE \
     $*

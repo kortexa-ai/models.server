@@ -18,6 +18,6 @@ fi
 llama-server -hf unsloth/gpt-oss-120b-GGUF:$QUANT --alias gpt-oss-120b --host 0.0.0.0 --port 2023 \
     --jinja -ngl 99 --threads -1 \
     --ctx-size 32768 --temp 1.0 --top-p 1.0 --top-k 0 \
-    --flash-attn on \
+    --no-mmap --flash-attn on \
     --cache-type-k $CACHE_TYPE --cache-type-v $CACHE_TYPE \
     $*

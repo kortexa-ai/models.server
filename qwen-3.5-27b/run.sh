@@ -32,7 +32,7 @@ else
     llama-server -hf unsloth/Qwen3.5-27B-GGUF:$QUANT --alias qwen-3.5-27b --host "$HOST" --port $PORT \
         --jinja -ngl 99 --threads -1 \
         --temp 1.0 --top-p 0.95 --min-p 0.01 --top-k 40 \
-        --flash-attn on \
+        --no-mmap --flash-attn on \
         --cache-type-k $CACHE_TYPE --cache-type-v $CACHE_TYPE \
         "$@"
 fi
