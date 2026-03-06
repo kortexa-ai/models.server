@@ -52,18 +52,72 @@ The container works fine for Qwen 3 and older models (confirmed with `Qwen/Qwen2
 
 **Blocked until NVIDIA ships a newer container with vLLM >= 0.17+ that adds Qwen 3.5 support, or we find a way to upgrade vLLM inside the container without breaking CUDA/Blackwell compatibility.**
 
-### Next Steps: Building vLLM from Source
+### vLLM — PAUSED (staying on llama-server for now)
 
 The key insight: **vLLM `main` branch has `qwen3_5.py`** — the model is supported in latest source.
-The problem is getting vLLM to compile on DGX Spark (aarch64 + Blackwell + CUDA 13.0).
+The problem is getting vLLM to actually *run* on DGX Spark (aarch64 + Blackwell + CUDA 13.0).
+**Revisiting in a few days.** Most promising untried path: custom Docker image from NVIDIA base.
 
-#### Community Resources
+#### Attempt 1: eelbaz/dgx-spark-vllm-setup (from-source build)
 
-1. **[dgx-spark-vllm-setup](https://github.com/eelbaz/dgx-spark-vllm-setup)** — Build script that compiles Triton + vLLM from source with Blackwell patches. Default targets vLLM commit `66a168a19` (v0.11.1rc3, too old for Qwen 3.5). We're running it with `--vllm-version main` to get latest vLLM. **Status: IN PROGRESS** — Triton compiling (needs `python3.12-dev` apt package installed first, otherwise cmake fails with "Could NOT find Python3 (missing: Development.Module)"). Installs PyTorch 2.10.0+cu130.
+**[dgx-spark-vllm-setup](https://github.com/eelbaz/dgx-spark-vllm-setup)** — Build script that compiles Triton + vLLM from source with Blackwell patches.
 
-2. **[vllm-dgx-spark](https://github.com/mark-ramsey-ri/vllm-dgx-spark)** — Docker wrapper around NVIDIA's official container (`nvcr.io/nvidia/vllm:25.11-py3`). Adds nice multi-node orchestration with InfiniBand/Ray, but uses the same old vLLM that lacks Qwen 3.5. **Not useful for our case** — same underlying problem as the NVIDIA container.
+**With `--vllm-version main`** (to get Qwen 3.5 support):
 
-3. **[Installing vLLM on DGX Spark from Source](https://medium.com/@anveshkumarchavidi/installing-vllm-on-nvidia-dgx-spark-from-source-4dde137ff3ef)** — Step-by-step Medium guide. Haven't tried yet.
+Build: SUCCESS (with fixes).
+- Prerequisite: `sudo apt install python3.12-dev` (cmake fails without it: "Could NOT find Python3 (missing: Development.Module)")
+- Installs PyTorch 2.10.0+cu130, Triton 3.5.0+git (built from source), vLLM 0.17.0rc1
+- Triton version mismatch warning: torch wants 3.6.0, we have 3.5.0 — did not block the build
+- Build takes ~25 min total (Triton ~15 min, vLLM CUDA kernels ~10 min)
+- WARNING: ninja `-j 20` during vLLM CUDA kernel compilation can OOM and kill the machine. Set `MAX_JOBS=4` if retrying.
+- Location: `~/src/dgx-spark-vllm-setup/vllm-install/`
+
+Runtime: FAILS. vLLM compiles and imports, but `vllm serve` crashes for ALL models (tested Qwen3.5-2B and OPT-125M). The EngineCore child process dies silently after NCCL/distributed init — no error message captured. The APIServer parent times out waiting.
+
+Symptoms:
+- `Resolved architecture: Qwen3_5ForConditionalGeneration` — model is recognized
+- EngineCore starts, gets through parallel_state init, then process exits silently
+- Same failure with `--enforce-eager` (CUDA graphs disabled)
+- Same failure with `VLLM_ENGINE_ITERATION_TIMEOUT_S=600`
+- Same failure with OPT-125M — **not a Qwen 3.5 issue, vLLM itself doesn't work bare-metal**
+- `flashinfer-cubin` not available for Blackwell; flashinfer falls back to JIT kernel compilation which likely segfaults silently in the subprocess
+- `VLLM_USE_FLASHINFER_MXFP4_MOE=1` set by vllm_env.sh but unrecognized by vLLM 0.17 ("Unknown vLLM environment variable")
+- Not yet tested: unsetting `VLLM_USE_FLASHINFER_MXFP4_MOE` and setting `VLLM_ATTENTION_BACKEND=FLASH_ATTN` to bypass flashinfer entirely
+
+Additional fix needed: transformers 4.57.6 (installed by eelbaz) doesn't know `qwen3_5` model type.
+`pip install --upgrade transformers` upgrades to 5.3.0 which works (vLLM warns about <5 constraint but
+the upgrade is needed). Also need `pip install accelerate`.
+
+**With default version** (vLLM commit `66a168a19`, v0.11.1rc3):
+
+Build: FAILS. `flashinfer-python==0.4.1` has broken `pyproject.toml` metadata that doesn't work with
+newer setuptools (`project.license` validation error). The pinned dependencies have bitrotted since
+the repo was last updated.
+
+**Conclusion: The eelbaz repo is broken in both modes.** Default version fails to build due to
+dependency bitrot. Main version builds but crashes at runtime — the EngineCore subprocess dies silently,
+likely due to flashinfer JIT kernel compilation failing on Blackwell bare-metal.
+
+#### Attempt 2: mark-ramsey-ri/vllm-dgx-spark
+
+**[vllm-dgx-spark](https://github.com/mark-ramsey-ri/vllm-dgx-spark)** — Docker wrapper around NVIDIA's
+official container (`nvcr.io/nvidia/vllm:25.11-py3`). Adds nice multi-node orchestration with
+InfiniBand/Ray for dual-Spark setups. But uses the same old vLLM that lacks Qwen 3.5.
+**Not useful for our case.**
+
+#### Not Yet Tried
+
+- **[Installing vLLM on DGX Spark from Source](https://medium.com/@anveshkumarchavidi/installing-vllm-on-nvidia-dgx-spark-from-source-4dde137ff3ef)** — Medium guide. Likely hits the same bare-metal runtime issue.
+
+#### Remaining Option: Custom Docker Image
+
+Build a Docker image starting from `nvcr.io/nvidia/vllm:26.02-py3` (which has working CUDA 13.1
+forward-compat) and upgrade vLLM + transformers inside it. This combines:
+- NVIDIA container's working CUDA runtime environment
+- Latest vLLM source with Qwen 3.5 support
+- Updated transformers (>=5.0) that knows `qwen3_5` model type
+
+This is the most promising path forward.
 
 ---
 
