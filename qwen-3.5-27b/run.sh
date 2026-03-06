@@ -26,8 +26,8 @@ if [[ "$OS" == "Darwin" ]]; then
 else
     # Linux - use llama-server with GGUF
     # 27B uses UD-Q8_K_XL quant (larger model benefits from imatrix quants)
-    QUANT="UD-Q8_K_XL"
-    CACHE_TYPE="q8_0"
+    QUANT="Q4_K_M"
+    CACHE_TYPE="q4_0"
     echo "Starting llama-server on port $PORT..."
     llama-server -hf unsloth/Qwen3.5-27B-GGUF:$QUANT --alias qwen-3.5-27b --host "$HOST" --port $PORT \
         --jinja -ngl 99 --threads -1 \
