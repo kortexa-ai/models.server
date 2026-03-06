@@ -3,6 +3,5 @@
   "id": "lfm-2.5-1.2b-thinking",
   "host": "192.168.2.7",
   "port": 2022,
-  "hf_model": "LiquidAI/LFM2.5-1.2B-Thinking",
-  "backend": "mlx-lm"
+  "hf_model": "LiquidAI/LFM2.5-1.2B-Thinking"
 }

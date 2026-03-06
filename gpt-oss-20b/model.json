@@ -3,6 +3,5 @@
   "id": "gpt-oss-20b",
   "host": "192.168.2.7",
   "port": 2020,
-  "hf_model": "unsloth/gpt-oss-20b-GGUF:Q8_K_XL",
-  "backend": "llama-server"
+  "hf_model": "unsloth/gpt-oss-20b-GGUF:Q8_K_XL"
 }

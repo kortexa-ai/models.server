@@ -3,6 +3,5 @@
   "id": "lfm-2-24b-a2b",
   "host": "192.168.2.7",
   "port": 2028,
-  "hf_model": "LiquidAI/LFM2-24B-A2B-GGUF:Q8_0",
-  "backend": "llama-server"
+  "hf_model": "LiquidAI/LFM2-24B-A2B-GGUF:Q8_0"
 }
