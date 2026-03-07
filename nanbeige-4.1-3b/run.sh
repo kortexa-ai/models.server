@@ -3,9 +3,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-# venv only required on macOS (mlx-vlm/mlx-lm); Linux uses llama-server
+MODELS_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
 if [[ -d ".venv" ]]; then
     source .venv/bin/activate
+elif [[ -d "${MODELS_ROOT}/.venv" ]]; then
+    # shellcheck disable=SC1091
+    source "${MODELS_ROOT}/.venv/bin/activate"
 fi
 
 

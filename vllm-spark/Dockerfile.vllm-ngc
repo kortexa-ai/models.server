@@ -1,0 +1,72 @@
+ARG BASE_IMAGE=nvcr.io/nvidia/vllm:26.02-py3
+FROM ${BASE_IMAGE}
+
+ARG VLLM_PIP_SPEC=vllm>=0.17.0
+ARG VLLM_WHEEL_INDEX=https://wheels.vllm.ai/nightly
+ARG VLLM_INSTALL_ARGS=--no-deps
+ARG TRANSFORMERS_REF=main
+
+ENV PIP_NO_CACHE_DIR=1 \
+    HF_HUB_ENABLE_HF_TRANSFER=1 \
+    LD_LIBRARY_PATH=/usr/local/lib/python3.12/dist-packages/nvidia/cuda_runtime/lib:/usr/local/lib/python3.12/dist-packages/nvidia/cuda_cupti/lib:${LD_LIBRARY_PATH}
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Keep NVIDIA's CUDA/Blackwell userspace intact, but replace the old Python
+# packages that block Qwen 3.5 model loading.
+RUN python3 -m pip install --upgrade pip setuptools wheel packaging && \
+    python3 -m pip install --upgrade --no-cache-dir \
+        ${VLLM_INSTALL_ARGS} \
+        --extra-index-url ${VLLM_WHEEL_INDEX} \
+        "${VLLM_PIP_SPEC}" && \
+    python3 -m pip install --upgrade --no-cache-dir \
+        "transformers[serving] @ git+https://github.com/huggingface/transformers.git@${TRANSFORMERS_REF}" \
+        accelerate \
+        hf-transfer \
+        nvidia-cuda-runtime-cu12 \
+        nvidia-cuda-cupti-cu12 \
+        pillow && \
+    python3 - <<'PY'
+from pathlib import Path
+import importlib.metadata as m
+import importlib.util
+import torch
+
+if importlib.util.find_spec("torch._opaque_base") is None:
+    torch_dir = Path(torch.__file__).resolve().parent
+    shim = torch_dir / "_opaque_base.py"
+    shim.write_text("OpaqueBase = object\n", encoding="utf-8")
+    print(f"created compatibility shim: {shim}")
+else:
+    print("torch._opaque_base already present")
+
+from torch._library.opaque_object import register_opaque_type
+if "hoist" not in register_opaque_type.__code__.co_varnames:
+    torch_utils = Path("/usr/local/lib/python3.12/dist-packages/vllm/utils/torch_utils.py")
+    text = torch_utils.read_text(encoding="utf-8")
+    old = '    register_opaque_type(ModuleName, typ="value", hoist=True)\n'
+    new = (
+        '    import inspect\n'
+        '    if "hoist" in inspect.signature(register_opaque_type).parameters:\n'
+        '        register_opaque_type(ModuleName, typ="value", hoist=True)\n'
+        '    else:\n'
+        '        register_opaque_type(ModuleName, typ="value")\n'
+    )
+    if old in text:
+        torch_utils.write_text(text.replace(old, new), encoding="utf-8")
+        print(f"patched hoist compatibility in: {torch_utils}")
+    else:
+        print("hoist patch not applied; expected snippet not found")
+
+for mod in ("vllm", "transformers", "torch", "flashinfer-python", "flash-attn"):
+    try:
+        print(f"{mod}=={m.version(mod)}")
+    except Exception:
+        print(f"{mod}=MISSING")
+print("has torch._opaque_base =", importlib.util.find_spec("torch._opaque_base") is not None)
+PY
+
+ENTRYPOINT ["vllm"]
+CMD ["serve"]

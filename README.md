@@ -4,7 +4,18 @@ This directory contains model configurations and launch scripts for locally-host
 
 - `model.json` — model metadata (name, id, port, HuggingFace model ID)
 - `run.sh` — starts the inference server
-- `setup.sh` — installs dependencies into a local `.venv`
+- `setup.sh` — prepares whatever dependencies that model needs
+
+## Shared Setup
+
+Run `./setup.sh` from `models.server/` for the common environment:
+
+- macOS: creates/updates a shared `.venv` with `mlx-vlm` and `mlx-lm`
+- Linux: checks that `llama-server` is available for the llama-backed models
+
+The Qwen 3.5 family now delegates to this shared setup. `nanbeige-4.1-3b` and
+`lfm-2.5-1.2b-thinking` also reuse the shared macOS environment, but keep their
+own local `vLLM` env on Linux because that part is still model-specific.
 
 ## Serving Backends
 
@@ -23,7 +34,7 @@ GGUF-quantized models served via [llama.cpp](https://github.com/ggerganov/llama.
 
 Vision Language Models served via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm). macOS only (Apple Silicon / MLX). Uses `mlx-community/` quantized models from HuggingFace. Serves at `/chat/completions` (no `/v1` prefix — see [API routing](#api-routing) below).
 
-**Used by:** Qwen 3.5 family (9B, 27B, 35B-A3B)
+**Used by:** Qwen 3.5 family (0.8B, 2B, 4B, 9B, 27B, 27B Opus, 35B-A3B)
 
 **Pros:** ~2x faster generation on Apple Silicon vs llama-server GGUF. Native MLX acceleration.
 **Cons:** macOS only. Requires `torch` + `torchvision` as dependencies (for the video processor). Currently needs two sed patches in setup.sh (see [Patches](#mlx-vlm-patches)).
@@ -39,6 +50,9 @@ Text-only LLMs served via [mlx-lm](https://github.com/ml-explore/mlx-examples/tr
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Used as the Linux counterpart for models that use mlx-lm/mlx-vlm on macOS.
 
 **Used by:** Nanbeige 4.1 3B (Linux), Qwen 3.5 family (Linux)
+
+Spark-specific Docker experiments and benchmark artifacts live in
+`vllm-spark/`.
 
 ## Choosing a Backend
 
@@ -67,8 +81,12 @@ Prompt processing is faster on llama-server (~113 tok/s vs ~40 tok/s), but gener
 
 | Model | ID | Port | macOS Backend | HF Model |
 |-------|-----|------|---------------|----------|
-| Qwen 3.5 9B | `qwen-3.5-9b` | 2024 | mlx-vlm | `mlx-community/Qwen3.5-9B-4bit` |
+| Qwen 3.5 0.8B | `qwen-3.5-0.8b` | 2031 | mlx-vlm | `mlx-community/Qwen3.5-0.8B-MLX-4bit` |
+| Qwen 3.5 2B | `qwen-3.5-2b` | 2030 | mlx-vlm | `mlx-community/Qwen3.5-2B-MLX-4bit` |
+| Qwen 3.5 4B | `qwen-3.5-4b` | 2029 | mlx-vlm | `mlx-community/Qwen3.5-4B-MLX-4bit` |
+| Qwen 3.5 9B | `qwen-3.5-9b` | 2024 | mlx-vlm | `mlx-community/Qwen3.5-9B-MLX-4bit` |
 | Qwen 3.5 27B | `qwen-3.5-27b` | 2026 | mlx-vlm | `mlx-community/Qwen3.5-27B-4bit` |
+| Qwen 3.5 27B Opus | `qwen-3.5-27b-opus` | 2032 | mlx-vlm | `mlx-community/Qwen3.5-27B-Claude-4.6-Opus-Distilled-MLX-4bit` |
 | Qwen 3.5 35B A3B | `qwen-3.5-35b-a3b` | 2027 | mlx-vlm | `mlx-community/Qwen3.5-35B-A3B-4bit` |
 | Nanbeige 4.1 3B | `nanbeige4.1-3b` | 2025 | mlx-lm | `Nanbeige/Nanbeige4.1-3B` |
 | GLM 4.7 Flash | `glm-4.7-flash` | 2021 | llama-server | `unsloth/GLM-4.7-Flash-GGUF` |

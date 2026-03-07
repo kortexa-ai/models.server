@@ -1,0 +1,10 @@
+{
+  "name": "Qwen 3.5 27B Opus",
+  "id": "qwen-3.5-27b-opus",
+  "host": "192.168.2.7",
+  "port": 2032,
+  "hf_model": {
+    "darwin": "mlx-community/Qwen3.5-27B-Claude-4.6-Opus-Distilled-MLX-4bit",
+    "linux": "mradermacher/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-GGUF:Q4_K_M"
+  }
+}
