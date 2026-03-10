@@ -24,6 +24,7 @@ if [[ "$OS" == "Darwin" ]]; then
     python -m mlx_vlm.server \
         --host "$HOST" \
         --port "$PORT" \
+        --kv-bits 4 \
         "$@"
 else
     # Linux - use llama-server with GGUF
