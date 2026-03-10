@@ -14,15 +14,14 @@ case "$OS" in
         setup_shared_mlx_env
         echo ""
         echo "Setup complete! Shared environment is ready for MLX-backed models."
+        echo "For bench engines (vLLM, SGLang, MLX bench venv): run bench/setup.sh"
         ;;
     Linux)
         echo "Detected Linux (${ARCH}) - checking llama-server..."
         check_llama_server
-        if [[ -d "${ROOT}/vllm-spark" ]]; then
-            echo "Experimental Spark vLLM tooling lives in ${ROOT}/vllm-spark"
-        fi
         echo ""
         echo "Setup complete! Llama-backed models can use the system llama-server."
+        echo "For CUDA bench engines (vLLM, SGLang): run bench/setup.sh"
         ;;
     *)
         echo "Unsupported platform: ${OS}"

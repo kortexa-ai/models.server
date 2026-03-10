@@ -18,18 +18,18 @@ setup_shared_mlx_env() {
 
     require_command uv
 
-    echo "Creating/updating shared virtual environment at ${root}/.venv..."
-    uv venv "${root}/.venv"
+    echo "Creating/updating shared virtual environment at ${root}/.venv-mlx..."
+    uv venv "${root}/.venv-mlx"
 
     # shellcheck disable=SC1091
-    source "${root}/.venv/bin/activate"
+    source "${root}/.venv-mlx/bin/activate"
     uv pip install --upgrade \
         'mlx-vlm @ git+https://github.com/Blaizzy/mlx-vlm.git' \
         mlx-lm \
         torch \
         torchvision
 
-    echo "Shared MLX environment ready at ${root}/.venv"
+    echo "Shared MLX environment ready at ${root}/.venv-mlx"
 }
 
 check_llama_server() {

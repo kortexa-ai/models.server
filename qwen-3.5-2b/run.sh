@@ -5,9 +5,9 @@ cd "$(dirname "$0")"
 
 MODELS_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-if [[ "$(uname -s)" == "Darwin" && -d "${MODELS_ROOT}/.venv" ]]; then
+if [[ "$(uname -s)" == "Darwin" && -d "${MODELS_ROOT}/.venv-mlx" ]]; then
     # shellcheck disable=SC1091
-    source "${MODELS_ROOT}/.venv/bin/activate"
+    source "${MODELS_ROOT}/.venv-mlx/bin/activate"
 fi
 
 
