@@ -38,7 +38,8 @@ shift
 
 eval "$(python3 "${RESOLVER}" "${MODEL_INPUT}" --format shell)"
 
-VENV_PATH="${VENV_PATH:-${SCRIPT_DIR}/.venv-mlx}"
+MODELS_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+VENV_PATH="${VENV_PATH:-${MODELS_ROOT}/.venv-mlx}"
 PYTHON_BIN="${PYTHON_BIN:-$(venv_python "${VENV_PATH}")}"
 HOST="${HOST:-0.0.0.0}"
 PORT="${PORT:-${MLX_PORT}}"

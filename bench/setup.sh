@@ -56,7 +56,7 @@ echo ""
 
 echo "=== Setup Summary ==="
 if (( SETUP_MLX )); then
-    echo "  MLX (mlx-vlm/mlx-lm): OK — ${SCRIPT_DIR}/.venv-mlx"
+    echo "  MLX (mlx-vlm/mlx-lm): OK — $(cd "${SCRIPT_DIR}/.." && pwd)/.venv-mlx"
 fi
 if (( SETUP_VLLM )); then
     echo "  vLLM:                  OK — ${SCRIPT_DIR}/.venv-vllm"

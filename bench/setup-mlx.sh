@@ -2,12 +2,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+MODELS_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # shellcheck source=./common.sh
 source "${SCRIPT_DIR}/common.sh"
 
 require_command uv
 
-VENV_PATH="${VENV_PATH:-${SCRIPT_DIR}/.venv-mlx}"
+VENV_PATH="${VENV_PATH:-${MODELS_ROOT}/.venv-mlx}"
 
 echo "Creating MLX venv at ${VENV_PATH}..."
 uv venv "${VENV_PATH}"
