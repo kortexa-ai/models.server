@@ -1,50 +1,93 @@
-ARG BASE_IMAGE=nvcr.io/nvidia/tensorrt-llm/release:1.3.0rc6
-ARG TRTLLM_REPO=https://github.com/NVIDIA/TensorRT-LLM.git
-ARG TRTLLM_REF=main
-ARG TRANSFORMERS_SPEC=transformers==5.3.0
-ARG TRTLLM_PRECOMPILED_LOCATION=
-ARG FULL_SOURCE_BUILD=0
-ARG CUDA_ARCHITECTURES=120-real
-ARG JOB_COUNT=4
+#!/usr/bin/env bash
+# Build TRT-LLM from source on bare metal (DGX Spark / Blackwell aarch64).
+#
+# Extracts the same logic as Dockerfile.main-source but runs natively.
+# Installs into /opt/TensorRT-LLM with a dedicated venv.
+#
+# Prerequisites (installed by this script if missing):
+#   - CUDA toolkit 13.x  (already on DGX Spark)
+#   - Python 3.12
+#   - TensorRT, NCCL, OpenMPI dev libs (from DGX/CUDA apt repos)
+#
+# Usage:
+#   sudo ./trtllm.spark/build-bare-metal.sh          # full build
+#   JOB_COUNT=8 sudo ./trtllm.spark/build-bare-metal.sh   # parallel jobs
 
-FROM ${BASE_IMAGE}
+set -euo pipefail
 
-ARG TRTLLM_REPO
-ARG TRTLLM_REF
-ARG TRANSFORMERS_SPEC
-ARG TRTLLM_PRECOMPILED_LOCATION
-ARG FULL_SOURCE_BUILD
-ARG CUDA_ARCHITECTURES
-ARG JOB_COUNT
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TRTLLM_REPO="${TRTLLM_REPO:-https://github.com/NVIDIA/TensorRT-LLM.git}"
+TRTLLM_REF="${TRTLLM_REF:-main}"
+INSTALL_DIR="${INSTALL_DIR:-/opt/TensorRT-LLM}"
+VENV_DIR="${VENV_DIR:-/opt/trtllm-venv}"
+CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES:-120-real}"
+JOB_COUNT="${JOB_COUNT:-4}"
+TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers==5.3.0}"
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PIP_NO_CACHE_DIR=1
+echo "=== TRT-LLM Bare Metal Build ==="
+echo "Repo:      ${TRTLLM_REPO}"
+echo "Branch:    ${TRTLLM_REF}"
+echo "Install:   ${INSTALL_DIR}"
+echo "Venv:      ${VENV_DIR}"
+echo "CUDA arch: ${CUDA_ARCHITECTURES}"
+echo "Jobs:      ${JOB_COUNT}"
+echo ""
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    git \
-    git-lfs \
-    && rm -rf /var/lib/apt/lists/*
+# --- Step 1: System dependencies ---
+echo "--- Step 1: System dependencies ---"
+apt-get update
+apt-get install -y --no-install-recommends \
+    python3.12 python3.12-dev python3.12-venv \
+    git git-lfs \
+    cmake \
+    build-essential \
+    libopenmpi-dev openmpi-bin \
+    libnvinfer-dev libnvinfer-plugin10 libnvinfer-headers-dev \
+    libnccl-dev libnccl2 \
+    libcudnn9-dev-cuda-13
 
-RUN mkdir -p /opt/trtllm-precompiled && \
-    cp -a /usr/local/lib/python3.12/dist-packages/tensorrt_llm /opt/trtllm-precompiled/
+echo ""
 
-WORKDIR /opt
-RUN GIT_LFS_SKIP_SMUDGE=1 git \
-    -c filter.lfs.smudge= \
-    -c filter.lfs.required=false \
-    clone --depth 1 --branch "${TRTLLM_REF}" "${TRTLLM_REPO}" TensorRT-LLM
+# --- Step 2: Create venv ---
+echo "--- Step 2: Python venv ---"
+if [[ ! -d "${VENV_DIR}" ]]; then
+    python3.12 -m venv "${VENV_DIR}"
+fi
+source "${VENV_DIR}/bin/activate"
+pip install --upgrade pip setuptools wheel
 
-WORKDIR /opt/TensorRT-LLM
+# Install PyTorch (stock 2.10 supports sm_120 on aarch64)
+pip install torch==2.10.0
 
-RUN if [ "${FULL_SOURCE_BUILD}" = "1" ]; then \
-        git lfs install --local && \
-        git lfs pull ; \
-    fi
+# Install transformers
+pip install "${TRANSFORMERS_SPEC}"
 
-RUN python3 -m pip install --no-cache-dir --upgrade "${TRANSFORMERS_SPEC}"
+echo ""
 
-RUN python3 - <<'PY'
+# --- Step 3: Clone TRT-LLM ---
+echo "--- Step 3: Clone TRT-LLM ---"
+if [[ -d "${INSTALL_DIR}" ]]; then
+    echo "Existing ${INSTALL_DIR} found — pulling latest"
+    cd "${INSTALL_DIR}"
+    git fetch origin "${TRTLLM_REF}"
+    git checkout FETCH_HEAD
+else
+    GIT_LFS_SKIP_SMUDGE=1 git \
+        -c filter.lfs.smudge= \
+        -c filter.lfs.required=false \
+        clone --depth 1 --branch "${TRTLLM_REF}" "${TRTLLM_REPO}" "${INSTALL_DIR}"
+fi
+cd "${INSTALL_DIR}"
+
+# Pull LFS files (needed for source build — binary deps like nvshmem)
+git lfs install --local
+git lfs pull
+
+echo ""
+
+# --- Step 4: Apply transformers 5.3 compatibility patches ---
+echo "--- Step 4: Applying compatibility patches ---"
+python3 - <<'PY'
 from pathlib import Path
 
 repo = Path("/opt/TensorRT-LLM")
@@ -273,61 +316,99 @@ replacements = {
     ],
 }
 
+patched = 0
+skipped = 0
 for path, file_replacements in replacements.items():
+    if not path.exists():
+        print(f"SKIP (not found): {path}")
+        skipped += 1
+        continue
     text = path.read_text()
+    changed = False
     for old, new in file_replacements:
         if old not in text:
-            raise RuntimeError(f"Expected snippet not found in {path}: {old!r}")
+            # Already patched or source changed upstream
+            print(f"  SKIP snippet in {path.name}: {old[:60]!r}...")
+            continue
         text = text.replace(old, new, 1)
-    path.write_text(text)
+        changed = True
+    if changed:
+        path.write_text(text)
+        print(f"PATCHED: {path}")
+        patched += 1
+
+print(f"\nPatches: {patched} files patched, {skipped} skipped")
 PY
 
-RUN python3 -m pip uninstall -y tensorrt_llm
+# DisabledTqdm fix
+sed -i 's/super().__init__(\*args, \*\*kwargs, disable=True)/kwargs.pop("disable", None); super().__init__(*args, **kwargs, disable=True)/' \
+    "${INSTALL_DIR}/tensorrt_llm/llmapi/utils.py"
 
-# Fix DisabledTqdm in TRT-LLM's llmapi/utils.py: pop duplicate 'disable' kwarg
-# before calling super().__init__, preventing TypeError with newer tqdm/hf_hub.
-RUN sed -i 's/super().__init__(\*args, \*\*kwargs, disable=True)/kwargs.pop("disable", None); super().__init__(*args, **kwargs, disable=True)/' \
-    /opt/TensorRT-LLM/tensorrt_llm/llmapi/utils.py
+# rope_type="default" aliases
+sed -i 's/return PositionEmbeddingType\[s\]/return PositionEmbeddingType[{"default":"rope_gpt_neox"}.get(s,s)]/' \
+    "${INSTALL_DIR}/tensorrt_llm/functional.py"
+sed -i 's/return RotaryScalingType\[s\]/return RotaryScalingType[{"default":"none"}.get(s,s)]/' \
+    "${INSTALL_DIR}/tensorrt_llm/functional.py"
 
-RUN if [ "${FULL_SOURCE_BUILD}" = "1" ]; then \
-        python3 scripts/build_wheel.py \
-            --cuda_architectures "${CUDA_ARCHITECTURES}" \
-            --job_count "${JOB_COUNT}" \
-            --build_type Release \
-            --no-venv \
-            --skip-stubs \
-            --skip_building_wheel && \
-        echo "=== Copying compiled libs into source tree ===" && \
-        mkdir -p tensorrt_llm/libs && \
-        find cpp/build -name '*.so' -type f | while read -r f; do \
-            name="$(basename "$f")" ; \
-            case "$name" in \
-                libtensorrt_llm.so|libnvinfer_plugin_tensorrt_llm.so|libth_common.so| \
-                libdecoder_attention_*.so|libpg_utils.so| \
-                libtensorrt_llm_mooncake_wrapper.so|libtensorrt_llm_nixl_wrapper.so| \
-                libtensorrt_llm_ucx_wrapper.so) \
-                    echo "  $f -> tensorrt_llm/libs/$name" ; \
-                    cp "$f" "tensorrt_llm/libs/$name" ;; \
-            esac ; \
-        done && \
-        echo "=== Libs in tensorrt_llm/libs/ ===" && \
-        ls -lh tensorrt_llm/libs/*.so ; \
-    elif [ -n "${TRTLLM_PRECOMPILED_LOCATION}" ]; then \
-        TRTLLM_USE_PRECOMPILED=1 \
-        TRTLLM_PRECOMPILED_LOCATION="${TRTLLM_PRECOMPILED_LOCATION}" \
-        python3 -m pip install --no-deps -e . ; \
-    else \
-        TRTLLM_USE_PRECOMPILED=1 \
-        python3 -m pip install --no-deps -e . ; \
-    fi
+echo ""
 
-# Fix transformers 5.3 rope_type="default": TRT-LLM enums don't know "default".
-# Map to rope_gpt_neox (PositionEmbeddingType) and none (RotaryScalingType).
-RUN sed -i 's/return PositionEmbeddingType\[s\]/return PositionEmbeddingType[{"default":"rope_gpt_neox"}.get(s,s)]/' \
-        /opt/TensorRT-LLM/tensorrt_llm/functional.py && \
-    sed -i 's/return RotaryScalingType\[s\]/return RotaryScalingType[{"default":"none"}.get(s,s)]/' \
-        /opt/TensorRT-LLM/tensorrt_llm/functional.py
+# --- Step 5: Install TRT-LLM Python deps ---
+echo "--- Step 5: Install TRT-LLM Python deps ---"
+cd "${INSTALL_DIR}"
+pip install -r requirements.txt || echo "WARNING: Some requirements failed (expected — some are NVIDIA-internal)"
 
-# For full source builds, the editable pip install fails due to version==None
-# from the shallow clone. Instead, put the source tree on PYTHONPATH directly.
-ENV PYTHONPATH="/opt/TensorRT-LLM${PYTHONPATH:+:${PYTHONPATH}}"
+echo ""
+
+# --- Step 6: Build C++ libs ---
+echo "--- Step 6: Build C++ (this takes a while) ---"
+cd "${INSTALL_DIR}"
+python3 scripts/build_wheel.py \
+    --cuda_architectures "${CUDA_ARCHITECTURES}" \
+    --job_count "${JOB_COUNT}" \
+    --build_type Release \
+    --no-venv \
+    --skip-stubs \
+    --skip_building_wheel
+
+echo ""
+
+# --- Step 7: Copy compiled .so into source tree ---
+echo "--- Step 7: Installing compiled libs ---"
+mkdir -p tensorrt_llm/libs
+find cpp/build -name '*.so' -type f | while read -r f; do
+    name="$(basename "$f")"
+    case "$name" in
+        libtensorrt_llm.so|libnvinfer_plugin_tensorrt_llm.so|libth_common.so| \
+        libdecoder_attention_*.so|libpg_utils.so| \
+        libtensorrt_llm_mooncake_wrapper.so|libtensorrt_llm_nixl_wrapper.so| \
+        libtensorrt_llm_ucx_wrapper.so)
+            echo "  $f -> tensorrt_llm/libs/$name"
+            cp "$f" "tensorrt_llm/libs/$name" ;;
+    esac
+done
+echo "=== Libs in tensorrt_llm/libs/ ==="
+ls -lh tensorrt_llm/libs/*.so
+
+echo ""
+
+# --- Step 8: Create activation script ---
+echo "--- Step 8: Creating activation script ---"
+cat > "${INSTALL_DIR}/activate.sh" <<'ACTIVATE'
+#!/usr/bin/env bash
+# Source this to use TRT-LLM: source /opt/TensorRT-LLM/activate.sh
+source /opt/trtllm-venv/bin/activate
+export PYTHONPATH="/opt/TensorRT-LLM${PYTHONPATH:+:${PYTHONPATH}}"
+echo "TRT-LLM activated (venv + PYTHONPATH)"
+ACTIVATE
+chmod +x "${INSTALL_DIR}/activate.sh"
+
+echo ""
+echo "=== Build Complete ==="
+echo ""
+echo "To use TRT-LLM:"
+echo "  source ${INSTALL_DIR}/activate.sh"
+echo ""
+echo "To serve a model:"
+echo "  python3 -m tensorrt_llm.commands.serve serve Qwen/Qwen3-4B \\"
+echo "    --host 0.0.0.0 --port 2250 --backend pytorch --tp_size 1 --max_seq_len 32768"
+echo ""

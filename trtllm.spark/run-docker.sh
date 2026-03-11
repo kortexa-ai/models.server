@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-RESOLVER="${SCRIPT_DIR}/../bare.spark/resolve_model.py"
+RESOLVER="${SCRIPT_DIR}/../bench/resolve_model.py"
 CONFIG_FILE_HOST="${SCRIPT_DIR}/extra-llm-api-config.yml"
 CONFIG_FILE_CONTAINER="/workspace/trtllm.spark/extra-llm-api-config.yml"
 
