@@ -17,11 +17,15 @@ case "$OS" in
         echo "For bench engines (vLLM, SGLang, MLX bench venv): run bench/setup.sh"
         ;;
     Linux)
-        echo "Detected Linux (${ARCH}) - checking llama-server..."
+        echo "Detected Linux (${ARCH})"
+        echo ""
+        echo "--- Checking llama-server ---"
         check_llama_server
         echo ""
-        echo "Setup complete! Llama-backed models can use the system llama-server."
-        echo "For CUDA bench engines (vLLM, SGLang): run bench/setup.sh"
+        echo "--- Setting up vLLM environment ---"
+        "${ROOT}/bench/setup-vllm.sh"
+        echo ""
+        echo "Setup complete!"
         ;;
     *)
         echo "Unsupported platform: ${OS}"

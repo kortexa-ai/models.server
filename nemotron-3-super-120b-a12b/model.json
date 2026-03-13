@@ -1,0 +1,9 @@
+{
+  "name": "Nemotron 3 Super 120B A12B",
+  "id": "nemotron-3-super-120b-a12b",
+  "host": "192.168.2.7",
+  "port": 2033,
+  "hf_model": {
+    "linux": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4"
+  }
+}

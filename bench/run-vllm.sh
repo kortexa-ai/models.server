@@ -53,7 +53,7 @@ REASONING_PARSER="${REASONING_PARSER:-${REASONING_PARSER_DEFAULT}}"
 VLLM_CACHE_ROOT="${VLLM_CACHE_ROOT:-${SCRIPT_DIR}/.cache/vllm}"
 VLLM_CONFIG_ROOT="${VLLM_CONFIG_ROOT:-${SCRIPT_DIR}/.config/vllm}"
 TORCHINDUCTOR_CACHE_DIR="${TORCHINDUCTOR_CACHE_DIR:-${VLLM_CACHE_ROOT}/torch_compile_cache}"
-HF_HOME="${HF_HOME:-${SCRIPT_DIR}/.cache/huggingface}"
+HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
 HF_HUB_CACHE="${HF_HUB_CACHE:-${HF_HOME}/hub}"
 TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/transformers}"
 
@@ -78,6 +78,11 @@ export TORCHINDUCTOR_CACHE_DIR
 export HF_HOME
 export HF_HUB_CACHE
 export TRANSFORMERS_CACHE
+
+# Pass through HF token if set, or copy from default location
+if [[ -z "${HF_TOKEN:-}" && -f "$HOME/.cache/huggingface/token" ]]; then
+    export HF_TOKEN="$(cat "$HOME/.cache/huggingface/token")"
+fi
 
 configure_cuda_env "${PYTHON_BIN}"
 
