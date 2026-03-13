@@ -8,7 +8,7 @@
 		<string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
 	</dict>
 	<key>KeepAlive</key>
-	<true/>
+	<false/>
 	<key>Label</key>
 	<string>ai.kortexa.qwen-3.5-27b</string>
 	<key>ProgramArguments</key>
@@ -16,7 +16,7 @@
 		<string>/Users/francip/src/models.server/qwen-3.5-27b/launchd/kortexa-qwen-3.5-27b.sh</string>
 	</array>
 	<key>RunAtLoad</key>
-	<true/>
+	<false/>
 	<key>StandardErrorPath</key>
 	<string>/Users/francip/Library/Logs/qwen-3.5-27b.log</string>
 	<key>StandardOutPath</key>
