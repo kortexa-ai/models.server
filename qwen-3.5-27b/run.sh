@@ -28,7 +28,7 @@ if [[ "$OS" == "Darwin" ]]; then
         "$@"
 else
     # Linux - use llama-server with GGUF
-    QUANT="${QUANT:-Q4_K_M}"
+    QUANT="${QUANT:-UD-Q4_K_XL}"
     CACHE_TYPE="${CACHE_TYPE:-q4_0}"
     CONTEXT="${CONTEXT:-262144}"
     PARALLEL="${PARALLEL:-1}"

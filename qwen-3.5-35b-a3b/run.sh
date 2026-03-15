@@ -28,9 +28,9 @@ if [[ "$OS" == "Darwin" ]]; then
         "$@"
 else
     # Linux - use llama-server with GGUF
-    QUANT="${QUANT:-Q4_K_M}"
+    QUANT="${QUANT:-UD-Q4_K_XL}"
     CACHE_TYPE="${CACHE_TYPE:-q4_0}"
-    CONTEXT="${CONTEXT:-163840}"
+    CONTEXT="${CONTEXT:-65536}"
     PARALLEL="${PARALLEL:-1}"
     echo "Starting llama-server on port $PORT..."
     llama-server -hf "unsloth/Qwen3.5-35B-A3B-GGUF:${QUANT}" --alias qwen-3.5-35b-a3b --host "$HOST" --port "$PORT" \
