@@ -94,6 +94,7 @@ Prompt processing is faster on llama-server (~113 tok/s vs ~40 tok/s), but gener
 | GPT OSS 120B | `gpt-oss-120b` | 2023 | llama-server | `unsloth/gpt-oss-120b-GGUF` |
 | LFM 2.5 1.2B | `lfm-2.5-1.2b-thinking` | 2022 | mlx-lm | `LiquidAI/LFM2.5-1.2B-Thinking` |
 | LFM-2 24B A2B | `lfm-2-24b-a2b` | 2028 | llama-server | `LiquidAI/LFM2-24B-A2B-GGUF` |
+| Nemotron 3 Nano 30B A3B | `nemotron-3-nano-30b-a3b` | 2034 | — (Linux vLLM) | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4` |
 | Penumbra | `penumbra` | 4007 | custom | `karpathy/nanochat_d32` |
 
 ## API Routing

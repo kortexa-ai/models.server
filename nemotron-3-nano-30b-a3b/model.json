@@ -1,0 +1,9 @@
+{
+  "name": "Nemotron 3 Nano 30B A3B",
+  "id": "nemotron-3-nano-30b-a3b",
+  "host": "192.168.2.7",
+  "port": 2034,
+  "hf_model": {
+    "linux": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4"
+  }
+}
