@@ -5,6 +5,58 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## March 21, 2026
+
+### vLLM Docker (`vllm-node:latest`) — Qwen 3.5-35B-A3B (Intel AutoRound int4)
+
+**BREAKTHROUGH:** After extensive investigation, achieved **50 tok/s** (target was 50-79 tok/s).
+
+| Metric | Value |
+|--------|-------|
+| Warm gen TPS (avg) | **50.2** |
+| TPS range | 46.2 - 51.6 |
+| Model size | 19.3 GiB |
+| KV cache | 60+ GiB available |
+| Context | 32768 |
+| Quantization | Intel AutoRound int4 (GPTQ-compatible) |
+
+**Configuration:**
+```bash
+docker run --rm --name vllm-test-35b \
+  --gpus all --network host --ipc host \
+  --ulimit memlock=-1 --ulimit stack=67108864 \
+  -v "$HOME/.cache/huggingface:/root/.cache/huggingface" \
+  vllm-node:latest \
+  Intel/Qwen3.5-35B-A3B-int4-AutoRound \
+  --port 2242 \
+  --max-model-len 32768 \
+  --reasoning-parser qwen3 \
+  --gpu-memory-utilization 0.7 \
+  --load-format fastsafetensors \
+  --kv-cache-dtype fp8
+```
+
+**Key findings:**
+- vLLM 0.17.2rc1.dev7 has proper SM121 (Blackwell) support
+- FlashInfer attention backend works correctly on DGX Spark
+- CUDA graphs captured successfully (51 PIECEWISE + 35 FULL)
+- FP8 KV cache critical for memory bandwidth on unified memory
+
+**Comparison with previous attempts:**
+
+| Configuration | TPS | Notes |
+|--------------|-----|-------|
+| vLLM 0.17.1rc1 bare-metal BF16 | 17.4 | Baseline, slow |
+| vLLM 0.17.2rc1 Docker + AutoRound int4 | **50.2** | 3x improvement! |
+| Target (community reports) | 50-79 | Achieved! |
+
+**Remaining optimization opportunities:**
+- Apply MXFP4 patches → could reach 60-70 tok/s
+- Use TP=2 (if 2 GPUs available) → could double throughput
+- Kill competing processes → could increase to 0.85 memory utilization
+
+---
+
 ## March 12, 2026
 
 ### Nemotron-3-Super 120B-A12B on DGX Spark
