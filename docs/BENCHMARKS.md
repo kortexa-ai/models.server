@@ -57,25 +57,26 @@ docker run --rm --name vllm-test-35b \
 
 ---
 
-### vLLM Docker (`vllm-node:latest`) — Qwen 3.5 BF16 Sweep
+### vLLM Docker (`vllm-node:latest`) — Qwen 3.5 Full Sweep
 
-**Date:** March 22, 2026 (late night)
+**Date:** March 22, 2026
 
-Testing smaller Qwen 3.5 models with same Docker image (BF16, no quantization):
+Complete benchmark of all Qwen 3.5 sizes in both BF16 and int4:
 
-| Model | Gen TPS | Memory | Notes |
-|-------|---------|--------|-------|
-| Qwen3.5-4B | 20.6 | 8.6 GiB | Dense model |
-| Qwen3.5-9B | 12.3 | 17.7 GiB | Dense model |
-| Qwen3.5-27B | ~2.5 | ~55 GiB | Memory-bound, very slow |
-| **Qwen3.5-35B-A3B (int4)** | **50.2** | 19.3 GiB | MoE + quantized = fast! |
+| Model | BF16 TPS | int4 TPS | Speedup | BF16 Mem | int4 Mem |
+|-------|----------|----------|---------|----------|----------|
+| Qwen3.5-4B | 20.6 | **43.9** | 2.1x | 8.6 GiB | 3.7 GiB |
+| Qwen3.5-9B | 12.3 | **32.7** | 2.7x | 17.7 GiB | 8.1 GiB |
+| Qwen3.5-27B | 2.5 | **12.6** | 5.0x | ~55 GiB | 17.6 GiB |
+| Qwen3.5-35B-A3B | 17.4 | **50.2** | 2.9x | ~67 GiB | 19.3 GiB |
 
-**Key insight:** The 35B MoE model with int4 quantization is **faster** than the 9B dense model in BF16! This is because:
-1. MoE only activates 3B params per token (vs 9B for dense)
-2. int4 quantization reduces memory bandwidth by 4x
-3. Unified memory architecture benefits from smaller model footprint
+**Key findings:**
+1. **int4 quantization helps all models** - 2-5x speedup depending on size
+2. **27B shows biggest gain (5x)** - most memory-bound model benefits most
+3. **35B MoE int4 is fastest** - despite being "largest", MoE only activates 3B params
+4. **BF16 for large models is unusable** - 27B crawls at 2.5 tok/s
 
-**Conclusion:** For DGX Spark, always use quantized models. BF16 is memory-bandwidth limited.
+**Recommendation:** Always use int4 quantization on DGX Spark. The 35B-A3B int4 at 50 tok/s is the sweet spot.
 
 ---
 
