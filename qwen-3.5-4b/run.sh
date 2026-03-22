@@ -10,23 +10,44 @@ if [[ "$(uname -s)" == "Darwin" && -d "${MODELS_ROOT}/.venv-mlx" ]]; then
     source "${MODELS_ROOT}/.venv-mlx/bin/activate"
 fi
 
-
 MODEL_MLX="mlx-community/Qwen3.5-4B-MLX-4bit"
 PORT="${PORT:-2029}"
 HOST="${HOST:-0.0.0.0}"
 
 OS="$(uname -s)"
+HOSTNAME="$(hostname)"
+
+IS_SPARK=false
+if [[ "$HOSTNAME" == *"spark"* ]]; then
+    IS_SPARK=true
+fi
 
 if [[ "$OS" == "Darwin" ]]; then
-    # macOS - use mlx-vlm
-    # Model is loaded on first request via the "model" field in the request body.
     echo "Starting mlx-vlm server on port $PORT..."
     python -m mlx_vlm.server \
         --host "$HOST" \
         --port "$PORT" \
         "$@"
+elif [[ "$IS_SPARK" == true ]]; then
+    # DGX Spark - use vLLM Docker with AutoRound int4
+    # Memory fraction: 0.15 = ~19GB, leaves plenty for larger models
+    GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.15}"
+    MODEL_HF="Qwen/Qwen3.5-4B-Instruct-AutoRound-int4-sym"
+    
+    echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC})..."
+    docker run --rm -it --network host --gpus all \
+        -e HF_TOKEN="${HF_TOKEN:-}" \
+        -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
+        -v ~/.cache/huggingface:/root/.cache/huggingface \
+        vllm/vllm-openai:vllm-node \
+        --model "$MODEL_HF" \
+        --host "$HOST" \
+        --port "$PORT" \
+        --max-model-len 8192 \
+        --gpu-memory-utilization "$GPU_MEM_FRAC" \
+        --enforce-eager \
+        "$@"
 else
-    # Linux - use llama-server with GGUF
     QUANT="${QUANT:-UD-Q4_K_XL}"
     CACHE_TYPE="${CACHE_TYPE:-q4_0}"
     CONTEXT="${CONTEXT:-65536}"

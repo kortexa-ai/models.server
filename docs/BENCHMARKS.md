@@ -78,6 +78,13 @@ Complete benchmark of all Qwen 3.5 sizes in both BF16 and int4:
 
 **Recommendation:** Always use int4 quantization on DGX Spark. The 35B-A3B int4 at 50 tok/s is the sweet spot.
 
+**Updated run.sh scripts (March 22):**
+All Qwen 3.5 `run.sh` scripts now auto-detect DGX Spark and use vLLM Docker with int4:
+- `GPU_MEM_FRAC` env var controls memory allocation (default varies by model size)
+- On Spark: uses `vllm/vllm-openai:vllm-node` with AutoRound int4 models
+- On other Linux: uses llama.cpp with GGUF
+- On macOS: uses mlx-vlm
+
 **Comparison with llama.cpp (4B):**
 
 | Engine | Quant | TPS |
