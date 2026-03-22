@@ -32,15 +32,16 @@ elif [[ "$IS_SPARK" == true ]]; then
     # DGX Spark - use vLLM Docker with AutoRound int4
     # Memory fraction: 0.2 = ~26GB, leaves room for other models
     GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.2}"
-    MODEL_HF="Qwen/Qwen3.5-9B-Instruct-AutoRound-int4-sym"
-    
+    MODEL_HF="Intel/Qwen3.5-9B-int4-AutoRound"
+
     echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC})..."
-    docker run --rm -it --network host --gpus all \
+    docker run --rm --network host --gpus all --ipc host \
+        --ulimit memlock=-1 --ulimit stack=67108864 \
         -e HF_TOKEN="${HF_TOKEN:-}" \
         -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
         -v ~/.cache/huggingface:/root/.cache/huggingface \
-        vllm/vllm-openai:vllm-node \
-        --model "$MODEL_HF" \
+        vllm-node:latest \
+        vllm serve "$MODEL_HF" \
         --host "$HOST" \
         --port "$PORT" \
         --max-model-len 8192 \

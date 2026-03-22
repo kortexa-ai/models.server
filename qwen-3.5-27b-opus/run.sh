@@ -34,16 +34,17 @@ elif [[ "$IS_SPARK" == true ]]; then
     # Memory fraction: 0.4 = ~51GB
     GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.4}"
     # Fall back to standard 27B int4 - Opus distill not available in int4
-    MODEL_HF="Qwen/Qwen3.5-27B-Instruct-AutoRound-int4-sym"
+    MODEL_HF="Intel/Qwen3.5-27B-int4-AutoRound"
 
     echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC})..."
     echo "NOTE: Using base 27B int4 (Opus distill not available in int4)"
-    docker run --rm -it --network host --gpus all \
+    docker run --rm --network host --gpus all --ipc host \
+        --ulimit memlock=-1 --ulimit stack=67108864 \
         -e HF_TOKEN="${HF_TOKEN:-}" \
         -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
         -v ~/.cache/huggingface:/root/.cache/huggingface \
-        vllm/vllm-openai:vllm-node \
-        --model "$MODEL_HF" \
+        vllm-node:latest \
+        vllm serve "$MODEL_HF" \
         --host "$HOST" \
         --port "$PORT" \
         --max-model-len 8192 \
