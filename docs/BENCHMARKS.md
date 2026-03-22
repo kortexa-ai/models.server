@@ -78,6 +78,15 @@ Complete benchmark of all Qwen 3.5 sizes in both BF16 and int4:
 
 **Recommendation:** Always use int4 quantization on DGX Spark. The 35B-A3B int4 at 50 tok/s is the sweet spot.
 
+**Comparison with llama.cpp (4B):**
+
+| Engine | Quant | TPS |
+|--------|-------|-----|
+| vLLM Docker | AutoRound int4 | **43.9** |
+| llama.cpp | Q4_K_M GGUF | 38.2 |
+
+vLLM Docker int4 beats llama.cpp GGUF for the 4B model.
+
 ---
 
 ### Nemotron 3 Nano 30B NVFP4 — Not Working
