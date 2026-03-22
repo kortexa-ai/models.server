@@ -57,6 +57,41 @@ docker run --rm --name vllm-test-35b \
 
 ---
 
+### vLLM Docker (`vllm-node:latest`) — Qwen 3.5 BF16 Sweep
+
+**Date:** March 22, 2026 (late night)
+
+Testing smaller Qwen 3.5 models with same Docker image (BF16, no quantization):
+
+| Model | Gen TPS | Memory | Notes |
+|-------|---------|--------|-------|
+| Qwen3.5-4B | 20.6 | 8.6 GiB | Dense model |
+| Qwen3.5-9B | 12.3 | 17.7 GiB | Dense model |
+| Qwen3.5-27B | ~2.5 | ~55 GiB | Memory-bound, very slow |
+| **Qwen3.5-35B-A3B (int4)** | **50.2** | 19.3 GiB | MoE + quantized = fast! |
+
+**Key insight:** The 35B MoE model with int4 quantization is **faster** than the 9B dense model in BF16! This is because:
+1. MoE only activates 3B params per token (vs 9B for dense)
+2. int4 quantization reduces memory bandwidth by 4x
+3. Unified memory architecture benefits from smaller model footprint
+
+**Conclusion:** For DGX Spark, always use quantized models. BF16 is memory-bandwidth limited.
+
+---
+
+### Nemotron 3 Nano 30B NVFP4 — Not Working
+
+**Status:** CUDA graph capture hangs / CUTLASS TMA errors
+
+```
+[ERROR] Assertion failed: Failed to initialize cutlass TMA WS grouped gemm
+```
+
+The `vllm-node:latest` image has CUTLASS SM120 kernel issues with Nemotron models.
+Needs investigation or different Docker image.
+
+---
+
 ## March 12, 2026
 
 ### Nemotron-3-Super 120B-A12B on DGX Spark
