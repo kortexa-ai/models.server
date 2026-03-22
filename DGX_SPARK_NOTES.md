@@ -209,6 +209,37 @@ Compiles and caches at `~/.cache/flashinfer/`:
 | Nemotron 3 Super 120B-A12B | 12B active | eugr Docker + Marlin | NVFP4 | **12** | |
 | Qwen 3.5 27B | 27B dense | buildspark Docker | BF16 | 3 | GDN kernel bottleneck |
 
+## Qwen 3.5 vLLM int4 Cache Budget Presets
+
+These presets are tuned for the AutoRound `vllm-node:latest` flow on Spark and sized to the requested steady-state concurrency target, not to the maximum possible KV cache reservation. On this machine, prefer explicit `--kv-cache-memory-bytes` for the actual cache budget, but still set a conservative `--gpu-memory-utilization` because current vLLM uses it for the startup free-memory check.
+
+| Model | Context | Target reqs | Loaded weights | KV / req | KV budget | Suggested `--kv-cache-memory-bytes` | Guard `--gpu-memory-utilization` | `--max-num-seqs` |
+|-------|--------:|------------:|---------------:|---------:|----------:|------------------------------------:|---------------------------------:|-----------------:|
+| Qwen 3.5 0.8B | 32768 | 1 | ~1.0 GiB (est.) | 0.75 GiB | 1 GiB | 1073741824 | 0.08 | 1 |
+| Qwen 3.5 2B | 32768 | 1 | ~1.8 GiB (est.) | 0.75 GiB | 1 GiB | 1073741824 | 0.08 | 1 |
+| Qwen 3.5 4B | 65536 | 1 | 3.65 GiB | 4.0 GiB | 4 GiB | 4294967296 | 0.12 | 1 |
+| Qwen 3.5 9B | 65536 | 1 | 8.1 GiB | 4.0 GiB | 4 GiB | 4294967296 | 0.18 | 1 |
+| Qwen 3.5 27B | 65536 | 2 | 17.6 GiB | 8.0 GiB | 16 GiB | 17179869184 | 0.40 | 2 |
+| Qwen 3.5 35B-A3B | 65536 | 4 | 19.3 GiB | 2.5 GiB | 12 GiB | 12884901888 | 0.40 | 4 |
+
+Notes:
+
+- All Spark Qwen int4 run scripts now add `--enable-force-include-usage`.
+- All Spark Qwen int4 run scripts now pin `--load-format fastsafetensors` and `--reasoning-parser qwen3`.
+- For Qwen 3.5 35B-A3B, `--gpu-memory-utilization 0.6` was unnecessarily greedy for the 4×64k goal and failed to start while other resident services were present. The corrected coexistence preset is `--kv-cache-memory-bytes 12884901888` plus a guardrail `--gpu-memory-utilization 0.4`.
+- The 0.8B and 2B loaded-weight numbers are estimates until directly profiled; the rest are measured from Spark logs.
+
+### Qwen 3.5 35B-A3B Coexistence Benchmark (`vllm-node:latest` + Intel AutoRound int4)
+
+- Config: `--max-model-len 65536 --max-num-seqs 4 --gpu-memory-utilization 0.4 --kv-cache-memory-bytes 12884901888 --kv-cache-dtype fp8 --load-format fastsafetensors --reasoning-parser qwen3 --enable-force-include-usage`
+- Model loading took `19.3 GiB`
+- Available KV cache memory: `11.62 GiB`
+- GPU KV cache size: `303,920 tokens`
+- `check_mem` after benchmark showed the 35B engine at `34,149 MiB` (`33.35 GiB`) GPU allocation, with total GPU allocations on the box at `71.19 GiB`
+- First 4-way no-thinking batch after startup (`1024` output tokens each) produced `4096` completion tokens in `76.74s` = **53.37 tok/s aggregate** (~`13.34 tok/s` per request)
+- Warm 4-way no-thinking batch on the installed service produced `4096` completion tokens in `40.90s` = **100.14 tok/s aggregate** (~`25.04 tok/s` per request)
+- vLLM still uses `gpu_memory_utilization` for its startup admission check even when `kv_cache_memory_bytes` is explicit. The sane default on a shared Spark is therefore: explicit 12 GiB KV budget + conservative `gpu-memory-utilization 0.4` guardrail.
+
 ## Known Issues & Gotchas
 
 ### Qwen 3.5 GDN Linear Attention
@@ -223,7 +254,7 @@ GB10 reports SM 12.1 but many tools only recognize SM 12.0. This causes:
 ### Unified Memory Gotchas
 - `torch.cuda.mem_get_info()` reports GPU-visible memory, not system total
 - Models can oversubscribe GPU memory (pages to system RAM) but thrash badly
-- The `gpu-memory-utilization` flag is checked against free memory at startup, not total
+- The `gpu-memory-utilization` flag is checked against free memory at startup, not total; explicit `--kv-cache-memory-bytes` gives deterministic cache sizing, but you still need a conservative `gpu-memory-utilization` guardrail until vLLM fixes that behavior
 - Kill all other model containers before starting large models
 
 ### Thinking Token Overhead (Qwen 3.5)

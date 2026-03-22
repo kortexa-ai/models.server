@@ -30,13 +30,15 @@ if [[ "$OS" == "Darwin" ]]; then
         "$@"
 elif [[ "$IS_SPARK" == true ]]; then
     # DGX Spark - use vLLM Docker with AutoRound int4
-    # NOTE: No AutoRound int4 available for Opus distill, using base 27B int4
-    # Memory fraction: 0.4 = ~51GB
+    # DGX Spark - use vLLM Docker with AutoRound int4
+    # Memory fraction: 0.4 = ~51GB, sized for two 64k requests
     GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.4}"
+    CONTEXT="${CONTEXT:-262144}"
+    MAX_NUM_SEQS="${MAX_NUM_SEQS:-2}"
     # Fall back to standard 27B int4 - Opus distill not available in int4
     MODEL_HF="Intel/Qwen3.5-27B-int4-AutoRound"
 
-    echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC})..."
+    echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC}, ctx: ${CONTEXT})..."
     echo "NOTE: Using base 27B int4 (Opus distill not available in int4)"
     docker run --rm --network host --gpus all --ipc host \
         --ulimit memlock=-1 --ulimit stack=67108864 \
@@ -47,9 +49,13 @@ elif [[ "$IS_SPARK" == true ]]; then
         vllm serve "$MODEL_HF" \
         --host "$HOST" \
         --port "$PORT" \
-        --max-model-len 8192 \
+        --max-model-len "$CONTEXT" \
+        --max-num-seqs "$MAX_NUM_SEQS" \
         --gpu-memory-utilization "$GPU_MEM_FRAC" \
-        --enforce-eager \
+        --load-format fastsafetensors \
+        --reasoning-parser qwen3 \
+        --kv-cache-dtype fp8 \
+        --enable-force-include-usage \
         "$@"
 else
     QUANT="${QUANT:-UD-Q4_K_XL}"

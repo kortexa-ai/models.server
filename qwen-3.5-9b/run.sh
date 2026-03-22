@@ -30,11 +30,14 @@ if [[ "$OS" == "Darwin" ]]; then
         "$@"
 elif [[ "$IS_SPARK" == true ]]; then
     # DGX Spark - use vLLM Docker with AutoRound int4
-    # Memory fraction: 0.2 = ~26GB, leaves room for other models
-    GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.2}"
+    # Explicit KV budget: 4 GiB, sized for a single 64k request
+    KV_CACHE_MEMORY_BYTES="${KV_CACHE_MEMORY_BYTES:-4294967296}"
+    GPU_MEM_UTILIZATION="${GPU_MEM_UTILIZATION:-0.18}"
+    CONTEXT="${CONTEXT:-65536}"
+    MAX_NUM_SEQS="${MAX_NUM_SEQS:-1}"
     MODEL_HF="Intel/Qwen3.5-9B-int4-AutoRound"
 
-    echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC})..."
+    echo "Starting vLLM server on DGX Spark (port $PORT, KV cache bytes: ${KV_CACHE_MEMORY_BYTES}, gpu cap: ${GPU_MEM_UTILIZATION}, ctx: ${CONTEXT})..."
     docker run --rm --network host --gpus all --ipc host \
         --ulimit memlock=-1 --ulimit stack=67108864 \
         -e HF_TOKEN="${HF_TOKEN:-}" \
@@ -44,9 +47,14 @@ elif [[ "$IS_SPARK" == true ]]; then
         vllm serve "$MODEL_HF" \
         --host "$HOST" \
         --port "$PORT" \
-        --max-model-len 8192 \
-        --gpu-memory-utilization "$GPU_MEM_FRAC" \
-        --enforce-eager \
+        --max-model-len "$CONTEXT" \
+        --max-num-seqs "$MAX_NUM_SEQS" \
+        --gpu-memory-utilization "$GPU_MEM_UTILIZATION" \
+        --kv-cache-memory-bytes "$KV_CACHE_MEMORY_BYTES" \
+        --load-format fastsafetensors \
+        --reasoning-parser qwen3 \
+        --kv-cache-dtype fp8 \
+        --enable-force-include-usage \
         "$@"
 else
     QUANT="${QUANT:-UD-Q4_K_XL}"
