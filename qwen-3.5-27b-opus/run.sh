@@ -30,33 +30,46 @@ if [[ "$OS" == "Darwin" ]]; then
         "$@"
 elif [[ "$IS_SPARK" == true ]]; then
     # DGX Spark - use vLLM Docker with AutoRound int4
-    # DGX Spark - use vLLM Docker with AutoRound int4
-    # Memory fraction: 0.4 = ~51GB, sized for two 64k requests
-    GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.4}"
-    CONTEXT="${CONTEXT:-262144}"
+    # Explicit KV budget: 16 GiB, sized for two 64k requests
+    # KV math: 2(K+V) * 64 layers * 4 kv_heads * 256 head_dim * 1 byte(fp8) * 65536 ctx * 2 reqs = 16 GiB
+    KV_CACHE_MEMORY_BYTES="${KV_CACHE_MEMORY_BYTES:-17179869184}"
+    GPU_MEM_UTILIZATION="${GPU_MEM_UTILIZATION:-0.40}"
+    CONTEXT="${CONTEXT:-65536}"
     MAX_NUM_SEQS="${MAX_NUM_SEQS:-2}"
     # Fall back to standard 27B int4 - Opus distill not available in int4
     MODEL_HF="Intel/Qwen3.5-27B-int4-AutoRound"
 
-    echo "Starting vLLM server on DGX Spark (port $PORT, GPU mem: ${GPU_MEM_FRAC}, ctx: ${CONTEXT})..."
+    CONTAINER_NAME="qwen-3.5-27b-opus"
+    trap 'docker stop "$CONTAINER_NAME" 2>/dev/null' EXIT
+    echo "Starting vLLM server on DGX Spark (port $PORT, KV cache bytes: ${KV_CACHE_MEMORY_BYTES}, gpu cap: ${GPU_MEM_UTILIZATION}, ctx: ${CONTEXT})..."
     echo "NOTE: Using base 27B int4 (Opus distill not available in int4)"
-    docker run --rm --network host --gpus all --ipc host \
-        --ulimit memlock=-1 --ulimit stack=67108864 \
-        -e HF_TOKEN="${HF_TOKEN:-}" \
-        -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
-        -v ~/.cache/huggingface:/root/.cache/huggingface \
-        vllm-node:latest \
-        vllm serve "$MODEL_HF" \
-        --host "$HOST" \
-        --port "$PORT" \
-        --max-model-len "$CONTEXT" \
-        --max-num-seqs "$MAX_NUM_SEQS" \
-        --gpu-memory-utilization "$GPU_MEM_FRAC" \
-        --load-format fastsafetensors \
-        --reasoning-parser qwen3 \
-        --kv-cache-dtype fp8 \
-        --enable-force-include-usage \
-        "$@"
+    if docker container inspect "$CONTAINER_NAME" &>/dev/null; then
+        echo "Reusing existing container $CONTAINER_NAME..."
+        docker start -a "$CONTAINER_NAME"
+    else
+        docker run --name "$CONTAINER_NAME" --network host --gpus all --ipc host --privileged \
+            --ulimit memlock=-1 --ulimit stack=67108864 \
+            -e HF_TOKEN="${HF_TOKEN:-}" \
+            -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
+            -v ~/.cache/huggingface:/root/.cache/huggingface \
+            -v ~/.cache/vllm-docker:/root/.cache/vllm \
+            vllm-node:latest \
+            vllm serve "$MODEL_HF" \
+            --served-model-name qwen-3.5-27b-opus \
+            --host "$HOST" \
+            --port "$PORT" \
+            --max-model-len "$CONTEXT" \
+            --max-num-seqs "$MAX_NUM_SEQS" \
+            --gpu-memory-utilization "$GPU_MEM_UTILIZATION" \
+            --kv-cache-memory-bytes "$KV_CACHE_MEMORY_BYTES" \
+            --load-format fastsafetensors \
+            --reasoning-parser qwen3 \
+            --enable-auto-tool-choice \
+            --tool-call-parser qwen3_xml \
+            --kv-cache-dtype fp8 \
+            --enable-force-include-usage \
+            "$@"
+    fi
 else
     QUANT="${QUANT:-UD-Q4_K_XL}"
     CACHE_TYPE="${CACHE_TYPE:-q4_0}"
