@@ -1,0 +1,9 @@
+{
+  "name": "Nemotron Cascade 2 30B A3B",
+  "id": "nemotron-cascade-2-30b-a3b",
+  "host": "192.168.2.7",
+  "port": 2035,
+  "hf_model": {
+    "linux": "bartowski/nvidia_Nemotron-Cascade-2-30B-A3B-GGUF"
+  }
+}

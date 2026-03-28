@@ -75,7 +75,7 @@ else
     QUANT="${QUANT:-UD-Q4_K_XL}"
     CACHE_TYPE="${CACHE_TYPE:-q4_0}"
     CONTEXT="${CONTEXT:-65536}"
-    PARALLEL="${PARALLEL:-1}"
+    PARALLEL="${PARALLEL:-8}"
     echo "Starting llama-server on port $PORT..."
     llama-server -hf "unsloth/Qwen3.5-35B-A3B-GGUF:${QUANT}" --alias qwen-3.5-35b-a3b --host "$HOST" --port "$PORT" \
         --jinja -c "$CONTEXT" -ngl 99 --threads -1 --parallel "$PARALLEL" \
