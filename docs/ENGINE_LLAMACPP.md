@@ -12,7 +12,7 @@ Limitations:
 
 - Built from source with `-DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=native`
 - Also needs `-DLLAMA_OPENSSL=ON` for HuggingFace downloads via `-hf` flag
-- Build script: `api.server/llama.cpp/build-llama.sh` (auto-detects platform)
+- Build script: `llama.cpp/build-llama.sh` (auto-detects platform)
 - OpenAI-compatible API with `--jinja` flag
 
 ### Running Models
@@ -23,7 +23,7 @@ All five models are configured as systemd services on their assigned ports (see 
 
 ## Build Notes
 
-- Build script: `api.server/llama.cpp/build-llama.sh`
+- Build script: `llama.cpp/build-llama.sh`
 - Uses `CMAKE_CUDA_ARCHITECTURES=native` which auto-detects `121a-real` for Blackwell
 - Do NOT hardcode architecture numbers — Blackwell uses `121a` suffix (not just `121`)
 - The script handles Mac (Metal), Intel Linux (CUDA), DGX Spark (CUDA), and Pi (CPU-only)
