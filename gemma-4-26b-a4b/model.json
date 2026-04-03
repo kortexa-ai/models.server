@@ -1,0 +1,7 @@
+{
+  "name": "Gemma 4 26B-A4B",
+  "id": "gemma-4-26b-a4b",
+  "host": "192.168.2.3",
+  "port": 2036,
+  "hf_model": "google/gemma-4-26B-A4B-it"
+}
