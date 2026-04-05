@@ -1,10 +1,22 @@
 {
   "name": "Qwen 3.5 4B",
   "id": "qwen-3.5-4b",
-  "host": "192.168.2.7",
   "port": 2029,
-  "hf_model": {
-    "darwin": "mlx-community/Qwen3.5-4B-MLX-4bit",
-    "linux": "unsloth/Qwen3.5-4B-GGUF:Q8_0"
+  "host": "192.168.2.7",
+  "context": 65536,
+  "parallel": 2,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/Qwen3.5-4B-GGUF",
+    "quant": "UD-Q4_K_XL"
+  },
+  "mlx": {
+    "repo": "mlx-community/Qwen3.5-4B-MLX-4bit"
+  },
+  "vllm": null,
+  "cpu": {
+    "repo": "unsloth/Qwen3.5-4B-GGUF",
+    "quant": "Q4_K_M",
+    "context": 4096
   }
 }

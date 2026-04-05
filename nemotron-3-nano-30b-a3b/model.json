@@ -1,9 +1,25 @@
 {
   "name": "Nemotron 3 Nano 30B A3B",
   "id": "nemotron-3-nano-30b-a3b",
-  "host": "192.168.2.7",
   "port": 2034,
-  "hf_model": {
-    "linux": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4"
-  }
+  "host": "192.168.2.7",
+  "context": 65536,
+  "parallel": 8,
+  "cache_type": "q8_0",
+  "llama": null,
+  "mlx": null,
+  "vllm": {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4",
+    "quantization": "auto",
+    "kv_cache_dtype": "fp8",
+    "kv_cache_bytes": 17179869184,
+    "max_num_seqs": 8,
+    "trust_remote_code": true,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "nano_v3",
+    "reasoning_parser_plugin": "nano_v3_reasoning_parser.py",
+    "marlin": true,
+    "enable_prefix_caching": true
+  },
+  "cpu": null
 }

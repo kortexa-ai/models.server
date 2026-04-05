@@ -1,9 +1,30 @@
 {
   "name": "Nemotron 3 Super 120B A12B",
   "id": "nemotron-3-super-120b-a12b",
-  "host": "192.168.2.7",
   "port": 2033,
-  "hf_model": {
-    "linux": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4"
-  }
+  "host": "192.168.2.7",
+  "context": 16384,
+  "parallel": 1,
+  "cache_type": "q4_0",
+  "llama": {
+    "repo": "unsloth/NVIDIA-Nemotron-3-Super-120B-A12B-GGUF",
+    "quant": "Q4_K_M"
+  },
+  "mlx": null,
+  "vllm": {
+    "model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+    "quantization": "auto",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "max_num_seqs": 8,
+    "max_model_len": 32768,
+    "trust_remote_code": true,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "super_v3",
+    "reasoning_parser_plugin": "super_v3_reasoning_parser.py",
+    "marlin": true,
+    "enable_chunked_prefill": true,
+    "mamba_ssm_cache_dtype": "float16"
+  },
+  "cpu": null
 }

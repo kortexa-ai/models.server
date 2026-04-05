@@ -1,7 +1,29 @@
 {
   "name": "Gemma 4 E2B",
   "id": "gemma-4-e2b",
-  "host": "192.168.2.3",
   "port": 2039,
-  "hf_model": "google/gemma-4-E2B-it"
+  "host": "192.168.2.3",
+  "context": 32768,
+  "parallel": 2,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/gemma-4-E2B-it-GGUF",
+    "quant": "Q8_0"
+  },
+  "mlx": {
+    "repo": "mlx-community/gemma-4-e2b-it-4bit"
+  },
+  "vllm": {
+    "model": "google/gemma-4-E2B-it",
+    "quantization": "fp8",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "max_num_seqs": 8,
+    "tool_call_parser": "pythonic"
+  },
+  "cpu": {
+    "repo": "unsloth/gemma-4-E2B-it-GGUF",
+    "quant": "Q8_0",
+    "context": 8192
+  }
 }

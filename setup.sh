@@ -2,33 +2,37 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
+
+# shellcheck disable=SC1091
+source "${ROOT}/scripts/setup-common.sh"
+
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
-# shellcheck disable=SC1091
-source "${ROOT}/setup-common.sh"
-
 case "$OS" in
     Darwin)
-        echo "Detected macOS (${ARCH}) - preparing shared MLX environment..."
-        setup_shared_mlx_env
-        echo ""
-        echo "Setup complete! Shared environment is ready for MLX-backed models."
-        echo "For bench engines (vLLM, SGLang, MLX bench venv): run bench/setup.sh"
+        echo "Detected macOS (${ARCH}) — setting up MLX environment..."
+        "${ROOT}/scripts/setup-mlx.sh"
         ;;
     Linux)
         echo "Detected Linux (${ARCH})"
         echo ""
         echo "--- Checking llama-server ---"
-        check_llama_server
+        require_command llama-server
+        echo "Found llama-server at $(command -v llama-server)"
         echo ""
-        echo "--- Setting up vLLM environment ---"
-        "${ROOT}/bench/setup-vllm.sh"
-        echo ""
-        echo "Setup complete!"
+        if command -v nvidia-smi >/dev/null 2>&1; then
+            echo "--- Setting up vLLM environment ---"
+            "${ROOT}/scripts/setup-vllm.sh"
+        else
+            echo "No NVIDIA GPU detected, skipping vLLM setup."
+        fi
         ;;
     *)
         echo "Unsupported platform: ${OS}"
         exit 1
         ;;
 esac
+
+echo ""
+echo "Setup complete!"

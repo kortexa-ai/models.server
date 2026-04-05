@@ -1,10 +1,26 @@
 {
   "name": "Qwen 3.5 35B A3B",
   "id": "qwen-3.5-35b-a3b",
-  "host": "192.168.2.7",
   "port": 2027,
-  "hf_model": {
-    "darwin": "mlx-community/Qwen3.5-35B-A3B-4bit",
-    "linux": "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M"
-  }
+  "host": "192.168.2.7",
+  "context": 65536,
+  "parallel": 8,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/Qwen3.5-35B-A3B-GGUF",
+    "quant": "UD-Q4_K_XL"
+  },
+  "mlx": {
+    "repo": "mlx-community/Qwen3.5-35B-A3B-4bit"
+  },
+  "vllm": {
+    "model": "Qwen/Qwen3.5-35B-A3B",
+    "quantization": "fp8",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "max_num_seqs": 8,
+    "max_model_len": 163840,
+    "tool_call_parser": "qwen3_coder"
+  },
+  "cpu": null
 }

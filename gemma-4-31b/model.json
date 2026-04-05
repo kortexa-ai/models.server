@@ -1,7 +1,26 @@
 {
   "name": "Gemma 4 31B",
   "id": "gemma-4-31b",
-  "host": "192.168.2.3",
   "port": 2037,
-  "hf_model": "google/gemma-4-31B-it"
+  "host": "192.168.2.3",
+  "context": 65536,
+  "parallel": 4,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/gemma-4-31B-it-GGUF",
+    "quant": "UD-Q4_K_XL"
+  },
+  "mlx": {
+    "repo": "mlx-community/gemma-4-31b-it-4bit"
+  },
+  "vllm": {
+    "model": "google/gemma-4-31B-it",
+    "quantization": "fp8",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "kv_cache_bytes": 4294967296,
+    "max_num_seqs": 4,
+    "tool_call_parser": "pythonic"
+  },
+  "cpu": null
 }

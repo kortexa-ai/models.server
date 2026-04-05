@@ -1,7 +1,29 @@
 {
   "name": "Gemma 4 E4B",
   "id": "gemma-4-e4b",
-  "host": "192.168.2.3",
   "port": 2038,
-  "hf_model": "google/gemma-4-E4B-it"
+  "host": "192.168.2.3",
+  "context": 65536,
+  "parallel": 2,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/gemma-4-E4B-it-GGUF",
+    "quant": "UD-Q4_K_XL"
+  },
+  "mlx": {
+    "repo": "mlx-community/gemma-4-e4b-it-4bit"
+  },
+  "vllm": {
+    "model": "google/gemma-4-E4B-it",
+    "quantization": "fp8",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "max_num_seqs": 8,
+    "tool_call_parser": "pythonic"
+  },
+  "cpu": {
+    "repo": "unsloth/gemma-4-E4B-it-GGUF",
+    "quant": "Q4_K_M",
+    "context": 4096
+  }
 }

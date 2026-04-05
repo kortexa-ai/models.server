@@ -1,21 +1,29 @@
 # Models Server
 
-This repo is shared between three different machines. Always run `hostname` to check which machine you're on before picking the right way to run a model.
+Run `hostname` to check which machine you're on before doing anything.
 
 ## Machines
 
-| Hostname | Hardware | GPU Memory | Arch | Primary Backend |
-|----------|----------|------------|------|-----------------|
-| **smarty** | RTX PRO 6000 Blackwell Workstation | 96 GB VRAM | x86_64 Linux | `llama-server` (llama.cpp GGUF) |
-| **sparky** | DGX Spark GB10 | 128 GB unified | aarch64 Linux | Docker vLLM, TensorRT-LLM |
-| **snappy** | Mac Mini M4 Pro | 64 GB unified | arm64 macOS | `mlx-vlm`, `mlx-lm` |
+| Hostname | Hardware | GPU Memory | OS | Status |
+|----------|----------|------------|------|--------|
+| **smarty** | RTX PRO 6000 Blackwell | 96 GB VRAM | Ubuntu Linux | active |
+| **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | active |
+| **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | active |
+| **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline — see `spark/` |
 
-## Key Differences
+## How It Works
 
-- **smarty**: Uses `llama-server` with GGUF quants. No Docker vLLM (`vllm-node` image doesn't exist here).
-- **sparky**: Uses Docker-based vLLM (custom `vllm-node` image with Marlin NVFP4 backend) or TensorRT-LLM. Hostname contains "spark" — run.sh scripts detect this via `hostname`.
-- **Mac**: Uses MLX-based servers (`mlx-vlm` for vision models, `mlx-lm` for text-only). Detected via `uname -s == Darwin`.
+- `run.sh` is the single entry point — auto-detects platform and dispatches to the right engine
+- All model config lives in `<model-id>/model.json` — engines, quants, ports, KV budgets
+- Generic engine scripts live in `scripts/` — they read model.json, not hardcoded values
+- Usage: `./run.sh qwen-3.5-4b` or `cd qwen-3.5-4b && ../run.sh`
+- Override engine: `./run.sh qwen-3.5-4b --engine vllm`
 
-## Adding New Models
+## Rules
 
-Run.sh scripts use platform detection (`uname -s`, `hostname`) to pick the right backend. When adding a new model, check which machines it needs to run on and add the appropriate branches. Not every model needs to support every machine.
+- **Never kill running processes** — if a port is busy, ask. Don't touch what you didn't start.
+- **Never start servers** — the user starts them. Just curl the running endpoints.
+- Quantization: >= 4B → `UD-Q4_K_XL`, < 4B → `Q8_0`
+- KV cache: `q8_0` (llama.cpp) / `fp8` (vLLM) everywhere
+- Context: >= 4B → 64K, < 4B → 32K
+- Parallel: MoE → 8, big dense → 4, small dense → 2

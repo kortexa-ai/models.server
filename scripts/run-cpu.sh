@@ -1,0 +1,33 @@
+#!/bin/bash
+set -euo pipefail
+
+MODEL_DIR="$1"; shift
+SCRIPTS_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+eval "$(python3 "${SCRIPTS_DIR}/parse-config.py" "${MODEL_DIR}/model.json")"
+
+if [[ "${CPU_SUPPORTED:-}" == "false" ]]; then
+    echo "Not supported: ${MODEL_NAME} is too large for CPU-only inference." >&2
+    exit 1
+fi
+
+PORT="${PORT:-$MODEL_PORT}"
+HOST="${HOST:-0.0.0.0}"
+QUANT="${QUANT:-$CPU_QUANT}"
+CONTEXT="${CONTEXT:-$CPU_CONTEXT}"
+
+echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server on port ${PORT}..."
+exec llama-server \
+    -hf "${CPU_REPO}:${QUANT}" \
+    --alias "$MODEL_ID" \
+    --host "$HOST" \
+    --port "$PORT" \
+    --jinja \
+    -c "$CONTEXT" \
+    --threads 4 \
+    --parallel 1 \
+    --temp 1.0 \
+    --top-p 0.95 \
+    --cache-type-k q4_0 \
+    --cache-type-v q4_0 \
+    "$@"

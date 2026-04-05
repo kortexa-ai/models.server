@@ -11,11 +11,11 @@ Type=simple
 User=francip
 Group=francip
 
-WorkingDirectory=/home/francip/src/models.server/qwen-3.5-9b
+WorkingDirectory=/home/francip/src/models.server
 
 Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 
-ExecStart=/home/francip/src/models.server/qwen-3.5-9b/run.sh
+ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/qwen-3.5-9b
 
 Restart=always
 RestartSec=15
