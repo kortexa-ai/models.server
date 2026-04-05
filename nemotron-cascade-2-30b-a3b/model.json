@@ -11,7 +11,8 @@
     "quant": "UD-Q4_K_XL"
   },
   "mlx": {
-    "repo": "mlx-community/Nemotron-Cascade-2-30B-A3B-4bit"
+    "repo": "mlx-community/Nemotron-Cascade-2-30B-A3B-4bit",
+    "backend": "mlx_vlm"
   },
   "vllm": {
     "model": "nvidia/Nemotron-Cascade-2-30B-A3B",
@@ -23,8 +24,7 @@
     "trust_remote_code": true,
     "tool_call_parser": "qwen3_coder",
     "reasoning_parser": "nano_v3",
-    "reasoning_parser_plugin": "nano_v3_reasoning_parser.py",
-    "enable_prefix_caching": true
+    "reasoning_parser_plugin": "nano_v3_reasoning_parser.py"
   },
   "cpu": null
 }

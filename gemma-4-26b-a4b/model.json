@@ -11,7 +11,8 @@
     "quant": "UD-Q4_K_XL"
   },
   "mlx": {
-    "repo": "mlx-community/gemma-4-26b-a4b-it-4bit"
+    "repo": "mlx-community/gemma-4-26b-a4b-it-4bit",
+    "backend": "mlx_vlm"
   },
   "vllm": {
     "model": "google/gemma-4-26B-A4B-it",

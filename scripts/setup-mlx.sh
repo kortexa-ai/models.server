@@ -11,7 +11,7 @@ require_command uv
 VENV_PATH="${VENV_PATH:-${ROOT}/.venv-mlx}"
 
 echo "Creating MLX venv at ${VENV_PATH}..."
-uv venv "${VENV_PATH}"
+uv venv --allow-existing "${VENV_PATH}"
 
 echo "Installing mlx-vlm, mlx-lm, torch, torchvision..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \

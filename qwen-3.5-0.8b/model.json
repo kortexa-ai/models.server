@@ -11,9 +11,16 @@
     "quant": "Q8_0"
   },
   "mlx": {
-    "repo": "mlx-community/Qwen3.5-0.8B-MLX-4bit"
+    "repo": "mlx-community/Qwen3.5-0.8B-MLX-4bit",
+    "backend": "mlx_vlm"
   },
-  "vllm": null,
+  "vllm": {
+    "model": "Qwen/Qwen3.5-0.8B",
+    "quantization": "fp8",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "tool_call_parser": "qwen3_coder"
+  },
   "cpu": {
     "repo": "unsloth/Qwen3.5-0.8B-GGUF",
     "quant": "Q8_0",

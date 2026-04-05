@@ -11,7 +11,8 @@
     "quant": "Q8_0"
   },
   "mlx": {
-    "repo": "mlx-community/gemma-4-e2b-it-4bit"
+    "repo": "mlx-community/gemma-4-e2b-it-4bit",
+    "backend": "mlx_vlm"
   },
   "vllm": {
     "model": "google/gemma-4-E2B-it",

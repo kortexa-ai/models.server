@@ -79,8 +79,6 @@ fi
 if [[ -n "${VLLM_REASONING_PARSER_PLUGIN:-}" ]]; then
     CMD+=(--reasoning-parser-plugin "${MODEL_DIR}/${VLLM_REASONING_PARSER_PLUGIN}")
 fi
-if [[ "${VLLM_ENABLE_PREFIX_CACHING:-}" == "true" ]]; then
-    CMD+=(--enable-prefix-caching)
-fi
+CMD+=(--enable-prefix-caching)
 
 exec "${CMD[@]}" "$@"

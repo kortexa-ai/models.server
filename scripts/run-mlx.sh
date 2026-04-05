@@ -20,8 +20,10 @@ fi
 PORT="${PORT:-$MODEL_PORT}"
 HOST="${HOST:-0.0.0.0}"
 
-echo "Starting ${MODEL_NAME} via mlx-vlm on port ${PORT}..."
-exec python -m mlx_vlm.server \
+BACKEND="${MLX_BACKEND:-mlx_vlm}"
+
+echo "Starting ${MODEL_NAME} via ${BACKEND} on port ${PORT}..."
+exec python -m "${BACKEND}.server" \
     --host "$HOST" \
     --port "$PORT" \
     "$@"

@@ -37,6 +37,7 @@ def main():
     mlx = m.get("mlx")
     if mlx:
         print(f"MLX_REPO='{quote(mlx['repo'])}'")
+        print(f"MLX_BACKEND='{mlx.get('backend', 'mlx_vlm')}'")
     else:
         print("MLX_SUPPORTED=false")
 
