@@ -34,10 +34,10 @@ if [ "$OS" = "Linux" ]; then
         echo "Detected Linux (Ubuntu-like)"
 
         # Install dependencies if not present
-        if ! dpkg -s libcurl4-openssl-dev libssl-dev ccache >/dev/null 2>&1; then
+        if ! dpkg -s build-essential cmake libcurl4-openssl-dev libssl-dev ccache >/dev/null 2>&1; then
             echo "Installing dependencies..."
             sudo apt update
-            sudo apt install -y libcurl4-openssl-dev libssl-dev ccache
+            sudo apt install -y build-essential cmake libcurl4-openssl-dev libssl-dev ccache
         fi
 
         # Detect glibc / Ubuntu version to decide on Docker path early
@@ -55,6 +55,12 @@ if [ "$OS" = "Linux" ]; then
         # Check for NVIDIA CUDA
         if command_exists nvidia-smi; then
             echo "Detected NVIDIA GPU, enabling CUDA"
+
+            # Install CUDA toolkit if nvcc is not present
+            if ! command_exists nvcc; then
+                echo "Installing CUDA toolkit..."
+                sudo apt install -y nvidia-cuda-toolkit
+            fi
             
             # Auto-detect GPU architecture
             # Use 'native' to let cmake detect the exact arch (handles suffixes like 121a for Blackwell)
