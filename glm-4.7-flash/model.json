@@ -1,7 +1,0 @@
-{
-  "name": "GLM 4.7 Flash",
-  "id": "glm-4.7-flash",
-  "host": "192.168.2.7",
-  "port": 2021,
-  "hf_model": "unsloth/GLM-4.7-Flash-GGUF:UD-Q8_K_XL"
-}
