@@ -24,6 +24,7 @@ BACKEND="${MLX_BACKEND:-mlx_vlm}"
 
 echo "Starting ${MODEL_NAME} via ${BACKEND} on port ${PORT}..."
 exec python -m "${BACKEND}.server" \
+    --model "$MLX_REPO" \
     --host "$HOST" \
     --port "$PORT" \
     "$@"
