@@ -16,6 +16,11 @@ HOST="${HOST:-0.0.0.0}"
 QUANT="${QUANT:-$CPU_QUANT}"
 CONTEXT="${CONTEXT:-$CPU_CONTEXT}"
 
+VISION_ARGS=()
+if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
+    VISION_ARGS=(--no-mmproj)
+fi
+
 echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server on port ${PORT}..."
 exec llama-server \
     -hf "${CPU_REPO}:${QUANT}" \
@@ -30,4 +35,5 @@ exec llama-server \
     --top-p 0.95 \
     --cache-type-k q4_0 \
     --cache-type-v q4_0 \
+    "${VISION_ARGS[@]}" \
     "$@"

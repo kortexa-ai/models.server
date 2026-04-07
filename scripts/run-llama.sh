@@ -18,6 +18,11 @@ CACHE_TYPE="${CACHE_TYPE:-$MODEL_CACHE_TYPE}"
 CONTEXT="${CONTEXT:-$MODEL_CONTEXT}"
 PARALLEL="${PARALLEL:-$MODEL_PARALLEL}"
 
+VISION_ARGS=()
+if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
+    VISION_ARGS=(--no-mmproj)
+fi
+
 echo "Starting ${MODEL_NAME} (GGUF ${QUANT}) via llama-server on port ${PORT}..."
 exec llama-server \
     -hf "${LLAMA_REPO}:${QUANT}" \
@@ -35,4 +40,5 @@ exec llama-server \
     --flash-attn on \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
+    "${VISION_ARGS[@]}" \
     "$@"

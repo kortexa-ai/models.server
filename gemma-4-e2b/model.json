@@ -1,6 +1,7 @@
 {
   "name": "Gemma 4 E2B",
   "id": "gemma-4-e2b",
+  "multimodal": true,
   "port": 2039,
   "host": "192.168.2.3",
   "context": 32768,
