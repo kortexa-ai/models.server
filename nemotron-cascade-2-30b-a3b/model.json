@@ -2,7 +2,7 @@
   "name": "Nemotron Cascade 2 30B A3B",
   "id": "nemotron-cascade-2-30b-a3b",
   "port": 2035,
-  "host": "192.168.2.7",
+  "host": "192.168.2.3",
   "context": 65536,
   "parallel": 8,
   "cache_type": "q8_0",

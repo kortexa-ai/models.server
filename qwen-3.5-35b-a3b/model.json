@@ -3,7 +3,7 @@
   "id": "qwen-3.5-35b-a3b",
   "multimodal": true,
   "port": 2027,
-  "host": "192.168.2.7",
+  "host": "192.168.2.3",
   "context": 65536,
   "parallel": 8,
   "cache_type": "q8_0",
