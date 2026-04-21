@@ -25,6 +25,7 @@ def main():
     print(f"MODEL_PARALLEL='{m.get('parallel', 1)}'")
     print(f"MODEL_CACHE_TYPE='{m.get('cache_type', 'q8_0')}'")
     print(f"MODEL_MULTIMODAL={'true' if m.get('multimodal') else 'false'}")
+    print(f"MODEL_EMBEDDING={'true' if m.get('embedding') else 'false'}")
 
     # llama
     llama = m.get("llama")

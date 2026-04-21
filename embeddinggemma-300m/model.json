@@ -1,0 +1,15 @@
+{
+  "name": "EmbeddingGemma 300M",
+  "id": "embeddinggemma-300m",
+  "multimodal": false,
+  "embedding": true,
+  "port": 2041,
+  "host": "192.168.2.3",
+  "context": 2048,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/embeddinggemma-300m-GGUF",
+    "quant": "Q4_0"
+  }
+}

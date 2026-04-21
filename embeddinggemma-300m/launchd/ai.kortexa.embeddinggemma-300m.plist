@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
+	</dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>ai.kortexa.embeddinggemma-300m</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/francip/src/models.server/run.sh</string>
+		<string>/Users/francip/src/models.server/embeddinggemma-300m</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/francip/Library/Logs/embeddinggemma-300m.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/francip/Library/Logs/embeddinggemma-300m.log</string>
+	<key>ThrottleInterval</key>
+	<integer>15</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/francip/src/models.server</string>
+</dict>
+</plist>

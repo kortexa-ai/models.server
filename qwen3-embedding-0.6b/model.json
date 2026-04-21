@@ -1,0 +1,15 @@
+{
+  "name": "Qwen3 Embedding 0.6B",
+  "id": "qwen3-embedding-0.6b",
+  "multimodal": false,
+  "embedding": true,
+  "port": 2040,
+  "host": "192.168.2.3",
+  "context": 32768,
+  "parallel": 4,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+    "quant": "Q8_0"
+  }
+}
