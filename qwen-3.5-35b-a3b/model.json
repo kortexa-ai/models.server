@@ -4,7 +4,7 @@
   "multimodal": true,
   "port": 2027,
   "host": "192.168.2.3",
-  "context": 65536,
+  "context": 524288,
   "parallel": 8,
   "cache_type": "q8_0",
   "llama": {
