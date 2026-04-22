@@ -1,0 +1,26 @@
+{
+  "name": "Qwen 3.6 27B",
+  "id": "qwen-3.6-27b",
+  "multimodal": true,
+  "port": 2032,
+  "host": "192.168.2.3",
+  "context": 262144,
+  "parallel": 4,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/Qwen3.6-27B-GGUF",
+    "quant": "UD-Q4_K_XL"
+  },
+  "mlx": {
+    "repo": "unsloth/Qwen3.6-27B-UD-MLX-4bit",
+    "backend": "mlx_vlm"
+  },
+  "vllm": {
+    "model": "Qwen/Qwen3.6-27B",
+    "quantization": "fp8",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "tool_call_parser": "qwen3_coder"
+  },
+  "cpu": null
+}
