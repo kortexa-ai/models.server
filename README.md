@@ -30,6 +30,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2025 | Qwen 3.5 9B | big dense | UD-Q4_K_XL | q8_0 | 64K | 4 |
 | 2026 | Qwen 3.5 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 4 |
 | 2027 | Qwen 3.5 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
+| 2028 | Qwen 3.6 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2029 | Qwen 3.5 4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2031 | Qwen 3.5 0.8B | small dense | Q8_0 | q8_0 | 32K | 2 |
