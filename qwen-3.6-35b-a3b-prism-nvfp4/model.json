@@ -1,0 +1,25 @@
+{
+  "name": "Qwen 3.6 35B A3B PRISM NVFP4",
+  "id": "qwen-3.6-35b-a3b-prism-nvfp4",
+  "multimodal": true,
+  "port": 2042,
+  "host": "192.168.2.3",
+  "context": 32768,
+  "parallel": 8,
+  "cache_type": "fp8",
+  "llama": null,
+  "mlx": null,
+  "vllm": {
+    "model": "Ex0bit/Qwen3.6-35B-A3B-PRISM-NVFP4",
+    "quantization": "compressed-tensors",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "TRITON_ATTN",
+    "max_num_seqs": 8,
+    "kv_cache_bytes": 8589934592,
+    "gpu_memory_utilization": 0.55,
+    "trust_remote_code": true,
+    "tool_call_parser": "qwen3_coder",
+    "marlin": true
+  },
+  "cpu": null
+}

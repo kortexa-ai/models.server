@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.kortexa.qwen-3.6-35b-a3b-prism-nvfp4</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/francip/src/models.server</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/francip/src/models.server/run.sh</string>
+        <string>/Users/francip/src/models.server/qwen-3.6-35b-a3b-prism-nvfp4</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>ThrottleInterval</key>
+    <integer>15</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/francip/Library/Logs/qwen-3.6-35b-a3b-prism-nvfp4.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/francip/Library/Logs/qwen-3.6-35b-a3b-prism-nvfp4.log</string>
+</dict>
+</plist>

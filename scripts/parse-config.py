@@ -52,6 +52,8 @@ def main():
         print(f"VLLM_ATTENTION_BACKEND='{vllm.get('attention_backend', 'TRITON_ATTN')}'")
         if vllm.get("kv_cache_bytes"):
             print(f"VLLM_KV_CACHE_BYTES='{vllm['kv_cache_bytes']}'")
+        if vllm.get("gpu_memory_utilization"):
+            print(f"VLLM_GPU_MEMORY_UTILIZATION='{vllm['gpu_memory_utilization']}'")
         if vllm.get("max_num_seqs"):
             print(f"VLLM_MAX_NUM_SEQS='{vllm['max_num_seqs']}'")
         if vllm.get("trust_remote_code"):

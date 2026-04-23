@@ -64,6 +64,9 @@ CMD=(
 if [[ -n "${VLLM_KV_CACHE_BYTES:-}" ]]; then
     CMD+=(--kv-cache-memory-bytes "${VLLM_KV_CACHE_BYTES}")
 fi
+if [[ -n "${VLLM_GPU_MEMORY_UTILIZATION:-}" ]]; then
+    CMD+=(--gpu-memory-utilization "${VLLM_GPU_MEMORY_UTILIZATION}")
+fi
 if [[ "${VLLM_QUANTIZATION}" != "auto" ]]; then
     CMD+=(--quantization "${VLLM_QUANTIZATION}")
 fi
