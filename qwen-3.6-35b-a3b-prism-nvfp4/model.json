@@ -4,7 +4,7 @@
   "multimodal": true,
   "port": 2042,
   "host": "192.168.2.3",
-  "context": 32768,
+  "context": 65536,
   "parallel": 8,
   "cache_type": "fp8",
   "llama": null,
@@ -16,7 +16,7 @@
     "attention_backend": "TRITON_ATTN",
     "max_num_seqs": 8,
     "kv_cache_bytes": 8589934592,
-    "gpu_memory_utilization": 0.55,
+    "gpu_memory_utilization": 0.35,
     "trust_remote_code": true,
     "tool_call_parser": "qwen3_coder",
     "marlin": true
