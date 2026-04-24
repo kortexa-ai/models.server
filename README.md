@@ -27,19 +27,19 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
-| 2025 | Qwen 3.5 9B | big dense | UD-Q4_K_XL | q8_0 | 64K | 4 |
-| 2026 | Qwen 3.5 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 4 |
+| 2025 | Qwen 3.5 9B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
+| 2026 | Qwen 3.5 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2027 | Qwen 3.5 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2028 | Qwen 3.6 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2029 | Qwen 3.5 4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2031 | Qwen 3.5 0.8B | small dense | Q8_0 | q8_0 | 32K | 2 |
-| 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 4 |
+| 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2033 | Nemotron 3 Super 120B A12B | MoE (NVFP4) | NVFP4 | fp8 | 64K | 8 |
 | 2034 | Nemotron 3 Nano 30B A3B | MoE (NVFP4) | NVFP4 | fp8 | 64K | 8 |
 | 2035 | Nemotron Cascade 2 30B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2036 | Gemma 4 26B-A4B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
-| 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 4 |
+| 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2039 | Gemma 4 E2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 4007 | Penumbra | custom | — | — | — | — |
@@ -95,7 +95,7 @@ GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux 
 
 | Model size | Weight quant | KV cache | Context | Parallel slots |
 |------------|-------------|----------|---------|----------------|
-| >= 4B | UD-Q4_K_XL | q8_0 / fp8 | 64K | MoE: 8, big dense: 4, small: 2 |
+| >= 4B | UD-Q4_K_XL | q8_0 / fp8 | 64K | MoE: 8, big dense: 2, small: 2 |
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
 NVFP4 models (Nemotron Nano/Super) use vLLM with Marlin backend instead of llama.cpp.

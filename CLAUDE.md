@@ -26,4 +26,4 @@ Run `hostname` to check which machine you're on before doing anything.
 - Quantization: >= 4B → `UD-Q4_K_XL`, < 4B → `Q8_0`
 - KV cache: `q8_0` (llama.cpp) / `fp8` (vLLM) everywhere
 - Context: >= 4B → 64K, < 4B → 32K
-- Parallel: MoE → 8, big dense → 4, small dense → 2
+- Parallel: MoE → 8, big dense → 2, small dense → 2

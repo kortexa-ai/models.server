@@ -4,8 +4,8 @@
   "multimodal": true,
   "port": 2026,
   "host": "192.168.2.3",
-  "context": 262144,
-  "parallel": 4,
+  "context": 131072,
+  "parallel": 2,
   "cache_type": "q8_0",
   "llama": {
     "repo": "unsloth/Qwen3.5-27B-GGUF",
