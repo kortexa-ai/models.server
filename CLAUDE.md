@@ -9,7 +9,7 @@ Run `hostname` to check which machine you're on before doing anything.
 | **smarty** | RTX PRO 6000 Blackwell | 96 GB VRAM | Ubuntu Linux | active |
 | **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | active |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | active |
-| **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline — see `spark/` |
+| **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
 
 ## How It Works
 
@@ -25,5 +25,5 @@ Run `hostname` to check which machine you're on before doing anything.
 - **Never start servers** — the user starts them. Just curl the running endpoints.
 - Quantization: >= 4B → `UD-Q4_K_XL`, < 4B → `Q8_0`
 - KV cache: `q8_0` (llama.cpp) / `fp8` (vLLM) everywhere
-- Context: big dense → 256K, other >= 4B → 64K, < 4B → 32K
-- Parallel: MoE → 8, big dense → 1, small dense → 2
+- Context: max supported by the model
+- Parallel: MoE → 8, dense → 1

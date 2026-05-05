@@ -1,7 +1,0 @@
-kv_cache_config:
-  enable_block_reuse: false
-cuda_graph_config:
-  max_batch_size: 32
-  enable_padding: true
-moe_config:
-  backend: CUTLASS

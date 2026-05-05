@@ -5,7 +5,7 @@
   "port": 2038,
   "host": "192.168.2.3",
   "context": 131072,
-  "parallel": 2,
+  "parallel": 1,
   "cache_type": "q8_0",
   "llama": {
     "repo": "unsloth/gemma-4-E4B-it-GGUF",

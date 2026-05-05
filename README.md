@@ -21,7 +21,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | **smarty** | RTX PRO 6000 Blackwell | 96 GB VRAM | Ubuntu Linux | `llama-server` (GGUF), bare-metal vLLM |
 | **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | `mlx-vlm` (MLX) |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | — |
-| **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline — artifacts in `spark/` |
+| **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
 
 ## Model Inventory
 
@@ -67,8 +67,7 @@ models.server/
 ├── .venv-vllm/             # Shared vLLM venv (Linux)
 ├── llama.cpp/              # llama.cpp build scripts
 ├── whisper.cpp/            # whisper.cpp build scripts
-├── bench/                  # Benchmark results
-└── spark/                  # DGX Spark artifacts (offline)
+└── bench/                  # Benchmark results
 ```
 
 ## Engine Auto-Detection

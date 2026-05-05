@@ -1,9 +1,0 @@
-kv_cache_config:
-  enable_block_reuse: false
-  # FP8 KV cache saves ~50% vs BF16 — critical on 128GB unified memory
-  kv_cache_dtype: fp8
-cuda_graph_config:
-  max_batch_size: 32
-  enable_padding: true
-moe_config:
-  backend: CUTLASS
