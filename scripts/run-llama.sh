@@ -58,7 +58,9 @@ exec llama-server \
     -ngl 99 \
     --threads -1 \
     --parallel "$PARALLEL" \
-    --temp 1.0 \
+    --no-context-shift \
+    --temp 0.6 \
+    --top-k 20 \
     --top-p 0.95 \
     --no-mmap \
     --flash-attn on \
