@@ -4,8 +4,8 @@
   "multimodal": true,
   "port": 2037,
   "host": "192.168.2.3",
-  "context": 131072,
-  "parallel": 2,
+  "context": 262144,
+  "parallel": 1,
   "cache_type": "q8_0",
   "llama": {
     "repo": "unsloth/gemma-4-31B-it-GGUF",
