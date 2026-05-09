@@ -1,11 +1,54 @@
 # Benchmark Results Log
 
-All benchmarks on NVIDIA DGX Spark (GB10 Blackwell, 128GB unified memory).
+Each entry tags its machine. Early entries are **sparky** (DGX Spark GB10 Blackwell, 128 GB unified). Later entries are **smarty** (RTX PRO 6000 Blackwell, 96 GB VRAM).
 TPS = generation tokens per second (warm, single-request, no-reasoning unless noted).
+
+> **Note to future Claude:** not every bench run lands here — some live only in chat transcripts. If the user asks about speeds and the answer isn't in this file, extensively grep `~/.claude/projects/` on **both smarty and snappy** (over ssh) for unlogged TPS numbers before answering. Then offer to roll any findings into this file.
 
 ---
 
-## March 21, 2026
+## April 22–24, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Qwen 3.6 bring-up sweep + Gemma 4 retest (llama.cpp UD-Q4_K_XL, q8_0 KV, n=4)
+
+| Model | Engine | Quant | Gen TPS |
+|-------|--------|-------|---------|
+| Qwen 3.6 35B-A3B PRISM-NVFP4 | vLLM Marlin | NVFP4 | **195.2** |
+| Qwen 3.6 35B-A3B | llama.cpp | UD-Q4_K_XL | **187.1** |
+| Qwen 3.5 35B-A3B | llama.cpp | UD-Q4_K_XL | 181.2 |
+| Qwen 3.6 35B-A3B PRISM-NVFP4 | vLLM FlashInfer CUTLASS | NVFP4 | 174.6 |
+| Qwen 3.6 35B-A3B PRISM-NVFP4 | vLLM 0.19.2 + flashinfer 0.6.8 + torch 2.11 | NVFP4 | 174.4 |
+| Gemma 4 26B-A4B | llama.cpp | UD-Q4_K_XL | 164.5 |
+| Qwen 3.6 27B (dense) | llama.cpp | UD-Q4_K_XL | 68.0 |
+| Gemma 4 31B (dense) | llama.cpp | UD-Q4_K_XL | 59.0 |
+
+**Notes:**
+- MoE wins on raw throughput at total-param scale — only ~3-4B active per token vs 27-31B for dense.
+- Gemma 4 31B at UD-Q4_K_XL was retested later and hit ~64 tok/s (vs 59 in the sweep, vs 42 at Q8_0 on Apr 5).
+- PRISM-NVFP4 vLLM Marlin was the peak; FlashInfer CUTLASS and the bumped vLLM 0.19.2 / flashinfer 0.6.8 / torch 2.11 stack landed lower (~175).
+
+---
+
+## April 5, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Gemma 4 family bring-up (llama.cpp Q8_0)
+
+| Model | Type | Active params | Gen TPS | Prompt TPS |
+|-------|------|---------------|---------|------------|
+| Gemma 4 E2B | dense (PLE) | ~2B | **250** | 2,793 |
+| Gemma 4 26B-A4B | MoE | 4B | **171** | 1,387 |
+| Gemma 4 31B | dense | 31B | **42** | 646 |
+
+**Notes:**
+- E2B on Q8_0 is an absolute screamer — model fits in L2-ish, no routing overhead.
+- 26B-A4B / 31B ratio (171 vs 42 ≈ 4x) lines up with active-params (4B vs 31B).
+- vLLM with batching hit ~324 tok/s aggregate on 26B-A4B (chat-side note, not formal sweep).
+- Gemma 4 E4B never got a clean bench in the transcripts.
+- Gemma 4 uses 512-token sliding window attention — llama.cpp can't reuse KV across requests, so prompt processing eats a re-process penalty. Generation TPS is unaffected.
+
+---
+
+## March 21, 2026 — sparky (DGX Spark)
 
 ### vLLM Docker (`vllm-node:latest`) — Qwen 3.5-35B-A3B (Intel AutoRound int4)
 
