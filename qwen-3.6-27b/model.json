@@ -13,7 +13,9 @@
   },
   "mlx": {
     "repo": "unsloth/Qwen3.6-27B-UD-MLX-4bit",
-    "backend": "mlx_vlm"
+    "backend": "mlx_vlm",
+    "draft_model": "z-lab/Qwen3.6-27B-DFlash",
+    "draft_kind": "dflash"
   },
   "vllm": {
     "model": "Qwen/Qwen3.6-27B",

@@ -87,6 +87,10 @@ GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). O
 ### mlx-vlm
 Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm). macOS only (Apple Silicon / MLX). Uses `mlx-community/` quantized models. Serves at `/chat/completions` (no `/v1` prefix).
 
+`mlx-vlm>=0.6.0` supports speculative decoding on the server. Add optional `mlx.draft_model`, `mlx.draft_kind`, and `mlx.draft_block_size` fields in `model.json` to pass `--draft-model`, `--draft-kind`, and `--draft-block-size`; set `MLX_DISABLE_DRAFT=1` when launching to run without the configured drafter.
+
+Gemma 4 MTP drafters are recorded in `model.json` but have `mlx.draft_enabled=false` by default because vanilla `mlx-vlm 0.6.0` routes MTP through a server batch path that crashes during cache rollback. Set `MLX_FORCE_DRAFT=1` only for upstream-fix testing.
+
 ### vLLM
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.
 

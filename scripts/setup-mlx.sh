@@ -15,7 +15,7 @@ uv venv --allow-existing "${VENV_PATH}"
 
 echo "Installing mlx-vlm, mlx-lm, torch, torchvision..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
-    'mlx-vlm @ git+https://github.com/Blaizzy/mlx-vlm.git' \
+    'mlx-vlm>=0.6.0' \
     mlx-lm \
     torch \
     torchvision

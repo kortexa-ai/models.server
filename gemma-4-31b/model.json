@@ -13,7 +13,11 @@
   },
   "mlx": {
     "repo": "mlx-community/gemma-4-31b-it-4bit",
-    "backend": "mlx_vlm"
+    "backend": "mlx_vlm",
+    "draft_enabled": false,
+    "draft_model": "mlx-community/gemma-4-31B-it-assistant-bf16",
+    "draft_kind": "mtp",
+    "draft_block_size": 4
   },
   "vllm": {
     "model": "google/gemma-4-31B-it",

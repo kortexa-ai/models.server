@@ -40,6 +40,14 @@ def main():
     if mlx:
         print(f"MLX_REPO='{quote(mlx['repo'])}'")
         print(f"MLX_BACKEND='{mlx.get('backend', 'mlx_vlm')}'")
+        if "draft_enabled" in mlx:
+            print(f"MLX_DRAFT_ENABLED={'true' if mlx['draft_enabled'] else 'false'}")
+        if mlx.get("draft_model"):
+            print(f"MLX_DRAFT_MODEL='{quote(mlx['draft_model'])}'")
+        if mlx.get("draft_kind"):
+            print(f"MLX_DRAFT_KIND='{quote(mlx['draft_kind'])}'")
+        if mlx.get("draft_block_size"):
+            print(f"MLX_DRAFT_BLOCK_SIZE='{mlx['draft_block_size']}'")
     else:
         print("MLX_SUPPORTED=false")
 
