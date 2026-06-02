@@ -84,6 +84,8 @@ Override with `--engine`: `./run.sh qwen-3.5-4b --engine vllm`
 ### llama-server (llama.cpp)
 GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible API at `/v1/chat/completions`. CUDA + flash attention on smarty, Metal on snappy.
 
+llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max` (llama.cpp default 3, PR notes 2-3 is the sweet spot for ~1.7-2x speedup at 72-83% accept rate). Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Used by both Qwen 3.6 models.
+
 ### mlx-vlm
 Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm). macOS only (Apple Silicon / MLX). Uses `mlx-community/` quantized models. Serves at `/chat/completions` (no `/v1` prefix).
 

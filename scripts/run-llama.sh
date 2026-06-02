@@ -23,6 +23,16 @@ if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
     VISION_ARGS=(--no-mmproj)
 fi
 
+# MTP speculative decoding: enabled when the GGUF has MTP heads (e.g. unsloth's *-MTP-GGUF).
+# https://github.com/ggml-org/llama.cpp/blob/master/docs/speculative.md
+MTP_ARGS=()
+if [[ "${LLAMA_MTP:-}" == "true" ]]; then
+    MTP_ARGS=(--spec-type draft-mtp)
+    if [[ -n "${LLAMA_MTP_N_MAX:-}" ]]; then
+        MTP_ARGS+=(--spec-draft-n-max "$LLAMA_MTP_N_MAX")
+    fi
+fi
+
 # Embedding mode: enable --embedding and drop chat/sampling-only flags
 # (--jinja, --temp, --top-p are inert here; skipped for clarity).
 EMBEDDING_ARGS=()
@@ -66,5 +76,6 @@ exec llama-server \
     --flash-attn on \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
+    "${MTP_ARGS[@]}" \
     "${VISION_ARGS[@]}" \
     "$@"

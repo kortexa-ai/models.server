@@ -8,8 +8,9 @@
   "parallel": 1,
   "cache_type": "q8_0",
   "llama": {
-    "repo": "unsloth/Qwen3.6-27B-GGUF",
-    "quant": "UD-Q4_K_XL"
+    "repo": "unsloth/Qwen3.6-27B-MTP-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "mtp": true
   },
   "mlx": {
     "repo": "unsloth/Qwen3.6-27B-UD-MLX-4bit",

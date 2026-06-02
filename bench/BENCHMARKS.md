@@ -32,6 +32,48 @@ single-request, 400-token generations, `temperature=0`.
 
 ---
 
+## June 1, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Qwen 3.6 35B-A3B MTP speculative decoding (llama.cpp UD-Q4_K_XL, n_max=3, parallel=8)
+
+First bench of the Unsloth MTP build (`Qwen3.6-35B-A3B-MTP-GGUF`) against the non-MTP baseline of **187.1 TPS** from April.
+
+| Workload | Gen TPS | Speedup vs 187.1 | Draft accept rate |
+|----------|---------|------------------|-------------------|
+| Prose run 1 (no_think, 600 tok) | 265.3 | 1.42x | 52.1% (365/700) |
+| Prose run 2 | 264.7 | 1.41x | 51.5% (363/705) |
+| Prose run 3 | **275.3** | 1.47x | 55.5% (374/674) |
+| Code run 1 (no_think, 600 tok) | 287.8 | 1.54x | 59.7% (384/643) |
+| Code run 2 | 268.3 | 1.43x | 53.3% (368/691) |
+| Code run 3 | **303.1** | **1.62x** | **65.7%** (396/603) |
+
+**Notes:**
+- Net win: **~1.4-1.6x** over the non-MTP baseline. Below the upstream PR's quoted 1.7-2x, but the PR's 72-83% accept rate was on different workloads; we hit 52-66%.
+- Code beats prose on both TPS (~285 vs ~268 avg) and accept rate (~60% vs ~52%) — speculation likes predictable token sequences.
+- First attempt at this bench (earlier in the same session) hit only ~240 TPS / 43% accept and **segfaulted on the 3rd request**. Two things changed before the successful retry: fresh llama.cpp rebuild AND GPU ECC enabled (`sudo nvidia-smi -e 1`). The crashed run also saw two single-byte file corruptions in the llama.cpp working tree (one bit-flip in `ggml-opencl.cpp`, one in `ggml-metal.metal`), which is the signature of VRAM/DMA corruption with ECC off. Can't prove ECC was the smoking gun without an A/B, but the circumstantial case is strong.
+- Blackwell PRO 6000 reports ECC-on with no VRAM tax visible (`memory.total` unchanged at 97887 MiB) — appears to use inline ECC.
+- MTP config: `mtp_n_max: 3, mtp_n_min: 0`, prompt cache 8192 MiB, context checkpoints max=32, parallel=8 (8 slots × 65536 ctx). All bench requests served by single slot via LCP cache hits.
+
+### Qwen 3.6 27B dense MTP (llama.cpp UD-Q4_K_XL)
+
+Same session. Non-MTP baseline from April: **68.0 TPS**.
+
+| Workload | Gen TPS | Speedup vs 68.0 | Draft accept rate |
+|----------|---------|-----------------|-------------------|
+| Prose run 1 | 126.1 | 1.85x | 60.3% (385/639) |
+| Prose run 2 | 109.3 | 1.61x | 47.0% (350/744) |
+| Prose run 3 | 116.4 | 1.71x | 52.6% (366/696) |
+| Code run 1 | 126.9 | 1.87x | 60.6% (386/637) |
+| Code run 2 | **130.6** | **1.92x** | 63.4% (392/618) |
+| Code run 3 | 130.2 | 1.91x | 63.1% (392/621) |
+
+**Notes:**
+- **Dense gets bigger MTP gains than MoE** (1.9x vs 1.6x). Per-token forward-pass cost is higher on dense (full 27B vs 3-4B active on MoE), so each accepted draft saves more wall time. MoE already amortizes the work MTP would otherwise skip.
+- Accept rates on code (~62%) close to MoE's (~60%) — speculation quality is more about workload than model architecture.
+- No crashes, 6/6 runs clean.
+
+---
+
 ## April 22–24, 2026 — smarty (RTX PRO 6000 Blackwell)
 
 ### Qwen 3.6 bring-up sweep + Gemma 4 retest (llama.cpp UD-Q4_K_XL, q8_0 KV, n=4)

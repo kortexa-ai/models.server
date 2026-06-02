@@ -32,6 +32,10 @@ def main():
     if llama:
         print(f"LLAMA_REPO='{quote(llama['repo'])}'")
         print(f"LLAMA_QUANT='{quote(llama['quant'])}'")
+        if llama.get("mtp"):
+            print("LLAMA_MTP=true")
+        if llama.get("mtp_n_max"):
+            print(f"LLAMA_MTP_N_MAX='{llama['mtp_n_max']}'")
     else:
         print("LLAMA_SUPPORTED=false")
 
