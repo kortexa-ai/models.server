@@ -89,7 +89,11 @@ Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm). macOS 
 
 `mlx-vlm>=0.6.0` supports speculative decoding on the server. Add optional `mlx.draft_model`, `mlx.draft_kind`, and `mlx.draft_block_size` fields in `model.json` to pass `--draft-model`, `--draft-kind`, and `--draft-block-size`; set `MLX_DISABLE_DRAFT=1` when launching to run without the configured drafter.
 
-Gemma 4 MTP drafters are recorded in `model.json` but have `mlx.draft_enabled=false` by default because vanilla `mlx-vlm 0.6.0` routes MTP through a server batch path that crashes during cache rollback. Set `MLX_FORCE_DRAFT=1` only for upstream-fix testing.
+**Gemma 4 MTP — patched ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260)).** The drafter works but only helps large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s; see `bench/BENCHMARKS.md`); 26B-A4B/31B keep `draft_enabled=true` pending an MLX bench.
+- **Symptom:** first single-request `/chat/completions` with an MTP drafter crashes — `AttributeError: 'list' object has no attribute 'max'`.
+- **Cause:** the batched MTP path in `mlx_vlm/speculative/mtp.py` passes `accepted` as a Python list, but `models/gemma4/language.py::rollback_speculative_cache` only guarded the `int` case before calling `accepted.max()`. (The `qwen3_5` hook already handled lists; Gemma 4 was missing that branch.)
+- **Workaround:** `scripts/setup-mlx.sh` patches the installed file to convert list/tuple → `mx.array`. Idempotent, applied automatically on setup. Fix submitted upstream as PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261).
+- **Breaks again if:** you `uv pip install --upgrade mlx-vlm` past 0.6.0 and upstream refactors that function before the PR lands — the setup patch then fails loudly ("anchor not found"), which is your signal to drop the patch step (the upstream fix has likely superseded it).
 
 ### vLLM
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.

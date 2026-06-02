@@ -14,7 +14,7 @@
   "mlx": {
     "repo": "mlx-community/gemma-4-26b-a4b-it-4bit",
     "backend": "mlx_vlm",
-    "draft_enabled": false,
+    "draft_enabled": true,
     "draft_model": "mlx-community/gemma-4-26B-A4B-it-assistant-bf16",
     "draft_kind": "mtp",
     "draft_block_size": 4

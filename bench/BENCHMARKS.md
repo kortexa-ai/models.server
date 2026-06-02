@@ -1,9 +1,34 @@
 # Benchmark Results Log
 
-Each entry tags its machine. Early entries are **sparky** (DGX Spark GB10 Blackwell, 128 GB unified). Later entries are **smarty** (RTX PRO 6000 Blackwell, 96 GB VRAM).
+Each entry tags its machine. Early entries are **sparky** (DGX Spark GB10 Blackwell, 128 GB unified). Later entries are **smarty** (RTX PRO 6000 Blackwell, 96 GB VRAM). MLX entries are **snappy** (Mac Mini M4 Pro, 64 GB unified).
 TPS = generation tokens per second (warm, single-request, no-reasoning unless noted).
 
 > **Note to future Claude:** not every bench run lands here — some live only in chat transcripts. If the user asks about speeds and the answer isn't in this file, extensively grep `~/.claude/projects/` on **both smarty and snappy** (over ssh) for unlogged TPS numbers before answering. Then offer to roll any findings into this file.
+
+---
+
+## June 1, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
+
+### Gemma 4 MLX speculative-decoding bring-up (mlx-vlm 0.6.0, 4-bit, MTP drafter)
+
+First **snappy / MLX** entry in this log. Required patching mlx-vlm to fix a
+Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260),
+fix PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)) — see `../README.md`.
+Numbers below are server-reported `timings.predicted_per_second`, warm,
+single-request, 400-token generations, `temperature=0`.
+
+| Model | Engine | Quant | Drafter | Gen TPS |
+|-------|--------|-------|---------|---------|
+| Gemma 4 E2B | mlx-vlm (MTP, block=4) | 4-bit | gemma-4-E2B-it-assistant-bf16 | 112.5 (108.7–120.3, n=5) |
+| Gemma 4 E2B | mlx-vlm (no drafter) | 4-bit | — | **123.8** (122.8–124.1, n=5) |
+| Gemma 4 E4B | mlx-vlm (MTP, block=4) | 4-bit | gemma-4-E4B-it-assistant-bf16 | 66.8 (63.1–72.5, n=5) |
+| Gemma 4 E4B | mlx-vlm (no drafter) | 4-bit | — | **70.6** (70.5–70.6, n=5) |
+
+**Notes:**
+- MTP confirmed active on the drafter runs (server log: `Drafter ready — speculative decoding enabled.`). Peak memory ~3.8 GB (E2B) / ~5.5 GB (E4B).
+- E2B ran on port 2039, E4B on 2038.
+- **MTP is a net loss on both small models:** E2B 112.5 vs 123.8 no-drafter (~9% slower), E4B 66.8 vs 70.6 (~5% slower). No-drafter baselines are rock-flat (E2B 122.8–124.1, E4B 70.5–70.6) while MTP runs swing — the signature of low draft acceptance, where verification overhead exceeds the savings. Speculative decoding pays off on large *slow* targets, not 4B-class models where the target is already cheap.
+- Decision: `mlx.draft_enabled=false` for E2B/E4B; 26B-A4B/31B left `true` pending an MLX bench (the fix from mlx-vlm#1260 is still required for those to even run MTP).
 
 ---
 
