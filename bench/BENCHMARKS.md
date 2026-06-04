@@ -26,6 +26,25 @@ New model. Dense 11.95B, multimodal, 256K ctx. Server-reported `predicted_per_se
 
 ---
 
+## June 3, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Gemma 4 12B (llama.cpp UD-Q4_K_XL, q8_0 KV)
+
+Same new model, llama.cpp side. Server-reported `predicted_per_second`, warm, 400-token, `temperature=0`, single slot.
+
+| Model | Engine | Quant | Gen TPS |
+|-------|--------|-------|---------|
+| Gemma 4 12B | llama.cpp | UD-Q4_K_XL | **123.8** (123.6–123.9, n=5) |
+
+**Notes:**
+- Rock-flat 123.8 — slots between Gemma 4 31B dense (59) and 26B-A4B MoE (164.5); ~2x the 31B, tracking the ~2.6x param ratio.
+- ~4.3x faster than snappy's MTP-on 12B (28.9) — RTX 6000 vs M4 Pro.
+- No MTP on this side: gemma-4-12b has no `*-MTP-GGUF` (baked draft heads), so llama.cpp runs vanilla. (`common_speculative_init: no implementations specified` in the log is expected.)
+- Required a llama.cpp update for Gemma 4 vision: the `gemma4uv` mmproj projector is only in recent builds (smarty's 9467 predated it). Post-update, mmproj loads clean and multimodal works.
+- llama.cpp auto-caps the slot to the model's trained context (131072), confirming the GGUF's `n_ctx_train`; `model.json` context (262144, from the HF card) should be lowered to match.
+
+---
+
 ## June 1, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
 
 ### Gemma 4 MLX speculative-decoding bring-up (mlx-vlm 0.6.0, 4-bit, MTP drafter)
