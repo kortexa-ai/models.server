@@ -42,6 +42,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2039 | Gemma 4 E2B | small dense | Q8_0 | q8_0 | 32K | 2 |
+| 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 4007 | Penumbra | custom | — | — | — | — |
 
 ## Directory Structure

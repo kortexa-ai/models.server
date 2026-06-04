@@ -7,6 +7,25 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## June 3, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
+
+### Gemma 4 12B bring-up (mlx-vlm 0.6.1, 4-bit, MTP drafter)
+
+New model. Dense 11.95B, multimodal, 256K ctx. Server-reported `predicted_per_second`, warm, 400-token, `temperature=0`. Drafter `gemma-4-12B-it-assistant-bf16` (~0.85 GB MTP head) confirmed loaded.
+
+| Model | Engine | Quant | Gen TPS |
+|-------|--------|-------|---------|
+| Gemma 4 12B | mlx-vlm (MTP, block=4) | 4-bit | **28.9** (26.4–33.1, n=5) |
+| Gemma 4 12B | mlx-vlm (no drafter) | 4-bit | 21.1 (20.9–21.2, n=5) |
+
+**Notes:**
+- Peak memory ~12.2 GB (11 GB model + 0.85 GB drafter + KV).
+- **MTP is a net WIN here: 28.9 vs 21.1 = 1.37x.** First MLX model in this log where the drafter pays off. Baseline is rock-flat (20.9–21.2); MTP jitters 26–33 (acceptance-rate variance) but stays well above baseline every run.
+- Confirms the large/slow-target rule across engines: spec decoding lost on E2B/E4B (already 70–124 tok/s), wins here where the 12B target is slow enough (~21 tok/s) for the cheap 0.85 GB drafter to come out ahead.
+- Decision: keep `mlx.draft_enabled=true` for the 12B.
+
+---
+
 ## June 1, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
 
 ### Gemma 4 MLX speculative-decoding bring-up (mlx-vlm 0.6.0, 4-bit, MTP drafter)
