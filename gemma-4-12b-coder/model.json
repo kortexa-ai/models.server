@@ -1,0 +1,17 @@
+{
+  "name": "Gemma 4 12B Coder",
+  "id": "gemma-4-12b-coder",
+  "multimodal": false,
+  "port": 2044,
+  "host": "192.168.2.3",
+  "context": 131072,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+    "quant": "Q4_K_M"
+  },
+  "mlx": null,
+  "vllm": null,
+  "cpu": null
+}
