@@ -37,7 +37,9 @@ if ! docker run --rm \
             GPU_ARCH=native
         fi
         echo \"Building for CUDA architecture: \$GPU_ARCH\"
-        cmake -B build -DGGML_CUDA=ON -DLLAMA_OPENSSL=ON -DCMAKE_CUDA_ARCHITECTURES=\$GPU_ARCH -DBUILD_SHARED_LIBS=OFF
+        # NCCL is only for multi-GPU collective comms; our machines are all single-GPU,
+        # so disable it (also silences the \"NCCL not found\" cmake configure warning).
+        cmake -B build -DGGML_CUDA=ON -DLLAMA_OPENSSL=ON -DCMAKE_CUDA_ARCHITECTURES=\$GPU_ARCH -DBUILD_SHARED_LIBS=OFF -DGGML_CUDA_NCCL=OFF
         # Scale jobs to container memory (1 per GB, min 1, max 8)
         TOTAL_RAM_GB=\$(((\$(grep MemTotal /proc/meminfo | awk '{print \$2}') / 1024 / 1024)))
         JOBS=\$((\$TOTAL_RAM_GB > 1 ? \$TOTAL_RAM_GB - 1 : 1))

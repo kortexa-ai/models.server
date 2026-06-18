@@ -75,7 +75,9 @@ if [ "$OS" = "Linux" ]; then
             fi
 
             # Standard CUDA build for compatible glibc versions
-            CMAKE_FLAGS="-DGGML_CUDA=ON -DLLAMA_OPENSSL=ON -DCMAKE_CUDA_ARCHITECTURES=$GPU_ARCH -DBUILD_SHARED_LIBS=OFF"
+            # NCCL is only for multi-GPU collective comms; our machines are all single-GPU,
+            # so disable it (also silences the "NCCL not found" cmake configure warning).
+            CMAKE_FLAGS="-DGGML_CUDA=ON -DLLAMA_OPENSSL=ON -DCMAKE_CUDA_ARCHITECTURES=$GPU_ARCH -DBUILD_SHARED_LIBS=OFF -DGGML_CUDA_NCCL=OFF"
         else
             # CPU-only Linux (e.g. Raspberry Pi aarch64)
             CMAKE_FLAGS="-DLLAMA_OPENSSL=ON -DBUILD_SHARED_LIBS=OFF"
