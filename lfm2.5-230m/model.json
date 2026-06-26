@@ -24,7 +24,8 @@
   "cpu": {
     "repo": "LiquidAI/LFM2.5-230M-GGUF",
     "quant": "Q4_K_M",
-    "context": 32768,
-    "flash_attn": true
+    "context": 128000,
+    "flash_attn": true,
+    "checkpoint_min_step": 0
   }
 }

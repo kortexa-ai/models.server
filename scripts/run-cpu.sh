@@ -30,6 +30,11 @@ if [[ -n "${CPU_FLASH_ATTN:-}" ]]; then
     fi
 fi
 
+CHECKPOINT_ARGS=()
+if [[ -n "${CPU_CHECKPOINT_MIN_STEP:-}" ]]; then
+    CHECKPOINT_ARGS=(--checkpoint-min-step "$CPU_CHECKPOINT_MIN_STEP")
+fi
+
 echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server on port ${PORT}..."
 exec llama-server \
     -hf "${CPU_REPO}:${QUANT}" \
@@ -45,5 +50,6 @@ exec llama-server \
     --cache-type-k q4_0 \
     --cache-type-v q4_0 \
     "${FLASH_ATTN_ARGS[@]}" \
+    "${CHECKPOINT_ARGS[@]}" \
     "${VISION_ARGS[@]}" \
     "$@"

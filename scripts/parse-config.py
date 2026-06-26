@@ -91,6 +91,8 @@ def main():
         print(f"CPU_REPO='{quote(cpu.get('repo', llama['repo'] if llama else ''))}'")
         if "flash_attn" in cpu:
             print(f"CPU_FLASH_ATTN={'true' if cpu['flash_attn'] else 'false'}")
+        if "checkpoint_min_step" in cpu:
+            print(f"CPU_CHECKPOINT_MIN_STEP='{cpu['checkpoint_min_step']}'")
     else:
         print("CPU_SUPPORTED=false")
 
