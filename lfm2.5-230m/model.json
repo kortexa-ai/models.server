@@ -1,0 +1,30 @@
+{
+  "name": "LFM2.5 230M",
+  "id": "lfm2.5-230m",
+  "multimodal": false,
+  "port": 2045,
+  "host": "0.0.0.0",
+  "context": 32768,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "LiquidAI/LFM2.5-230M-GGUF",
+    "quant": "Q8_0"
+  },
+  "mlx": {
+    "repo": "LiquidAI/LFM2.5-230M-MLX-8bit",
+    "backend": "mlx_lm"
+  },
+  "vllm": {
+    "model": "LiquidAI/LFM2.5-230M",
+    "quantization": "auto",
+    "kv_cache_dtype": "auto",
+    "attention_backend": "TRITON_ATTN"
+  },
+  "cpu": {
+    "repo": "LiquidAI/LFM2.5-230M-GGUF",
+    "quant": "Q4_K_M",
+    "context": 32768,
+    "flash_attn": true
+  }
+}

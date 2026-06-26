@@ -21,6 +21,15 @@ if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
     VISION_ARGS=(--no-mmproj)
 fi
 
+FLASH_ATTN_ARGS=()
+if [[ -n "${CPU_FLASH_ATTN:-}" ]]; then
+    if [[ "${CPU_FLASH_ATTN}" == "true" ]]; then
+        FLASH_ATTN_ARGS=(--flash-attn on)
+    else
+        FLASH_ATTN_ARGS=(--flash-attn off)
+    fi
+fi
+
 echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server on port ${PORT}..."
 exec llama-server \
     -hf "${CPU_REPO}:${QUANT}" \
@@ -35,5 +44,6 @@ exec llama-server \
     --top-p 0.95 \
     --cache-type-k q4_0 \
     --cache-type-v q4_0 \
+    "${FLASH_ATTN_ARGS[@]}" \
     "${VISION_ARGS[@]}" \
     "$@"

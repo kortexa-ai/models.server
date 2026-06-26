@@ -16,12 +16,14 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 
 ## Machines
 
-| Hostname | Hardware | GPU Memory | OS | Primary Backend |
-|----------|----------|------------|------|-----------------|
+| Host/IP | Hardware | Memory | OS | Primary Backend |
+|---------|----------|------------|------|-----------------|
 | **smarty** | RTX PRO 6000 Blackwell | 96 GB VRAM | Ubuntu Linux | `llama-server` (GGUF), bare-metal vLLM |
 | **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | `mlx-vlm` (MLX) |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | — |
 | **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
+| **192.168.2.144** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
+| **192.168.2.145** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 
 ## Model Inventory
 
@@ -44,6 +46,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2039 | Gemma 4 E2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2044 | Gemma 4 12B Coder | big dense (GGUF only) | Q4_K_M | q8_0 | 128K | 1 |
+| 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 32K | 1 |
 | 4007 | Penumbra | custom | — | — | — | — |
 
 ## Directory Structure
@@ -75,7 +78,7 @@ models.server/
 ## Engine Auto-Detection
 
 `run.sh` picks the engine automatically:
-- **macOS** → `mlx` (mlx-vlm)
+- **macOS** → `mlx` (mlx-vlm or mlx-lm)
 - **ARM Linux without CUDA** → `cpu` (Raspberry Pi)
 - **Linux with CUDA** → `llama` (llama.cpp), or `vllm` if model has no GGUF (NVFP4)
 
@@ -88,8 +91,8 @@ GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). O
 
 llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max` (llama.cpp default 3, PR notes 2-3 is the sweet spot for ~1.7-2x speedup at 72-83% accept rate). Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Used by both Qwen 3.6 models.
 
-### mlx-vlm
-Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm). macOS only (Apple Silicon / MLX). Uses `mlx-community/` quantized models. Serves at `/chat/completions` (no `/v1` prefix).
+### mlx-vlm / mlx-lm
+Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and text-only MLX models via `mlx-lm` when `mlx.backend` is `mlx_lm`. macOS only (Apple Silicon / MLX). VLMs serve at `/chat/completions` (no `/v1` prefix); `mlx-lm` serves OpenAI-compatible `/v1` routes.
 
 `mlx-vlm>=0.6.0` supports speculative decoding on the server. Add optional `mlx.draft_model`, `mlx.draft_kind`, and `mlx.draft_block_size` fields in `model.json` to pass `--draft-model`, `--draft-kind`, and `--draft-block-size`; set `MLX_DISABLE_DRAFT=1` when launching to run without the configured drafter.
 
@@ -97,6 +100,9 @@ Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm). macOS 
 
 ### vLLM
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.
+
+### CPU llama-server
+ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 32K context, q4 KV cache, and flash attention enabled. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
 
 ## Quantization Standards
 
@@ -106,6 +112,7 @@ GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux 
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
 NVFP4 models (Nemotron Nano/Super) use vLLM with Marlin backend instead of llama.cpp.
+LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M.
 
 ## Adding a New Model
 
