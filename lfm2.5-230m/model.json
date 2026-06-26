@@ -4,8 +4,8 @@
   "multimodal": false,
   "port": 2045,
   "host": "0.0.0.0",
-  "context": 32768,
-  "parallel": 1,
+  "context": 512000,
+  "parallel": 4,
   "cache_type": "q8_0",
   "llama": {
     "repo": "LiquidAI/LFM2.5-230M-GGUF",
@@ -24,7 +24,7 @@
   "cpu": {
     "repo": "LiquidAI/LFM2.5-230M-GGUF",
     "quant": "Q4_K_M",
-    "context": 128000,
+    "context": 512000,
     "flash_attn": true,
     "checkpoint_min_step": 0
   }
