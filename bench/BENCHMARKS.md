@@ -7,6 +7,33 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## June 26, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
+
+### LFM2.5 230M (mlx-lm 0.31.3, 8-bit MLX, prompt/decode concurrency 4)
+
+New tiny edge model on Snappy using `LiquidAI/LFM2.5-230M-MLX-8bit`.
+Launcher flags: `python -m mlx_lm server --prompt-concurrency 4 --decode-concurrency 4`.
+Numbers are OpenAI-compatible `/v1/chat/completions`, `temperature=0`, wall-clock from client timing and API `usage`.
+Completion TPS is completion tokens divided by full request wall time, so cold long-prompt rows include prefill cost.
+
+| Workload | Prompt tok | Completion tok | Cold wall | Cold comp TPS | Warm cached tok | Warm wall | Warm comp TPS |
+|----------|------------|----------------|-----------|---------------|-----------------|-----------|---------------|
+| Short answer | 46 | 39 | 0.107s | 364.1 | 45 | 0.084s avg | 466.1 avg |
+| Long decode | 60 | 256 | 0.609s | 420.7 | 59 | 0.510s avg | 501.6 avg |
+| Chat history | 211 | 46 | 0.136s | 338.4 | 210 | 0.097s avg | 476.2 avg |
+| Long prompt | 6,361 | 90 | 0.743s | 121.1 | 6,360 | 0.218s avg | 412.8 avg |
+| Larger prompt | 15,840 | 96 | 1.720s | 55.8 | 15,839 | 0.293s | 327.4 |
+| Near-128K context probe | 120,540 | 16 | 42.632s | 0.4 | 120,539 | 0.341s | 46.9 |
+
+Four concurrent long-ish requests (`prompt-concurrency=4`, `decode-concurrency=4`): 4 requests × ~1,647 prompt tok / 47 completion tok completed in **0.645s batch wall**, aggregate **291.5 completion tok/s** and **10.5K total tok/s**.
+
+**Notes:**
+- Prompt cache is very effective on repeated stable prompts: 15.8K prompt cold-to-warm dropped from 1.72s to 0.293s; 120.5K prompt dropped from 42.6s to 0.341s.
+- Cold near-128K prefill is usable but slow (~2.8K total tok/s wall-clock including the 16-token answer). Warm repeated-prefix calls are effectively dominated by decode/response overhead.
+- The model sometimes ignores terse instructions ("Say ok" became a help-offer), so benchmark prompts that require exact format should be treated as latency probes, not quality probes. Tiny model, tiny opinions, still opinions.
+
+---
+
 ## June 3, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
 
 ### Gemma 4 12B bring-up (mlx-vlm 0.6.1, 4-bit, MTP drafter)

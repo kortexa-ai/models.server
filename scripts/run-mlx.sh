@@ -29,21 +29,80 @@ SERVER_ARGS=(
     --port "$PORT"
 )
 
+LM_ARGS=()
+if [[ -n "${MLX_PROMPT_CONCURRENCY:-}" ]]; then
+    LM_ARGS+=(--prompt-concurrency "$MLX_PROMPT_CONCURRENCY")
+fi
+if [[ -n "${MLX_DECODE_CONCURRENCY:-}" ]]; then
+    LM_ARGS+=(--decode-concurrency "$MLX_DECODE_CONCURRENCY")
+fi
+if [[ -n "${MLX_PROMPT_CACHE_SIZE:-}" ]]; then
+    LM_ARGS+=(--prompt-cache-size "$MLX_PROMPT_CACHE_SIZE")
+fi
+if [[ -n "${MLX_PROMPT_CACHE_BYTES:-}" ]]; then
+    LM_ARGS+=(--prompt-cache-bytes "$MLX_PROMPT_CACHE_BYTES")
+fi
+
+VLM_ARGS=()
+if [[ -n "${MLX_VISION_CACHE_SIZE:-}" ]]; then
+    VLM_ARGS+=(--vision-cache-size "$MLX_VISION_CACHE_SIZE")
+fi
+if [[ -n "${MLX_MAX_KV_SIZE:-}" ]]; then
+    VLM_ARGS+=(--max-kv-size "$MLX_MAX_KV_SIZE")
+fi
+if [[ -n "${MLX_KV_BITS:-}" ]]; then
+    VLM_ARGS+=(--kv-bits "$MLX_KV_BITS")
+fi
+if [[ -n "${MLX_KV_QUANT_SCHEME:-}" ]]; then
+    VLM_ARGS+=(--kv-quant-scheme "$MLX_KV_QUANT_SCHEME")
+fi
+if [[ -n "${MLX_KV_GROUP_SIZE:-}" ]]; then
+    VLM_ARGS+=(--kv-group-size "$MLX_KV_GROUP_SIZE")
+fi
+if [[ -n "${MLX_QUANTIZED_KV_START:-}" ]]; then
+    VLM_ARGS+=(--quantized-kv-start "$MLX_QUANTIZED_KV_START")
+fi
+
+COMMON_MLX_ARGS=()
+if [[ -n "${MLX_PREFILL_STEP_SIZE:-}" ]]; then
+    COMMON_MLX_ARGS+=(--prefill-step-size "$MLX_PREFILL_STEP_SIZE")
+fi
+if [[ -n "${MLX_MAX_TOKENS:-}" ]]; then
+    COMMON_MLX_ARGS+=(--max-tokens "$MLX_MAX_TOKENS")
+fi
+
+DRAFT_ARGS=()
 if [[ -n "${MLX_DRAFT_MODEL:-}" && "${MLX_DISABLE_DRAFT:-}" != "1" ]]; then
     if [[ "${MLX_DRAFT_ENABLED:-true}" == "false" && "${MLX_FORCE_DRAFT:-}" != "1" ]]; then
         echo "Speculative drafter configured but disabled for vanilla ${BACKEND}; set MLX_FORCE_DRAFT=1 to override."
     else
         echo "Using speculative drafter: ${MLX_DRAFT_MODEL}"
-        SERVER_ARGS+=(--draft-model "$MLX_DRAFT_MODEL")
+        DRAFT_ARGS+=(--draft-model "$MLX_DRAFT_MODEL")
 
         if [[ -n "${MLX_DRAFT_KIND:-}" ]]; then
-            SERVER_ARGS+=(--draft-kind "$MLX_DRAFT_KIND")
+            DRAFT_ARGS+=(--draft-kind "$MLX_DRAFT_KIND")
         fi
 
         if [[ -n "${MLX_DRAFT_BLOCK_SIZE:-}" ]]; then
-            SERVER_ARGS+=(--draft-block-size "$MLX_DRAFT_BLOCK_SIZE")
+            DRAFT_ARGS+=(--draft-block-size "$MLX_DRAFT_BLOCK_SIZE")
         fi
     fi
 fi
 
-exec python -m "${BACKEND}.server" "${SERVER_ARGS[@]}" "$@"
+case "$BACKEND" in
+    mlx_lm)
+        exec python -m mlx_lm server \
+            "${SERVER_ARGS[@]}" \
+            ${COMMON_MLX_ARGS[@]+"${COMMON_MLX_ARGS[@]}"} \
+            ${LM_ARGS[@]+"${LM_ARGS[@]}"} \
+            "$@"
+        ;;
+    *)
+        exec python -m "${BACKEND}.server" \
+            "${SERVER_ARGS[@]}" \
+            ${COMMON_MLX_ARGS[@]+"${COMMON_MLX_ARGS[@]}"} \
+            ${VLM_ARGS[@]+"${VLM_ARGS[@]}"} \
+            ${DRAFT_ARGS[@]+"${DRAFT_ARGS[@]}"} \
+            "$@"
+        ;;
+esac

@@ -12,6 +12,10 @@ def quote(v):
     return str(v).replace("'", "'\\''")
 
 
+def emit(name, value):
+    print(f"{name}='{quote(value)}'")
+
+
 def main():
     with open(sys.argv[1]) as f:
         m = json.load(f)
@@ -32,6 +36,8 @@ def main():
     if llama:
         print(f"LLAMA_REPO='{quote(llama['repo'])}'")
         print(f"LLAMA_QUANT='{quote(llama['quant'])}'")
+        emit("LLAMA_CONTEXT", llama.get("context", m.get("context", 65536)))
+        emit("LLAMA_PARALLEL", llama.get("parallel", m.get("parallel", 1)))
         if llama.get("mtp"):
             print("LLAMA_MTP=true")
         if llama.get("mtp_n_max"):
@@ -43,7 +49,25 @@ def main():
     mlx = m.get("mlx")
     if mlx:
         print(f"MLX_REPO='{quote(mlx['repo'])}'")
-        print(f"MLX_BACKEND='{mlx.get('backend', 'mlx_vlm')}'")
+        backend = mlx.get("backend", "mlx_vlm")
+        print(f"MLX_BACKEND='{backend}'")
+        if backend == "mlx_lm":
+            emit("MLX_PROMPT_CONCURRENCY", mlx.get("prompt_concurrency", m.get("parallel", 1)))
+            emit("MLX_DECODE_CONCURRENCY", mlx.get("decode_concurrency", m.get("parallel", 1)))
+        for key, env in (
+            ("prefill_step_size", "MLX_PREFILL_STEP_SIZE"),
+            ("prompt_cache_size", "MLX_PROMPT_CACHE_SIZE"),
+            ("prompt_cache_bytes", "MLX_PROMPT_CACHE_BYTES"),
+            ("max_tokens", "MLX_MAX_TOKENS"),
+            ("vision_cache_size", "MLX_VISION_CACHE_SIZE"),
+            ("max_kv_size", "MLX_MAX_KV_SIZE"),
+            ("kv_bits", "MLX_KV_BITS"),
+            ("kv_quant_scheme", "MLX_KV_QUANT_SCHEME"),
+            ("kv_group_size", "MLX_KV_GROUP_SIZE"),
+            ("quantized_kv_start", "MLX_QUANTIZED_KV_START"),
+        ):
+            if key in mlx:
+                emit(env, mlx[key])
         if "draft_enabled" in mlx:
             print(f"MLX_DRAFT_ENABLED={'true' if mlx['draft_enabled'] else 'false'}")
         if mlx.get("draft_model"):
@@ -62,6 +86,7 @@ def main():
         print(f"VLLM_QUANTIZATION='{vllm.get('quantization', 'fp8')}'")
         print(f"VLLM_KV_CACHE_DTYPE='{vllm.get('kv_cache_dtype', 'fp8')}'")
         print(f"VLLM_ATTENTION_BACKEND='{vllm.get('attention_backend', 'TRITON_ATTN')}'")
+        emit("VLLM_MAX_MODEL_LEN", vllm.get("max_model_len", m.get("context", 65536)))
         if vllm.get("kv_cache_bytes"):
             print(f"VLLM_KV_CACHE_BYTES='{vllm['kv_cache_bytes']}'")
         if vllm.get("gpu_memory_utilization"):
@@ -87,7 +112,9 @@ def main():
     cpu = m.get("cpu")
     if cpu:
         print(f"CPU_QUANT='{quote(cpu['quant'])}'")
-        print(f"CPU_CONTEXT='{cpu['context']}'")
+        emit("CPU_CONTEXT", cpu.get("context", m.get("context", 65536)))
+        emit("CPU_PARALLEL", cpu.get("parallel", m.get("parallel", 1)))
+        emit("CPU_CACHE_TYPE", cpu.get("cache_type", "q4_0"))
         print(f"CPU_REPO='{quote(cpu.get('repo', llama['repo'] if llama else ''))}'")
         if "flash_attn" in cpu:
             print(f"CPU_FLASH_ATTN={'true' if cpu['flash_attn'] else 'false'}")

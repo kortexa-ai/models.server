@@ -13,18 +13,23 @@
   },
   "mlx": {
     "repo": "LiquidAI/LFM2.5-230M-MLX-8bit",
-    "backend": "mlx_lm"
+    "backend": "mlx_lm",
+    "prompt_concurrency": 4,
+    "decode_concurrency": 4
   },
   "vllm": {
     "model": "LiquidAI/LFM2.5-230M",
     "quantization": "auto",
     "kv_cache_dtype": "auto",
-    "attention_backend": "TRITON_ATTN"
+    "attention_backend": "TRITON_ATTN",
+    "max_model_len": 128000,
+    "max_num_seqs": 4
   },
   "cpu": {
     "repo": "LiquidAI/LFM2.5-230M-GGUF",
     "quant": "Q4_K_M",
     "context": 512000,
+    "parallel": 4,
     "flash_attn": true,
     "checkpoint_min_step": 0
   }

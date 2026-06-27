@@ -15,6 +15,8 @@ PORT="${PORT:-$MODEL_PORT}"
 HOST="${HOST:-0.0.0.0}"
 QUANT="${QUANT:-$CPU_QUANT}"
 CONTEXT="${CONTEXT:-$CPU_CONTEXT}"
+PARALLEL="${PARALLEL:-$CPU_PARALLEL}"
+CACHE_TYPE="${CACHE_TYPE:-$CPU_CACHE_TYPE}"
 
 VISION_ARGS=()
 if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
@@ -44,11 +46,11 @@ exec llama-server \
     --jinja \
     -c "$CONTEXT" \
     --threads 4 \
-    --parallel 1 \
+    --parallel "$PARALLEL" \
     --temp 1.0 \
     --top-p 0.95 \
-    --cache-type-k q4_0 \
-    --cache-type-v q4_0 \
+    --cache-type-k "$CACHE_TYPE" \
+    --cache-type-v "$CACHE_TYPE" \
     "${FLASH_ATTN_ARGS[@]}" \
     "${CHECKPOINT_ARGS[@]}" \
     "${VISION_ARGS[@]}" \
