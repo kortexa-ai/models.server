@@ -15,6 +15,12 @@
 	<array>
 		<string>/Users/francip/src/models.server/run.sh</string>
 		<string>/Users/francip/src/models.server/gemma-4-e2b</string>
+		<string>--engine</string>
+		<string>llama</string>
+		<!-- The repo's Q8_0 tag also matches MTP/…Q8_0-MTP.gguf (drafter head,
+		     unloadable standalone); pin the actual model file. -->
+		<string>--hf-file</string>
+		<string>gemma-4-E2B-it-Q8_0.gguf</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

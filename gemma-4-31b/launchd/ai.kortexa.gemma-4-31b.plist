@@ -20,6 +20,9 @@
     <dict>
         <key>PATH</key>
         <string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
+        <!-- Two slots: honcho deriver + hermes aux roles share this model -->
+        <key>PARALLEL</key>
+        <string>2</string>
     </dict>
 
     <key>RunAtLoad</key>
