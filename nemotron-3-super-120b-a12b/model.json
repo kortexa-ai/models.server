@@ -2,7 +2,7 @@
   "name": "Nemotron 3 Super 120B A12B",
   "id": "nemotron-3-super-120b-a12b",
   "port": 2033,
-  "host": "192.168.2.3",
+  "host": "192.168.2.6",
   "context": 16384,
   "parallel": 1,
   "cache_type": "q4_0",

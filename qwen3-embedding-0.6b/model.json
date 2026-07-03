@@ -4,7 +4,7 @@
   "multimodal": false,
   "embedding": true,
   "port": 2040,
-  "host": "192.168.2.3",
+  "host": "192.168.2.6",
   "context": 32768,
   "parallel": 4,
   "cache_type": "q8_0",

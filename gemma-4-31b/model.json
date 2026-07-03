@@ -3,7 +3,7 @@
   "id": "gemma-4-31b",
   "multimodal": true,
   "port": 2037,
-  "host": "192.168.2.3",
+  "host": "192.168.2.6",
   "context": 262144,
   "parallel": 1,
   "cache_type": "q8_0",
