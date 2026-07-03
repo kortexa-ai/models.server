@@ -35,6 +35,8 @@ fi
 
 # Embedding mode: enable --embedding and drop chat/sampling-only flags
 # (--jinja, --temp, --top-p are inert here; skipped for clarity).
+# Arrays expand via ${arr[@]+...} because macOS bash 3.2 treats an empty
+# array as unset under `set -u`.
 EMBEDDING_ARGS=()
 if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
     EMBEDDING_ARGS=(--embedding)
@@ -52,8 +54,8 @@ if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
         --flash-attn on \
         --cache-type-k "$CACHE_TYPE" \
         --cache-type-v "$CACHE_TYPE" \
-        "${EMBEDDING_ARGS[@]}" \
-        "${VISION_ARGS[@]}" \
+        ${EMBEDDING_ARGS[@]+"${EMBEDDING_ARGS[@]}"} \
+        ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \
         "$@"
 fi
 
@@ -76,6 +78,6 @@ exec llama-server \
     --flash-attn on \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
-    "${MTP_ARGS[@]}" \
-    "${VISION_ARGS[@]}" \
+    ${MTP_ARGS[@]+"${MTP_ARGS[@]}"} \
+    ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \
     "$@"

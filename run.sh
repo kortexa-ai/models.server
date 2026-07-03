@@ -33,7 +33,13 @@ done
 # Auto-detect engine from platform and model config
 if [[ -z "$ENGINE" ]]; then
     if [[ "$(uname -s)" == "Darwin" ]]; then
-        ENGINE=mlx
+        # Prefer MLX, but fall back to llama.cpp (Metal) for models with no MLX config
+        HAS_MLX=$(python3 -c "import json; m=json.load(open('${MODEL_DIR}/model.json')); print('yes' if m.get('mlx') else 'no')")
+        if [[ "$HAS_MLX" == "yes" ]]; then
+            ENGINE=mlx
+        else
+            ENGINE=llama
+        fi
     elif [[ "$(uname -m)" == "aarch64" && ! -d /usr/local/cuda ]]; then
         ENGINE=cpu
     else
