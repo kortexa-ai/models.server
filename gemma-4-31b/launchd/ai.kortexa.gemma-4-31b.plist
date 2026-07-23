@@ -10,7 +10,7 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/francip/src/models.server/run.sh</string>
+        <string>/Users/francip/src/models.server/gemma-4-31b/launchd/kortexa-gemma-4-31b.sh</string>
         <string>/Users/francip/src/models.server/gemma-4-31b</string>
         <string>--engine</string>
         <string>llama</string>

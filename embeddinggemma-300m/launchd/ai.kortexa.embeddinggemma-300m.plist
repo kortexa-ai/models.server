@@ -13,7 +13,7 @@
 	<string>ai.kortexa.embeddinggemma-300m</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/francip/src/models.server/run.sh</string>
+		<string>/Users/francip/src/models.server/embeddinggemma-300m/launchd/kortexa-embeddinggemma-300m.sh</string>
 		<string>/Users/francip/src/models.server/embeddinggemma-300m</string>
 	</array>
 	<key>RunAtLoad</key>
