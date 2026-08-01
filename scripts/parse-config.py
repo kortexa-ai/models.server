@@ -123,7 +123,7 @@ def main():
     else:
         print("CPU_SUPPORTED=false")
 
-    # transformers (CPU-only tasks that llama.cpp does not support)
+    # transformers (tasks that llama.cpp does not support)
     transformers = m.get("transformers")
     if transformers:
         print(f"TRANSFORMERS_MODEL='{quote(transformers['model'])}'")

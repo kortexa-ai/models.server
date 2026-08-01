@@ -49,7 +49,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 128K/slot | 4 |
 | 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
-| 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (Transformers CPU) | — | 8K | 1 |
+| 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 4007 | Penumbra | custom | — | — | — | — |
 
 ## Directory Structure
@@ -63,13 +63,13 @@ models.server/
 │   ├── run-mlx.sh          # Generic MLX launcher
 │   ├── run-vllm.sh         # Generic vLLM launcher
 │   ├── run-cpu.sh          # Generic CPU-only launcher (Pi)
-│   ├── run-transformers.sh # Generic Transformers CPU launcher
-│   ├── transformers-server.py # CPU server for non-generative tasks
+│   ├── run-transformers.sh # Generic Transformers launcher
+│   ├── transformers-server.py # Server for non-generative tasks
 │   ├── parse-config.py      # Reads model.json → shell variables
 │   ├── setup-common.sh      # Shared helpers (CUDA env, venv paths)
 │   ├── setup-vllm.sh        # Creates/updates .venv-vllm
 │   ├── setup-mlx.sh         # Creates/updates .venv-mlx
-│   └── setup-transformers.sh # Creates/updates the CPU .venv
+│   └── setup-transformers.sh # Creates/updates the Transformers .venv
 ├── <model-id>/
 │   ├── model.json          # All config: ports, quants, engine settings
 │   ├── launchd/            # macOS service unit
@@ -85,7 +85,7 @@ models.server/
 
 `run.sh` picks the engine automatically:
 
-- A model's `default_engine` wins when configured (the 350M LFM models use CPU backends)
+- A model's `default_engine` wins when configured (the generative 350M LFM models use CPU backends)
 - **macOS** → `mlx` (mlx-vlm or mlx-lm)
 - **ARM Linux without CUDA** → `cpu` (Raspberry Pi)
 - **Linux with CUDA** → `llama` (llama.cpp), or `vllm` if model has no GGUF (NVFP4)
@@ -120,9 +120,9 @@ ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Ras
 
 LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
 
-### Transformers CPU
+### Transformers (MPS / CPU)
 
-LFM2.5 Encoder 350M is a bidirectional masked-language model, not a causal LLM. LiquidAI does not publish a GGUF for this exact checkpoint, and llama.cpp cannot serve its masked-LM API. It therefore defaults to the small CPU-only Transformers backend while the two generative 350M models stay on llama.cpp.
+LFM2.5 Encoder 350M is a bidirectional masked-language model, not a causal LLM. LiquidAI does not publish a GGUF for this exact checkpoint, and llama.cpp cannot serve its masked-LM API. It therefore defaults to the small Transformers backend while the two generative 350M models stay on llama.cpp. The backend uses FP32 on every platform, selecting MPS on Apple Silicon and CPU elsewhere. CUDA is deliberately disabled so running it on smarty does not consume VRAM.
 
 Install its runtime with `scripts/setup-transformers.sh`, then launch it with `./run.sh lfm2.5-encoder-350m`. It exposes `GET /health`, `GET /v1/models`, and `POST /v1/fill-mask`:
 

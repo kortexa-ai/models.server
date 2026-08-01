@@ -33,7 +33,9 @@ if [[ "${TRANSFORMERS_TRUST_REMOTE_CODE:-}" == "true" ]]; then
     TRUST_ARGS=(--trust-remote-code)
 fi
 
-echo "Starting ${MODEL_NAME} (${TRANSFORMERS_TASK}, CPU) via Transformers on port ${PORT}..."
+# The server selects MPS on Apple Silicon and CPU elsewhere. Keep CUDA hidden so
+# this small model never consumes VRAM on Linux hosts such as smarty.
+echo "Starting ${MODEL_NAME} (${TRANSFORMERS_TASK}) via Transformers on port ${PORT}..."
 CUDA_VISIBLE_DEVICES="" exec "${PYTHON_BIN}" "${SCRIPTS_DIR}/transformers-server.py" \
     --model "${TRANSFORMERS_MODEL}" \
     --alias "${MODEL_ID}" \

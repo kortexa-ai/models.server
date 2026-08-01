@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small CPU HTTP server for Transformers tasks unsupported by llama.cpp."""
+"""Small HTTP server for Transformers tasks unsupported by llama.cpp."""
 
 import argparse
 import json
@@ -11,11 +11,19 @@ import torch
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
 
+def inference_device():
+    """Use Apple GPU acceleration when available; keep other platforms on CPU."""
+    if torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
 class FillMaskModel:
     def __init__(self, model_id, max_length, threads, trust_remote_code):
         torch.set_num_threads(threads)
         self.max_length = max_length
         self.lock = threading.Lock()
+        self.device = inference_device()
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_id,
             trust_remote_code=trust_remote_code,
@@ -23,7 +31,7 @@ class FillMaskModel:
         self.model = AutoModelForMaskedLM.from_pretrained(
             model_id,
             trust_remote_code=trust_remote_code,
-        ).to("cpu").eval()
+        ).to(self.device).eval()
 
         if self.tokenizer.mask_token_id is None:
             raise ValueError(f"{model_id} does not define a mask token")
@@ -46,8 +54,11 @@ class FillMaskModel:
             )
 
         mask_position = mask_positions[0].item()
+        model_inputs = {
+            name: tensor.to(self.device) for name, tensor in encoded.items()
+        }
         with self.lock, torch.inference_mode():
-            logits = self.model(**encoded).logits[0, mask_position]
+            logits = self.model(**model_inputs).logits[0, mask_position]
             probabilities = torch.softmax(logits, dim=-1)
             scores, token_ids = probabilities.topk(min(top_k, len(probabilities)))
 
@@ -163,7 +174,11 @@ def main():
     )
     handler = make_handler(model, args.alias, args.top_k)
     server = ThreadingHTTPServer((args.host, args.port), handler)
-    print(f"Serving {args.alias} on http://{args.host}:{args.port}", flush=True)
+    print(
+        f"Serving {args.alias} on http://{args.host}:{args.port} "
+        f"(device={model.device.type})",
+        flush=True,
+    )
     server.serve_forever()
 
 
