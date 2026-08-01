@@ -1,0 +1,10 @@
+# This directory preserves instructions and small operational artifacts only.
+# Model weights, converted containers, caches, and run logs stay off Git.
+*.bin
+*.gguf
+*.log
+*.safetensors
+*.tmp
+*.waste
+.cache/
+logs/

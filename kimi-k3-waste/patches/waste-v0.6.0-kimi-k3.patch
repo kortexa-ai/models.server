@@ -1,0 +1,42 @@
+diff --git a/tools/convert.py b/tools/convert.py
+index 817e94b..93879c4 100644
+--- a/tools/convert.py
++++ b/tools/convert.py
+@@ -84,0 +85,5 @@ def _load_vq():
++    if os.environ.get("WASTE_DISABLE_NATIVE_VQ"):
++        # Useful for accelerators, and as a safe fallback if the optional
++        # host encoder is unstable on a particular machine.
++        _VQ = False
++        return None
+diff --git a/tools/mxfp4.py b/tools/mxfp4.py
+index a11171c..c45dcc7 100644
+--- a/tools/mxfp4.py
++++ b/tools/mxfp4.py
+@@ -13 +13 @@ bare biased exponent, so the scale is exactly 2^(e-127). Dequantization is
+-therefore exact — a lookup and a multiply, no rounding.
++therefore exact — a small arithmetic decode and a multiply, no rounding.
+@@ -27,3 +27,13 @@ GROUP = 32
+-# E2M1 magnitudes by the low 3 bits; bit 3 is the sign.
+-_E2M1 = torch.tensor([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
+-_LUT = torch.cat([_E2M1, -_E2M1])          # index by the full nibble
++
++def _decode_e2m1(nibble: torch.Tensor):
++    """Decode an E2M1 nibble without an integer advanced-index tensor.
++
++    The three magnitude bits name 0,.5,1,1.5 / 2,3 / 4,6.  Every result is
++    exactly representable in f32, including the signed zero selected by bit
++    3.  Arithmetic avoids a PyTorch uint8-to-int64 indexing fault observed
++    only after hundreds of large tensors on one x86 host.
++    """
++    code = (nibble & 0x07).to(torch.float32)
++    mag = torch.where(code < 4, code * 0.5,
++                      torch.where(code < 6, code - 2, (code - 4) * 2))
++    return torch.where((nibble & 0x08) != 0, -mag, mag)
+@@ -39,2 +48,0 @@ def dequant(packed: torch.Tensor, scale: torch.Tensor, group: int = GROUP):
+-    lo = (packed & 0x0F).to(torch.long)
+-    hi = (packed >> 4).to(torch.long)
+@@ -42,2 +50,2 @@ def dequant(packed: torch.Tensor, scale: torch.Tensor, group: int = GROUP):
+-    vals[:, 0::2] = _LUT[lo]
+-    vals[:, 1::2] = _LUT[hi]
++    vals[:, 0::2] = _decode_e2m1(packed & 0x0F)
++    vals[:, 1::2] = _decode_e2m1(packed >> 4)
