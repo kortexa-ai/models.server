@@ -123,6 +123,19 @@ def main():
     else:
         print("CPU_SUPPORTED=false")
 
+    # transformers (CPU-only tasks that llama.cpp does not support)
+    transformers = m.get("transformers")
+    if transformers:
+        print(f"TRANSFORMERS_MODEL='{quote(transformers['model'])}'")
+        emit("TRANSFORMERS_TASK", transformers.get("task", "fill-mask"))
+        emit("TRANSFORMERS_MAX_LENGTH", transformers.get("max_length", m.get("context", 8192)))
+        emit("TRANSFORMERS_THREADS", transformers.get("threads", 4))
+        emit("TRANSFORMERS_TOP_K", transformers.get("top_k", 5))
+        if transformers.get("trust_remote_code"):
+            print("TRANSFORMERS_TRUST_REMOTE_CODE=true")
+    else:
+        print("TRANSFORMERS_SUPPORTED=false")
+
 
 if __name__ == "__main__":
     main()

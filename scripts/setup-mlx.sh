@@ -13,10 +13,11 @@ VENV_PATH="${VENV_PATH:-${ROOT}/.venv-mlx}"
 echo "Creating MLX venv at ${VENV_PATH}..."
 uv venv --allow-existing "${VENV_PATH}"
 
-echo "Installing mlx-vlm, mlx-lm, torch, torchvision..."
+echo "Installing mlx-vlm, mlx-lm, Transformers, torch, torchvision..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
     'mlx-vlm>=0.6.1' \
     mlx-lm \
+    'transformers>=5.12.0' \
     torch \
     torchvision
 
@@ -25,7 +26,7 @@ echo "Verifying MLX environment..."
 from importlib.metadata import PackageNotFoundError, version
 import platform
 
-for package in ("mlx-vlm", "mlx-lm", "torch", "torchvision"):
+for package in ("mlx-vlm", "mlx-lm", "transformers", "torch", "torchvision"):
     try:
         print(f"{package} = {version(package)}")
     except PackageNotFoundError:

@@ -41,6 +41,7 @@ echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server on port ${PORT}...
 exec llama-server \
     -hf "${CPU_REPO}:${QUANT}" \
     --alias "$MODEL_ID" \
+    --device none \
     --host "$HOST" \
     --port "$PORT" \
     --jinja \

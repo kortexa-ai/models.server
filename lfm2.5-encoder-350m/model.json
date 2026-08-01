@@ -1,0 +1,19 @@
+{
+  "name": "LFM2.5 Encoder 350M",
+  "id": "lfm2.5-encoder-350m",
+  "hf_model": "LiquidAI/LFM2.5-Encoder-350M",
+  "multimodal": false,
+  "port": 2048,
+  "host": "192.168.2.6",
+  "context": 8192,
+  "parallel": 1,
+  "default_engine": "transformers",
+  "transformers": {
+    "model": "LiquidAI/LFM2.5-Encoder-350M",
+    "task": "fill-mask",
+    "max_length": 8192,
+    "threads": 4,
+    "top_k": 5,
+    "trust_remote_code": true
+  }
+}

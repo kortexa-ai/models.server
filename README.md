@@ -47,6 +47,9 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2044 | Gemma 4 12B Coder | big dense (GGUF only) | Q4_K_M | q8_0 | 128K | 1 |
 | 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 128K/slot | 4 |
+| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
+| 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
+| 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (Transformers CPU) | — | 8K | 1 |
 | 4007 | Penumbra | custom | — | — | — | — |
 
 ## Directory Structure
@@ -60,10 +63,13 @@ models.server/
 │   ├── run-mlx.sh          # Generic MLX launcher
 │   ├── run-vllm.sh         # Generic vLLM launcher
 │   ├── run-cpu.sh          # Generic CPU-only launcher (Pi)
-│   ├── parse-config.py     # Reads model.json → shell variables
-│   ├── setup-common.sh     # Shared helpers (CUDA env, venv paths)
-│   ├── setup-vllm.sh       # Creates/updates .venv-vllm
-│   └── setup-mlx.sh        # Creates/updates .venv-mlx
+│   ├── run-transformers.sh # Generic Transformers CPU launcher
+│   ├── transformers-server.py # CPU server for non-generative tasks
+│   ├── parse-config.py      # Reads model.json → shell variables
+│   ├── setup-common.sh      # Shared helpers (CUDA env, venv paths)
+│   ├── setup-vllm.sh        # Creates/updates .venv-vllm
+│   ├── setup-mlx.sh         # Creates/updates .venv-mlx
+│   └── setup-transformers.sh # Creates/updates the CPU .venv
 ├── <model-id>/
 │   ├── model.json          # All config: ports, quants, engine settings
 │   ├── launchd/            # macOS service unit
@@ -78,6 +84,8 @@ models.server/
 ## Engine Auto-Detection
 
 `run.sh` picks the engine automatically:
+
+- A model's `default_engine` wins when configured (the 350M LFM models use CPU backends)
 - **macOS** → `mlx` (mlx-vlm or mlx-lm)
 - **ARM Linux without CUDA** → `cpu` (Raspberry Pi)
 - **Linux with CUDA** → `llama` (llama.cpp), or `vllm` if model has no GGUF (NVFP4)
@@ -110,6 +118,20 @@ vLLM treats context as per-sequence length. Use `vllm.max_model_len` for `--max-
 ### CPU llama-server
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
 
+LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
+
+### Transformers CPU
+
+LFM2.5 Encoder 350M is a bidirectional masked-language model, not a causal LLM. LiquidAI does not publish a GGUF for this exact checkpoint, and llama.cpp cannot serve its masked-LM API. It therefore defaults to the small CPU-only Transformers backend while the two generative 350M models stay on llama.cpp.
+
+Install its runtime with `scripts/setup-transformers.sh`, then launch it with `./run.sh lfm2.5-encoder-350m`. It exposes `GET /health`, `GET /v1/models`, and `POST /v1/fill-mask`:
+
+```bash
+curl http://localhost:2048/v1/fill-mask \
+  -H 'Content-Type: application/json' \
+  -d '{"input":"The capital of France is <|mask|>.","top_k":5}'
+```
+
 ## Quantization Standards
 
 | Model size | Weight quant | KV cache | Context | Parallel slots |
@@ -119,6 +141,7 @@ ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Ras
 
 NVFP4 models (Nemotron Nano/Super) use vLLM with Marlin backend instead of llama.cpp.
 LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M. It is also configured for four 128K slots on llama.cpp-style backends and four-way prompt/decode concurrency on `mlx-lm`.
+The LFM 350M generative models follow the normal sub-4B `Q8_0` standard and default to CPU. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
 
 ## Adding a New Model
 

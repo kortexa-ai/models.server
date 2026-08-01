@@ -1,0 +1,24 @@
+{
+  "name": "LFM2.5 350M",
+  "id": "lfm2.5-350m",
+  "multimodal": false,
+  "port": 2046,
+  "host": "192.168.2.6",
+  "context": 512000,
+  "parallel": 4,
+  "cache_type": "q8_0",
+  "default_engine": "cpu",
+  "llama": {
+    "repo": "LiquidAI/LFM2.5-350M-GGUF",
+    "quant": "Q8_0"
+  },
+  "cpu": {
+    "repo": "LiquidAI/LFM2.5-350M-GGUF",
+    "quant": "Q8_0",
+    "context": 512000,
+    "parallel": 4,
+    "cache_type": "q8_0",
+    "flash_attn": true,
+    "checkpoint_min_step": 0
+  }
+}

@@ -14,7 +14,7 @@ elif [[ -f "./model.json" ]]; then
     # cd qwen-3.5-4b && ../run.sh
     MODEL_DIR="$(pwd)"
 else
-    echo "Usage: run.sh [model-dir] [--engine llama|vllm|mlx|cpu] [extra args...]" >&2
+    echo "Usage: run.sh [model-dir] [--engine llama|vllm|mlx|cpu|transformers] [extra args...]" >&2
     echo "" >&2
     echo "Run from a model directory:  cd qwen-3.5-4b && ../run.sh" >&2
     echo "Or specify the model:        ./run.sh qwen-3.5-4b" >&2
@@ -29,6 +29,12 @@ while [[ $# -gt 0 ]]; do
         *) break ;;
     esac
 done
+
+# Honor a model-specific default before platform auto-detection. This keeps
+# tiny CPU-first models off GPU backends unless explicitly overridden.
+if [[ -z "$ENGINE" ]]; then
+    ENGINE=$(python3 -c "import json; m=json.load(open('${MODEL_DIR}/model.json')); print(m.get('default_engine', ''))")
+fi
 
 # Auto-detect engine from platform and model config
 if [[ -z "$ENGINE" ]]; then

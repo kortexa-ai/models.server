@@ -26,6 +26,9 @@ case "$OS" in
             "${ROOT}/scripts/setup-vllm.sh"
         else
             echo "No NVIDIA GPU detected, skipping vLLM setup."
+            echo ""
+            echo "--- Setting up Transformers CPU environment ---"
+            "${ROOT}/scripts/setup-transformers.sh"
         fi
         ;;
     *)

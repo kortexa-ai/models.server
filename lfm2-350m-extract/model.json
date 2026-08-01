@@ -1,0 +1,24 @@
+{
+  "name": "LFM2 350M Extract",
+  "id": "lfm2-350m-extract",
+  "multimodal": false,
+  "port": 2047,
+  "host": "192.168.2.6",
+  "context": 512000,
+  "parallel": 4,
+  "cache_type": "q8_0",
+  "default_engine": "cpu",
+  "llama": {
+    "repo": "LiquidAI/LFM2-350M-Extract-GGUF",
+    "quant": "Q8_0"
+  },
+  "cpu": {
+    "repo": "LiquidAI/LFM2-350M-Extract-GGUF",
+    "quant": "Q8_0",
+    "context": 512000,
+    "parallel": 4,
+    "cache_type": "q8_0",
+    "flash_attn": true,
+    "checkpoint_min_step": 0
+  }
+}
