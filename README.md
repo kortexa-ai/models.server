@@ -62,7 +62,6 @@ service on port 4007.
 | 2033 | Available | Former Nemotron 3 Super 120B A12B port |
 | 2034 | Available | Former Nemotron 3 Nano 30B A3B port |
 | 2035 | Available | Former Nemotron Cascade 2 30B A3B port |
-| 2044 | Available | Former Gemma 4 12B Coder port |
 | 2049 | Blocked | NFS port; Fetch implementations such as Node reject it as an unsafe port |
 | 2050 | Reserved | Default `hermes-router` sidecar port; do not assign to a model |
 | 2051 | Reserved | Default port for the `hermes-auxiliary-brain` managed llama.cpp server; do not assign to a model |
