@@ -101,6 +101,11 @@ def main():
             print(f"VLLM_REASONING_PARSER='{quote(vllm['reasoning_parser'])}'")
         if vllm.get("reasoning_parser_plugin"):
             print(f"VLLM_REASONING_PARSER_PLUGIN='{quote(vllm['reasoning_parser_plugin'])}'")
+        if vllm.get("speculative_config"):
+            emit(
+                "VLLM_SPECULATIVE_CONFIG",
+                json.dumps(vllm["speculative_config"], separators=(",", ":")),
+            )
         if vllm.get("marlin"):
             print("VLLM_MARLIN=true")
         if vllm.get("enable_prefix_caching"):

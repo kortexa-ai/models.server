@@ -7,6 +7,73 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 1, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Qwen 3.6 27B: current llama.cpp vs vLLM 0.26.0 MTP
+
+Fresh comparison after updating both engines. llama.cpp was build 10200
+(`5f55650a7`) with `Qwen3.6-27B-UD-Q4_K_XL.gguf`, q8_0 K/V, 262,144 context,
+and GPU-side draft sampling. vLLM was stable 0.26.0 with the official FP8
+checkpoint, FP8 KV, FlashInfer 0.6.14, and PyTorch 2.11/CUDA 13. Each single
+result is decode throughput for a forced 600-token, temperature-0 `/no_think`
+generation. Prose and Python prompts were identical across engines.
+
+| Engine | MTP depth | Prose tok/s | Code tok/s | Mixed mean |
+|--------|-----------|-------------|------------|------------|
+| llama.cpp | off | 73.43 | 73.44 | 73.44 |
+| llama.cpp | 1 | 107.00 | 113.31 | 110.16 |
+| llama.cpp | 2 | 119.50 | 144.36 | 131.93 |
+| **llama.cpp** | **3** | **115.19** (114.99–115.39, n=3) | **156.26** (152.06–158.39, n=3) | **135.73** |
+| llama.cpp | 4 | 106.77 | 157.91 | 132.34 |
+| vLLM | off | 50.69 | 50.69 | 50.69 |
+| vLLM | 1 | 72.22 | 79.66 | 75.94 |
+| vLLM | 2 | 78.13 | 99.96 | 89.05 |
+| vLLM | 3 | 80.26 | 119.47 | 99.87 |
+| **vLLM** | **4** | **85.91** (85.90–85.92, n=3) | **129.48** (129.37–129.57, n=3) | **107.70** |
+| vLLM | 5 | 83.10 | 126.68 | 104.89 |
+
+| Final configuration | llama.cpp | vLLM |
+|---------------------|-----------|------|
+| Weight / KV quant | UD-Q4_K_XL / q8_0 | official FP8 / fp8 |
+| MTP | depth 3 | native `mtp`, depth 4 |
+| Single prose / code | 115.19 / 156.26 tok/s | 85.91 / 129.48 tok/s |
+| Four-request aggregate | not tested (production has one slot) | **310.44 tok/s**, 104.99 mean per request |
+| Added GPU memory over resident baseline | ~28,409 MiB | ~42,411 MiB |
+| Free VRAM while loaded | ~32,563 MiB | ~18,537 MiB |
+
+**vLLM cache configuration:**
+
+- Exact `kv_cache_memory_bytes=10,194,124,800` (9.494019 GiB), 183 allocator
+  pages. vLLM reports exactly 262,144 aggregate cache tokens and 1.00x
+  concurrency at the model's full context.
+- `max_num_seqs=4` is a scheduling ceiling, not four preallocated 262K slots.
+  One request can consume all 262K tokens; four equally long live requests can
+  consume about 65K each. The shared pool therefore avoids reserving four full
+  contexts for a mostly single-request service.
+- Total GPU use was 78,713 MiB with all resident services still running, so no
+  service needed to be stopped. The exact byte pool controls allocation;
+  `gpu_memory_utilization=0.60` is only the startup headroom gate.
+
+**Findings:**
+
+- llama.cpp remains the production default: it is 1.34x faster on prose and
+  1.21x faster on code while using about 14 GiB less VRAM. vLLM is the useful
+  alternate when four-way aggregate throughput matters.
+- llama.cpp depth 3 accepted 46.7% of drafted prose tokens and 78.0% of code
+  tokens. vLLM depth 4 accepted 39.6% and 72.2%, respectively. Predictable code
+  benefits more from deeper speculation.
+- vLLM automatic attention selected FlashInfer and passed the four-request
+  test. Forcing Triton improved some one-off single-request results, but the
+  final four-request test crashed its isolated engine with an illegal CUDA
+  memory access; do not use it here. All resident services remained healthy.
+- FlashInfer currently falls back to PIECEWISE CUDA graphs with speculative
+  decoding, which likely contributes to its single-request deficit.
+- The FP8 checkpoint does not publish calibrated q/k/v/prob attention scales;
+  vLLM warns that it is using 1.0. Throughput and output validity were checked,
+  but quality should be evaluated before making FP8 vLLM the default.
+
+---
+
 ## June 26, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
 
 ### LFM2.5 230M (mlx-lm 0.31.3, 8-bit MLX, prompt/decode concurrency 4)

@@ -10,7 +10,8 @@
   "llama": {
     "repo": "unsloth/Qwen3.6-27B-MTP-GGUF",
     "quant": "UD-Q4_K_XL",
-    "mtp": true
+    "mtp": true,
+    "mtp_n_max": 3
   },
   "mlx": {
     "repo": "unsloth/Qwen3.6-27B-UD-MLX-4bit",
@@ -19,11 +20,19 @@
     "draft_kind": "dflash"
   },
   "vllm": {
-    "model": "Qwen/Qwen3.6-27B",
-    "quantization": "fp8",
+    "model": "Qwen/Qwen3.6-27B-FP8",
+    "quantization": "auto",
     "kv_cache_dtype": "fp8",
-    "attention_backend": "TRITON_ATTN",
-    "tool_call_parser": "qwen3_coder"
+    "attention_backend": "auto",
+    "kv_cache_bytes": 10194124800,
+    "gpu_memory_utilization": 0.6,
+    "max_num_seqs": 4,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "qwen3",
+    "speculative_config": {
+      "method": "mtp",
+      "num_speculative_tokens": 4
+    }
   },
   "cpu": null
 }

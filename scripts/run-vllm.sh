@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-MODEL_DIR="$(cd "$1" && pwd)"; shift
-SCRIPTS_DIR="$(cd "$(dirname "$0")" && pwd)"
+MODEL_DIR="$(CDPATH= cd "$1" && pwd)"; shift
+SCRIPTS_DIR="$(CDPATH= cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPTS_DIR}/.." && pwd)"
 
 # shellcheck source=./setup-common.sh
@@ -81,6 +81,9 @@ if [[ -n "${VLLM_REASONING_PARSER:-}" ]]; then
 fi
 if [[ -n "${VLLM_REASONING_PARSER_PLUGIN:-}" ]]; then
     CMD+=(--reasoning-parser-plugin "${MODEL_DIR}/${VLLM_REASONING_PARSER_PLUGIN}")
+fi
+if [[ -n "${VLLM_SPECULATIVE_CONFIG:-}" ]]; then
+    CMD+=(--speculative-config "${VLLM_SPECULATIVE_CONFIG}")
 fi
 CMD+=(--enable-prefix-caching)
 

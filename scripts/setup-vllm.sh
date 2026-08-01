@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(CDPATH= cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # shellcheck source=./setup-common.sh
 source "${SCRIPT_DIR}/setup-common.sh"
@@ -11,21 +11,36 @@ require_command uv
 PYTHON_BIN="${PYTHON_BIN:-/usr/bin/python3.12}"
 VENV_PATH="${VENV_PATH:-${ROOT}/.venv-vllm}"
 VLLM_SPEC="${VLLM_SPEC:-vllm}"
-VLLM_WHEEL_INDEX="${VLLM_WHEEL_INDEX:-https://wheels.vllm.ai/nightly/cu130}"
+VLLM_WHEEL_INDEX="${VLLM_WHEEL_INDEX:-}"
 TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=5.5.0}"
+NUMPY_SPEC="${NUMPY_SPEC:-numpy<2.4}"
 
-echo "Creating vLLM venv at ${VENV_PATH} with ${PYTHON_BIN}"
-uv venv --python "${PYTHON_BIN}" "${VENV_PATH}"
+if [[ -x "${VENV_PATH}/bin/python" ]]; then
+    echo "Updating existing vLLM venv at ${VENV_PATH}"
+else
+    echo "Creating vLLM venv at ${VENV_PATH} with ${PYTHON_BIN}"
+    uv venv --python "${PYTHON_BIN}" "${VENV_PATH}"
+fi
 
-echo "Installing latest vLLM nightly for CUDA 13..."
-uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
-    --prerelease allow \
-    "${VLLM_SPEC}" \
-    --extra-index-url "${VLLM_WHEEL_INDEX}" \
+echo "Installing latest stable vLLM for CUDA 13..."
+VLLM_INSTALL_ARGS=(
+    --python "${VENV_PATH}/bin/python"
+    --upgrade
+    "${VLLM_SPEC}"
     --torch-backend cu130
+)
+if [[ -n "${VLLM_WHEEL_INDEX}" ]]; then
+    VLLM_INSTALL_ARGS+=(--extra-index-url "${VLLM_WHEEL_INDEX}" --prerelease allow)
+fi
+uv pip install "${VLLM_INSTALL_ARGS[@]}"
+
+# Old nightlies installed a separately versioned cubin wheel.  Current
+# FlashInfer downloads matching cubins on demand; a stale wheel prevents import.
+uv pip uninstall --python "${VENV_PATH}/bin/python" flashinfer-cubin 2>/dev/null || true
 
 echo "Upgrading Transformers (>=5.5.0 required for Gemma 4)..."
-uv pip install --python "${VENV_PATH}/bin/python" --upgrade "${TRANSFORMERS_SPEC}"
+uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
+    "${TRANSFORMERS_SPEC}" "${NUMPY_SPEC}"
 
 echo "Installing runtime build helpers used by FP4 kernels..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade ninja

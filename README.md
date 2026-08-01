@@ -34,7 +34,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2029 | Qwen 3.5 4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2031 | Qwen 3.5 0.8B | small dense | Q8_0 | q8_0 | 32K | 2 |
-| 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
+| 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
 | 2036 | Gemma 4 26B-A4B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
@@ -114,7 +114,7 @@ GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). O
 
 `model.context` is the total llama.cpp context. With `parallel > 1`, llama.cpp divides that total across slots. For example, LFM2.5 230M uses `context=512000` and `parallel=4`, which gives four 128K slots.
 
-llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max` (llama.cpp default 3, PR notes 2-3 is the sweet spot for ~1.7-2x speedup at 72-83% accept rate). Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Used by both Qwen 3.6 models.
+llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B explicitly uses depth 3, its fastest measured llama.cpp setting; see `bench/BENCHMARKS.md`.
 
 ### mlx-vlm / mlx-lm
 Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and text-only MLX models via `mlx-lm` when `mlx.backend` is `mlx_lm`. macOS only (Apple Silicon / MLX). VLMs serve at `/chat/completions` (no `/v1` prefix); `mlx-lm` serves OpenAI-compatible `/v1` routes.
@@ -129,6 +129,10 @@ Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and te
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.
 
 vLLM treats context as per-sequence length. Use `vllm.max_model_len` for `--max-model-len` and `vllm.max_num_seqs` for request concurrency. If `vllm.max_model_len` is absent, the launcher falls back to `model.context`.
+
+Set `vllm.kv_cache_bytes` to pass an exact `--kv-cache-memory-bytes` pool instead of sizing KV from a percentage of VRAM. The pool is shared dynamically by up to `vllm.max_num_seqs` requests: one request may consume the full pool, while concurrent requests divide it according to their live token counts. `gpu_memory_utilization` remains a startup admission guard when exact bytes are configured; it does not resize the pool. Native MTP is configured through `vllm.speculative_config`.
+
+Qwen 3.6 27B uses a 10,194,124,800-byte FP8 KV pool, which vLLM 0.26.0 reports as exactly 262,144 aggregate tokens with MTP depth 4 and up to four scheduled requests. Four simultaneous 262K requests do not fit; four equally long requests can use about 65K tokens each. The default Linux engine remains llama.cpp because it is faster and smaller for the usual single request. Use `./run.sh qwen-3.6-27b --engine vllm` when continuous batching is more valuable; the measured four-request aggregate was 310 tok/s. Keep the vLLM attention backend on `auto`: forcing Triton caused an illegal-memory-access crash under four-way load.
 
 ### CPU llama-server
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
