@@ -46,7 +46,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
-| 2049 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
+| 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover
@@ -62,8 +62,8 @@ service on port 4007.
 | 2033 | Available | Former Nemotron 3 Super 120B A12B port |
 | 2034 | Available | Former Nemotron 3 Nano 30B A3B port |
 | 2035 | Available | Former Nemotron Cascade 2 30B A3B port |
-| 2042 | Available | Former Qwen 3.6 PRISM port |
 | 2044 | Available | Former Gemma 4 12B Coder port |
+| 2049 | Blocked | NFS port; Fetch implementations such as Node reject it as an unsafe port |
 | 2050 | Reserved | Default `hermes-router` sidecar port; do not assign to a model |
 | 2051 | Reserved | Default port for the `hermes-auxiliary-brain` managed llama.cpp server; do not assign to a model |
 
@@ -135,7 +135,7 @@ ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Ras
 
 LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
 
-LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2049 with two slots sharing 2K total context.
+LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2042 with two slots sharing 2K total context. Port 2049 is deliberately skipped because Fetch implementations block the historical NFS port.
 
 ### Transformers (MPS / CPU)
 
