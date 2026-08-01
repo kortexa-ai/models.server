@@ -37,6 +37,25 @@ if [[ -n "${CPU_CHECKPOINT_MIN_STEP:-}" ]]; then
     CHECKPOINT_ARGS=(--checkpoint-min-step "$CPU_CHECKPOINT_MIN_STEP")
 fi
 
+if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
+    echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server in EMBEDDING mode on port ${PORT}..."
+    exec llama-server \
+        -hf "${CPU_REPO}:${QUANT}" \
+        --alias "$MODEL_ID" \
+        --device none \
+        --host "$HOST" \
+        --port "$PORT" \
+        --embedding \
+        -c "$CONTEXT" \
+        --threads 4 \
+        --parallel "$PARALLEL" \
+        --cache-type-k "$CACHE_TYPE" \
+        --cache-type-v "$CACHE_TYPE" \
+        ${FLASH_ATTN_ARGS[@]+"${FLASH_ATTN_ARGS[@]}"} \
+        ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \
+        "$@"
+fi
+
 echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server on port ${PORT}..."
 exec llama-server \
     -hf "${CPU_REPO}:${QUANT}" \
@@ -52,7 +71,7 @@ exec llama-server \
     --top-p 0.95 \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
-    "${FLASH_ATTN_ARGS[@]}" \
-    "${CHECKPOINT_ARGS[@]}" \
-    "${VISION_ARGS[@]}" \
+    ${FLASH_ATTN_ARGS[@]+"${FLASH_ATTN_ARGS[@]}"} \
+    ${CHECKPOINT_ARGS[@]+"${CHECKPOINT_ARGS[@]}"} \
+    ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \
     "$@"

@@ -1,0 +1,26 @@
+{
+  "name": "LFM2.5 Embedding 350M",
+  "id": "lfm2.5-embedding-350m",
+  "multimodal": false,
+  "embedding": true,
+  "port": 2049,
+  "host": "0.0.0.0",
+  "context": 2048,
+  "parallel": 2,
+  "cache_type": "q8_0",
+  "default_engine": {
+    "Darwin": "llama",
+    "Linux": "cpu"
+  },
+  "llama": {
+    "repo": "LiquidAI/LFM2.5-Embedding-350M-GGUF",
+    "quant": "Q8_0"
+  },
+  "cpu": {
+    "repo": "LiquidAI/LFM2.5-Embedding-350M-GGUF",
+    "quant": "Q8_0",
+    "context": 2048,
+    "parallel": 2,
+    "cache_type": "q8_0"
+  }
+}

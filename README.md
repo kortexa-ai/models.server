@@ -30,27 +30,42 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
 | 2025 | Qwen 3.5 9B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
-| 2026 | Qwen 3.5 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
-| 2027 | Qwen 3.5 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2028 | Qwen 3.6 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2029 | Qwen 3.5 4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2031 | Qwen 3.5 0.8B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
-| 2033 | Nemotron 3 Super 120B A12B | MoE (NVFP4) | NVFP4 | fp8 | 64K | 8 |
-| 2034 | Nemotron 3 Nano 30B A3B | MoE (NVFP4) | NVFP4 | fp8 | 64K | 8 |
-| 2035 | Nemotron Cascade 2 30B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2036 | Gemma 4 26B-A4B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2039 | Gemma 4 E2B | small dense | Q8_0 | q8_0 | 32K | 2 |
+| 2040 | Qwen3 Embedding 0.6B | embedding | Q8_0 | q8_0 | 32K | 4 |
+| 2041 | EmbeddingGemma 300M | embedding | Q4_0 | q8_0 | 2K | 1 |
 | 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
-| 2044 | Gemma 4 12B Coder | big dense (GGUF only) | Q4_K_M | q8_0 | 128K | 1 |
 | 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 128K/slot | 4 |
 | 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
-| 4007 | Penumbra | custom | — | — | — | — |
+| 2049 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
+| 4007 | Penumbra | `control.server` discovery | — | — | — | — |
+
+The `penumbra/model.json` entry intentionally lets `control.server` discover
+Penumbra as a model. The actual runtime remains the separate `penumbra.server`
+service on port 4007.
+
+### Available and Reserved Ports
+
+| Port | Status | Notes |
+|------|--------|-------|
+| 2026 | Available | Former Qwen 3.5 27B port |
+| 2027 | Available | Former Qwen 3.5 35B A3B reservation |
+| 2033 | Available | Former Nemotron 3 Super 120B A12B port |
+| 2034 | Available | Former Nemotron 3 Nano 30B A3B port |
+| 2035 | Available | Former Nemotron Cascade 2 30B A3B port |
+| 2042 | Available | Former Qwen 3.6 PRISM port |
+| 2044 | Available | Former Gemma 4 12B Coder port |
+| 2050 | Reserved | Default `hermes-router` sidecar port; do not assign to a model |
+| 2051 | Reserved | Default port for the `hermes-auxiliary-brain` managed llama.cpp server; do not assign to a model |
 
 ## Directory Structure
 
@@ -85,7 +100,7 @@ models.server/
 
 `run.sh` picks the engine automatically:
 
-- A model's `default_engine` wins when configured (the generative 350M LFM models use CPU backends)
+- A model's `default_engine` wins when configured. It may be a single engine or a per-platform map keyed by `uname` (the LFM embedder uses Metal-backed llama.cpp on Darwin and CPU-only llama.cpp on Linux).
 - **macOS** → `mlx` (mlx-vlm or mlx-lm)
 - **ARM Linux without CUDA** → `cpu` (Raspberry Pi)
 - **Linux with CUDA** → `llama` (llama.cpp), or `vllm` if model has no GGUF (NVFP4)
@@ -95,7 +110,7 @@ Override with `--engine`: `./run.sh qwen-3.5-4b --engine vllm`
 ## Serving Backends
 
 ### llama-server (llama.cpp)
-GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible API at `/v1/chat/completions`. CUDA + flash attention on smarty, Metal on snappy.
+GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.
 
 `model.context` is the total llama.cpp context. With `parallel > 1`, llama.cpp divides that total across slots. For example, LFM2.5 230M uses `context=512000` and `parallel=4`, which gives four 128K slots.
 
@@ -120,6 +135,8 @@ ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Ras
 
 LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
 
+LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2049 with two slots sharing 2K total context.
+
 ### Transformers (MPS / CPU)
 
 LFM2.5 Encoder 350M is a bidirectional masked-language model, not a causal LLM. LiquidAI does not publish a GGUF for this exact checkpoint, and llama.cpp cannot serve its masked-LM API. It therefore defaults to the small Transformers backend while the two generative 350M models stay on llama.cpp. The backend uses FP32 on every platform, selecting MPS on Apple Silicon and CPU elsewhere. CUDA is deliberately disabled so running it on smarty does not consume VRAM.
@@ -139,9 +156,8 @@ curl http://localhost:2048/v1/fill-mask \
 | >= 4B | UD-Q4_K_XL | q8_0 / fp8 | 64K | MoE: 8, big dense: 2, small: 2 |
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
-NVFP4 models (Nemotron Nano/Super) use vLLM with Marlin backend instead of llama.cpp.
 LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M. It is also configured for four 128K slots on llama.cpp-style backends and four-way prompt/decode concurrency on `mlx-lm`.
-The LFM 350M generative models follow the normal sub-4B `Q8_0` standard and default to CPU. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
+The LFM 350M generative and embedding models use `Q8_0`; the generative models default to CPU, while the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
 
 ## Adding a New Model
 

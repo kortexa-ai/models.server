@@ -8,20 +8,20 @@
 		<string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
 	</dict>
 	<key>KeepAlive</key>
-	<false/>
+	<true/>
 	<key>Label</key>
-	<string>ai.kortexa.qwen-3.5-27b</string>
+	<string>ai.kortexa.lfm2.5-embedding-350m</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/francip/src/models.server/run.sh</string>
-		<string>/Users/francip/src/models.server/qwen-3.5-27b</string>
+		<string>/Users/francip/src/models.server/lfm2.5-embedding-350m/launchd/kortexa-lfm2.5-embedding-350m.sh</string>
+		<string>/Users/francip/src/models.server/lfm2.5-embedding-350m</string>
 	</array>
 	<key>RunAtLoad</key>
-	<false/>
+	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/francip/Library/Logs/qwen-3.5-27b.log</string>
+	<string>/Users/francip/Library/Logs/lfm2.5-embedding-350m.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/francip/Library/Logs/qwen-3.5-27b.log</string>
+	<string>/Users/francip/Library/Logs/lfm2.5-embedding-350m.log</string>
 	<key>ThrottleInterval</key>
 	<integer>15</integer>
 	<key>WorkingDirectory</key>

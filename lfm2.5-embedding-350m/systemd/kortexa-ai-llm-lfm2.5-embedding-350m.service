@@ -1,5 +1,5 @@
 [Unit]
-Description=Nemotron Cascade 2 30B A3B LLM
+Description=LFM2.5 Embedding 350M
 After=network.target
 
 StartLimitIntervalSec=120
@@ -15,7 +15,7 @@ WorkingDirectory=/home/francip/src/models.server
 
 Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 
-ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/nemotron-cascade-2-30b-a3b
+ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/lfm2.5-embedding-350m
 
 Restart=always
 RestartSec=15

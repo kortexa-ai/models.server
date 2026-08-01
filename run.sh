@@ -30,10 +30,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Honor a model-specific default before platform auto-detection. This keeps
-# tiny CPU-first models off GPU backends unless explicitly overridden.
+# Honor a model-specific default before platform auto-detection. The value may
+# be a single engine name or a map keyed by uname (for example, Darwin/Linux).
+# This keeps tiny CPU-first models off GPU backends unless explicitly overridden.
 if [[ -z "$ENGINE" ]]; then
-    ENGINE=$(python3 -c "import json; m=json.load(open('${MODEL_DIR}/model.json')); print(m.get('default_engine', ''))")
+    PLATFORM="$(uname -s)"
+    ENGINE=$(python3 -c "import json; m=json.load(open('${MODEL_DIR}/model.json')); d=m.get('default_engine', ''); print(d.get('${PLATFORM}', '') if isinstance(d, dict) else d)")
 fi
 
 # Auto-detect engine from platform and model config
