@@ -17,7 +17,7 @@
 		<string>/Users/francip/src/models.server/lfm2.5-vl-450m</string>
 	</array>
 	<key>RunAtLoad</key>
-	<false/>
+	<true/>
 	<key>StandardErrorPath</key>
 	<string>/Users/francip/Library/Logs/lfm2.5-vl-450m.log</string>
 	<key>StandardOutPath</key>

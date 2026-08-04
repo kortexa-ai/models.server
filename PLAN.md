@@ -16,8 +16,9 @@ a matched Q8_0 model and projector.
 
 ## Status
 
-- Completed 2026-08-04: the managed MLX service is installed, running, and
-  photo-tested on `snappy` at port 2052 with a 32K effective context.
+- Completed 2026-08-04: the managed MLX service is installed, enabled at
+  login, running, and photo-tested on `snappy` at port 2052 with a 32K
+  effective context.
 - `happyhippo` was idle and selected for the Pi test. llama.cpp was updated to
   build 10267, and the verified 459.7 MiB Q8_0 model/projector pair remains on
   the Pi for later use.

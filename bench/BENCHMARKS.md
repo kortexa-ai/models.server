@@ -11,10 +11,10 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ### LFM2.5 VL 450M managed camera/photo service (MLX 8-bit)
 
-Installed `lfm2.5-vl-450m` with `ktxsvc` and left it running on port 2052.
-The MLX service uses the 8-bit checkpoint, a 32,768-token limit, and
-continuous batching. It settled at about 1.03 GiB RSS and correctly identified
-the Statue of Liberty in every 512x341 and 1536x1536 request.
+Installed `lfm2.5-vl-450m` with `ktxsvc`, enabled it at login, and left it
+running on port 2052. The MLX service uses the 8-bit checkpoint, a 32,768-token
+limit, and continuous batching. It settled at about 1.03 GiB RSS and correctly
+identified the Statue of Liberty in every 512x341 and 1536x1536 request.
 
 | Image | First measured wall | Repeat wall | Decode tok/s |
 |-------|---------------------|-------------|--------------|
