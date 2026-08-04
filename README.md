@@ -47,6 +47,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
+| 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover
@@ -122,7 +123,9 @@ Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and te
 
 `mlx-vlm>=0.6.0` supports speculative decoding on the server. Add optional `mlx.draft_model`, `mlx.draft_kind`, and `mlx.draft_block_size` fields in `model.json` to pass `--draft-model`, `--draft-kind`, and `--draft-block-size`; set `MLX_DISABLE_DRAFT=1` when launching to run without the configured drafter.
 
-**Gemma 4 MTP drafters** work but only help large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s; see `bench/BENCHMARKS.md`); 26B-A4B/31B keep `draft_enabled=true` pending an MLX bench. The Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260), `AttributeError: 'list' object has no attribute 'max'`) is fixed upstream in `mlx-vlm 0.6.1` (our PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)) — hence the `>=0.6.1` floor in `setup-mlx.sh`. The old local patch has been removed.
+LFM2.5 VL 450M uses LiquidAI's official 8-bit MLX checkpoint on snappy. It has a 32K multimodal context and one request slot; `mlx-vlm>=0.6.6` is required for the LFM2-VL loader and tokenizer fixes.
+
+**Gemma 4 MTP drafters** work but only help large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s; see `bench/BENCHMARKS.md`); 26B-A4B/31B keep `draft_enabled=true` pending an MLX bench. The Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260), `AttributeError: 'list' object has no attribute 'max'`) is fixed upstream in `mlx-vlm 0.6.1` (our PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)). The old local patch has been removed; the current setup floor also includes the later LFM2-VL fixes.
 
 ### vLLM
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.
@@ -137,6 +140,8 @@ Qwen 3.6 27B uses a 10,194,124,800-byte FP8 KV pool, which vLLM 0.26.0 reports a
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
 
 LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
+
+LFM2.5 VL 450M uses LiquidAI's official `Q8_0` GGUF and matching vision projector on llama.cpp and CPU backends. It keeps the model's 32K multimodal context in one slot; macOS defaults to the official 8-bit MLX checkpoint instead.
 
 LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2042 with two slots sharing 2K total context. Port 2049 is deliberately skipped because Fetch implementations block the historical NFS port.
 
@@ -160,7 +165,7 @@ curl http://localhost:2048/v1/fill-mask \
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
 LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M. It is also configured for four 128K slots on llama.cpp-style backends and four-way prompt/decode concurrency on `mlx-lm`.
-The LFM 350M generative and embedding models use `Q8_0`; the generative models default to CPU, while the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
+The LFM 350M generative, vision-language, and embedding models use `Q8_0`; the generative models default to CPU, the VLM defaults to MLX on Darwin, and the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
 
 ## Adding a New Model
 

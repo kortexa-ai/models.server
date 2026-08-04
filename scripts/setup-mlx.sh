@@ -15,7 +15,7 @@ uv venv --allow-existing "${VENV_PATH}"
 
 echo "Installing mlx-vlm, mlx-lm, Transformers, torch, torchvision..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
-    'mlx-vlm>=0.6.1' \
+    'mlx-vlm>=0.6.6' \
     mlx-lm \
     'transformers>=5.12.0' \
     torch \
