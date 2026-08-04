@@ -1,3 +1,40 @@
+# LFM2.5 VL 450M GPU benchmark on smarty
+
+## Goal
+
+Measure the same text, 512px photo, and 1536px tiled-photo workloads on
+`smarty` with full GPU offload, without stopping or disturbing resident
+production services.
+
+## Live baseline — 2026-08-04
+
+- RTX PRO 6000: 64,798 MiB used, 32,453 MiB free, 0% utilization, 32 C.
+- Running GPU set: image base, ComfyUI, Vision, Qwen 3.6 27B, Gemma 4 E2B,
+  ASR, TTS, and Qwen3 Embedding 0.6B.
+- Repository is clean on `main` at `830e373`; port 2052 is free and no LFM2.5
+  VL benchmark process exists.
+- No service will be stopped. Keep at least 10 GiB free and begin with one
+  short image request before running the matched benchmark.
+
+## Work plan
+
+1. Verify every resident GPU endpoint and capture the exact GPU baseline.
+2. Start one isolated llama.cpp GPU server and run a small canary.
+3. Measure matched text, 512px, and 1536px cold/warm requests.
+4. Stop the benchmark server, recheck every baseline service, and log results.
+
+## Status
+
+- Completed 2026-08-04 without production downtime. Full GPU offload delivered
+  1,310.64 text tok/s, 0.084s / 0.026s cold/warm 512px images, and 0.159s /
+  0.062s cold/warm 1536px tiled images.
+- Peak sampled use left 30,955 MiB VRAM free. The benchmark server was stopped,
+  port 2052 is free, all eight resident endpoints are HTTP 200, and final GPU
+  use returned to within 90 MiB of baseline.
+- Results are recorded in `bench/BENCHMARKS.md`.
+
+---
+
 # LFM2.5 VL 450M deployment and Pi benchmark
 
 ## Goal

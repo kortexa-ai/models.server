@@ -7,6 +7,52 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 4, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### LFM2.5 VL 450M image serving (llama.cpp Q8_0, full GPU offload)
+
+Matched follow-up to the CPU and Pi tests using llama.cpp build 10200
+(`5f55650a7`), the official Q8_0 model/projector pair, all layers on CUDA,
+q8_0 K/V, 32,768 context, one slot, and the tuned 8/24 decode/batch thread
+split. No production service was stopped. The resident baseline left 32,453
+MiB VRAM free; the benchmark's highest sampled use still left 30,955 MiB free.
+
+| Workload | Prompt / cached tok | Wall | Prompt tok/s | Decode tok/s |
+|----------|---------------------|------|--------------|--------------|
+| 128-token text, first | 31 / 1 | 0.113s | 9,202 | 1,313.67 |
+| 128-token text, repeat | 4 / 28 | 0.110s | 2,950 | 1,307.60 |
+| 512x341 image, cold | 201 / 0 | **0.084s** | 3,427 | 1,293.90 |
+| 512x341 image, warm | 4 / 197 | **0.026s** | 1,208 | 1,305.85 |
+| 1536x1536 image, cold | 2,594 / 1 | **0.159s** | 25,905 | 1,270.76 |
+| 1536x1536 image, warm | 4 / 2,590 | **0.062s** | 2,532 | 1,267.43 |
+
+Direct image comparison:
+
+| Engine | 512px cold / warm | 1536px cold / warm |
+|--------|-------------------|----------------------|
+| `snappy` MLX 8-bit | 0.270s / 0.176s | 0.160s / 0.166s |
+| `smarty` CPU Q8_0, tuned | 0.434s / 0.237s | 2.742s / 0.399s |
+| **`smarty` GPU Q8_0** | **0.084s / 0.026s** | **0.159s / 0.062s** |
+
+**Findings:**
+
+- GPU text decode averaged **1,310.64 tok/s**, 13.9x the tuned `smarty` CPU
+  result. The 512px path was 3.2x faster cold and 6.7x faster warm than
+  `snappy` MLX.
+- Cold 1536px latency essentially tied `snappy` at 0.159s, but llama.cpp kept
+  the full 10-tile / 2,594-token representation. CUDA processed that prompt at
+  25.9K tok/s, 23.5x the tuned CPU prompt rate. The cached repeat was 2.7x
+  faster than `snappy`.
+- Compared with tuned CPU llama.cpp, full GPU offload was 5.1x faster for the
+  cold 512px image and 17.3x faster for the cold tiled image.
+- Model startup took 0.79s. The benchmark process accounted for 666 MiB VRAM;
+  total sampled GPU use rose by at most about 1.5 GiB over the live baseline.
+- The isolated server was stopped, port 2052 was left free, and all eight
+  checked resident endpoints returned HTTP 200 afterward. Final GPU use was
+  within 90 MiB of baseline.
+
+---
+
 ## August 4, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
 
 ### LFM2.5 VL 450M managed camera/photo service (MLX 8-bit)
