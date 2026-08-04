@@ -7,6 +7,72 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 4, 2026 — snappy (Mac Mini M4 Pro, 64 GB unified)
+
+### LFM2.5 VL 450M managed camera/photo service (MLX 8-bit)
+
+Installed `lfm2.5-vl-450m` with `ktxsvc` and left it running on port 2052.
+The MLX service uses the 8-bit checkpoint, a 32,768-token limit, and
+continuous batching. It settled at about 1.03 GiB RSS and correctly identified
+the Statue of Liberty in every 512x341 and 1536x1536 request.
+
+| Image | First measured wall | Repeat wall | Decode tok/s |
+|-------|---------------------|-------------|--------------|
+| 512x341 | 0.270s | **0.176s** | 155–180 |
+| 1536x1536 | **0.160s** | 0.166s | 147–151 |
+
+This was a deployment smoke test, not a quality evaluation. The MLX path did
+not show llama.cpp's 10-tile latency penalty for the large image, but camera
+clients should still resize before upload to avoid needless transfer and image
+decode work.
+
+---
+
+## August 4, 2026 — happyhippo (Raspberry Pi 5, CPU only)
+
+### LFM2.5 VL 450M image serving (llama.cpp Q8_0)
+
+CPU-only test on an 8 GB Raspberry Pi 5 with four Cortex-A76 cores at 2.4 GHz.
+llama.cpp was updated from build 9803 to build 10267 (`7bd8282c3`) and run with
+four decode/batch threads, `--device none`, q8_0 K/V, 32,768 context, one slot,
+and the matching Q8_0 model and projector. The two artifacts total 459.7 MiB.
+Model startup took 4.13s; RSS was about 1.04 GiB after load and 1.23 GiB after
+the large-image run.
+
+Requests came from `snappy` over the LAN, so wall time includes request upload
+and response overhead. The same Statue of Liberty images and prompt used for
+the `smarty` test produced identical prompt token counts. Cold rows processed
+the image from scratch; warm rows repeated the exact image and prompt.
+
+| Workload | Prompt / cached tok | Wall | Prompt tok/s | Decode tok/s |
+|----------|---------------------|------|--------------|--------------|
+| 128-token text, first | 32 / 0 | 5.129s | 183 | 27.23 |
+| 128-token text, repeat | 4 / 28 | 4.963s | 107 | 26.18 |
+| 512x341 image, cold | 201 / 1 | 4.067s | 57.9 | 30.63 |
+| 512x341 image, warm | 4 / 197 | **0.603s** | 103 | 27.87 |
+| 1536x1536 image, cold | 2,594 / 1 | 60.476s | 43.6 | 19.84 |
+| 1536x1536 image, warm | 4 / 2,590 | **1.013s** | 61.5 | 19.14 |
+
+**Findings:**
+
+- Text-only decode averaged **26.71 tok/s**. A cold 512px camera snapshot is
+  usable at about four seconds, while an exact cached repeat is 6.7x faster.
+- The 10-tile large image is not an edge-friendly default: it was 14.9x slower
+  than the 512px image and 22.1x slower than the tuned `smarty` cold result.
+  Resize camera frames to roughly a 512px maximum edge unless fine detail or
+  OCR specifically requires more pixels.
+- Exact prompt/image caching is extremely effective for unchanged inputs: the
+  large repeat reused 2,590 tokens and fell from 60.48s to 1.01s. Normal live
+  camera frames change, so do not assume this win unless the image bytes are
+  actually reused.
+- The Pi stayed at 2.4 GHz and about 65 C with no active throttle bits during
+  the test. Sticky status indicated an earlier undervoltage/throttle event
+  since boot, but neither condition was active during measurement.
+- The temporary Pi server was stopped and port 2052 was left free. The verified
+  model artifacts remain under `/home/pi/models/lfm2.5-vl-450m/` for later use.
+
+---
+
 ## August 4, 2026 — smarty (Core i9-14900K, CPU only)
 
 ### LFM2.5 VL 450M image serving (llama.cpp Q8_0)

@@ -1,3 +1,35 @@
+# LFM2.5 VL 450M deployment and Pi benchmark
+
+## Goal
+
+Keep the model available on `snappy` as a low-latency camera/photo service,
+then measure its CPU-only image performance on one 8 GB Raspberry Pi 5 with
+a matched Q8_0 model and projector.
+
+## Work plan
+
+1. Inspect the existing service and both Pis; use the quieter healthy Pi.
+2. Install, start, and exercise the managed MLX service on `snappy`.
+3. Update llama.cpp on the selected Pi only if needed, copy the non-repository
+   Q8_0 artifacts, and benchmark text plus small and tiled image inputs.
+4. Record results, stop the temporary Pi server, and verify affected services.
+
+## Status
+
+- Completed 2026-08-04: the managed MLX service is installed, running, and
+  photo-tested on `snappy` at port 2052 with a 32K effective context.
+- `happyhippo` was idle and selected for the Pi test. llama.cpp was updated to
+  build 10267, and the verified 459.7 MiB Q8_0 model/projector pair remains on
+  the Pi for later use.
+- The Pi delivered 26.71 text tok/s, a 4.07s cold / 0.60s warm 512px image,
+  and a 60.48s cold / 1.01s warm 1536px tiled image. All image responses were
+  correct in the smoke test.
+- Results are logged in `bench/BENCHMARKS.md`. The temporary Pi server and test
+  images were removed, port 2052 is free there, and the `snappy` service is
+  healthy.
+
+---
+
 # Qwen 3.6 27B engine and memory tuning
 
 ## Goal
