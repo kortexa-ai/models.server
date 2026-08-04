@@ -7,6 +7,54 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 4, 2026 — smarty (Core i9-14900K, CPU only)
+
+### LFM2.5 VL 450M image serving (llama.cpp Q8_0)
+
+Quick CPU-only bring-up of `LiquidAI/LFM2.5-VL-450M-GGUF` with its matching
+Q8_0 vision projector. llama.cpp was build 10200 (`5f55650a7`), launched with
+`--device none`, q8_0 K/V, 32,768 context, one slot, and `temperature=0`.
+The process used about 0.9 GiB RSS and allocated no GPU memory. `smarty` has an
+i9-14900K with 8 P-cores, 16 E-cores, and 32 logical CPUs.
+
+The same Statue of Liberty photo was tested at 512x341 and as a 1536x1536
+large-image/10-tile stress case. Cold rows processed the image from scratch;
+warm rows repeated the identical image and prompt. Image results are one quick
+run per condition, while text decode is the mean of two 128-token runs.
+
+| Workload | Prompt / cached tok | Default 4-thread wall | Tuned 8/24 wall | Default prompt tok/s | Tuned prompt tok/s | Default decode tok/s | Tuned decode tok/s |
+|----------|---------------------|-----------------------|-----------------|----------------------|--------------------|----------------------|--------------------|
+| 512x341 image, cold | 201 / 1 | 0.536s | **0.434s** | 651 | **903** | 89.0 | **95.9** |
+| 512x341 image, warm | 4 / 198 | 0.243s | **0.237s** | — | — | 90.2 | **92.9** |
+| 1536x1536 image, cold | 2,594 / 1 | 5.007s | **2.742s** | 565 | **1,101** | 73.6 | **80.7** |
+| 1536x1536 image, warm | 4 / 2,591 | 0.424s | **0.399s** | — | — | 77.2 | **81.5** |
+
+Text-only decode improved from **87.1 tok/s** with the configured four threads
+to **94.5 tok/s** with eight decode threads and 24 batch/image threads. The
+tuned command was:
+
+```bash
+./run.sh lfm2.5-vl-450m --engine cpu --threads 8 --threads-batch 24
+```
+
+**Findings:**
+
+- The tuned hybrid-CPU split cut cold 512px image latency by 19% and cold
+  large-image latency by 45%. Large-image prompt throughput nearly doubled
+  from 565 to 1,101 tok/s.
+- Vision/prompt caching is the bigger win for repeated images: 198 of the small
+  prompt's tokens and 2,591 of the large prompt's tokens were reused, reducing
+  wall time to 0.24s and 0.40s, respectively.
+- Both image sizes correctly identified the Statue of Liberty; this was a
+  correctness smoke test, not a quality evaluation.
+- Keep the shared four-thread CPU default for the Raspberry Pis. Use the 8/24
+  override on `smarty`, where the extra batch threads materially accelerate
+  image prefill.
+- The temporary server was stopped, port 2052 was left free, and all five
+  checked resident service health endpoints still returned HTTP 200.
+
+---
+
 ## August 1, 2026 — smarty (RTX PRO 6000 Blackwell)
 
 ### Qwen 3.6 27B: current llama.cpp vs vLLM 0.26.0 MTP
