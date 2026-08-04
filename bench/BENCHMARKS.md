@@ -7,6 +7,60 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 4, 2026 — snappy + smarty
+
+### YOLO-to-LFM movie pipeline and MiniMax H3 critic trial
+
+The camera-style trial used a 70.542-second, 800x332
+[*Tears of Steel* battle excerpt](https://iandevlin.github.io/mdn/video-player/video/tears-of-steel-battle-clip-medium.mp4).
+The underlying [Blender Foundation open movie](https://video.blender.org/w/hs1zJY8mdr3iH2JNmxpeGV)
+and raw material are released under CC BY 3.0. Thirty-five JPEGs were sampled every two seconds on `snappy`,
+sent sequentially over the LAN to `smarty`'s `yolo26n.pt`, and only selected
+evidence frames were sent to the 8-bit LFM service on `snappy`.
+
+| Stage | Input | Wall / result |
+|-------|-------|---------------|
+| YOLO detection | 35 movie frames, sequential LAN requests | **1.65s** total (21.2 sampled fps); 42 detections in 24 frames, including 31 people |
+| LFM attributes | One 640x266 boxed person frame | **0.311s**; correctly reported white shirt, dark hair, downward gaze, and sunglasses |
+| LFM timeline | Four-frame 1024x426 evidence grid | **0.389s**; followed the person but incorrectly called the adjacent machine a rifle |
+
+The generated-video trial temporarily stopped Qwen 3.6 27B, used the existing
+MiniMax H3 stack through `alt-video-gen.server`, and restored Qwen afterward.
+The canary completed in 20 seconds. Both real runs used T2VA, the same seed
+(`240804`), 1344x768, five requested seconds, 20 steps, and native stereo
+audio. The baseline used a normal prose prompt; the revision added explicit
+stationary, grasp, lift, and hold time beats after the first critique.
+
+| H3 run | Generation wall | Peak total VRAM used | Minimum free VRAM | Output |
+|--------|-----------------|----------------------|-------------------|--------|
+| Baseline | **196s** | 78,706 MiB | 18,544 MiB | 5.167s H.264 + stereo AAC |
+| Timed-prompt revision | **201s** | 78,738 MiB | 18,512 MiB | 5.167s H.264 + stereo AAC |
+
+YOLO supplied the useful temporal measurements from eight evenly spaced
+frames. The revision delayed the actual lift and held the cup more rigidly:
+
+| Main mug track | Baseline | Revision |
+|----------------|----------|----------|
+| Bounding-box area coefficient of variation | 9.03% | **1.31%** |
+| Motion onset | 1.875s | **3.125s** |
+| Final two-frame vertical jitter | 2.25 px | **0.63 px** |
+| Net vertical lift | 63.3 px | 69.5 px |
+
+**Finding:** LFM is useful as a cheap micro-critic, not a holistic video
+judge. Separate single-frame yes/no checks correctly detected a hand in the
+baseline opening (0.325s) and no hand in the revised opening (0.119s).
+Comparison grids were unreliable: the same model claimed both opening frames
+contained hands, and the movie test produced the rifle hallucination. The
+practical loop is therefore deterministic frame sampling and YOLO tracking,
+followed by one narrowly worded LFM question per selected frame. Keep scoring,
+counts, motion, and acceptance gates in code.
+
+The temporary H3 wrapper was uninstalled, port 4005 was returned to its prior
+free state, Qwen received a new healthy PID, every resident endpoint returned
+HTTP 200, and final GPU use was within 28 MiB of the recorded baseline.
+
+---
+
 ## August 4, 2026 — smarty (RTX PRO 6000 Blackwell)
 
 ### LFM2.5 VL 450M image serving (llama.cpp Q8_0, full GPU offload)
