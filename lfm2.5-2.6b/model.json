@@ -1,0 +1,21 @@
+{
+  "name": "LFM2.5 2.6B",
+  "id": "lfm2.5-2.6b",
+  "multimodal": false,
+  "port": 2027,
+  "host": "0.0.0.0",
+  "context": 128000,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "LiquidAI/LFM2.5-2.6B-GGUF",
+    "quant": "Q8_0"
+  },
+  "mlx": {
+    "repo": "LiquidAI/LFM2.5-2.6B-MLX",
+    "subdir": "8bit",
+    "backend": "mlx_lm",
+    "prompt_concurrency": 1,
+    "decode_concurrency": 1
+  }
+}

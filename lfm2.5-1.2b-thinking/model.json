@@ -1,0 +1,20 @@
+{
+  "name": "LFM2.5 1.2B Thinking",
+  "id": "lfm2.5-1.2b-thinking",
+  "multimodal": false,
+  "port": 2026,
+  "host": "0.0.0.0",
+  "context": 32768,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "LiquidAI/LFM2.5-1.2B-Thinking-GGUF",
+    "quant": "Q8_0"
+  },
+  "mlx": {
+    "repo": "LiquidAI/LFM2.5-1.2B-Thinking-MLX-8bit",
+    "backend": "mlx_lm",
+    "prompt_concurrency": 1,
+    "decode_concurrency": 1
+  }
+}

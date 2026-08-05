@@ -30,6 +30,8 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
 | 2025 | Qwen 3.5 9B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
+| 2026 | LFM2.5 1.2B Thinking | reasoning dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
+| 2027 | LFM2.5 2.6B | agentic dense | Q8_0 / MLX 8-bit | q8_0 | 128K | 1 |
 | 2028 | Qwen 3.6 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2029 | Qwen 3.5 4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
@@ -58,8 +60,6 @@ service on port 4007.
 
 | Port | Status | Notes |
 |------|--------|-------|
-| 2026 | Available | Former Qwen 3.5 27B port |
-| 2027 | Available | Former Qwen 3.5 35B A3B reservation |
 | 2033 | Available | Former Nemotron 3 Super 120B A12B port |
 | 2034 | Available | Former Nemotron 3 Nano 30B A3B port |
 | 2035 | Available | Former Nemotron Cascade 2 30B A3B port |
@@ -121,6 +121,10 @@ Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and te
 
 `mlx-lm` does not take a llama-style context flag. Use `mlx.prompt_concurrency` and `mlx.decode_concurrency` for request batching, plus optional prompt-cache fields. `mlx-vlm` exposes different knobs such as `mlx.max_kv_size`, `mlx.vision_cache_size`, and `mlx.prefill_step_size`; these are passed only when set.
 
+When an official MLX repository stores precision variants in subdirectories,
+set `mlx.subdir`; the launcher downloads only that subtree and gives its local
+path to `mlx-lm`. LFM2.5 2.6B uses this for the official `8bit/` checkpoint.
+
 `mlx-vlm>=0.6.0` supports speculative decoding on the server. Add optional `mlx.draft_model`, `mlx.draft_kind`, and `mlx.draft_block_size` fields in `model.json` to pass `--draft-model`, `--draft-kind`, and `--draft-block-size`; set `MLX_DISABLE_DRAFT=1` when launching to run without the configured drafter.
 
 LFM2.5 VL 450M uses LiquidAI's official 8-bit MLX checkpoint on snappy. It has a 32K multimodal context and one request slot; `mlx-vlm>=0.6.6` is required for the LFM2-VL loader and tokenizer fixes.
@@ -142,6 +146,11 @@ ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Ras
 LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
 
 LFM2.5 VL 450M uses LiquidAI's official `Q8_0` GGUF and matching vision projector on llama.cpp and CPU backends. It keeps the model's 32K multimodal context in one slot; macOS defaults to the official 8-bit MLX checkpoint instead.
+
+LFM2.5 1.2B Thinking and LFM2.5 2.6B use the official `Q8_0` GGUFs with full
+CUDA offload on `smarty`, and official 8-bit MLX checkpoints on `snappy`.
+They run one request at a time with their supported 32K and 128K contexts,
+respectively. Neither has a CPU backend configured.
 
 LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2042 with two slots sharing 2K total context. Port 2049 is deliberately skipped because Fetch implementations block the historical NFS port.
 
@@ -165,6 +174,8 @@ curl http://localhost:2048/v1/fill-mask \
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
 LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M. It is also configured for four 128K slots on llama.cpp-style backends and four-way prompt/decode concurrency on `mlx-lm`.
+LFM2.5 1.2B Thinking and 2.6B are single-slot Q8 exceptions for their reasoning
+and agentic workloads; they use MLX on macOS and CUDA-backed llama.cpp on Linux.
 The LFM 350M generative, vision-language, and embedding models use `Q8_0`; the generative models default to CPU, the VLM defaults to MLX on Darwin, and the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
 
 ## Adding a New Model

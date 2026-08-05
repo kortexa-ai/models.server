@@ -49,6 +49,8 @@ def main():
     mlx = m.get("mlx")
     if mlx:
         print(f"MLX_REPO='{quote(mlx['repo'])}'")
+        if mlx.get("subdir"):
+            print(f"MLX_SUBDIR='{quote(mlx['subdir'])}'")
         backend = mlx.get("backend", "mlx_vlm")
         print(f"MLX_BACKEND='{backend}'")
         if backend == "mlx_lm":

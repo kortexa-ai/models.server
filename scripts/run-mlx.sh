@@ -23,8 +23,29 @@ HOST="${HOST:-0.0.0.0}"
 BACKEND="${MLX_BACKEND:-mlx_vlm}"
 
 echo "Starting ${MODEL_NAME} via ${BACKEND} on port ${PORT}..."
+MODEL_PATH="$MLX_REPO"
+if [[ -n "${MLX_SUBDIR:-}" ]]; then
+    echo "Resolving ${MLX_REPO}/${MLX_SUBDIR} from its multi-precision repository..."
+    MODEL_PATH="$(
+        MLX_MODEL_REPO="$MLX_REPO" MLX_MODEL_SUBDIR="$MLX_SUBDIR" python - <<'PY'
+import os
+from pathlib import Path
+
+from huggingface_hub import snapshot_download
+
+repo = os.environ["MLX_MODEL_REPO"]
+subdir = os.environ["MLX_MODEL_SUBDIR"].strip("/")
+snapshot = snapshot_download(repo, allow_patterns=[f"{subdir}/*"])
+model_path = Path(snapshot) / subdir
+if not (model_path / "config.json").is_file():
+    raise SystemExit(f"MLX model subdirectory has no config.json: {model_path}")
+print(model_path)
+PY
+    )"
+fi
+
 SERVER_ARGS=(
-    --model "$MLX_REPO"
+    --model "$MODEL_PATH"
     --host "$HOST"
     --port "$PORT"
 )

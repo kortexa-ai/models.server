@@ -1,3 +1,30 @@
+# LFM2.5 1.2B Thinking and 2.6B bring-up
+
+## Goal
+
+Add both text models with official Q8_0 GGUF checkpoints on `smarty` CUDA,
+official 8-bit MLX checkpoints on `snappy`, maximum supported context, and one
+request slot. Verify and benchmark each backend, then leave both services
+uninstalled, stopped, and without downloaded model artifacts on either host.
+
+## Work plan
+
+1. Add model configs, service units, inventory docs, and minimal MLX subfolder
+   support for the 2.6B checkpoint's multi-precision repository.
+2. Validate parsers, launchers, launchd plists, and systemd units.
+3. Temporarily install, smoke-test, and benchmark both MLX services on `snappy`.
+4. Commit and sync through Git, then repeat on `smarty` with full CUDA offload
+   while preserving resident production services and at least 10 GiB VRAM.
+5. Record results; uninstall both services, remove only artifacts downloaded by
+   this run, and verify ports, processes, services, caches, and resident health.
+
+## Status
+
+- In progress on 2026-08-04. Baseline: both ports (2026 and 2027) are free and
+  neither model service is installed on `snappy`.
+
+---
+
 # LFM2.5 VL 450M GPU benchmark on smarty
 
 ## Goal
