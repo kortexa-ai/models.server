@@ -20,8 +20,19 @@ uninstalled, stopped, and without downloaded model artifacts on either host.
 
 ## Status
 
-- In progress on 2026-08-04. Baseline: both ports (2026 and 2027) are free and
-  neither model service is installed on `snappy`.
+- Completed 2026-08-04. Both models returned the correct arithmetic canary on
+  MLX and CUDA; llama.cpp reported one 32,768-token slot for 1.2B Thinking and
+  one 128,000-token slot for 2.6B.
+- Warm 256-token decode measured 147.9 / 68.5 wall tok/s on `snappy` MLX and
+  749.6 / 330.8 server tok/s on `smarty` CUDA for 1.2B / 2.6B, respectively.
+  Matched 4.1K-token cold and cached-prompt results are in
+  `bench/BENCHMARKS.md`.
+- The launchd plists use model-named wrapper scripts, so macOS Login Items do
+  not show two more generic `run.sh` entries.
+- No production service was stopped. Both new services are uninstalled and
+  off on both hosts; ports 2026 and 2027 are free, all four downloaded model
+  caches were removed, all resident `smarty` endpoints are HTTP 200, and both
+  repositories are clean at the same commit.
 
 ---
 

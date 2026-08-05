@@ -9,6 +9,59 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ## August 4, 2026 — snappy + smarty
 
+### LFM2.5 1.2B Thinking and 2.6B bring-up (8-bit, one slot)
+
+Matched OpenAI chat requests on `snappy` (mlx-lm 0.31.3 / MLX 0.32.0) and
+`smarty` (llama.cpp build 10200, `5f55650a7`). The Mac used LiquidAI's official
+8-bit MLX checkpoints; the RTX PRO 6000 used the official Q8_0 GGUFs with all
+layers on CUDA and q8_0 K/V. Thinking used its supported 32,768-token context;
+2.6B used 128,000. Both ran with one prompt/decode slot.
+
+The decode workload requested 256 tokens of continuous prose. "First" is the
+first request for that exact prompt; "warm" averages three cached-prefix
+repeats. Wall TPS includes HTTP and prompt overhead. llama.cpp also reports
+decode-only server TPS. Completion counts include the models' reasoning tokens.
+
+| Model | Host / backend | 256 first wall | 256 warm wall | Warm wall TPS | Server decode TPS |
+|-------|----------------|----------------|---------------|---------------|-------------------|
+| 1.2B Thinking | `snappy` MLX 8-bit | 2.556s | 1.732s | **147.9** | — |
+| 1.2B Thinking | `smarty` CUDA Q8_0 | 0.351s | **0.346s** | **739.1** | **749.6** |
+| 2.6B | `snappy` MLX 8-bit | 3.916s | 3.735s | **68.5** | — |
+| 2.6B | `smarty` CUDA Q8_0 | 0.791s | **0.781s** | **327.8** | **330.8** |
+
+The prompt workload repeated a stable four-token phrase, then requested a
+16-token answer. It measures one cold 4.1K-token prefill and one exact repeat:
+
+| Model | Host / backend | Prompt tok | Cold wall | Cached tok | Repeat wall |
+|-------|----------------|------------|-----------|------------|-------------|
+| 1.2B Thinking | `snappy` MLX 8-bit | 4,113 | 1.570s | 4,112 | 0.130s |
+| 1.2B Thinking | `smarty` CUDA Q8_0 | 4,113 | **0.085s** | 4,109 | **0.026s** |
+| 2.6B | `snappy` MLX 8-bit | 4,114 | 3.553s | 4,113 | 0.301s |
+| 2.6B | `smarty` CUDA Q8_0 | 4,114 | **0.174s** | 4,110 | **0.054s** |
+
+**Findings:**
+
+- CUDA was 5.0x faster than MLX for warm 1.2B end-to-end decode and 4.8x
+  faster for 2.6B. Cold 4.1K prompt wall time was 18.5x and 20.4x faster,
+  respectively.
+- The arithmetic canary used each model's recommended sampling, including
+  repetition penalties of 1.05 and 1.1. Both backends returned 323 for
+  `17 * 19`; at temperature 0.05, the reasoning model needed its repetition
+  penalty to avoid a loop on llama.cpp.
+- llama.cpp confirmed `n_ctx_slot = 32768` and `128000`. The 1.2B server added
+  about 2.1 GiB to the initial live GPU baseline; the 2.6B process used 4,834
+  MiB. The lowest sampled free VRAM was 27,497 MiB, so no production service
+  needed to stop.
+- The 2.6B MLX repository stores all precisions together. `mlx.subdir = 8bit`
+  downloaded only that subtree before starting mlx-lm. The model-specific
+  launch wrappers were also exercised and appeared as the launchd programs.
+- Both temporary services were uninstalled on both hosts. Ports 2026/2027 are
+  free, the two MLX caches and two GGUF caches were removed, every resident
+  `smarty` endpoint returned HTTP 200, and final GPU use was 713 MiB below the
+  initial baseline.
+
+---
+
 ### YOLO-to-LFM movie pipeline and MiniMax H3 critic trial
 
 The camera-style trial used a 70.542-second, 800x332
