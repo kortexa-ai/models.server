@@ -40,6 +40,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
 | 2033 | Qwen3 TTS 0.6B CustomVoice | streaming TTS | BF16 / MLX BF16 | — | 4K | 1 |
 | 2034 | Audio8 TTS Preview 0.6B | cloning TTS | BF16 / MLX BF16 | — | 2K | 1 |
+| 2035 | Qwen3 TTS 1.7B CustomVoice | streaming controlled TTS | BF16 / MLX BF16 | — | 4K | 1 |
 | 2036 | Gemma 4 26B-A4B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
@@ -63,7 +64,6 @@ service on port 4007.
 
 | Port | Status | Notes |
 |------|--------|-------|
-| 2035 | Available | Former Nemotron Cascade 2 30B A3B port |
 | 2049 | Blocked | NFS port; Fetch implementations such as Node reject it as an unsafe port |
 | 2050 | Reserved | Default `hermes-router` sidecar port; do not assign to a model |
 | 2051 | Reserved | Default port for the `hermes-auxiliary-brain` managed llama.cpp server; do not assign to a model |
@@ -149,8 +149,8 @@ launcher preloads the model configured by `mlx_audio.model` and registers it
 under the roster's stable `id`, so clients use the same short model name on
 both platforms.
 
-Qwen3 TTS uses
-`mlx-community/Qwen3-TTS-12Hz-0.6B-CustomVoice-bf16`; Audio8 uses
+Qwen3 TTS uses the 0.6B and 1.7B CustomVoice checkpoints from
+`mlx-community`; Audio8 uses
 `mlx-community/Audio8-TTS-Preview-0.6b-bf16`. Audio8 requires
 `mlx-audio>=0.4.7` for the `arktts` loader. Qwen supports incremental audio
 chunks by setting `"stream": true`; the current Audio8 MLX implementation
@@ -173,11 +173,12 @@ isolated `.venv-vllm-omni` environment because each vLLM-Omni release requires
 the matching vLLM release. The setup currently installs vLLM and vLLM-Omni
 0.26.0.
 
-Qwen3 TTS uses the model-local `vllm-omni.yaml`, copied from vLLM-Omni 0.26.0's
-two-stage talker/code2wav deployment with codec chunk streaming. Keeping the
-config beside the model avoids relying on non-Python YAML files being included
-in the PyPI wheel. The server exposes
-`qwen3-tts-0.6b-customvoice` at `/v1/audio/speech` on port 2033.
+Both Qwen3 TTS sizes use the shared `scripts/configs/qwen3-tts.yaml`, copied
+from vLLM-Omni 0.26.0's two-stage talker/code2wav deployment with codec chunk
+streaming. Keeping the config in this repository avoids relying on non-Python
+YAML files being included in the PyPI wheel. The 0.6B and 1.7B servers expose
+`qwen3-tts-0.6b-customvoice` on port 2033 and
+`qwen3-tts-1.7b-customvoice` on port 2035.
 
 ### SGLang-Omni
 
@@ -194,7 +195,7 @@ Audio8 is exposed as `audio8-tts-0.6b` on port 2034.
 
 ### Text-to-Speech API
 
-Both TTS ports use the OpenAI speech route and stable roster aliases:
+All TTS ports use the OpenAI speech route and stable roster aliases:
 
 ```bash
 curl http://localhost:2033/v1/audio/speech \
@@ -216,6 +217,9 @@ curl http://localhost:2034/v1/audio/speech \
   }' \
   --output audio8-tts.wav
 ```
+
+Use port 2035 and model `qwen3-tts-1.7b-customvoice` for the larger Qwen
+checkpoint with natural-language instruction control.
 
 ### CPU llama-server
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.

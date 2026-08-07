@@ -1,4 +1,4 @@
-# Qwen3-TTS deployment from vLLM-Omni 0.26.0.
+# Shared Qwen3-TTS deployment from vLLM-Omni 0.26.0.
 # Source: vllm_omni/deploy/qwen3_tts.yaml
 async_chunk: true
 

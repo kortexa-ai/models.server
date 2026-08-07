@@ -1,8 +1,8 @@
 {
-  "name": "Qwen3 TTS 0.6B CustomVoice",
-  "id": "qwen3-tts-0.6b-customvoice",
+  "name": "Qwen3 TTS 1.7B CustomVoice",
+  "id": "qwen3-tts-1.7b-customvoice",
   "tts": true,
-  "port": 2033,
+  "port": 2035,
   "host": "192.168.2.6",
   "sample_rate": 24000,
   "default_voice": "ryan",
@@ -24,11 +24,11 @@
     "Linux": "vllm-omni"
   },
   "mlx_audio": {
-    "model": "mlx-community/Qwen3-TTS-12Hz-0.6B-CustomVoice-bf16",
+    "model": "mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-bf16",
     "max_batch_size": 4
   },
   "vllm_omni": {
-    "model": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+    "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
     "deploy_config": "../scripts/configs/qwen3-tts.yaml",
     "trust_remote_code": true
   }
