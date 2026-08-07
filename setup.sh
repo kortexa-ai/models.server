@@ -24,6 +24,12 @@ case "$OS" in
         if command -v nvidia-smi >/dev/null 2>&1; then
             echo "--- Setting up vLLM environment ---"
             "${ROOT}/scripts/setup-vllm.sh"
+            echo ""
+            echo "--- Setting up vLLM-Omni environment ---"
+            "${ROOT}/scripts/setup-vllm-omni.sh"
+            echo ""
+            echo "--- Setting up Audio8 SGLang-Omni environment ---"
+            "${ROOT}/scripts/setup-sglang-omni.sh"
         else
             echo "No NVIDIA GPU detected, skipping vLLM setup."
             echo ""

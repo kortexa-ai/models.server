@@ -1,6 +1,6 @@
 # Model Serving Infrastructure
 
-Local LLM serving across multiple machines. Each model gets its own directory with configuration; shared engine scripts handle the actual launching.
+Local model serving across multiple machines. Each model gets its own directory with configuration; shared engine scripts handle the actual launching.
 
 ## Quick Start
 
@@ -12,14 +12,15 @@ Local LLM serving across multiple machines. Each model gets its own directory wi
 ./run.sh qwen-3.5-4b                    # from root
 cd qwen-3.5-4b && ../run.sh             # from model dir
 ./run.sh gemma-4-26b-a4b --engine vllm  # override engine
+./run.sh qwen3-tts-0.6b-customvoice     # MLX-Audio on macOS, vLLM-Omni on CUDA
 ```
 
 ## Machines
 
 | Host/IP | Hardware | Memory | OS | Primary Backend |
 |---------|----------|------------|------|-----------------|
-| **smarty** | RTX PRO 6000 Blackwell | 96 GB VRAM | Ubuntu Linux | `llama-server` (GGUF), bare-metal vLLM |
-| **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | `mlx-vlm` (MLX) |
+| **smarty** | RTX PRO 6000 Blackwell | 96 GB VRAM | Ubuntu Linux | `llama-server`, vLLM, vLLM-Omni, SGLang-Omni |
+| **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | `mlx-vlm`, `mlx-lm`, `mlx-audio` |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | — |
 | **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
 | **192.168.2.144** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
@@ -37,6 +38,8 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2031 | Qwen 3.5 0.8B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2032 | Qwen 3.6 27B | big dense | UD-Q4_K_XL / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
+| 2033 | Qwen3 TTS 0.6B CustomVoice | streaming TTS | BF16 / MLX BF16 | — | 4K | 1 |
+| 2034 | Audio8 TTS Preview 0.6B | cloning TTS | BF16 / MLX BF16 | — | 2K | 1 |
 | 2036 | Gemma 4 26B-A4B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
 | 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
@@ -60,8 +63,6 @@ service on port 4007.
 
 | Port | Status | Notes |
 |------|--------|-------|
-| 2033 | Available | Former Nemotron 3 Super 120B A12B port |
-| 2034 | Available | Former Nemotron 3 Nano 30B A3B port |
 | 2035 | Available | Former Nemotron Cascade 2 30B A3B port |
 | 2049 | Blocked | NFS port; Fetch implementations such as Node reject it as an unsafe port |
 | 2050 | Reserved | Default `hermes-router` sidecar port; do not assign to a model |
@@ -72,17 +73,23 @@ service on port 4007.
 ```
 models.server/
 ├── run.sh                  # Single entry point — detects platform, dispatches
-├── setup.sh                # Environment setup (MLX on macOS, vLLM on Linux)
+├── setup.sh                # Platform setup, including TTS serving engines
 ├── scripts/
 │   ├── run-llama.sh        # Generic llama.cpp launcher
 │   ├── run-mlx.sh          # Generic MLX launcher
+│   ├── run-mlx-audio.sh    # Generic MLX-Audio TTS launcher
 │   ├── run-vllm.sh         # Generic vLLM launcher
+│   ├── run-vllm-omni.sh    # Generic vLLM-Omni TTS launcher
+│   ├── run-sglang-omni.sh  # Generic SGLang-Omni launcher
 │   ├── run-cpu.sh          # Generic CPU-only launcher (Pi)
 │   ├── run-transformers.sh # Generic Transformers launcher
+│   ├── mlx-audio-server.py # Pins one MLX TTS model behind its roster alias
 │   ├── transformers-server.py # Server for non-generative tasks
 │   ├── parse-config.py      # Reads model.json → shell variables
 │   ├── setup-common.sh      # Shared helpers (CUDA env, venv paths)
 │   ├── setup-vllm.sh        # Creates/updates .venv-vllm
+│   ├── setup-vllm-omni.sh   # Creates/updates .venv-vllm-omni
+│   ├── setup-sglang-omni.sh # Installs Audio8's pinned SGLang adapter
 │   ├── setup-mlx.sh         # Creates/updates .venv-mlx
 │   └── setup-transformers.sh # Creates/updates the Transformers .venv
 ├── <model-id>/
@@ -91,6 +98,9 @@ models.server/
 │   └── systemd/            # Linux service unit
 ├── .venv-mlx/              # Shared MLX venv (macOS)
 ├── .venv-vllm/             # Shared vLLM venv (Linux)
+├── .venv-vllm-omni/        # Isolated vLLM-Omni venv (Linux)
+├── .venv-sglang-omni/      # Isolated Audio8 SGLang-Omni venv (Linux)
+├── .engines/               # Gitignored pinned engine/adapter checkouts
 ├── llama.cpp/              # llama.cpp build scripts
 ├── whisper.cpp/            # whisper.cpp build scripts
 └── bench/                  # Benchmark results
@@ -100,7 +110,7 @@ models.server/
 
 `run.sh` picks the engine automatically:
 
-- A model's `default_engine` wins when configured. It may be a single engine or a per-platform map keyed by `uname` (the LFM embedder uses Metal-backed llama.cpp on Darwin and CPU-only llama.cpp on Linux).
+- A model's `default_engine` wins when configured. It may be a single engine or a per-platform map keyed by `uname`. The TTS models select `mlx-audio` on Darwin and their CUDA serving engine on Linux.
 - **macOS** → `mlx` (mlx-vlm or mlx-lm)
 - **ARM Linux without CUDA** → `cpu` (Raspberry Pi)
 - **Linux with CUDA** → `llama` (llama.cpp), or `vllm` if model has no GGUF (NVFP4)
@@ -131,6 +141,21 @@ LFM2.5 VL 450M uses LiquidAI's official 8-bit MLX checkpoint on snappy. It has a
 
 **Gemma 4 MTP drafters** work but only help large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s; see `bench/BENCHMARKS.md`); 26B-A4B/31B keep `draft_enabled=true` pending an MLX bench. The Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260), `AttributeError: 'list' object has no attribute 'max'`) is fixed upstream in `mlx-vlm 0.6.1` (our PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)). The old local patch has been removed; the current setup floor also includes the later LFM2-VL fixes.
 
+### MLX-Audio
+
+[mlx-audio](https://github.com/Blaizzy/mlx-audio) serves TTS on Apple Silicon
+through the OpenAI-compatible `POST /v1/audio/speech` endpoint. The local
+launcher preloads the model configured by `mlx_audio.model` and registers it
+under the roster's stable `id`, so clients use the same short model name on
+both platforms.
+
+Qwen3 TTS uses
+`mlx-community/Qwen3-TTS-12Hz-0.6B-CustomVoice-bf16`; Audio8 uses
+`mlx-community/Audio8-TTS-Preview-0.6b-bf16`. Audio8 requires
+`mlx-audio>=0.4.7` for the `arktts` loader. Qwen supports incremental audio
+chunks by setting `"stream": true`; the current Audio8 MLX implementation
+returns the completed clip, while its CUDA SGLang-Omni path streams chunks.
+
 ### vLLM
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.
 
@@ -139,6 +164,58 @@ vLLM treats context as per-sequence length. Use `vllm.max_model_len` for `--max-
 Set `vllm.kv_cache_bytes` to pass an exact `--kv-cache-memory-bytes` pool instead of sizing KV from a percentage of VRAM. The pool is shared dynamically by up to `vllm.max_num_seqs` requests: one request may consume the full pool, while concurrent requests divide it according to their live token counts. `gpu_memory_utilization` remains a startup admission guard when exact bytes are configured; it does not resize the pool. Native MTP is configured through `vllm.speculative_config`.
 
 Qwen 3.6 27B uses a 10,194,124,800-byte FP8 KV pool, which vLLM 0.26.0 reports as exactly 262,144 aggregate tokens with MTP depth 4 and up to four scheduled requests. Four simultaneous 262K requests do not fit; four equally long requests can use about 65K tokens each. The default Linux engine remains llama.cpp because it is faster and smaller for the usual single request. Use `./run.sh qwen-3.6-27b --engine vllm` when continuous batching is more valuable; the measured four-request aggregate was 310 tok/s. Keep the vLLM attention backend on `auto`: forcing Triton caused an illegal-memory-access crash under four-way load.
+
+### vLLM-Omni
+
+[vLLM-Omni](https://github.com/vllm-project/vllm-omni) provides the CUDA TTS
+pipeline and OpenAI-compatible speech API for Qwen3 TTS. It runs in the
+isolated `.venv-vllm-omni` environment because each vLLM-Omni release requires
+the matching vLLM release. The setup currently installs vLLM and vLLM-Omni
+0.26.0.
+
+Qwen3 TTS uses the model-local `vllm-omni.yaml`, copied from vLLM-Omni 0.26.0's
+two-stage talker/code2wav deployment with codec chunk streaming. Keeping the
+config beside the model avoids relying on non-Python YAML files being included
+in the PyPI wheel. The server exposes
+`qwen3-tts-0.6b-customvoice` at `/v1/audio/speech` on port 2033.
+
+### SGLang-Omni
+
+Audio8's CUDA path uses its upstream
+[SGLang-Omni adapter](https://github.com/Audio8-AI/Audio8_TTS/tree/master/sglang_omni).
+The setup script checks out the exact SGLang-Omni and Audio8 commits validated
+by the model authors, installs them in `.venv-sglang-omni`, and keeps those
+generated source trees under `.engines/`.
+
+The adapter provides dynamic batching, reference-audio voice cloning, and
+streaming output through `/v1/audio/speech`. It automatically selects
+FlashInfer on consumer Blackwell GPUs that do not have an FA3 kernel image.
+Audio8 is exposed as `audio8-tts-0.6b` on port 2034.
+
+### Text-to-Speech API
+
+Both TTS ports use the OpenAI speech route and stable roster aliases:
+
+```bash
+curl http://localhost:2033/v1/audio/speech \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "qwen3-tts-0.6b-customvoice",
+    "input": "Hello from Qwen text to speech.",
+    "voice": "ryan",
+    "response_format": "wav"
+  }' \
+  --output qwen3-tts.wav
+
+curl http://localhost:2034/v1/audio/speech \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "audio8-tts-0.6b",
+    "input": "Hello from Audio8 text to speech.",
+    "response_format": "wav"
+  }' \
+  --output audio8-tts.wav
+```
 
 ### CPU llama-server
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
@@ -177,6 +254,9 @@ LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_
 LFM2.5 1.2B Thinking and 2.6B are single-slot Q8 exceptions for their reasoning
 and agentic workloads; they use MLX on macOS and CUDA-backed llama.cpp on Linux.
 The LFM 350M generative, vision-language, and embedding models use `Q8_0`; the generative models default to CPU, the VLM defaults to MLX on Darwin, and the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
+
+The TTS entries use their publishers' BF16/MLX checkpoints and codec-aware
+serving engines; the GGUF quantization table does not apply to them.
 
 ## Adding a New Model
 

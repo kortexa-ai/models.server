@@ -14,7 +14,7 @@ elif [[ -f "./model.json" ]]; then
     # cd qwen-3.5-4b && ../run.sh
     MODEL_DIR="$(pwd)"
 else
-    echo "Usage: run.sh [model-dir] [--engine llama|vllm|mlx|cpu|transformers] [extra args...]" >&2
+    echo "Usage: run.sh [model-dir] [--engine llama|vllm|vllm-omni|sglang-omni|mlx|mlx-audio|cpu|transformers] [extra args...]" >&2
     echo "" >&2
     echo "Run from a model directory:  cd qwen-3.5-4b && ../run.sh" >&2
     echo "Or specify the model:        ./run.sh qwen-3.5-4b" >&2

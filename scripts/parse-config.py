@@ -25,11 +25,15 @@ def main():
     print(f"MODEL_ID='{quote(m['id'])}'")
     print(f"MODEL_PORT='{m['port']}'")
     print(f"MODEL_HOST='{m.get('host', '0.0.0.0')}'")
+    print(f"MODEL_SAMPLE_RATE='{m.get('sample_rate', 0)}'")
+    print(f"MODEL_DEFAULT_VOICE='{quote(m.get('default_voice', ''))}'")
+    emit("MODEL_VOICES", ",".join(m.get("voices", [])))
     print(f"MODEL_CONTEXT='{m.get('context', 65536)}'")
     print(f"MODEL_PARALLEL='{m.get('parallel', 1)}'")
     print(f"MODEL_CACHE_TYPE='{m.get('cache_type', 'q8_0')}'")
     print(f"MODEL_MULTIMODAL={'true' if m.get('multimodal') else 'false'}")
     print(f"MODEL_EMBEDDING={'true' if m.get('embedding') else 'false'}")
+    print(f"MODEL_TTS={'true' if m.get('tts') else 'false'}")
 
     # llama
     llama = m.get("llama")
@@ -81,6 +85,14 @@ def main():
     else:
         print("MLX_SUPPORTED=false")
 
+    # mlx-audio
+    mlx_audio = m.get("mlx_audio")
+    if mlx_audio:
+        print(f"MLX_AUDIO_MODEL='{quote(mlx_audio['model'])}'")
+        emit("MLX_AUDIO_MAX_BATCH_SIZE", mlx_audio.get("max_batch_size", 1))
+    else:
+        print("MLX_AUDIO_SUPPORTED=false")
+
     # vllm
     vllm = m.get("vllm")
     if vllm:
@@ -114,6 +126,47 @@ def main():
             print("VLLM_ENABLE_PREFIX_CACHING=true")
     else:
         print("VLLM_SUPPORTED=false")
+
+    # vllm-omni
+    vllm_omni = m.get("vllm_omni")
+    if vllm_omni:
+        print(f"VLLM_OMNI_MODEL='{quote(vllm_omni['model'])}'")
+        if vllm_omni.get("deploy_config"):
+            print(
+                f"VLLM_OMNI_DEPLOY_CONFIG='{quote(vllm_omni['deploy_config'])}'"
+            )
+        if vllm_omni.get("trust_remote_code"):
+            print("VLLM_OMNI_TRUST_REMOTE_CODE=true")
+    else:
+        print("VLLM_OMNI_SUPPORTED=false")
+
+    # sglang-omni
+    sglang_omni = m.get("sglang_omni")
+    if sglang_omni:
+        print(f"SGLANG_OMNI_MODEL='{quote(sglang_omni['model'])}'")
+        print(f"SGLANG_OMNI_CONFIG='{quote(sglang_omni['config'])}'")
+        if "torch_compile" in sglang_omni:
+            print(
+                "SGLANG_OMNI_TORCH_COMPILE="
+                f"{'true' if sglang_omni['torch_compile'] else 'false'}"
+            )
+        if sglang_omni.get("attention_backend"):
+            print(
+                "SGLANG_OMNI_ATTENTION_BACKEND="
+                f"'{quote(sglang_omni['attention_backend'])}'"
+            )
+        if sglang_omni.get("memory_fraction_static"):
+            emit(
+                "SGLANG_OMNI_MEMORY_FRACTION_STATIC",
+                sglang_omni["memory_fraction_static"],
+            )
+        if sglang_omni.get("max_running_requests"):
+            emit(
+                "SGLANG_OMNI_MAX_RUNNING_REQUESTS",
+                sglang_omni["max_running_requests"],
+            )
+    else:
+        print("SGLANG_OMNI_SUPPORTED=false")
 
     # cpu
     cpu = m.get("cpu")

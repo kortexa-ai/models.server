@@ -1,0 +1,29 @@
+{
+  "name": "Audio8 TTS Preview 0.6B",
+  "id": "audio8-tts-0.6b",
+  "tts": true,
+  "port": 2034,
+  "host": "192.168.2.6",
+  "sample_rate": 44100,
+  "default_voice": "default",
+  "voices": [
+    "default"
+  ],
+  "context": 2048,
+  "parallel": 1,
+  "default_engine": {
+    "Darwin": "mlx-audio",
+    "Linux": "sglang-omni"
+  },
+  "mlx_audio": {
+    "model": "mlx-community/Audio8-TTS-Preview-0.6b-bf16",
+    "max_batch_size": 1
+  },
+  "sglang_omni": {
+    "model": "Audio8/Audio8-TTS-Preview-0.6b",
+    "config": "sglang_omni/configs/audio8_tts_0_6b.yaml",
+    "torch_compile": true,
+    "memory_fraction_static": 0.2,
+    "max_running_requests": 32
+  }
+}

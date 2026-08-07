@@ -6,5 +6,6 @@ __pycache__/
 logs/
 .cache/
 .config/
+.engines/
 bench-logs/
 .DS_Store
