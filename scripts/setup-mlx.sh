@@ -19,6 +19,7 @@ uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
     mlx-lm \
     'mlx-audio[server]>=0.4.7' \
     'transformers>=5.12.0' \
+    soundfile \
     torch \
     torchvision
 
@@ -27,7 +28,7 @@ echo "Verifying MLX environment..."
 from importlib.metadata import PackageNotFoundError, version
 import platform
 
-for package in ("mlx-vlm", "mlx-lm", "mlx-audio", "transformers", "torch", "torchvision"):
+for package in ("mlx-vlm", "mlx-lm", "mlx-audio", "transformers", "soundfile", "torch", "torchvision"):
     try:
         print(f"{package} = {version(package)}")
     except PackageNotFoundError:
