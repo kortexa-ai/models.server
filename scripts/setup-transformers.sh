@@ -16,7 +16,7 @@ uv venv --python "${PYTHON_BIN}" --allow-existing "${VENV_PATH}"
 
 echo "Installing Transformers and torch..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
-    'transformers>=5.12.0' \
+    'transformers>=5.14.1' \
     torch
 
 echo "Verifying Transformers environment..."

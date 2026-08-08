@@ -15,10 +15,10 @@ uv venv --allow-existing "${VENV_PATH}"
 
 echo "Installing mlx-vlm, mlx-lm, mlx-audio, Transformers, torch, torchvision..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
-    'mlx-vlm>=0.6.6' \
+    'mlx-vlm>=0.6.10' \
     mlx-lm \
     'mlx-audio[server]>=0.4.7' \
-    'transformers>=5.12.0' \
+    'transformers>=5.14.1' \
     soundfile \
     torch \
     torchvision

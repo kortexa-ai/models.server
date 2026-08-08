@@ -12,7 +12,7 @@ PYTHON_BIN="${PYTHON_BIN:-/usr/bin/python3.12}"
 VENV_PATH="${VENV_PATH:-${ROOT}/.venv-vllm}"
 VLLM_SPEC="${VLLM_SPEC:-vllm}"
 VLLM_WHEEL_INDEX="${VLLM_WHEEL_INDEX:-}"
-TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=5.5.0}"
+TRANSFORMERS_SPEC="${TRANSFORMERS_SPEC:-transformers>=5.14.1}"
 NUMPY_SPEC="${NUMPY_SPEC:-numpy<2.4}"
 
 if [[ -x "${VENV_PATH}/bin/python" ]]; then
@@ -38,7 +38,7 @@ uv pip install "${VLLM_INSTALL_ARGS[@]}"
 # FlashInfer downloads matching cubins on demand; a stale wheel prevents import.
 uv pip uninstall --python "${VENV_PATH}/bin/python" flashinfer-cubin 2>/dev/null || true
 
-echo "Upgrading Transformers (>=5.5.0 required for Gemma 4)..."
+echo "Upgrading Transformers (>=5.14.1 required for the current model stack)..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
     "${TRANSFORMERS_SPEC}" "${NUMPY_SPEC}"
 
