@@ -54,6 +54,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
 | 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
+| 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover

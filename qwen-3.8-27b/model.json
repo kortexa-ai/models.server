@@ -1,0 +1,33 @@
+{
+  "name": "Qwen 3.8 27B",
+  "id": "qwen-3.8-27b",
+  "multimodal": true,
+  "port": 2053,
+  "host": "192.168.2.6",
+  "context": 262144,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "unsloth/Qwen3.8-27B-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "mtp": true,
+    "mtp_n_max": 3
+  },
+  "mlx": null,
+  "vllm": {
+    "model": "Qwen/Qwen3.8-27B-FP8",
+    "quantization": "auto",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "auto",
+    "kv_cache_bytes": 10194124800,
+    "gpu_memory_utilization": 0.6,
+    "max_num_seqs": 4,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "qwen3",
+    "speculative_config": {
+      "method": "mtp",
+      "num_speculative_tokens": 3
+    }
+  },
+  "cpu": null
+}

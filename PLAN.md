@@ -1,3 +1,37 @@
+# Qwen 3.8 27B bring-up
+
+## Goal
+
+Add Qwen 3.8 27B serving support for `smarty` with its native 262,144-token
+context, one llama.cpp request slot, the standard `UD-Q4_K_XL` weight quant,
+q8 KV cache, and built-in MTP. Keep every other production service running.
+Qwen 3.6 27B is authorized to stop only for the Qwen 3.8 test block.
+
+## Live baseline — 2026-08-14 08:50 PDT
+
+- `smarty` is clean on `main` at `29502e0`; port 2053 is free and the root
+  filesystem has 565 GiB available.
+- The RTX PRO 6000 uses 63,351 MiB and has 34,536 MiB free.
+- Qwen 3.6 27B is installed, enabled, running, and healthy on port 2032. Its
+  llama.cpp process uses 30,180 MiB.
+- Image base, Vision, Gemma 4 E2B, ASR, TTS, and Qwen3 Embedding 0.6B are also
+  healthy. They must remain running.
+
+## Work plan
+
+1. Add the model config, launchd and systemd units, and inventory entry.
+2. Validate the config parser and both service-unit formats locally.
+3. Commit and push the change, then fast-forward the clean `smarty` checkout.
+4. Stop only Qwen 3.6 27B. Start Qwen 3.8 with a short batch-1 canary, verify
+   text and image requests, and record speed and GPU memory.
+5. Stop the test server, restore Qwen 3.6, and verify every baseline endpoint.
+
+## Status
+
+- In progress.
+
+---
+
 # LFM2.5 1.2B Thinking and 2.6B bring-up
 
 ## Goal
