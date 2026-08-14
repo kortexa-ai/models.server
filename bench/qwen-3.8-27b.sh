@@ -199,11 +199,10 @@ run_generation() {
     local prompt="$7"
     local payload response error completion finish accept_pct
 
-    payload="$(jq -nc \
+    payload="$(printf '%s' "$prompt" | jq -Rsc \
         --arg model "$model" \
-        --arg prompt "$prompt" \
         --argjson max_tokens "$max_tokens" \
-        '{
+        '. as $prompt | {
             model: $model,
             messages: [{role: "user", content: $prompt}],
             temperature: 0,
