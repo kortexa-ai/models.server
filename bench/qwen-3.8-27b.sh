@@ -210,9 +210,9 @@ run_generation() {
             ignore_eos: true,
             chat_template_kwargs: {enable_thinking: false}
         }')"
-    response="$(curl --max-time 900 -fsS \
+    response="$(printf '%s' "$payload" | curl --max-time 900 -fsS \
         "http://127.0.0.1:${port}/v1/chat/completions" \
-        -H 'Content-Type: application/json' -d "$payload")"
+        -H 'Content-Type: application/json' --data-binary @-)"
     error="$(echo "$response" | jq -r '.error.message // empty')"
     if [[ -n "$error" ]]; then
         echo "ERROR generation $label $workload $run_number: $error" >&2
