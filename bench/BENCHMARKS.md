@@ -7,6 +7,60 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 14, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Qwen 3.8 27B dense MTP and Qwen 3.6 matched comparison
+
+Qwen 3.8 used Unsloth's `UD-Q4_K_XL` GGUF with llama.cpp build 10200
+(`5f55650a7`), full CUDA offload, q8_0 K/V, one 262,144-token slot, and no
+reasoning. Each short speed request forced 600 output tokens. The MTP sweep
+used one prose and one Python-code request at each depth:
+
+| MTP depth | Prose tok/s | Code tok/s | Mixed mean | Prose/code accept |
+|-----------|-------------|------------|------------|-------------------|
+| Off | 72.37 | 72.39 | 72.38 | — |
+| 1 | 105.00 | 116.45 | 110.73 | 73.33% / 92.28% |
+| 2 | 121.67 | 145.40 | 133.53 | 59.82% / 81.36% |
+| **3** | **117.62** | **160.34** | **138.98** | 45.09% / 74.41% |
+| 4 | 111.04 | 161.36 | 136.20 | 37.59% / 66.51% |
+
+Depth 3 was the best mixed setting, 92.0% faster than running without MTP.
+The final clean run then repeated each workload three times and restored Qwen
+3.6 at its production MTP depth 3 for the same requests:
+
+| Model | Prose mean (range) | Code mean (range) | Aggregate accept |
+|-------|--------------------|-------------------|------------------|
+| Qwen 3.8 27B | **117.35** (117.30–117.41) | **157.37** (152.43–159.94) | 57.44% |
+| Qwen 3.6 27B | **120.09** (119.84–120.23) | **156.36** (156.27–156.47) | 60.87% |
+
+Qwen 3.8 was 2.3% slower on prose and 0.6% faster on code, or 0.6% slower on
+the equally weighted mixed mean. Two earlier passes completed the short speed
+section before finding and fixing large-request transport limits in the
+benchmark harness. Their valid data expanded the Qwen 3.8 sample to nine runs
+per workload: 117.69 tok/s prose (117.30–118.39) and 158.54 code
+(152.43–160.78).
+
+The long request contained 36,887 prompt tokens and generated 64 tokens:
+
+| Model | Pass | Evaluated / cached | Prompt tok/s | Decode tok/s |
+|-------|------|--------------------|--------------|--------------|
+| Qwen 3.8 | Cold | 36,887 / 0 | **3,023.94** | **112.57** |
+| Qwen 3.8 | Warm | 4 / 36,883 | 24.69 | **113.28** |
+| Qwen 3.6 | Cold | 36,887 / 0 | 2,974.63 | 106.36 |
+| Qwen 3.6 | Warm | 4 / 36,883 | 25.46 | 110.97 |
+
+Qwen 3.8 improved cold prefill by 1.7% and long decode by 5.8% cold / 2.1%
+warm. It loaded in about 6.1 seconds. At the post-canary sample it used 28,857
+MiB (28.18 GiB) above the other resident GPU services and left 35,127 MiB
+free. Exact text, required `lookup_weather(Paris)`, and 512x512 red-image
+canaries all passed.
+
+Only Qwen 3.6 was stopped. Qwen 3.8 was stopped after the run, Qwen 3.6 was
+restored, all seven protected endpoints returned HTTP 200, and port 2053 was
+closed.
+
+---
+
 ## August 4, 2026 — snappy + smarty
 
 ### LFM2.5 1.2B Thinking and 2.6B bring-up (8-bit, one slot)

@@ -34,7 +34,20 @@ authorized to stop only for the Qwen 3.8 test block.
 
 ## Status
 
-- In progress.
+- Completed 2026-08-14. The llama.cpp, MLX, and vLLM configurations, service
+  units, inventory entry, and reproducible benchmark harness are committed on
+  `main`. The authenticated `UD-Q4_K_XL` snapshot is cached on `smarty`; the
+  completed MLX 4-bit repository passed a local architecture/config check on
+  `snappy`.
+- MTP depth 3 was the best mixed setting. It averaged 117.35 decode tok/s on
+  prose and 157.37 on code in the final matched run, versus 120.09 and 156.36
+  for Qwen 3.6. With MTP disabled, Qwen 3.8 managed only 72.38 tok/s.
+- A 36,887-token cold prompt prefetched at 3,023.94 tok/s and decoded at
+  112.57 tok/s; the exact repeat cached 36,883 tokens and decoded at 113.28
+  tok/s. Text, required tool-call, and 512px image canaries all passed.
+- Qwen 3.8 was stopped after the test. Qwen 3.6 is installed, enabled, running,
+  and healthy again; port 2053 is closed, every protected endpoint is HTTP
+  200, and idle GPU memory returned to the production baseline.
 
 ---
 
