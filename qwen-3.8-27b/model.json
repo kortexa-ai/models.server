@@ -13,7 +13,10 @@
     "mtp": true,
     "mtp_n_max": 3
   },
-  "mlx": null,
+  "mlx": {
+    "repo": "mlx-community/Qwen3.8-27B-4bit",
+    "backend": "mlx_vlm"
+  },
   "vllm": {
     "model": "Qwen/Qwen3.8-27B-FP8",
     "quantization": "auto",

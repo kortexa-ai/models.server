@@ -4,8 +4,9 @@
 
 Add Qwen 3.8 27B serving support for `smarty` with its native 262,144-token
 context, one llama.cpp request slot, the standard `UD-Q4_K_XL` weight quant,
-q8 KV cache, and built-in MTP. Keep every other production service running.
-Qwen 3.6 27B is authorized to stop only for the Qwen 3.8 test block.
+q8 KV cache, and built-in MTP. Add the completed MLX 4-bit checkpoint as the
+`snappy` path. Keep every other production service running. Qwen 3.6 27B is
+authorized to stop only for the Qwen 3.8 test block.
 
 ## Live baseline — 2026-08-14 08:50 PDT
 
@@ -19,7 +20,8 @@ Qwen 3.6 27B is authorized to stop only for the Qwen 3.8 test block.
 
 ## Work plan
 
-1. Add the model config, launchd and systemd units, and inventory entry.
+1. Add the llama.cpp, MLX, and vLLM config, both service units, and inventory
+   entry.
 2. Validate the config parser and both service-unit formats locally.
 3. Commit and push the change, then fast-forward the clean `smarty` checkout.
 4. Stop only Qwen 3.6 27B. Start Qwen 3.8 with a short batch-1 canary, verify
