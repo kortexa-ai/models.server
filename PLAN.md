@@ -24,9 +24,13 @@ authorized to stop only for the Qwen 3.8 test block.
    entry.
 2. Validate the config parser and both service-unit formats locally.
 3. Commit and push the change, then fast-forward the clean `smarty` checkout.
-4. Stop only Qwen 3.6 27B. Start Qwen 3.8 with a short batch-1 canary, verify
-   text and image requests, and record speed and GPU memory.
-5. Stop the test server, restore Qwen 3.6, and verify every baseline endpoint.
+4. Stop only Qwen 3.6 27B. Sweep Qwen 3.8 llama.cpp MTP depths 0 through 4
+   with matched 600-token prose and Python workloads.
+5. Repeat each workload three times at the best depth, measure cold and warm
+   long-prompt handling, verify text, tool, and image requests, and record GPU
+   memory plus draft acceptance.
+6. Stop the test server, restore Qwen 3.6, run the same repeated workloads for
+   a matched speed comparison, and verify every baseline endpoint.
 
 ## Status
 
