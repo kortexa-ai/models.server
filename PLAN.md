@@ -1,3 +1,68 @@
+# Qwen 3.8 27B SGLang NVFP4 + DSpark comparison
+
+## Goal
+
+Test the current SGLang Qwen 3.8 recipe on `smarty` with the RadixArk NVFP4
+checkpoint and DSpark drafter. Compare it with the production llama.cpp
+UD-Q4_K_XL + MTP service using matched single-request workloads, then keep the
+faster practical backend. Also verify whether the llama.cpp path can set Qwen's
+default `reasoning_effort` to `medium` instead of the model-template default of
+`xhigh`.
+
+## Live baseline — 2026-08-17 08:25 PDT
+
+- `smarty` is clean on `main` at `90b97ba`; the root filesystem has about
+  500 GiB available.
+- Qwen 3.8 is installed, enabled, running, and healthy on port 2053 through
+  llama.cpp. Its process uses 30,194 MiB.
+- Image base, Vision, Gemma 4 E2B, ASR, and TTS are running and healthy.
+  ComfyUI is also running and uses 550 MiB, but its usual port 8188 was already
+  closed at baseline; leave that process alone.
+- The RTX PRO 6000 uses 59,688 MiB and has 37,554 MiB free.
+- The user explicitly authorized production downtime under the Smarty guide.
+  Snapshot and restore exactly the services stopped for the benchmark.
+- `snappy` has three unrelated user edits in LFM launchd plists. Do not stage
+  or alter them.
+
+## Work plan
+
+1. Extract the official RTX PRO 6000 recipe and identify the exact current
+   SGLang build, checkpoint, memory, attention, parser, and speculative flags.
+2. Add the smallest isolated text-SGLang launch/config support and a matched
+   benchmark path; download images and checkpoints without allocating GPU.
+3. Stop the authorized safe-list services once, starting with Qwen 3.8, until
+   the recipe has deliberate VRAM headroom. Start with a one-request canary.
+4. Compare SGLang without speculation, with in-checkpoint MTP/EAGLE, and with
+   DSpark. Run the official 8192-input/1024-output case and the existing
+   prose/code workloads against the best candidate and llama.cpp.
+5. Select the production backend and settings based on measured speed,
+   correctness, memory, startup behavior, and API/tool compatibility. Set
+   llama.cpp's default reasoning effort to `medium` if the installed build and
+   Qwen template honor it.
+6. Validate scripts/config, stop the benchmark process, restore and health-check
+   exactly the original services, then commit and push only the focused work.
+
+## Status
+
+- Recipe and live baseline captured. SGLang stable is 0.5.17, but the day-0
+  Qwen 3.8 recipe uses `lmsysorg/sglang:qwen38-27b`; use that isolated image so
+  the tested runtime matches the recipe rather than an older release wheel.
+- The RTX PRO 6000 recipe uses the RadixArk NVFP4 checkpoint, FlashInfer,
+  FP8 KV, 2048-token prefill chunks, FP32 GDN state, and an explicit Mamba
+  state/KV ratio. The comparison harness covers no speculation, MTP/EAGLE with
+  ReplaySSM, the linked DSpark low-latency recipe, and a lower-memory DSpark
+  configuration sized for one production request.
+- llama.cpp currently inherits Qwen's template default of `xhigh` (55 prompt
+  tokens for the probe versus 13 at `medium`). Config parsing and the generic
+  launcher now set `medium` model-wide while retaining request overrides.
+- Authenticated Hugging Face access is verified as `francip`. Native Xet made
+  no progress in bounded probes, so the checkpoints are being fetched through
+  authenticated resolver URLs with Xet disabled and resumable HTTP ranges.
+  Production services remain running until downloads and the Docker image are
+  ready.
+
+---
+
 # Qwen 3.8 27B bring-up
 
 ## Goal

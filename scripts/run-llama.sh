@@ -33,6 +33,11 @@ if [[ "${LLAMA_MTP:-}" == "true" ]]; then
     fi
 fi
 
+REASONING_ARGS=()
+if [[ -n "${LLAMA_REASONING_EFFORT:-}" ]]; then
+    REASONING_ARGS=(--reasoning-effort "$LLAMA_REASONING_EFFORT")
+fi
+
 # Embedding mode: enable --embedding and drop chat/sampling-only flags
 # (--jinja, --temp, --top-p are inert here; skipped for clarity).
 # Arrays expand via ${arr[@]+...} because macOS bash 3.2 treats an empty
@@ -79,5 +84,6 @@ exec llama-server \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
     ${MTP_ARGS[@]+"${MTP_ARGS[@]}"} \
+    ${REASONING_ARGS[@]+"${REASONING_ARGS[@]}"} \
     ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \
     "$@"

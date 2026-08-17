@@ -46,6 +46,8 @@ def main():
             print("LLAMA_MTP=true")
         if llama.get("mtp_n_max"):
             print(f"LLAMA_MTP_N_MAX='{llama['mtp_n_max']}'")
+        if llama.get("reasoning_effort"):
+            emit("LLAMA_REASONING_EFFORT", llama["reasoning_effort"])
     else:
         print("LLAMA_SUPPORTED=false")
 
