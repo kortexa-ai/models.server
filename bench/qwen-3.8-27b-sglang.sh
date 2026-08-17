@@ -448,11 +448,12 @@ else
     benchmark_tokenizer="$MODEL_DIR"
 fi
 bench_args=(
-    -m sglang.bench_serving
-    --backend sglang
+    -m sglang.benchmark.serving
+    --backend sglang-oai
     --host 127.0.0.1
     --port "$PORT"
-    --model qwen-3.8-27b
+    --model "$benchmark_tokenizer"
+    --served-model-name qwen-3.8-27b
     --tokenizer "$benchmark_tokenizer"
     --dataset-name random
     --random-input-len 8192
