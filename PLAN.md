@@ -44,17 +44,19 @@ default `reasoning_effort` to `medium` instead of the model-template default of
 
 ## Status
 
-- Recipe and live baseline captured. SGLang stable is 0.5.17, but the day-0
-  Qwen 3.8 recipe uses `lmsysorg/sglang:qwen38-27b`; use that isolated image so
-  the tested runtime matches the recipe rather than an older release wheel.
+- Completed 2026-08-17. Recipe and live baseline captured. SGLang stable is
+  0.5.17, while the day-0 Qwen 3.8 recipe uses the newer dedicated
+  `lmsysorg/sglang:qwen38-27b` image. Docker Hub throttling prevented that image
+  from completing, so the comparison used the recipe's pinned current-source
+  runtime instead of an older release wheel.
 - The RTX PRO 6000 recipe uses the RadixArk NVFP4 checkpoint, FlashInfer,
   FP8 KV, 2048-token prefill chunks, FP32 GDN state, and an explicit Mamba
   state/KV ratio. The comparison harness covers no speculation, MTP/EAGLE with
   ReplaySSM, the linked DSpark low-latency recipe, and a lower-memory DSpark
   configuration sized for one production request.
-- llama.cpp currently inherits Qwen's template default of `xhigh` (55 prompt
-  tokens for the probe versus 13 at `medium`). Config parsing and the generic
-  launcher now set `medium` model-wide while retaining request overrides.
+- At baseline, llama.cpp inherited Qwen's template default of `xhigh`. Config
+  parsing and the generic launcher now set `medium` model-wide while retaining
+  standard per-request overrides.
 - The fresh llama.cpp control on build 10470 (`34af94cd9`) averaged 114.64
   wall tok/s for prose and 156.22 for code over three forced 600-token runs.
   A cold 8,193-input / 1,024-output control reached 119.83 wall tok/s and
@@ -64,11 +66,32 @@ default `reasoning_effort` to `medium` instead of the model-template default of
   no progress in bounded probes, so the checkpoints were fetched through
   authenticated resolver URLs with Xet disabled and resumable HTTP ranges.
   Hub verification passed for all 22 NVFP4 files and all six DSpark files.
-- The exact recipe image is a resumable secondary control because Docker Hub
-  throttles its large layers. A pinned checkout of current SGLang `main` at
+- The exact recipe image remains a resumable secondary control because Docker
+  Hub throttled its large layers. A pinned checkout of current SGLang `main` at
   `af743371c` is ready in an isolated ignored venv with Torch 2.13 CUDA 13,
   FlashInfer 0.6.17, and SGLang Kernel 0.4.6.post1; every recipe flag passed a
   CLI smoke check. Production remained healthy throughout preparation.
+- Current-main EAGLE was the winner. A production-sized 45% memory / one-slot
+  configuration averaged 127.95 prose and 165.93 code tok/s, an 8.5% mixed
+  gain over the fresh llama.cpp control. The recipe's OpenAI 8K-input / 1K-output
+  run reached 142.60 tok/s versus llama.cpp's 119.83 wall tok/s. It passed text,
+  tool, and image canaries and left 53,494 MiB free while isolated.
+- DSpark crashes on current main because it matrix-multiplies against the
+  packed NVFP4 language head. The official pending fix at `da1fbe873` launches,
+  but managed only 88.08 prose / 173.85 code. Its earlier native-endpoint 8K/1K
+  run reached 90.03 tok/s; that case was not repeated through the corrected
+  OpenAI benchmark client. The exact Docker image remained 9.73 GB short after
+  prolonged Hub throttling; its pull was stopped and the resumable cache
+  retained.
+- Keep llama.cpp in production. SGLang's modest gain costs about 14 GiB more
+  VRAM and roughly five times the warm startup latency. More importantly,
+  SGLang's default chat-template kwargs currently overwrite per-request
+  reasoning effort. Restored llama.cpp's final probe rendered 14 / 14 / 56
+  prompt tokens for omitted / medium / xhigh, so it supplies the requested
+  medium default and standard request override without a custom engine patch.
+- Each authorized GPU block restored exactly the six recorded services. Their
+  health endpoints are HTTP 200, Qwen is again served by llama.cpp on port 2053,
+  and no SGLang, benchmark, aria2, or Docker-pull process remains.
 
 ---
 

@@ -7,6 +7,81 @@ TPS = generation tokens per second (warm, single-request, no-reasoning unless no
 
 ---
 
+## August 17, 2026 — smarty (RTX PRO 6000 Blackwell)
+
+### Qwen 3.8 27B SGLang NVFP4 versus llama.cpp UD-Q4_K_XL
+
+The llama.cpp control used build 10470 (`34af94cd9`), q8_0 K/V, one
+262,144-token slot, and its in-checkpoint MTP head at depth 3. SGLang used
+`af743371c` from current `main`, Torch 2.13.0 + CUDA 13.0, FlashInfer 0.6.17,
+the RadixArk NVFP4 target, FP8 KV, FlashInfer attention, 2,048-token prefill
+chunks, and FP32 GDN state. Both RadixArk snapshots were downloaded with the
+authenticated `francip` Hugging Face session and verified against the Hub;
+Xet was disabled after bounded probes made no progress.
+
+Short requests forced 600 output tokens through the OpenAI chat endpoint.
+The final EAGLE result is the production-sized configuration: 45% static
+memory, one request, five Mamba cache slots, three speculative steps, top-k 1,
+four draft tokens, and ReplaySSM.
+
+| Backend / speculative mode | Prose tok/s | Code tok/s | Mixed mean | 8K-in / 1K-out tok/s |
+|----------------------------|-------------|------------|------------|-----------------------|
+| llama.cpp MTP-3 | 114.64 | 156.22 | 135.43 | 119.83 wall / 170.57 decode |
+| SGLang, none | 72.62 | 72.60 | 72.61 | — |
+| SGLang EAGLE, 85% memory | 127.47 | 165.29 | 146.38 | 142.37 |
+| **SGLang EAGLE, 45% memory** | **127.95** | **165.93** | **146.94** | **142.60** |
+| SGLang DSpark, pending upstream fix | 88.08 | 173.85 | 130.97 | 90.03 native* |
+
+The practical EAGLE configuration beat llama.cpp by 11.6% on prose, 6.2% on
+code, 8.5% on the equally weighted short-request mean, and 19.0% on end-to-end
+8K/1K throughput. The corrected long run used the recipe's `sglang-oai`
+backend and local tokenizer path; TTFT was 680 ms, mean TPOT was 6.34 ms, and
+the speculative accept length was 2.94. The docs page itself labels the
+configuration validated but does not publish a 200 tok/s measurement.
+
+The speed gain has material costs. The 45% EAGLE server left 53,494 MiB free
+with the managed GPU services stopped, for 44,393 MiB total GPU use including
+the resident ComfyUI process. Replacing llama.cpp in the normal stack would
+leave about 24 GiB free, roughly 14 GiB less headroom than today. Warm SGLang
+startup took 29–31 seconds versus about six seconds for llama.cpp. The 85%
+recipe left only about 13 GiB free, while the 45% configuration still allocated
+502,976 FP8 KV tokens—more than the model's full context—and did not lose
+single-request speed. Text, required `lookup_weather(Paris)`, and 512px red
+image canaries passed on EAGLE.
+
+DSpark does not run on current SGLang `main`: its draft path feeds a 5,120-wide
+hidden state into the NVFP4-packed target language head, whose stored width is
+2,560, and CUDA graph capture fails. The official unmerged branch
+`fix/dspark-quantized-lm-head` (`da1fbe873`) fixes that exact operation by using
+the quantization kernel. It launched and passed all three canaries, but was
+10.9% slower than EAGLE on the mixed mean and 24.9% slower than llama.cpp on
+the 8K/1K request. Its acceptance was highly workload-dependent: prose stayed
+near 1.6–2.0 accepted tokens while code sometimes exceeded five.
+
+\* The DSpark long result came from the earlier native generation benchmark,
+before the long harness was corrected to use the recipe's OpenAI client. It is
+directionally useful, but is not an exact client-path comparison with the other
+long-request results.
+
+Reasoning control decided the production outcome. Qwen's template defaults to
+`xhigh`; the managed llama.cpp service now defaults to `medium` while honoring
+the standard per-request field: omitted / explicit medium / explicit xhigh
+rendered 14 / 14 / 56 prompt tokens in the final live probe. SGLang rendered
+the same short probe identically for all three effort values. Its request
+conversion removes `chat_template_kwargs.reasoning_effort`, then
+the server's default `medium` is merged back over the request value. Until that
+upstream collision is fixed, SGLang cannot provide the required default plus
+override behavior without carrying a custom patch or template.
+
+**Decision:** keep llama.cpp in production. SGLang EAGLE is measurably faster,
+but the 8.5% mixed gain does not justify the extra VRAM, slower startup, and
+broken reasoning override. The special recipe image remained 9.73 GB short
+after Docker Hub throttled a resumable pull; it was not substituted for the
+newer source build, and the pull was stopped without discarding its cache.
+Every managed service was restored to HTTP 200 after each test block.
+
+---
+
 ## August 14, 2026 — smarty (RTX PRO 6000 Blackwell)
 
 ### Qwen 3.8 27B dense MTP and Qwen 3.6 matched comparison
