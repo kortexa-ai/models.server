@@ -55,11 +55,20 @@ default `reasoning_effort` to `medium` instead of the model-template default of
 - llama.cpp currently inherits Qwen's template default of `xhigh` (55 prompt
   tokens for the probe versus 13 at `medium`). Config parsing and the generic
   launcher now set `medium` model-wide while retaining request overrides.
+- The fresh llama.cpp control on build 10470 (`34af94cd9`) averaged 114.64
+  wall tok/s for prose and 156.22 for code over three forced 600-token runs.
+  A cold 8,193-input / 1,024-output control reached 119.83 wall tok/s and
+  170.57 server decode tok/s, with 3,579 prompt tok/s and 84.25% MTP draft
+  acceptance.
 - Authenticated Hugging Face access is verified as `francip`. Native Xet made
-  no progress in bounded probes, so the checkpoints are being fetched through
+  no progress in bounded probes, so the checkpoints were fetched through
   authenticated resolver URLs with Xet disabled and resumable HTTP ranges.
-  Production services remain running until downloads and the Docker image are
-  ready.
+  Hub verification passed for all 22 NVFP4 files and all six DSpark files.
+- The exact recipe image is a resumable secondary control because Docker Hub
+  throttles its large layers. A pinned checkout of current SGLang `main` at
+  `af743371c` is ready in an isolated ignored venv with Torch 2.13 CUDA 13,
+  FlashInfer 0.6.17, and SGLang Kernel 0.4.6.post1; every recipe flag passed a
+  CLI smoke check. Production remained healthy throughout preparation.
 
 ---
 

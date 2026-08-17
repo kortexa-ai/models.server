@@ -11,11 +11,16 @@ fi
 IMAGE="${SGLANG_IMAGE:-lmsysorg/sglang:qwen38-27b}"
 MODEL_DIR="${SGLANG_MODEL_DIR:-$HOME/data/models/qwen-3.8-27b-nvfp4}"
 DRAFT_DIR="${SGLANG_DRAFT_DIR:-$HOME/data/models/qwen-3.8-27b-dspark}"
+CACHE_DIR="${SGLANG_CACHE_DIR:-$HOME/.cache/sglang-qwen38-docker}"
+RUNTIME="${SGLANG_RUNTIME:-docker}"
+SGLANG_BIN="${SGLANG_BIN:-$HOME/src/models.server/.venv-sglang/bin/sglang}"
+SGLANG_PYTHON="${SGLANG_PYTHON:-${SGLANG_BIN%/sglang}/python}"
 PORT="${PORT:-2053}"
 CONTAINER=models-server-qwen38-sglang-bench
 RESULTS_FILE="$(mktemp /tmp/qwen38-sglang-results.XXXXXX)"
 RESPONSE_FILE="$(mktemp /tmp/qwen38-sglang-response.XXXXXX)"
 server_log=""
+server_pid=""
 bench_tps=""
 
 health_code() {
@@ -23,25 +28,42 @@ health_code() {
         "http://127.0.0.1:${PORT}/health" || true
 }
 
-remove_container() {
+remove_server() {
     local state
-    state="$(docker inspect -f '{{.State.Status}}' "$CONTAINER" 2>/dev/null || true)"
-    if [[ "$state" == "running" ]]; then
-        docker stop --time 45 "$CONTAINER" >/dev/null 2>&1 || true
+    if [[ "$RUNTIME" == "docker" ]]; then
+        state="$(docker inspect -f '{{.State.Status}}' "$CONTAINER" 2>/dev/null || true)"
+        if [[ "$state" == "running" ]]; then
+            docker stop --time 45 "$CONTAINER" >/dev/null 2>&1 || true
+        fi
+        if [[ -n "$state" ]]; then
+            docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
+        fi
+        return
     fi
-    if [[ -n "$state" ]]; then
-        docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
+
+    if [[ -n "$server_pid" ]] && kill -0 -- "-$server_pid" 2>/dev/null; then
+        kill -TERM -- "-$server_pid"
+        for _ in $(seq 1 45); do
+            kill -0 -- "-$server_pid" 2>/dev/null || break
+            sleep 1
+        done
+        if kill -0 -- "-$server_pid" 2>/dev/null; then
+            kill -KILL -- "-$server_pid"
+        fi
+        wait "$server_pid" 2>/dev/null || true
     fi
+    server_pid=""
 }
 
 cleanup() {
     local command_status=$?
     trap - EXIT HUP INT TERM
     set +e
-    if [[ -n "$server_log" ]] && docker inspect "$CONTAINER" >/dev/null 2>&1; then
+    if [[ "$RUNTIME" == "docker" && -n "$server_log" ]] \
+        && docker inspect "$CONTAINER" >/dev/null 2>&1; then
         docker logs "$CONTAINER" >"$server_log" 2>&1 || true
     fi
-    remove_container
+    remove_server
     case "$RESULTS_FILE" in /tmp/qwen38-sglang-results.*) rm -f -- "$RESULTS_FILE" ;; esac
     case "$RESPONSE_FILE" in /tmp/qwen38-sglang-response.*) rm -f -- "$RESPONSE_FILE" ;; esac
     exit "$command_status"
@@ -51,12 +73,35 @@ trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-for command in curl docker jq nvidia-smi; do
+for command in curl jq nvidia-smi; do
     command -v "$command" >/dev/null 2>&1 || {
         echo "Missing required command: $command" >&2
         exit 1
     }
 done
+case "$RUNTIME" in
+    docker)
+        command -v docker >/dev/null 2>&1 || {
+            echo "Missing required command: docker" >&2
+            exit 1
+        }
+        docker image inspect "$IMAGE" >/dev/null
+        ;;
+    host)
+        command -v setsid >/dev/null 2>&1 || {
+            echo "Missing required command: setsid" >&2
+            exit 1
+        }
+        [[ -x "$SGLANG_BIN" && -x "$SGLANG_PYTHON" ]] || {
+            echo "Missing host SGLang runtime: $SGLANG_BIN" >&2
+            exit 1
+        }
+        ;;
+    *)
+        echo "Unknown SGLang runtime: $RUNTIME" >&2
+        exit 2
+        ;;
+esac
 for path in \
     "$MODEL_DIR/config.json" \
     "$MODEL_DIR/model.safetensors.index.json" \
@@ -65,7 +110,7 @@ for path in \
 do
     [[ -f "$path" ]] || { echo "Missing model file: $path" >&2; exit 1; }
 done
-docker image inspect "$IMAGE" >/dev/null
+mkdir -p "$CACHE_DIR"
 
 if [[ "$(health_code)" == "200" ]]; then
     echo "Port $PORT already has a healthy server; refusing to create a duplicate." >&2
@@ -78,23 +123,39 @@ if ((initial_free_mib < 90000)); then
     exit 1
 fi
 
-image_id="$(docker image inspect -f '{{.Id}}' "$IMAGE")"
-image_digests="$(docker image inspect -f '{{join .RepoDigests ","}}' "$IMAGE")"
-printf 'IMAGE ref=%s id=%s digests=%s\n' "$IMAGE" "$image_id" "$image_digests"
+if [[ "$RUNTIME" == "docker" ]]; then
+    image_id="$(docker image inspect -f '{{.Id}}' "$IMAGE")"
+    image_digests="$(docker image inspect -f '{{join .RepoDigests ","}}' "$IMAGE")"
+    printf 'RUNTIME type=docker ref=%s id=%s digests=%s\n' \
+        "$IMAGE" "$image_id" "$image_digests"
+else
+    runtime_commit="$(git -C "$HOME/src/models.server/.engines/sglang" rev-parse HEAD 2>/dev/null || true)"
+    printf 'RUNTIME type=host bin=%s commit=%s\n' "$SGLANG_BIN" "${runtime_commit:-unknown}"
+fi
 
 start_sglang() {
     local mode="$1"
     local memory_fraction=0.85
-    local -a sizing_args spec_args
+    local ssm_dtype=float32
+    local model_path draft_path
+    local -a serve_args sizing_args spec_args
+
+    if [[ "$RUNTIME" == "docker" ]]; then
+        model_path=/models/target
+        draft_path=/models/draft
+    else
+        model_path="$MODEL_DIR"
+        draft_path="$DRAFT_DIR"
+    fi
 
     sizing_args=()
     spec_args=()
     case "$mode" in
         none)
-            sizing_args=(--mamba-full-memory-ratio 4.5)
+            sizing_args=(--mamba-full-memory-ratio 4.59)
             ;;
         eagle)
-            sizing_args=(--mamba-full-memory-ratio 4.5)
+            sizing_args=(--mamba-full-memory-ratio 4.59)
             spec_args=(
                 --speculative-algorithm EAGLE
                 --speculative-num-steps 3
@@ -104,10 +165,19 @@ start_sglang() {
             )
             ;;
         dspark)
-            sizing_args=(--mamba-full-memory-ratio 11.7)
+            sizing_args=(--mamba-full-memory-ratio 11.93)
             spec_args=(
                 --speculative-algorithm DSPARK
-                --speculative-draft-model-path /models/draft
+                --speculative-draft-model-path "$draft_path"
+                --speculative-draft-attention-backend flashinfer
+            )
+            ;;
+        dspark-bf16)
+            ssm_dtype=bfloat16
+            sizing_args=(--mamba-full-memory-ratio 6.08)
+            spec_args=(
+                --speculative-algorithm DSPARK
+                --speculative-draft-model-path "$draft_path"
                 --speculative-draft-attention-backend flashinfer
             )
             ;;
@@ -116,7 +186,7 @@ start_sglang() {
             sizing_args=(--max-mamba-cache-size 5 --max-running-requests 1)
             spec_args=(
                 --speculative-algorithm DSPARK
-                --speculative-draft-model-path /models/draft
+                --speculative-draft-model-path "$draft_path"
                 --speculative-draft-attention-backend flashinfer
             )
             ;;
@@ -126,38 +196,54 @@ start_sglang() {
             ;;
     esac
 
-    remove_container
+    remove_server
     server_log="$(mktemp "/tmp/qwen38-sglang-${mode}.XXXXXX.log")"
     local start_ms
     start_ms="$(date +%s%3N)"
-    docker run -d \
-        --pull never \
-        --name "$CONTAINER" \
-        --gpus all \
-        --shm-size 32g \
-        --ipc=host \
-        -p "127.0.0.1:${PORT}:${PORT}" \
-        -v "$MODEL_DIR:/models/target:ro" \
-        -v "$DRAFT_DIR:/models/draft:ro" \
-        "$IMAGE" \
-        sglang serve \
-        --trust-remote-code \
-        --model-path /models/target \
-        --served-model-name qwen-3.8-27b \
-        --context-length 262144 \
-        --kv-cache-dtype fp8_e4m3 \
-        --mem-fraction-static "$memory_fraction" \
-        --attention-backend flashinfer \
-        --chunked-prefill-size 2048 \
-        --reasoning-parser qwen3 \
-        --tool-call-parser qwen3_coder \
-        --default-chat-template-kwargs '{"reasoning_effort":"medium"}' \
-        --mamba-radix-cache-strategy extra_buffer \
-        --mamba-ssm-dtype float32 \
-        --host 0.0.0.0 \
-        --port "$PORT" \
-        "${sizing_args[@]}" \
-        "${spec_args[@]}" >/dev/null
+    serve_args=(
+        serve
+        --trust-remote-code
+        --model-path "$model_path"
+        --served-model-name qwen-3.8-27b
+        --context-length 262144
+        --kv-cache-dtype fp8_e4m3
+        --mem-fraction-static "$memory_fraction"
+        --attention-backend flashinfer
+        --chunked-prefill-size 2048
+        --reasoning-parser qwen3
+        --tool-call-parser qwen3_coder
+        --default-chat-template-kwargs '{"reasoning_effort":"medium"}'
+        --mamba-radix-cache-strategy extra_buffer
+        --mamba-ssm-dtype "$ssm_dtype"
+        --host 0.0.0.0
+        --port "$PORT"
+        "${sizing_args[@]}"
+        "${spec_args[@]}"
+    )
+    if [[ "$RUNTIME" == "docker" ]]; then
+        docker run -d \
+            --pull never \
+            --name "$CONTAINER" \
+            --gpus all \
+            --shm-size 32g \
+            --ipc=host \
+            -p "127.0.0.1:${PORT}:${PORT}" \
+            -v "$MODEL_DIR:/models/target:ro" \
+            -v "$DRAFT_DIR:/models/draft:ro" \
+            -v "$CACHE_DIR:/root/.cache" \
+            --env CUDA_CACHE_PATH=/root/.cache/cuda \
+            --env HF_HUB_OFFLINE=1 \
+            --env TRITON_CACHE_DIR=/root/.cache/triton \
+            --env TRANSFORMERS_OFFLINE=1 \
+            "$IMAGE" sglang "${serve_args[@]}" >/dev/null
+    else
+        CUDA_CACHE_PATH="$CACHE_DIR/cuda" \
+        HF_HUB_OFFLINE=1 \
+        TRITON_CACHE_DIR="$CACHE_DIR/triton" \
+        TRANSFORMERS_OFFLINE=1 \
+            setsid "$SGLANG_BIN" "${serve_args[@]}" >"$server_log" 2>&1 &
+        server_pid=$!
+    fi
 
     local free_mib state end_ms
     for _ in $(seq 1 450); do
@@ -171,7 +257,8 @@ start_sglang() {
             fi
             printf 'SERVER mode=%s load_ms=%s free_mib=%s log=%s\n' \
                 "$mode" "$((end_ms - start_ms))" "$free_mib" "$server_log"
-            docker exec -i "$CONTAINER" python3 - <<'PY'
+            if [[ "$RUNTIME" == "docker" ]]; then
+                docker exec -i "$CONTAINER" python3 - <<'PY'
 import importlib.metadata as metadata
 
 for package in ("sglang", "torch", "flashinfer-python"):
@@ -180,12 +267,33 @@ for package in ("sglang", "torch", "flashinfer-python"):
     except metadata.PackageNotFoundError:
         print(f"VERSION package={package} version=unknown")
 PY
+            else
+                "$SGLANG_PYTHON" - <<'PY'
+import importlib.metadata as metadata
+
+for package in ("sglang", "torch", "flashinfer-python"):
+    try:
+        print(f"VERSION package={package} version={metadata.version(package)}")
+    except metadata.PackageNotFoundError:
+        print(f"VERSION package={package} version=unknown")
+PY
+            fi
             return 0
         fi
-        state="$(docker inspect -f '{{.State.Status}}' "$CONTAINER" 2>/dev/null || true)"
+        if [[ "$RUNTIME" == "docker" ]]; then
+            state="$(docker inspect -f '{{.State.Status}}' "$CONTAINER" 2>/dev/null || true)"
+        elif [[ -n "$server_pid" ]] && kill -0 -- "-$server_pid" 2>/dev/null; then
+            state=running
+        else
+            state=exited
+        fi
         if [[ "$state" != "running" ]]; then
             echo "SGLang mode $mode exited during startup." >&2
-            docker logs --tail 200 "$CONTAINER" >&2 || true
+            if [[ "$RUNTIME" == "docker" ]]; then
+                docker logs --tail 200 "$CONTAINER" >&2 || true
+            else
+                tail -n 200 "$server_log" >&2 || true
+            fi
             return 1
         fi
         free_mib="$(nvidia-smi --query-gpu=memory.free \
@@ -198,15 +306,20 @@ PY
     done
 
     echo "SGLang mode $mode did not become healthy." >&2
-    docker logs --tail 200 "$CONTAINER" >&2 || true
+    if [[ "$RUNTIME" == "docker" ]]; then
+        docker logs --tail 200 "$CONTAINER" >&2 || true
+    else
+        tail -n 200 "$server_log" >&2 || true
+    fi
     return 1
 }
 
 stop_sglang() {
-    if [[ -n "$server_log" ]] && docker inspect "$CONTAINER" >/dev/null 2>&1; then
+    if [[ "$RUNTIME" == "docker" && -n "$server_log" ]] \
+        && docker inspect "$CONTAINER" >/dev/null 2>&1; then
         docker logs "$CONTAINER" >"$server_log" 2>&1 || true
     fi
-    remove_container
+    remove_server
     for _ in $(seq 1 30); do
         [[ "$(health_code)" != "200" ]] && return 0
         sleep 1
@@ -258,20 +371,39 @@ prose_prompt='Write a continuous detailed essay about designing reliable local A
 code_prompt='Write a single Python module implementing a thread-safe LRU cache with TTL, tests, type hints, and detailed docstrings. Output code only and continue until stopped.'
 warmup_prompt='Write a short paragraph about reliable inference.'
 
-for mode in none eagle dspark dspark-prod; do
+for mode in none eagle dspark dspark-bf16 dspark-prod; do
     echo "SWEEP_START mode=$mode"
-    start_sglang "$mode"
-    run_generation "$mode" warmup 0 64 "$warmup_prompt"
-    run_generation "$mode" prose 1 600 "$prose_prompt"
-    printf '%s\tprose\t%s\n' "$mode" "$bench_tps" >> "$RESULTS_FILE"
-    run_generation "$mode" code 1 600 "$code_prompt"
-    printf '%s\tcode\t%s\n' "$mode" "$bench_tps" >> "$RESULTS_FILE"
+    if ! start_sglang "$mode"; then
+        echo "SWEEP_FAILED mode=$mode stage=start"
+        stop_sglang || true
+        continue
+    fi
+    if ! run_generation "$mode" warmup 0 64 "$warmup_prompt"; then
+        echo "SWEEP_FAILED mode=$mode stage=warmup"
+        stop_sglang
+        continue
+    fi
+    if ! run_generation "$mode" prose 1 600 "$prose_prompt"; then
+        echo "SWEEP_FAILED mode=$mode stage=prose"
+        stop_sglang
+        continue
+    fi
+    prose_tps="$bench_tps"
+    if ! run_generation "$mode" code 1 600 "$code_prompt"; then
+        echo "SWEEP_FAILED mode=$mode stage=code"
+        stop_sglang
+        continue
+    fi
+    code_tps="$bench_tps"
+    printf '%s\tprose\t%s\n' "$mode" "$prose_tps" >> "$RESULTS_FILE"
+    printf '%s\tcode\t%s\n' "$mode" "$code_tps" >> "$RESULTS_FILE"
     curl --max-time 5 -fsS "http://127.0.0.1:${PORT}/metrics" 2>/dev/null \
         | grep -E '^sglang:spec_(accept_length|accept_rate|block_accept_length)' \
         | tail -n 12 || true
     stop_sglang
 done
 
+[[ -s "$RESULTS_FILE" ]] || { echo "Every SGLang sweep mode failed." >&2; exit 1; }
 awk -F '\t' '
     {sum[$1]+=$3; n[$1]++}
     END {for (mode in sum) printf "SWEEP_SUMMARY mode=%s mixed_mean=%.4f\n", mode, sum[mode]/n[mode]}
@@ -298,19 +430,26 @@ awk -F '\t' -v mode="$best_mode" '
 ' "$RESULTS_FILE" | sort
 
 echo "OFFICIAL_RANDOM_BENCHMARK"
-docker exec "$CONTAINER" python3 -m sglang.bench_serving \
-    --backend sglang \
-    --host 127.0.0.1 \
-    --port "$PORT" \
-    --model qwen-3.8-27b \
-    --dataset-name random \
-    --random-input-len 8192 \
-    --random-output-len 1024 \
-    --random-range-ratio 1 \
-    --num-prompts 1 \
-    --max-concurrency 1 \
-    --request-rate inf \
+bench_args=(
+    -m sglang.bench_serving
+    --backend sglang
+    --host 127.0.0.1
+    --port "$PORT"
+    --model qwen-3.8-27b
+    --dataset-name random
+    --random-input-len 8192
+    --random-output-len 1024
+    --random-range-ratio 1
+    --num-prompts 1
+    --max-concurrency 1
+    --request-rate inf
     --flush-cache
+)
+if [[ "$RUNTIME" == "docker" ]]; then
+    docker exec "$CONTAINER" python3 "${bench_args[@]}"
+else
+    "$SGLANG_PYTHON" "${bench_args[@]}"
+fi
 
 text_payload="$(jq -nc '{
     model: "qwen-3.8-27b",
