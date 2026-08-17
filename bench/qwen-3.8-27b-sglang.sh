@@ -13,6 +13,7 @@ MODEL_DIR="${SGLANG_MODEL_DIR:-$HOME/data/models/qwen-3.8-27b-nvfp4}"
 DRAFT_DIR="${SGLANG_DRAFT_DIR:-$HOME/data/models/qwen-3.8-27b-dspark}"
 CACHE_DIR="${SGLANG_CACHE_DIR:-$HOME/.cache/sglang-qwen38-docker}"
 RUNTIME="${SGLANG_RUNTIME:-docker}"
+MODES="${SGLANG_MODES:-none eagle eagle-prod dspark dspark-bf16 dspark-prod}"
 SGLANG_BIN="${SGLANG_BIN:-$HOME/src/models.server/.venv-sglang/bin/sglang}"
 SGLANG_PYTHON="${SGLANG_PYTHON:-${SGLANG_BIN%/sglang}/python}"
 PORT="${PORT:-2053}"
@@ -156,6 +157,17 @@ start_sglang() {
             ;;
         eagle)
             sizing_args=(--mamba-full-memory-ratio 4.59)
+            spec_args=(
+                --speculative-algorithm EAGLE
+                --speculative-num-steps 3
+                --speculative-eagle-topk 1
+                --speculative-num-draft-tokens 4
+                --enable-linear-replayssm-spec
+            )
+            ;;
+        eagle-prod)
+            memory_fraction=0.45
+            sizing_args=(--max-mamba-cache-size 5 --max-running-requests 1)
             spec_args=(
                 --speculative-algorithm EAGLE
                 --speculative-num-steps 3
@@ -371,7 +383,7 @@ prose_prompt='Write a continuous detailed essay about designing reliable local A
 code_prompt='Write a single Python module implementing a thread-safe LRU cache with TTL, tests, type hints, and detailed docstrings. Output code only and continue until stopped.'
 warmup_prompt='Write a short paragraph about reliable inference.'
 
-for mode in none eagle dspark dspark-bf16 dspark-prod; do
+for mode in $MODES; do
     echo "SWEEP_START mode=$mode"
     if ! start_sglang "$mode"; then
         echo "SWEEP_FAILED mode=$mode stage=start"
@@ -430,12 +442,18 @@ awk -F '\t' -v mode="$best_mode" '
 ' "$RESULTS_FILE" | sort
 
 echo "OFFICIAL_RANDOM_BENCHMARK"
+if [[ "$RUNTIME" == "docker" ]]; then
+    benchmark_tokenizer=/models/target
+else
+    benchmark_tokenizer="$MODEL_DIR"
+fi
 bench_args=(
     -m sglang.bench_serving
     --backend sglang
     --host 127.0.0.1
     --port "$PORT"
     --model qwen-3.8-27b
+    --tokenizer "$benchmark_tokenizer"
     --dataset-name random
     --random-input-len 8192
     --random-output-len 1024
@@ -545,13 +563,18 @@ echo "$image_content" | grep -qi red || { echo "Image canary failed." >&2; exit 
 reasoning_probe() {
     local label="$1"
     local effort="${2:-}"
+    local transport="${3:-none}"
     local payload response prompt_tokens
-    payload="$(jq -nc --arg effort "$effort" '{
+    payload="$(jq -nc --arg effort "$effort" --arg transport "$transport" '{
         model: "qwen-3.8-27b",
         messages: [{role: "user", content: "Hi"}],
         temperature: 0,
         max_tokens: 1
-    } + (if $effort == "" then {} else {reasoning_effort: $effort} end)')"
+    } + (
+        if $transport == "top" then {reasoning_effort: $effort}
+        elif $transport == "template" then {chat_template_kwargs: {reasoning_effort: $effort}}
+        else {} end
+    )')"
     response="$(curl --max-time 300 -fsS \
         "http://127.0.0.1:${PORT}/v1/chat/completions" \
         -H 'Content-Type: application/json' -d "$payload")"
@@ -560,11 +583,13 @@ reasoning_probe() {
     echo "$prompt_tokens"
 }
 default_tokens="$(reasoning_probe default | tail -n 1)"
-medium_tokens="$(reasoning_probe medium medium | tail -n 1)"
-xhigh_tokens="$(reasoning_probe xhigh xhigh | tail -n 1)"
-printf 'REASONING_SUMMARY default=%s medium=%s xhigh=%s\n' \
-    "$default_tokens" "$medium_tokens" "$xhigh_tokens"
-[[ "$default_tokens" -eq "$medium_tokens" && "$xhigh_tokens" -gt "$medium_tokens" ]] || {
+medium_tokens="$(reasoning_probe medium medium template | tail -n 1)"
+top_xhigh_tokens="$(reasoning_probe top-xhigh xhigh top | tail -n 1)"
+template_xhigh_tokens="$(reasoning_probe template-xhigh xhigh template | tail -n 1)"
+printf 'REASONING_SUMMARY default=%s medium=%s top_xhigh=%s template_xhigh=%s\n' \
+    "$default_tokens" "$medium_tokens" "$top_xhigh_tokens" "$template_xhigh_tokens"
+[[ "$default_tokens" -eq "$medium_tokens" \
+    && "$template_xhigh_tokens" -gt "$medium_tokens" ]] || {
     echo "Reasoning default/override check failed." >&2
     exit 1
 }
