@@ -55,7 +55,7 @@ if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
         -ngl 99 \
         --threads -1 \
         --parallel "$PARALLEL" \
-        --no-mmap \
+        --load-mode none \
         --flash-attn on \
         --cache-type-k "$CACHE_TYPE" \
         --cache-type-v "$CACHE_TYPE" \
@@ -79,7 +79,7 @@ exec llama-server \
     --temp 0.6 \
     --top-k 20 \
     --top-p 0.95 \
-    --no-mmap \
+    --load-mode none \
     --flash-attn on \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
