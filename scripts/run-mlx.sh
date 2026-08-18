@@ -63,6 +63,9 @@ fi
 if [[ -n "${MLX_PROMPT_CACHE_BYTES:-}" ]]; then
     LM_ARGS+=(--prompt-cache-bytes "$MLX_PROMPT_CACHE_BYTES")
 fi
+if [[ -n "${MLX_CHAT_TEMPLATE_ARGS:-}" ]]; then
+    LM_ARGS+=(--chat-template-args "$MLX_CHAT_TEMPLATE_ARGS")
+fi
 
 VLM_ARGS=()
 if [[ -n "${MLX_VISION_CACHE_SIZE:-}" ]]; then

@@ -136,6 +136,11 @@ Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and te
 
 `mlx-lm` does not take a llama-style context flag. Use `mlx.prompt_concurrency` and `mlx.decode_concurrency` for request batching, plus optional prompt-cache fields. `mlx-vlm` exposes different knobs such as `mlx.max_kv_size`, `mlx.vision_cache_size`, and `mlx.prefill_step_size`; these are passed only when set.
 
+For `mlx_lm`, optional `mlx.chat_template_args` is serialized as JSON and
+passed through `--chat-template-args`. When the field is absent, the launcher
+does not pass the option. It is never passed to `mlx_vlm`, whose CLI does not
+support it.
+
 When an official MLX repository stores precision variants in subdirectories,
 set `mlx.subdir`; the launcher downloads only that subtree and gives its local
 path to `mlx-lm`. LFM2.5 2.6B uses this for the official `8bit/` checkpoint.

@@ -62,6 +62,11 @@ def main():
         if backend == "mlx_lm":
             emit("MLX_PROMPT_CONCURRENCY", mlx.get("prompt_concurrency", m.get("parallel", 1)))
             emit("MLX_DECODE_CONCURRENCY", mlx.get("decode_concurrency", m.get("parallel", 1)))
+            if "chat_template_args" in mlx:
+                emit(
+                    "MLX_CHAT_TEMPLATE_ARGS",
+                    json.dumps(mlx["chat_template_args"], separators=(",", ":")),
+                )
         for key, env in (
             ("prefill_step_size", "MLX_PREFILL_STEP_SIZE"),
             ("prompt_cache_size", "MLX_PROMPT_CACHE_SIZE"),
