@@ -17,9 +17,13 @@ the model instead of showing repeated generic scripts.
 
 ## Status
 
-- In progress. The inventory found 25 model plists: 11 already use named
-  wrappers and 14 still execute the generic `run.sh`. No model LaunchAgent is
-  currently installed on `snappy`, so no service reload is required.
+- Completed 2026-08-18. The inventory found 25 model plists: 11 already used
+  named wrappers, and the remaining 14 now do too. Every plist has a matching
+  executable `kortexa-<model-id>.sh` delegate and no plist directly executes
+  `run.sh`.
+- All 25 plists and wrappers passed XML, label, argument, executable-mode, and
+  Bash 3.2 validation on `snappy`. Its clean checkout was fast-forwarded through
+  Git; no model LaunchAgent was installed, enabled, loaded, or restarted.
 
 ---
 
