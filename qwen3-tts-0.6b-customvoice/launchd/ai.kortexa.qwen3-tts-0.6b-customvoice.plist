@@ -13,7 +13,7 @@
 	<string>ai.kortexa.qwen3-tts-0.6b-customvoice</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/francip/src/models.server/run.sh</string>
+		<string>/Users/francip/src/models.server/qwen3-tts-0.6b-customvoice/launchd/kortexa-qwen3-tts-0.6b-customvoice.sh</string>
 		<string>/Users/francip/src/models.server/qwen3-tts-0.6b-customvoice</string>
 	</array>
 	<key>RunAtLoad</key>

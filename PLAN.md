@@ -1,3 +1,28 @@
+# Model-named launchd entry points
+
+## Goal
+
+Make every model LaunchAgent execute a distinct `kortexa-<model-id>.sh`
+entry point that delegates to the shared `run.sh`, so macOS Login Items names
+the model instead of showing repeated generic scripts.
+
+## Work plan
+
+1. Inventory all repository plists and wrappers plus installed model agents on
+   `snappy`.
+2. Add the missing named wrappers and update only their plist executable paths.
+3. Validate every plist, wrapper, model argument, and executable mode on macOS.
+4. Commit and push under Sparta rules, then sync and verify the clean `snappy`
+   checkout without changing which model services are installed or enabled.
+
+## Status
+
+- In progress. The inventory found 25 model plists: 11 already use named
+  wrappers and 14 still execute the generic `run.sh`. No model LaunchAgent is
+  currently installed on `snappy`, so no service reload is required.
+
+---
+
 # Qwen 3.8 27B SGLang NVFP4 + DSpark comparison
 
 ## Goal

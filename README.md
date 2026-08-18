@@ -276,7 +276,9 @@ serving engines; the GGUF quantization table does not apply to them.
 
 1. Create `<model-id>/` directory
 2. Add `model.json` with all engine config (see any existing model for the schema)
-3. Add `launchd/` and `systemd/` service units
+3. Add `launchd/` and `systemd/` service units. The launchd plist must execute
+   a model-named `launchd/kortexa-<model-id>.sh` wrapper that delegates to the
+   repository's `run.sh`; this keeps macOS Login Items unambiguous.
 4. Follow the quantization standards above
 5. Test: `./run.sh <model-id>`
 
