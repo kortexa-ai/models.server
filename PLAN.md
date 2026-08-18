@@ -1,3 +1,38 @@
+# llama-server CORS policy
+
+## Goal
+
+Stop llama-server's permissive-CORS warning and prevent unrelated browser
+origins from calling model endpoints, without changing LAN/Tailnet firewall
+policy or the authenticated `api.server` proxy.
+
+## Work plan
+
+1. Inspect the upstream CORS implementation and current network topology.
+2. Apply the upstream `localhost` policy to every shared llama-server launch
+   path, including chat and embeddings on GPU and CPU.
+3. Verify localhost preflights are allowed, unrelated origins are omitted,
+   non-browser requests still work, and the startup warning is absent.
+4. Commit and push under Sparta rules, then sync `snappy` without restarting a
+   model service.
+
+## Status
+
+- Completed 2026-08-18. llama.cpp CORS accepts browser origins, not client
+  CIDRs. Every GPU/Metal llama-server branch now sets its special `localhost`
+  policy; CPU branches do the same when the installed binary supports the
+  option, preserving compatibility with one older idle Pi build.
+- A model-free loopback router test allowed a localhost preflight, omitted the
+  CORS header for an unrelated origin, accepted an originless health request,
+  and emitted no permissive-CORS warning. All four launch branches passed
+  syntax and argument traces. No model service was restarted, and the live
+  LFM2.5 1.2B Thinking endpoint remained healthy.
+- The same-origin embedded Web UI and backend clients remain available. Actual
+  LAN/Tailnet access stays enforced by the existing firewalls, while public
+  model access remains behind the authenticated `api.server` proxy.
+
+---
+
 # LFM2.5 1.2B Instruct roster entry
 
 ## Goal

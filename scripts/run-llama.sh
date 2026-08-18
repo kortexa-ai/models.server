@@ -51,6 +51,7 @@ if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
         --alias "$MODEL_ID" \
         --host "$HOST" \
         --port "$PORT" \
+        --cors-origins localhost \
         -c "$CONTEXT" \
         -ngl 99 \
         --threads -1 \
@@ -70,6 +71,7 @@ exec llama-server \
     --alias "$MODEL_ID" \
     --host "$HOST" \
     --port "$PORT" \
+    --cors-origins localhost \
     --jinja \
     -c "$CONTEXT" \
     -ngl 99 \

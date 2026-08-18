@@ -37,6 +37,11 @@ if [[ -n "${CPU_CHECKPOINT_MIN_STEP:-}" ]]; then
     CHECKPOINT_ARGS=(--checkpoint-min-step "$CPU_CHECKPOINT_MIN_STEP")
 fi
 
+CORS_ARGS=()
+if llama-server --help 2>&1 | grep -F -- '--cors-origins' >/dev/null; then
+    CORS_ARGS=(--cors-origins localhost)
+fi
+
 if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
     echo "Starting ${MODEL_NAME} (CPU, ${QUANT}) via llama-server in EMBEDDING mode on port ${PORT}..."
     exec llama-server \
@@ -51,6 +56,7 @@ if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
         --parallel "$PARALLEL" \
         --cache-type-k "$CACHE_TYPE" \
         --cache-type-v "$CACHE_TYPE" \
+        ${CORS_ARGS[@]+"${CORS_ARGS[@]}"} \
         ${FLASH_ATTN_ARGS[@]+"${FLASH_ATTN_ARGS[@]}"} \
         ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \
         "$@"
@@ -71,6 +77,7 @@ exec llama-server \
     --top-p 0.95 \
     --cache-type-k "$CACHE_TYPE" \
     --cache-type-v "$CACHE_TYPE" \
+    ${CORS_ARGS[@]+"${CORS_ARGS[@]}"} \
     ${FLASH_ATTN_ARGS[@]+"${FLASH_ATTN_ARGS[@]}"} \
     ${CHECKPOINT_ARGS[@]+"${CHECKPOINT_ARGS[@]}"} \
     ${VISION_ARGS[@]+"${VISION_ARGS[@]}"} \

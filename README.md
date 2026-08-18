@@ -124,6 +124,14 @@ Override with `--engine`: `./run.sh qwen-3.5-4b --engine vllm`
 ### llama-server (llama.cpp)
 GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.
 
+All llama-server launch paths set `--cors-origins localhost` when the installed
+binary supports it. This prevents unrelated browser origins from calling a
+model server while preserving its same-origin Web UI and non-browser clients
+such as `api.server`. The CPU launcher omits the option for older Pi binaries
+that predate llama.cpp's CORS controls. CORS is not a network ACL; LAN and
+Tailnet access remains the responsibility of the host and network firewalls,
+while public model access goes through the authenticated `api.server` proxy.
+
 `model.context` is the total llama.cpp context. With `parallel > 1`, llama.cpp divides that total across slots. For example, LFM2.5 230M uses `context=512000` and `parallel=4`, which gives four 128K slots.
 
 llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B explicitly uses depth 3, its fastest measured llama.cpp setting; see `bench/BENCHMARKS.md`.
