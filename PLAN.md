@@ -1,3 +1,34 @@
+# LFM2.5 1.2B Instruct roster entry
+
+## Goal
+
+Add LFM2.5 1.2B Instruct beside the existing Thinking variant with the official
+Q8_0 GGUF and MLX 8-bit checkpoints, its supported 32K context, one request
+slot, and managed service definitions for Linux and macOS.
+
+## Work plan
+
+1. Verify the official repositories, formats, context, and an unused port.
+2. Add the model config, service units, model-named launchd delegate, and
+   inventory documentation.
+3. Validate config parsing, backend dispatch, plist XML, shell syntax, systemd,
+   and roster discovery without downloading weights or starting a server.
+4. Commit and push under Sparta rules, then sync and verify the clean `snappy`
+   checkout without installing or enabling the service.
+
+## Status
+
+- Completed 2026-08-18. Official Hub metadata confirms the Instruct, Q8_0 GGUF,
+  and MLX 8-bit repositories. The roster now exposes
+  `lfm2.5-1.2b-instruct` on unused port 2054 with the documented 32,768-token
+  context, one slot, Q8 KV cache, and model-named service entry points.
+- JSON/config parsing, llama.cpp dispatch, launchd XML and delegation, systemd,
+  unique ID/port checks, and `ktxsvc` discovery passed without downloading a
+  checkpoint or starting a model server. The service remains uninstalled and
+  disabled on both hosts.
+
+---
+
 # Model-named launchd entry points
 
 ## Goal
