@@ -303,6 +303,38 @@ a 6 C target limit and negative shutdown and slowdown limits. Treat those limit
 fields as bad driver telemetry; the sampled GPU temperature and kernel event
 log remained coherent.
 
+## Repeated 600 W heat-soak result
+
+Two more depth-3 passes ran back-to-back at 600 W. The second pass started one
+second after the first pass ended, with a 77 C starting temperature. Both
+completed without an Xid, CUDA error, or thermal event.
+
+| Run | Turns | Generated tokens | Final context | Busy samples | Maximum temperature | Maximum fan |
+|---|---:|---:|---:|---:|---:|---:|
+| Initial 600 W pass | 13 | 17,965 | 139,929 | 325 s | 89 C | 53% |
+| Heat-soak pass 2 | 24 | 26,710 | 146,422 | 421 s | 90 C | 61% |
+| Heat-soak pass 3 | 28 | 30,793 | 157,381 | 439 s | 91 C | 74% |
+
+Across the three 600 W passes, MTP depth 3 completed 65 inference turns and
+generated 75,468 tokens during 1,185 sampled busy seconds. The final pass ran
+hotter and longer than any failed attempt. At 90 C, the driver reported no
+hardware or software thermal slowdown.
+
+The successful logs contain `non-consecutive token position` warnings during
+prompt-cache restoration. The final pass logged 30 of these warnings. They are
+evidence of cache-state transitions, but they are not sufficient to cause the
+lock.
+
+This heat-soak test strongly reduces the probability of context length,
+temperature, or cumulative high-utilization time as the primary trigger. A
+rare driver fault remains possible. The best current target is a specific
+MTP, CUDA graph, prompt-cache, or checkpoint state transition that this
+stochastic replay did not select.
+
+After the test, the runtime power limit was restored to 450 W. The managed
+service was started with MTP enabled and depth 3. Its live arguments include
+`--spec-type draft-mtp --spec-draft-n-max 3`, and its health endpoint passed.
+
 MTP depth 1 was tested before the approval-mode mismatch was found. It
 completed two long turns totaling 10,982 output tokens at 67.32 tok/s, but it
 stopped at a write approval rather than completing the yolo workflow. Treat

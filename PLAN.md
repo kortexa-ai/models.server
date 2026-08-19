@@ -28,9 +28,10 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
 - Completed 2026-08-19. The known failing OMP session and matching client log
   are preserved under `investigations/2026-08-19-qwen-3.8-27b-xid8/` with
   matching source and destination SHA-256 checksums.
-- MTP is disabled. The managed service restarted on a new PID, owns port 2053,
-  passed health and a small decode canary, and retained the 450 W runtime power
-  limit. Its launch arguments contain no speculative-decoding flags.
+- MTP was disabled for the isolation run. The managed service restarted on a
+  new PID, owned port 2053, passed health and a small decode canary, and
+  retained the 450 W runtime power limit. Its launch arguments contained no
+  speculative-decoding flags during that test.
 - Disabling MTP reduced idle Qwen VRAM from 30,236 MiB to 28,116 MiB. The next
   step was to resume the preserved OMP session and record stability and speed.
 - The replay completed 11 inference turns and generated 18,294 tokens while
@@ -52,6 +53,14 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   depth-3 samples. The run reached 89 C and had 325 busy telemetry seconds.
   This result does not support a simple temperature or cumulative-load
   threshold, but it does not exclude retained GPU driver or GSP state.
+- Two additional 600 W depth-3 passes ran back-to-back and completed without a
+  fault. Across all three 600 W passes, the model completed 65 inference turns,
+  generated 75,468 tokens, and had 1,185 sampled busy seconds. The final pass
+  reached 157,381 context tokens and 91 C. This strongly reduces the
+  probability of context size, temperature, or cumulative load as the primary
+  trigger.
+- The final production state is restored: 450 W, MTP enabled, depth 3, managed
+  service active, port 2053 healthy, and the live launch arguments verified.
 
 ---
 

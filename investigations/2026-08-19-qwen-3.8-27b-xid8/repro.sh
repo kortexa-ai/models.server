@@ -3,7 +3,7 @@ set -euo pipefail
 
 VARIANT="${1:-}"
 MAX_SECONDS="${2:-900}"
-HERE="$(cd "$(dirname "$0")" && pwd)"
+HERE="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 TARGET_REPO="unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL"
 FIXTURE_SOURCE="/Users/francip/.omp/agent/sessions/-src/2026-08-18T17-49-54-690Z_01a015fe-7c82-7000-8b72-e721a5d7b2a4.jsonl"
 FIXTURE_CUTOFF="2026-08-19T06:47:08.743Z"
