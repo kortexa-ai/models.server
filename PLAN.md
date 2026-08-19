@@ -15,6 +15,11 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
    arguments, GPU recovery state, and the retained 450 W runtime limit.
 4. Resume the preserved OMP session and record stability and MTP-off
    performance before selecting the next controlled variable.
+5. Stop the managed service and build a direct `llama-server` replay harness
+   from the session boundary immediately before the first crash.
+6. Run the fixed replay with MTP depths 1 and 2, then with the pinned DFlash v1
+   bootstrap drafter. Capture server output, GPU telemetry, kernel events, and
+   OMP output for each isolated run.
 
 ## Status
 
@@ -30,6 +35,15 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   context grew from 116,485 to 140,442 tokens. No Xid or CUDA error occurred.
   Long-context decode ran at approximately 41-45 tok/s, about 40-45% slower
   than the comparable MTP-on attempts. The next isolation test is MTP depth 1.
+- Completed 2026-08-19: the direct-server harness replays the first failed
+  turn through OMP's actual `/retry` operation with GooeyPi's extensions and
+  yolo approval mode. It captures raw server output, GPU telemetry, kernel
+  events, and metadata without changing `model.json`.
+- One full yolo pass each for MTP depths 2 and 3 and the pinned DFlash v1
+  bootstrap completed without Xid 8. The depth-3 control also passed, so this
+  session is a realistic stress fixture but not a deterministic reproducer.
+  DFlash worked at 56.52 tok/s with 33.6% initial acceptance; it was slower
+  than native MTP but faster than the earlier MTP-off run.
 
 ---
 

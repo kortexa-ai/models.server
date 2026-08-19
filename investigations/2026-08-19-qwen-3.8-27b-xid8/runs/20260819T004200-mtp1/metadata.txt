@@ -1,0 +1,4 @@
+2026-08-19T00:42:58-07:00
+NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 595.84, 450.00 W, 35, 31181 MiB
+variant=mtp1
+fixture_cutoff=2026-08-19T06:47:08.743Z

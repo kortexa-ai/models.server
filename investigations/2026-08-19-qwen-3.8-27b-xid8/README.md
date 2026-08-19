@@ -208,3 +208,63 @@ The original OMP RPC process used this session path on `snappy`:
 
 Use the preserved `omp-session.jsonl` to restore the known state if the live
 OMP session changes.
+
+## Direct replay harness
+
+The managed service stays stopped during experiments. `repro.sh` launches
+`llama-server` directly on port 2053, derives a fixture ending at the first
+failed assistant record, and uses OMP's `/retry` operation. The replay uses
+the original `high` thinking level, all three GooeyPi extensions, and `yolo`
+approval mode so tool results immediately feed the next inference turn.
+
+```bash
+./investigations/2026-08-19-qwen-3.8-27b-xid8/repro.sh mtp1
+./investigations/2026-08-19-qwen-3.8-27b-xid8/repro.sh mtp2
+./investigations/2026-08-19-qwen-3.8-27b-xid8/repro.sh mtp3
+./investigations/2026-08-19-qwen-3.8-27b-xid8/repro.sh dflash
+```
+
+The harness refuses to run if the managed service is active, port 2053 is in
+use, or the existing GPU limit is not 450 W. Each run gets raw server output,
+one-second GPU telemetry, kernel logs, metadata, and a small OMP control log
+under `runs/`. It stops its direct server on exit and does not restart the
+managed service.
+
+## Speculative decoding comparison
+
+The corrected yolo replay did not reproduce Xid 8 in one pass for any tested
+configuration. This fixture is a realistic stress workload, not a
+deterministic crash trigger. A passing run cannot establish that a mode is
+safe; repeated trials are required.
+
+| Mode | Initial prompt | Initial output | Initial decode | Initial acceptance | Final context | Result |
+|---|---:|---:|---:|---:|---:|---|
+| MTP depth 3 | 112,739 | 3,688 | 79.08 tok/s | 63.7% | 140,534 | completed, no Xid |
+| MTP depth 2 | 112,739 | 5,183 | 75.49 tok/s | 74.8% | 136,539 | completed, no Xid |
+| DFlash v1 bootstrap | 112,739 | 4,555 | 56.52 tok/s | 33.6% | 140,999 | completed, no Xid |
+
+The generation paths differ because sampling is not deterministic. Do not
+compare total turn counts or final context as if they were matched benchmark
+outputs. The initial request shape was matched, and the full agent workflow
+was allowed to finish.
+
+- MTP depth 3: 21 inference turns, 20,463 generated tokens, maximum 78 C.
+- MTP depth 2: 15 inference turns, 20,945 generated tokens, maximum 78 C.
+- DFlash v1: 12 inference turns, 24,541 generated tokens, maximum 80 C.
+
+One-second telemetry observed 95-100% utilization and brief sampled power
+readings above the configured 450 W limit in all modes. No run logged a kernel
+Xid, CUDA error, ECC error, or thermal shutdown.
+
+MTP depth 1 was tested before the approval-mode mismatch was found. It
+completed two long turns totaling 10,982 output tokens at 67.32 tok/s, but it
+stopped at a write approval rather than completing the yolo workflow. Treat
+that result as supporting data, not as a matched run.
+
+The DFlash candidate is pinned at Hub revision
+`3c89ca499fa04f89a0b4b5ca9b5867953261db39`; its Q8_0 GGUF SHA-256 is
+`5a5b354855ffa4cc2aed92297fe3fcc696039b27b533168a4ae458305c2b1b84`.
+It is a community bootstrap/transplant, not DFlash2 and not an official
+Qwen3.8-trained drafter. Its observed 33.6% first-turn acceptance closely
+matches its publisher's approximately 34% overall claim. It used about
+1.5 GiB more GPU memory than MTP in this shared-workload snapshot.

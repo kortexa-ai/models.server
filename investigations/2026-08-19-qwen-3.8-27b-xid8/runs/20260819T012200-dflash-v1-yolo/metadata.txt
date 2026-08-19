@@ -1,0 +1,12 @@
+2026-08-19T01:22:50-07:00
+NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 595.84, 450.00 W, 48, 31149 MiB
+variant=dflash-v1-yolo
+approval_mode=yolo
+fixture_cutoff=2026-08-19T06:47:08.743Z
+draft_revision=3c89ca499fa04f89a0b4b5ca9b5867953261db39
+draft_sha256=5a5b354855ffa4cc2aed92297fe3fcc696039b27b533168a4ae458305c2b1b84
+outcome=completed
+inference_turns=12
+generated_tokens=24541
+final_context=140999
+max_temperature_c=80
