@@ -1,0 +1,18 @@
+{
+  "name": "Qwen 3.8 27B Uncensored",
+  "id": "qwen-3.8-27b-uncensored",
+  "multimodal": true,
+  "port": 2056,
+  "host": "192.168.2.6",
+  "context": 262144,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "chimingw/Qwen3.8-27B-Uncensored-OrcaRouter-GGUF",
+    "quant": "Q4_K_M",
+    "reasoning_effort": "medium"
+  },
+  "mlx": null,
+  "vllm": null,
+  "cpu": null
+}

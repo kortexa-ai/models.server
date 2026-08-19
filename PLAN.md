@@ -1,3 +1,47 @@
+# Qwen 3.8 27B Uncensored roster entry and archive
+
+## Goal
+
+Add the Qwen 3.8 27B Uncensored OrcaRouter GGUF release with its available
+`Q4_K_M` quant, 262K context, one request slot, q8 KV cache, and managed service
+definitions. Preserve the selected weights and release metadata on `smarty`
+without starting the model or changing any running GPU service.
+
+## Work plan
+
+1. Verify the Hub revision, available quants, context, projector, MTP layout,
+   and an unused port.
+2. Add the GGUF-only model config, service units, model-named launchd delegate,
+   and inventory documentation.
+3. Download the pinned Q4 model, projector, optional MTP companion, license,
+   checksums, manifest, and reproduction notes to `smarty`'s data disk.
+4. Validate checksums, config parsing, backend dispatch, plist XML, shell
+   syntax, systemd, and roster discovery without loading weights or starting a
+   server.
+5. Commit and push under Sparta rules, sync the clean `smarty` checkout, and
+   verify that its original services and GPU workloads remain unchanged.
+
+## Status
+
+- Completed 2026-08-18. Hub revision
+  `58ebd123013160600229eda180b5b17f3fb7af9d` provides a 16.8 GB `Q4_K_M`
+  GGUF, matching 931 MB multimodal projector, and optional 3.2 GB MTP-only
+  companion. The GGUF-only roster entry uses unused port 2056 and leaves MTP
+  disabled until the release's separate or embedded draft layout is validated.
+- The 20 GB pinned archive is under
+  `/home/francip/data/models/huggingface/chimingw/Qwen3.8-27B-Uncensored-OrcaRouter-GGUF/58ebd123013160600229eda180b5b17f3fb7af9d`
+  on `smarty`. All 21 downloaded files match the pinned Hub revision. The
+  model, projector, MTP companion, manifest, license, and reproduction files
+  also match the publisher's SHA-256 list; its README checksum is stale, but
+  the downloaded README matches the pinned Hub blob exactly.
+- JSON/config parsing, llama.cpp argument construction through a non-model
+  stub, launchd XML and delegation, systemd structure, unique ID/port checks,
+  and `ktxsvc` discovery passed without loading weights or starting a server.
+  Port 2056 remains closed. Every original service, GPU PID, and VRAM allocation
+  on `smarty` is unchanged from the pre-download baseline.
+
+---
+
 # LFM2.5 VL 3B roster entry
 
 ## Goal

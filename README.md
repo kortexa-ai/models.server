@@ -57,11 +57,19 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
+| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 262K | 1 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover
 Penumbra as a model. The actual runtime remains the separate `penumbra.server`
 service on port 4007.
+
+Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
+GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
+projector and optional separate MTP companion are preserved with the model
+weights on `smarty`, but MTP is not enabled until that release's runtime path
+is validated. The publisher describes the model as refusal-removed; keep it
+behind application-level access controls and safeguards.
 
 ### Available and Reserved Ports
 
