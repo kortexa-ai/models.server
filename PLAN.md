@@ -1,3 +1,34 @@
+# Qwen 3.8 27B Xid 8 investigation
+
+## Goal
+
+Preserve the known failing long-context OMP session, disable only llama.cpp
+MTP, and replay the same workload to test whether MTP is required to trigger
+the RTX PRO 6000 Blackwell Xid 8 lock.
+
+## Work plan
+
+1. Preserve the OMP session, client transport log, checksums, system state,
+   failure timeline, and baseline MTP-on performance.
+2. Disable only MTP in the Qwen 3.8 27B llama.cpp configuration.
+3. Restart the managed service and verify port ownership, health, launch
+   arguments, GPU recovery state, and the retained 450 W runtime limit.
+4. Resume the preserved OMP session and record stability and MTP-off
+   performance before selecting the next controlled variable.
+
+## Status
+
+- Ready for replay 2026-08-19. The known failing OMP session and matching client log
+  are preserved under `investigations/2026-08-19-qwen-3.8-27b-xid8/` with
+  matching source and destination SHA-256 checksums.
+- MTP is disabled. The managed service restarted on a new PID, owns port 2053,
+  passed health and a small decode canary, and retained the 450 W runtime power
+  limit. Its launch arguments contain no speculative-decoding flags.
+- Disabling MTP reduced idle Qwen VRAM from 30,236 MiB to 28,116 MiB. The next
+  step is to resume the preserved OMP session and record stability and speed.
+
+---
+
 # Qwen 3.8 27B Uncensored roster entry and archive
 
 ## Goal
