@@ -134,6 +134,74 @@ Only Qwen 3.6 was stopped. Qwen 3.8 was stopped after the run, Qwen 3.6 was
 restored, all seven protected endpoints returned HTTP 200, and port 2053 was
 closed.
 
+### August 18 follow-up: Qwen 3.8 27B DFlash2 versus MTP
+
+This test used the open llama.cpp DFlash2 pull request
+[#27342](https://github.com/ggml-org/llama.cpp/pull/27342), commit `5ecbe1ac1`.
+The target was the same Unsloth `UD-Q4_K_XL` GGUF. The DFlash2 draft was
+`incoai/Qwen3.8-27B-DFlash2-GGUF` in Q4_K_M or Q8_0. All modes used full CUDA
+offload, q8_0 K/V, one 262,144-token slot, and the same target build. Each
+measured request forced 600 output tokens. Prose and code did not use
+reasoning. The reasoning request used `medium`.
+
+The main comparison used three prose runs, three code runs, and two reasoning
+runs per mode:
+
+| Mode | Prose tok/s | Code tok/s | Reasoning tok/s | Aggregate draft accept |
+|------|-------------|------------|-----------------|------------------------|
+| No speculation | 71.91 | 71.87 | 71.86 | — |
+| **MTP depth 3** | **116.70** | 158.38 | **161.03** | 61.47% |
+| DFlash2 Q4 depth 3 | 112.05 | 157.74 | 157.16 | 61.52% |
+| DFlash2 Q4 depth 7 | 82.53 | 147.78 | 143.21 | 34.98% |
+| DFlash2 Q8 depth 7 | 82.99 | 149.80 | 141.79 | 35.05% |
+
+Q4 and Q8 gave almost the same acceptance at depth 7. Q8 did not give a useful
+speed gain. At matched depth 3, DFlash2 also gave almost the same acceptance
+as MTP. It was 4.0% slower on prose, 0.4% slower on code, and 2.4% slower on
+reasoning.
+
+The Prometheus counters excluded warm-up traffic. They gave this acceptance
+rate for each draft position:
+
+| Mode | Mean accepted length | Position acceptance, first to last |
+|------|----------------------|------------------------------------|
+| MTP depth 3 | 2.840 | 82.09%, 60.68%, 41.28% |
+| DFlash2 Q4 depth 3 | 2.844 | 81.53%, 59.80%, 43.05% |
+| DFlash2 Q4 depth 7 | 3.438 | 79.05%, 55.81%, 37.16%, 25.97%, 20.01%, 14.78%, 10.98% |
+| DFlash2 Q8 depth 7 | 3.443 | 77.87%, 54.53%, 37.79%, 27.23%, 20.55%, 15.01%, 11.28% |
+
+The late positions have low acceptance. Their cost made the full seven-token
+block slower. A follow-up Q4 sweep tested the missing depths with one
+deterministic run per workload. Depths 3 and 7 below use the repeated means
+from the main comparison:
+
+| DFlash2 depth | Prose tok/s | Code tok/s | Reasoning tok/s | Prose/code mean |
+|---------------|-------------|------------|-----------------|-----------------|
+| 1 | 88.25 | 98.69 | 99.44 | 93.47 |
+| 2 | 110.34 | 133.59 | 135.37 | 121.97 |
+| **3** | **112.05** | 157.74 | 157.16 | **134.90** |
+| 4 | 105.78 | 163.00 | 155.43 | 134.39 |
+| 5 | 99.73 | **165.32** | **158.41** | 132.52 |
+| 6 | 89.66 | 156.43 | 152.18 | 123.05 |
+| 7 | 82.53 | 147.78 | 143.21 | 115.16 |
+
+Depth 3 was the best general DFlash2 setting. Its three-workload mean was 2.1%
+below MTP depth 3. Depth 5 was a narrow code-only result: it was 4.4% faster
+than MTP on code, but 14.5% slower on prose and 1.6% slower on reasoning. This
+single-run result needs repeated validation before use in a code-only service.
+
+The DFlash2 Q4 depth-7 server passed text and required-tool canaries. The image
+canary failed with HTTP 500. The draft context reported non-consecutive KV
+positions and `llama_decode(ctx_dft)` failure after multimodal prefill. The
+restored MTP server passed the identical image canary (`Red`, 285 prompt
+tokens). This isolates the defect to the experimental DFlash2 path.
+
+**Decision:** keep MTP depth 3 in production. DFlash2 does not improve balanced
+Qwen 3.8 speed on this llama.cpp and RTX PRO 6000 stack. Do not add the open
+pull request to the managed service. After both test blocks, Qwen and all four
+other protected GPU endpoints returned HTTP 200. The Smarty checkout remained
+clean.
+
 ---
 
 ## August 4, 2026 — snappy + smarty
