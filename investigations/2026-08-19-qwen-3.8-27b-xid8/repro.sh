@@ -8,6 +8,7 @@ TARGET_REPO="unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL"
 FIXTURE_SOURCE="/Users/francip/.omp/agent/sessions/-src/2026-08-18T17-49-54-690Z_01a015fe-7c82-7000-8b72-e721a5d7b2a4.jsonl"
 FIXTURE_CUTOFF="2026-08-19T06:47:08.743Z"
 DFLASH_MODEL="/home/francip/data/models/huggingface/mrchuy/Qwen3.8-27B-DFlash-drafter-bootstrap-GGUF/3c89ca499fa04f89a0b4b5ca9b5867953261db39/Qwen3.8-27B-DFlash-bootstrap-Q8_0.gguf"
+EXPECTED_POWER_LIMIT_W="${EXPECTED_POWER_LIMIT_W:-450}"
 
 usage() {
     echo "Usage: $0 mtp1|mtp2|mtp3|dflash [max-seconds]" >&2
@@ -41,8 +42,12 @@ if ss -ltn 'sport = :2053' | grep -q LISTEN; then
 fi
 
 POWER_LIMIT="$(nvidia-smi --query-gpu=power.limit --format=csv,noheader,nounits | cut -d. -f1)"
-[[ "$POWER_LIMIT" == "450" ]] || {
-    echo "Expected the existing 450 W cap; found ${POWER_LIMIT} W. Refusing to change it." >&2
+[[ "$EXPECTED_POWER_LIMIT_W" =~ ^[0-9]+$ ]] || {
+    echo "EXPECTED_POWER_LIMIT_W must be an integer." >&2
+    exit 1
+}
+[[ "$POWER_LIMIT" == "$EXPECTED_POWER_LIMIT_W" ]] || {
+    echo "Expected an existing ${EXPECTED_POWER_LIMIT_W} W cap; found ${POWER_LIMIT} W. Refusing to change it." >&2
     exit 1
 }
 
@@ -53,7 +58,8 @@ mkdir -p "$RUN_DIR"
 
 START_ISO="$(date --iso-8601=seconds)"
 {
-    printf 'started=%s\nvariant=%s\napproval_mode=yolo\n' "$START_ISO" "$VARIANT"
+    printf 'started=%s\nvariant=%s\napproval_mode=yolo\npower_limit_w=%s\n' \
+        "$START_ISO" "$VARIANT" "$POWER_LIMIT"
     printf 'fixture_cutoff=%s\ntarget=%s\n' "$FIXTURE_CUTOFF" "$TARGET_REPO"
     llama-server --version
     nvidia-smi --query-gpu=name,driver_version,power.limit,temperature.gpu,memory.used --format=csv,noheader

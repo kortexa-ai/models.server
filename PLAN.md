@@ -20,6 +20,8 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
 6. Run the fixed replay with MTP depths 1 and 2, then with the pinned DFlash v1
    bootstrap drafter. Capture server output, GPU telemetry, kernel events, and
    OMP output for each isolated run.
+7. Restore the default 600 W power limit and run the depth-3 replay again to
+   compare throughput, temperature, sustained load, and fault behavior.
 
 ## Status
 
@@ -44,6 +46,12 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   session is a realistic stress fixture but not a deterministic reproducer.
   DFlash worked at 56.52 tok/s with 33.6% initial acceptance; it was slower
   than native MTP but faster than the earlier MTP-off run.
+- A second depth-3 pass at the default 600 W limit completed 13 inference turns
+  and generated 17,965 tokens without an Xid. Initial prefill throughput was
+  2,286.90 tok/s and decode was 87.65 tok/s, 26.5% and 10.8% above the 450 W
+  depth-3 samples. The run reached 89 C and had 325 busy telemetry seconds.
+  This result does not support a simple temperature or cumulative-load
+  threshold, but it does not exclude retained GPU driver or GSP state.
 
 ---
 

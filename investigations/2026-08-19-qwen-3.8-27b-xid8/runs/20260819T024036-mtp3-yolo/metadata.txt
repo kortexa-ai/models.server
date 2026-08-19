@@ -1,0 +1,10 @@
+started=2026-08-19T02:40:36-07:00
+variant=mtp3
+approval_mode=yolo
+power_limit_w=600
+fixture_cutoff=2026-08-19T06:47:08.743Z
+target=unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL
+NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 595.84, 600.00 W, 33, 31221 MiB
+outcome=completed
+finished=2026-08-19T02:46:37-07:00
+remote_fixture=/tmp/qwen-xid8-20260819T024036-mtp3-yolo/session.jsonl

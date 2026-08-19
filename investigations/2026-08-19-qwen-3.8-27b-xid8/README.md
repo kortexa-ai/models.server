@@ -105,6 +105,9 @@ thermal protection, a 600 W transient, or one malformed tool result:
   restarts.
 - Three failures occurred with a 450 W limit and a maximum observed
   temperature of 78 C.
+- Two 450 W failures occurred only 85 and 93 seconds after fresh llama-server
+  process starts. Each process did one full prompt prefill and then failed
+  after 917 or 1,384 decoded tokens.
 
 The leading trigger envelope is long-context Qwen 3.8 decode with MTP,
 CUDA-graph reuse, and llama.cpp prompt-cache/checkpoint state on GB202. The
@@ -225,7 +228,9 @@ approval mode so tool results immediately feed the next inference turn.
 ```
 
 The harness refuses to run if the managed service is active, port 2053 is in
-use, or the existing GPU limit is not 450 W. Each run gets raw server output,
+use, or the existing GPU limit does not match `EXPECTED_POWER_LIMIT_W` (450 by
+default). For a deliberate 600 W comparison, use
+`EXPECTED_POWER_LIMIT_W=600 ./repro.sh mtp3`. Each run gets raw server output,
 one-second GPU telemetry, kernel logs, metadata, and a small OMP control log
 under `runs/`. It stops its direct server on exit and does not restart the
 managed service.
@@ -255,6 +260,48 @@ was allowed to finish.
 One-second telemetry observed 95-100% utilization and brief sampled power
 readings above the configured 450 W limit in all modes. No run logged a kernel
 Xid, CUDA error, ECC error, or thermal shutdown.
+
+## 600 W MTP depth-3 replay
+
+A depth-3 replay at the GPU's default 600 W limit completed without an Xid or
+CUDA error. OMP produced a different valid generation path, so this is a
+stress comparison and not a deterministic benchmark.
+
+| Limit | Initial prompt | Initial prefill | Initial output | Initial decode | Initial acceptance | Result |
+|---:|---:|---:|---:|---:|---:|---|
+| 450 W | 112,739 | 1,808.48 tok/s | 3,688 | 79.08 tok/s | 63.7% | completed, no Xid |
+| 600 W | 108,265 | 2,286.90 tok/s | 3,010 | 87.65 tok/s | 64.1% | completed, no Xid |
+
+The 600 W run had 26.5% higher initial prefill throughput and 10.8% higher
+initial decode throughput. Later cached turns reached 92.35 tok/s. Do not use
+the different total run times as a speed comparison because the generated
+agent paths and tool calls differed.
+
+- Completed inference turns: 13
+- Total generated tokens: 17,965
+- Final recorded context: 139,929 tokens
+- Maximum observed temperature: 89 C
+- Maximum observed fan speed: 53%
+- Maximum sampled power: 603.66 W
+- Busy telemetry samples: 325 of 351 seconds
+- Samples at 95-100% utilization: 162 seconds; longest consecutive sequence:
+  14 seconds
+- Kernel Xid, CUDA, ECC, or thermal events: none
+
+This successful pass had more sustained sampled load than the 450 W depth-3
+replay: 87.2% average utilization instead of 55.2%, with fewer and shorter tool
+gaps. It also ran hotter. This result does not support a simple cumulative busy
+time or temperature threshold. A new llama-server process does not power-cycle
+the GPU or fully reset all driver and GSP state, so a retained marginal device
+state is still possible. The stronger current hypothesis is a specific
+MTP/CUDA graph or state sequence on GB202.
+
+During the run, `clocks_throttle_reasons.active` reported `0x4`. This is the
+software power-cap reason, not a thermal slowdown reason. Driver 595.84 also
+reported impossible temperature limit fields through `nvidia-smi -q`, including
+a 6 C target limit and negative shutdown and slowdown limits. Treat those limit
+fields as bad driver telemetry; the sampled GPU temperature and kernel event
+log remained coherent.
 
 MTP depth 1 was tested before the approval-mode mismatch was found. It
 completed two long turns totaling 10,982 output tokens at 67.32 tok/s, but it
