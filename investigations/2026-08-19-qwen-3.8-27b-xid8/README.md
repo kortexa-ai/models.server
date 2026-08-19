@@ -152,6 +152,52 @@ The preserved artifacts passed high-confidence checks for common OpenAI,
 GitHub, AWS, private-key, bearer-token, and JWT secret formats before commit.
 `gitleaks` was not installed.
 
+## MTP-off replay result
+
+The original OMP session resumed at 2026-08-19 00:12 PDT and finished its
+task without a service or GPU failure.
+
+- Initial prompt: 116,485 tokens
+- Initial prefill: 59.79 seconds, 1,948.33 tok/s
+- First generation: 6,299 tokens, 44.91 tok/s
+- Second long generation: 5,746 tokens, 43.11 tok/s
+- Completed inference turns: 11
+- Total generated tokens: 18,294
+- Final recorded context: 140,442 tokens
+- Maximum observed temperature: 78 C
+- Power limit: 450 W
+- Kernel Xid events: none
+- CUDA errors: none
+- Final endpoint state: healthy and idle
+
+The MTP-on full-prompt replays took approximately 66.6-66.8 seconds to prefill
+116,456 tokens. MTP-off prefill was approximately 10% faster because the MTP
+context did not also process the prompt. MTP-off long-context decode was about
+41-45 tok/s, compared with approximately 75-76 tok/s for the directly
+comparable MTP-on attempts. The cost of this successful run was therefore
+approximately 40-45% lower decode throughput.
+
+This result shows that the 116K prompt alone is not sufficient to trigger the
+failure. It strongly implicates the MTP execution path, but disabling MTP also
+removed its 2,120 MiB context allocation. It does not yet distinguish an MTP
+state-management defect from a depth-dependent draft/verify defect.
+
+The next clean isolation test is MTP with `mtp_n_max` set to 1. That retains
+essentially the same full-length MTP context and draft KV allocation while
+reducing each speculative frontier to one token and each target verification
+batch to at most two positions. Interpretation:
+
+- Depth 1 fails: suspect the common MTP context, KV/checkpoint, recurrent-state,
+  or rollback path.
+- Depth 1 succeeds and depth 3 fails: suspect multi-token drafting, the larger
+  target verification graph, or rollback after partial multi-token acceptance.
+- To test capacity separately, keep depth 3 and reduce only the MTP draft KV
+  footprint, for example with q8 draft K/V or a smaller controlled context.
+
+Static VRAM exhaustion is unlikely: the MTP-on service had approximately 35 GB
+of free VRAM, and the failures produced no CUDA allocation, OOM, or ECC error.
+A memory-state correctness bug remains possible.
+
 ## Resume reference
 
 The original OMP RPC process used this session path on `snappy`:
