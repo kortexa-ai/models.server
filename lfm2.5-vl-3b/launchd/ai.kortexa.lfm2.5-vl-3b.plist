@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
+	</dict>
+	<key>KeepAlive</key>
+	<false/>
+	<key>Label</key>
+	<string>ai.kortexa.lfm2.5-vl-3b</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/francip/src/models.server/lfm2.5-vl-3b/launchd/kortexa-lfm2.5-vl-3b.sh</string>
+		<string>/Users/francip/src/models.server/lfm2.5-vl-3b</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StandardErrorPath</key>
+	<string>/Users/francip/Library/Logs/lfm2.5-vl-3b.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/francip/Library/Logs/lfm2.5-vl-3b.log</string>
+	<key>ThrottleInterval</key>
+	<integer>15</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/francip/src/models.server</string>
+</dict>
+</plist>

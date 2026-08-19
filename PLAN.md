@@ -1,3 +1,36 @@
+# LFM2.5 VL 3B roster entry
+
+## Goal
+
+Add LFM2.5 VL 3B with LiquidAI's official Q8_0 GGUF and MLX 8-bit
+checkpoints, its supported 32K multimodal context, one request slot, and
+managed service definitions for Linux and macOS.
+
+## Work plan
+
+1. Verify the official repositories, formats, context, runtime support, and an
+   unused port.
+2. Add the model config, service units, model-named launchd delegate, and
+   inventory documentation.
+3. Validate config parsing, backend dispatch, plist XML, shell syntax, systemd,
+   and roster discovery without downloading weights or starting a server.
+4. Commit and push under Sparta rules, then sync and verify the clean `smarty`
+   checkout without installing or enabling the service.
+
+## Status
+
+- Completed 2026-08-18. LiquidAI's model card and Hub repositories confirm the
+  32,768-token context, official Q8_0 GGUF with matching Q8_0 vision projector,
+  official MLX 8-bit checkpoint, native vLLM support, and `lfm2` tool parser.
+  The roster now exposes `lfm2.5-vl-3b` on unused port 2055 with one request
+  slot, Q8 KV cache, and model-named service entry points.
+- JSON/config parsing, llama.cpp, MLX, and vLLM dispatch, MLX model-family
+  loading, launchd XML and delegation, systemd template parity, unique ID/port
+  checks, and `ktxsvc` discovery passed without downloading a checkpoint or
+  starting a model server. The service remains uninstalled and disabled.
+
+---
+
 # llama-server CORS policy
 
 ## Goal

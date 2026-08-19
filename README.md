@@ -56,6 +56,7 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
+| 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover
@@ -245,7 +246,10 @@ ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Ras
 
 LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
 
-LFM2.5 VL 450M uses LiquidAI's official `Q8_0` GGUF and matching vision projector on llama.cpp and CPU backends. It keeps the model's 32K multimodal context in one slot; macOS defaults to the official 8-bit MLX checkpoint instead.
+LFM2.5 VL 450M and 3B use LiquidAI's official `Q8_0` GGUFs and matching
+vision projectors with llama.cpp. Both keep a 32K multimodal context in one
+slot and default to the official 8-bit MLX checkpoint on macOS. The 450M also
+supports the CPU backend; the 3B offers optional FP8 vLLM serving on CUDA.
 
 LFM2.5 1.2B Thinking, LFM2.5 1.2B Instruct, and LFM2.5 2.6B use the official
 `Q8_0` GGUFs with full CUDA offload on `smarty`, and official 8-bit MLX
@@ -274,9 +278,12 @@ curl http://localhost:2048/v1/fill-mask \
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
 LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M. It is also configured for four 128K slots on llama.cpp-style backends and four-way prompt/decode concurrency on `mlx-lm`.
-LFM2.5 1.2B Thinking, 1.2B Instruct, and 2.6B are single-slot Q8 exceptions;
-they use MLX on macOS and CUDA-backed llama.cpp on Linux.
-The LFM 350M generative, vision-language, and embedding models use `Q8_0`; the generative models default to CPU, the VLM defaults to MLX on Darwin, and the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
+LFM2.5 1.2B Thinking, 1.2B Instruct, 2.6B, and VL 3B are single-slot Q8
+exceptions; they use MLX on macOS and CUDA-backed llama.cpp on Linux.
+The smaller LFM generative, vision-language, and embedding models use `Q8_0`;
+the generative models default to CPU, the VLM defaults to MLX on Darwin, and
+the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M
+stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
 
 The TTS entries use their publishers' BF16/MLX checkpoints and codec-aware
 serving engines; the GGUF quantization table does not apply to them.
