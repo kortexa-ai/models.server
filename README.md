@@ -89,10 +89,10 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
 | 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
-| 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K | 1 / 4 |
+| 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K/slot | 3 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
-| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 262K | 1 |
+| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 262K/slot | 3 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover
@@ -176,7 +176,12 @@ that predate llama.cpp's CORS controls. CORS is not a network ACL; LAN and
 Tailnet access remains the responsibility of the host and network firewalls,
 while public model access goes through the authenticated `api.server` proxy.
 
-`model.context` is the total llama.cpp context. With `parallel > 1`, llama.cpp divides that total across slots. For example, LFM2.5 230M uses `context=512000` and `parallel=4`, which gives four 128K slots.
+`model.context` is the default total llama.cpp context. Optional
+`llama.context` and `llama.parallel` values override the shared defaults for
+that backend. With `parallel > 1`, llama.cpp divides the total context across
+slots. For example, Qwen 3.8 uses `llama.context=786432` and
+`llama.parallel=3`, which gives three 262K slots without changing the 262K
+per-request context used by its MLX and vLLM configurations.
 
 llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B explicitly uses depth 3, its fastest measured llama.cpp setting; see `bench/BENCHMARKS.md`.
 

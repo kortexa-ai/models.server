@@ -402,5 +402,7 @@ timed out rather than completing and generation paths are stochastic.
 
 The shared llama.cpp launcher now disables CUDA graphs by default, with an
 explicit per-model `llama.cuda_graphs: true` opt-in. The final managed state is
-MTP depth 3, CUDA graphs disabled through that launcher default, and the
-persistent 450 W limit active. The endpoint is healthy.
+three 262K slots, MTP depth 3, CUDA graphs disabled through that launcher
+default, and the persistent 450 W limit active. It leaves 13,174 MiB of VRAM
+free at idle, and a three-request canary completed on all slots. The endpoint
+is healthy.

@@ -77,10 +77,16 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   without an Xid. Both clients stopped at the configured time limit.
 - The shared llama.cpp launcher now disables CUDA graphs by default. Individual
   models can opt in with `llama.cuda_graphs: true`; no model currently does.
-- The final production state is 450 W, MTP enabled at depth 3, CUDA graphs
-  disabled, managed service active, port 2053 healthy, and the live process
-  environment and arguments verified. The host-local systemd unit applies the
-  power cap and remains outside `ktxsvc` discovery.
+- A direct startup probe measured two full 262K slots at 38,223 MiB for Qwen,
+  leaving 27,420 MiB free with the normal service stack. Production was set to
+  three full slots through llama-specific context and parallel overrides; the
+  uncensored variant has matching slot dimensions. The managed three-slot
+  service leaves 13,174 MiB free at idle, and a three-request canary completed
+  on all slots.
+- The final production state is 450 W, three 262K slots, MTP enabled at depth
+  3, CUDA graphs disabled, managed service active, port 2053 healthy, and the
+  live process environment and arguments verified. The host-local systemd unit
+  applies the power cap and remains outside `ktxsvc` discovery.
 
 ---
 
