@@ -42,6 +42,9 @@ def main():
         print(f"LLAMA_QUANT='{quote(llama['quant'])}'")
         emit("LLAMA_CONTEXT", llama.get("context", m.get("context", 65536)))
         emit("LLAMA_PARALLEL", llama.get("parallel", m.get("parallel", 1)))
+        print(
+            f"LLAMA_CUDA_GRAPHS={'true' if llama.get('cuda_graphs') else 'false'}"
+        )
         if llama.get("mtp"):
             print("LLAMA_MTP=true")
         if llama.get("mtp_n_max"):

@@ -26,6 +26,8 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
    managed service at MTP depths 3, 2, and 1 under the persistent 450 W cap.
 9. Disable CUDA graphs at runtime and repeat the managed replay at MTP depths
    1 and 3, keeping the session, power cap, and server configuration fixed.
+10. Make CUDA graphs default-off in the shared llama.cpp launcher with an
+    explicit per-model opt-in, then remove Qwen's host-local systemd drop-ins.
 
 ## Status
 
@@ -73,11 +75,12 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   tokens without an Xid. Depth 3 then ran for 15 minutes through 88 completed
   turns, 47,402 generated tokens, and 179,075 main-session context tokens
   without an Xid. Both clients stopped at the configured time limit.
+- The shared llama.cpp launcher now disables CUDA graphs by default. Individual
+  models can opt in with `llama.cuda_graphs: true`; no model currently does.
 - The final production state is 450 W, MTP enabled at depth 3, CUDA graphs
   disabled, managed service active, port 2053 healthy, and the live process
-  environment and arguments verified. The host applies both runtime settings
-  with systemd files deliberately kept outside the repository; the power unit
-  remains outside `ktxsvc` discovery.
+  environment and arguments verified. The host-local systemd unit applies the
+  power cap and remains outside `ktxsvc` discovery.
 
 ---
 

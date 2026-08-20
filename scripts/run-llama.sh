@@ -18,6 +18,15 @@ CACHE_TYPE="${CACHE_TYPE:-$MODEL_CACHE_TYPE}"
 CONTEXT="${CONTEXT:-$LLAMA_CONTEXT}"
 PARALLEL="${PARALLEL:-$LLAMA_PARALLEL}"
 
+# CUDA graphs are disabled by default. A model can opt in with
+# `llama.cuda_graphs: true` in model.json. Presence of the environment variable
+# disables graphs in llama.cpp, regardless of its value.
+if [[ "${LLAMA_CUDA_GRAPHS:-false}" == "true" ]]; then
+    unset GGML_CUDA_DISABLE_GRAPHS
+else
+    export GGML_CUDA_DISABLE_GRAPHS=1
+fi
+
 VISION_ARGS=()
 if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
     VISION_ARGS=(--no-mmproj)

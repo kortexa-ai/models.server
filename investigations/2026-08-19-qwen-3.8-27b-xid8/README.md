@@ -400,5 +400,7 @@ restoration, or long-context graph-shape transitions on GB202. The result is
 not proof of permanent stability because the two graph-disabled workflows
 timed out rather than completing and generation paths are stochastic.
 
-The final managed state is MTP depth 3, CUDA graphs disabled, and the
+The shared llama.cpp launcher now disables CUDA graphs by default, with an
+explicit per-model `llama.cuda_graphs: true` opt-in. The final managed state is
+MTP depth 3, CUDA graphs disabled through that launcher default, and the
 persistent 450 W limit active. The endpoint is healthy.

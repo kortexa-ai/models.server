@@ -88,5 +88,6 @@ on GB202. It does not prove the workaround is permanently safe: neither
 graph-disabled branch completed before the client time limit, and rare driver
 faults remain possible.
 
-The managed service now remains at MTP depth 3 with CUDA graphs disabled and
-the 450 W cap active.
+The shared llama.cpp launcher now disables CUDA graphs by default, with an
+explicit per-model `llama.cuda_graphs: true` opt-in. The managed service
+remains at MTP depth 3 with that default and the 450 W cap active.
