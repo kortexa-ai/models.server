@@ -54,4 +54,39 @@ multi-token draft/verify, rollback, CUDA-graph, or cache-state transition on
 GB202. A single passing depth-1 run is encouraging, not proof that it can never
 fail.
 
-The managed service remains at MTP depth 1 and 450 W after these tests.
+After these depth-only tests, the managed service was temporarily left at MTP
+depth 1 and 450 W before the CUDA graph isolation below.
+
+## CUDA graphs disabled
+
+The same fixture was replayed again after adding
+`GGML_CUDA_DISABLE_GRAPHS=1` to the managed service environment. This is a
+runtime switch; llama.cpp was not rebuilt. Both replays used the persistent
+450 W limit and stopped at the configured 15-minute client limit without an
+Xid.
+
+| MTP depth | First prompt | First output | First decode | Turns | Generated | Last main context | Peak temp | Result |
+|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 | 79,254 | 1,813 | 74.06 tok/s | 47 | 33,400 | 150,289 | 86 C | timeout, no Xid |
+| 3 | 83,728 | 2,361 | 84.18 tok/s | 88 | 47,402 | 179,075 | 87 C | timeout, no Xid |
+
+The graph-disabled depth-3 run lasted more than three times as long as its
+graph-enabled failure, completed 62 more inference turns, and reached 63,288
+tokens beyond that run's last completed context. It also exceeded the
+graph-enabled depth-2 failure by 51,349 context tokens.
+
+No performance penalty was visible in the matched initial requests. The
+graph-disabled depth-3 first turn ran at 84.18 tok/s versus 80.78 tok/s with
+graphs enabled, and depth 1 ran at 74.06 versus 71.52 tok/s. The stochastic
+outputs and differing prompt lengths make those stress comparisons rather
+than precise benchmarks, but they rule out a large expected slowdown in this
+workload.
+
+This A/B result strongly implicates CUDA graph capture or replay interacting
+with multi-token MTP, cache restoration, or changing long-context graph shapes
+on GB202. It does not prove the workaround is permanently safe: neither
+graph-disabled branch completed before the client time limit, and rare driver
+faults remain possible.
+
+The managed service now remains at MTP depth 3 with CUDA graphs disabled and
+the 450 W cap active.

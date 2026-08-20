@@ -24,6 +24,8 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
    compare throughput, temperature, sustained load, and fault behavior.
 8. Preserve the later `magicapp` crash session and replay it through the
    managed service at MTP depths 3, 2, and 1 under the persistent 450 W cap.
+9. Disable CUDA graphs at runtime and repeat the managed replay at MTP depths
+   1 and 3, keeping the session, power cap, and server configuration fixed.
 
 ## Status
 
@@ -66,10 +68,16 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   completed turns and at depth 2 after 60 completed turns. MTP depth 1
   completed all 82 turns, generated 42,032 tokens, and reached 146,887 context
   tokens without an Xid. The passing run peaked at 86 C, above both failures.
-- The final production state is 450 W, MTP enabled at depth 1, managed service
-  active, port 2053 healthy, and the live launch arguments verified. The host
-  applies the cap at boot with a systemd unit deliberately kept outside the
-  repository and outside `ktxsvc` discovery.
+- With `GGML_CUDA_DISABLE_GRAPHS=1`, MTP depth 1 ran for 15 minutes through 47
+  completed turns, 33,400 generated tokens, and 150,289 main-session context
+  tokens without an Xid. Depth 3 then ran for 15 minutes through 88 completed
+  turns, 47,402 generated tokens, and 179,075 main-session context tokens
+  without an Xid. Both clients stopped at the configured time limit.
+- The final production state is 450 W, MTP enabled at depth 3, CUDA graphs
+  disabled, managed service active, port 2053 healthy, and the live process
+  environment and arguments verified. The host applies both runtime settings
+  with systemd files deliberately kept outside the repository; the power unit
+  remains outside `ktxsvc` discovery.
 
 ---
 

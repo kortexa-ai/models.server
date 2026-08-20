@@ -373,6 +373,32 @@ and cumulative load as primary explanations. It implicates a depth-dependent
 multi-token draft/verify, rollback, CUDA-graph, or cache-state transition,
 although one successful depth-1 run cannot establish long-term safety.
 
-The final managed state is MTP depth 1 at a persistent 450 W limit. The Qwen
-service is active and healthy with live arguments
-`--spec-type draft-mtp --spec-draft-n-max 1`.
+After the depth-only tests, the managed service was temporarily left at MTP
+depth 1 and the persistent 450 W limit before the CUDA graph isolation below.
+
+## CUDA graph isolation
+
+The managed service was then given the runtime environment variable
+`GGML_CUDA_DISABLE_GRAPHS=1`; no llama.cpp rebuild was needed. The exact
+Magicapp fixture was replayed at MTP depths 1 and 3 with the same 450 W cap.
+
+| MTP depth | Duration | Completed turns | Generated tokens | Last main context | Peak temp | Result |
+|---:|---:|---:|---:|---:|---:|---|
+| 1 | 15 min | 47 | 33,400 | 150,289 | 86 C | client timeout, no Xid |
+| 3 | 15 min | 88 | 47,402 | 179,075 | 87 C | client timeout, no Xid |
+
+Both clients reached their configured time limit while the server remained
+healthy. The graph-disabled depth-3 run lasted more than three times as long
+as the graph-enabled depth-3 failure and exceeded its last context by 63,288
+tokens. It also ran beyond the depth-2 failure by 51,349 tokens. Initial
+depth-3 decode was 84.18 tok/s without CUDA graphs versus 80.78 tok/s in the
+graph-enabled failure, so this workload showed no material speed penalty.
+
+This is the strongest controlled evidence in the investigation. It points to
+CUDA graph capture or replay interacting with multi-token MTP, cache
+restoration, or long-context graph-shape transitions on GB202. The result is
+not proof of permanent stability because the two graph-disabled workflows
+timed out rather than completing and generation paths are stochastic.
+
+The final managed state is MTP depth 3, CUDA graphs disabled, and the
+persistent 450 W limit active. The endpoint is healthy.

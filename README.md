@@ -188,6 +188,20 @@ while public model access goes through the authenticated `api.server` proxy.
 
 llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B explicitly uses depth 3, its fastest measured llama.cpp setting; see `bench/BENCHMARKS.md`.
 
+On `smarty`, Qwen 3.8 disables CUDA graphs at runtime with the host-local
+systemd drop-in
+`/etc/systemd/system/kortexa-ai-llm-qwen-3.8-27b.service.d/20-disable-cuda-graphs.conf`:
+
+```ini
+[Service]
+Environment=GGML_CUDA_DISABLE_GRAPHS=1
+```
+
+No llama.cpp rebuild is required. This works around reproducible GB202 Xid 8
+faults during long-context MTP depth-2 and depth-3 inference; the same fixture
+ran for 15 minutes at depth 3 without a fault when graphs were disabled. See
+`investigations/2026-08-19-qwen-3.8-27b-xid8/` for the captured evidence.
+
 Set `llama.reasoning_effort` to pass a model-wide default through
 `--reasoning-effort`. Requests can still override it. Qwen 3.8 uses `medium`;
 without this setting its chat template defaults to `xhigh`.

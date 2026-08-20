@@ -1,0 +1,11 @@
+started=2026-08-19T18:16:44-07:00
+tag=mtp3-nographs
+approval_mode=yolo
+power_limit_w=450
+source_session_sha256=2570600738ad744b4adca283a9dc1d272ac665bd7db21bd526ed9068d0f3b3e3
+server_pid=952418
+server_cmdline=llama-server -hf unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL --alias qwen-3.8-27b --host 0.0.0.0 --port 2053 --cors-origins localhost --jinja -c 262144 -ngl 99 --threads -1 --parallel 1 --no-context-shift --temp 0.6 --top-k 20 --top-p 0.95 --load-mode none --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --spec-type draft-mtp --spec-draft-n-max 3 --reasoning-effort medium
+server_environment=GGML_CUDA_DISABLE_GRAPHS=1
+omp_status=0
+outcome=timeout
+finished=2026-08-19T18:31:54-07:00

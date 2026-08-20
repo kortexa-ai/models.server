@@ -1,0 +1,791 @@
+Aug 19 18:00:15 smarty run.sh[942818]: 2.25.728.640 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+Aug 19 18:00:15 smarty run.sh[942818]: 2.25.729.066 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+Aug 19 18:00:19 smarty run.sh[942818]: 2.29.091.866 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  10240, progress = 0.13, t =   3.26 s / 3140.22 tokens per second
+Aug 19 18:00:19 smarty run.sh[942818]: 2.29.798.516 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  12288, progress = 0.16, t =   3.96 s / 3099.54 tokens per second
+Aug 19 18:00:20 smarty run.sh[942818]: 2.30.518.221 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  14336, progress = 0.18, t =   4.68 s / 3062.02 tokens per second
+Aug 19 18:00:21 smarty run.sh[942818]: 2.31.251.320 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  16384, progress = 0.21, t =   5.41 s / 3026.69 tokens per second
+Aug 19 18:00:21 smarty run.sh[942818]: 2.31.997.838 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  18432, progress = 0.23, t =   6.16 s / 2993.79 tokens per second
+Aug 19 18:00:22 smarty run.sh[942818]: 2.32.758.186 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  20480, progress = 0.26, t =   6.91 s / 2961.88 tokens per second
+Aug 19 18:00:23 smarty run.sh[942818]: 2.33.531.516 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  22528, progress = 0.28, t =   7.69 s / 2931.09 tokens per second
+Aug 19 18:00:23 smarty run.sh[942818]: 2.33.590.059 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  22652, progress = 0.29, t =   7.84 s / 2889.90 tokens per second
+Aug 19 18:00:24 smarty run.sh[942818]: 2.34.442.121 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  24700, progress = 0.31, t =   8.59 s / 2875.12 tokens per second
+Aug 19 18:00:25 smarty run.sh[942818]: 2.35.242.963 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  26748, progress = 0.34, t =   9.39 s / 2847.83 tokens per second
+Aug 19 18:00:26 smarty run.sh[942818]: 2.36.060.806 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  28796, progress = 0.36, t =  10.21 s / 2821.07 tokens per second
+Aug 19 18:00:26 smarty run.sh[942818]: 2.36.894.424 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  30844, progress = 0.39, t =  11.04 s / 2794.27 tokens per second
+Aug 19 18:00:27 smarty run.sh[942818]: 2.37.752.367 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  32892, progress = 0.42, t =  11.89 s / 2765.90 tokens per second
+Aug 19 18:00:28 smarty run.sh[942818]: 2.38.638.513 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  34940, progress = 0.44, t =  12.77 s / 2735.36 tokens per second
+Aug 19 18:00:29 smarty run.sh[942818]: 2.39.550.342 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  36988, progress = 0.47, t =  13.68 s / 2703.41 tokens per second
+Aug 19 18:00:30 smarty run.sh[942818]: 2.40.489.445 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  39036, progress = 0.49, t =  14.62 s / 2670.67 tokens per second
+Aug 19 18:00:31 smarty run.sh[942818]: 2.41.449.778 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  41084, progress = 0.52, t =  15.57 s / 2638.01 tokens per second
+Aug 19 18:00:32 smarty run.sh[942818]: 2.42.429.812 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  43132, progress = 0.54, t =  16.55 s / 2606.05 tokens per second
+Aug 19 18:00:33 smarty run.sh[942818]: 2.43.427.160 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  45180, progress = 0.57, t =  17.55 s / 2575.05 tokens per second
+Aug 19 18:00:34 smarty run.sh[942818]: 2.44.442.549 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  47228, progress = 0.60, t =  18.56 s / 2544.94 tokens per second
+Aug 19 18:00:35 smarty run.sh[942818]: 2.45.475.224 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  49276, progress = 0.62, t =  19.59 s / 2515.75 tokens per second
+Aug 19 18:00:36 smarty run.sh[942818]: 2.46.524.640 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  51324, progress = 0.65, t =  20.63 s / 2487.35 tokens per second
+Aug 19 18:00:37 smarty run.sh[942818]: 2.47.593.514 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  53372, progress = 0.67, t =  21.70 s / 2459.54 tokens per second
+Aug 19 18:00:38 smarty run.sh[942818]: 2.48.679.210 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  55420, progress = 0.70, t =  22.78 s / 2432.57 tokens per second
+Aug 19 18:00:39 smarty run.sh[942818]: 2.49.783.525 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  57468, progress = 0.73, t =  23.88 s / 2406.12 tokens per second
+Aug 19 18:00:40 smarty run.sh[942818]: 2.50.906.264 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  59516, progress = 0.75, t =  25.00 s / 2380.28 tokens per second
+Aug 19 18:00:42 smarty run.sh[942818]: 2.52.049.744 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  61564, progress = 0.78, t =  26.14 s / 2354.95 tokens per second
+Aug 19 18:00:43 smarty run.sh[942818]: 2.53.208.457 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  63612, progress = 0.80, t =  27.30 s / 2330.11 tokens per second
+Aug 19 18:00:44 smarty run.sh[942818]: 2.54.387.159 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  65660, progress = 0.83, t =  28.47 s / 2305.91 tokens per second
+Aug 19 18:00:45 smarty run.sh[942818]: 2.55.581.002 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  67708, progress = 0.85, t =  29.67 s / 2282.25 tokens per second
+Aug 19 18:00:46 smarty run.sh[942818]: 2.56.793.919 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  69756, progress = 0.88, t =  30.88 s / 2259.14 tokens per second
+Aug 19 18:00:48 smarty run.sh[942818]: 2.58.026.944 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  71804, progress = 0.91, t =  32.11 s / 2236.42 tokens per second
+Aug 19 18:00:49 smarty run.sh[942818]: 2.59.277.714 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  73852, progress = 0.93, t =  33.35 s / 2214.15 tokens per second
+Aug 19 18:00:50 smarty run.sh[942818]: 3.00.549.964 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  75900, progress = 0.96, t =  34.62 s / 2192.23 tokens per second
+Aug 19 18:00:51 smarty run.sh[942818]: 3.01.839.202 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  77948, progress = 0.98, t =  35.91 s / 2170.63 tokens per second
+Aug 19 18:00:52 smarty run.sh[942818]: 3.02.370.474 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  78738, progress = 0.99, t =  36.53 s / 2155.21 tokens per second
+Aug 19 18:00:52 smarty run.sh[942818]: 3.02.822.379 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  79250, progress = 1.00, t =  36.95 s / 2144.66 tokens per second
+Aug 19 18:00:56 smarty run.sh[942818]: 3.06.011.866 I slot print_timing: id  0 | task 0 | n_gen =    233, tg =  77.09 t/s, tg_3s =  77.42 t/s
+Aug 19 18:00:59 smarty run.sh[942818]: 3.09.020.603 I slot print_timing: id  0 | task 0 | n_gen =    458, tg =  75.94 t/s, tg_3s =  74.78 t/s
+Aug 19 18:01:02 smarty run.sh[942818]: 3.12.027.474 I slot print_timing: id  0 | task 0 | n_gen =    687, tg =  76.01 t/s, tg_3s =  76.16 t/s
+Aug 19 18:01:05 smarty run.sh[942818]: 3.15.028.107 I slot print_timing: id  0 | task 0 | n_gen =    904, tg =  75.09 t/s, tg_3s =  72.32 t/s
+Aug 19 18:01:08 smarty run.sh[942818]: 3.18.049.905 I slot print_timing: id  0 | task 0 | n_gen =   1118, tg =  74.23 t/s, tg_3s =  70.82 t/s
+Aug 19 18:01:11 smarty run.sh[942818]: 3.21.050.856 I slot print_timing: id  0 | task 0 | n_gen =   1331, tg =  73.69 t/s, tg_3s =  70.98 t/s
+Aug 19 18:01:14 smarty run.sh[942818]: 3.24.058.631 I slot print_timing: id  0 | task 0 | n_gen =   1550, tg =  73.56 t/s, tg_3s =  72.81 t/s
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.076.610 I slot print_timing: id  0 | task 0 | n_gen =   1781, tg =  73.94 t/s, tg_3s =  76.54 t/s
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.468.009 I slot print_timing: id  0 | task 0 | prompt eval time =   37273.10 ms / 79254 tokens (    0.47 ms per token,  2126.31 tokens per second)
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.468.010 I slot print_timing: id  0 | task 0 |        eval time =   24465.69 ms /  1813 tokens (   13.50 ms per token,    74.06 tokens per second)
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.468.011 I slot print_timing: id  0 | task 0 |       total time =   61738.78 ms / 81067 tokens
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.468.011 I slot print_timing: id  0 | task 0 |    graphs reused =       1005
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.468.012 I slot print_timing: id  0 | task 0 | draft acceptance = 0.79051 (  800 accepted /  1012 generated), mean len =  1.79
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.469.430 I slot      release: id  0 | task 0 | stop processing: n_tokens = 81066, truncated = 0
+Aug 19 18:01:17 smarty run.sh[942818]: 3.27.700.845 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.194 (> 0.100 thold), f_keep = 0.209
+Aug 19 18:01:18 smarty run.sh[942818]: 3.28.984.939 I slot launch_slot_: id  0 | task 1055 | processing task, is_child = 0
+Aug 19 18:01:22 smarty run.sh[942818]: 3.32.479.054 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  10240, progress = 0.12, t =   3.39 s / 3022.33 tokens per second
+Aug 19 18:01:23 smarty run.sh[942818]: 3.33.215.881 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  12288, progress = 0.14, t =   4.12 s / 2980.56 tokens per second
+Aug 19 18:01:23 smarty run.sh[942818]: 3.33.965.715 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  14336, progress = 0.16, t =   4.87 s / 2943.62 tokens per second
+Aug 19 18:01:24 smarty run.sh[942818]: 3.34.730.112 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  16384, progress = 0.19, t =   5.63 s / 2909.08 tokens per second
+Aug 19 18:01:25 smarty run.sh[942818]: 3.35.506.812 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  18432, progress = 0.21, t =   6.41 s / 2877.16 tokens per second
+Aug 19 18:01:26 smarty run.sh[942818]: 3.36.299.399 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  20480, progress = 0.24, t =   7.20 s / 2845.92 tokens per second
+Aug 19 18:01:27 smarty run.sh[942818]: 3.37.104.702 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  22528, progress = 0.26, t =   8.00 s / 2816.25 tokens per second
+Aug 19 18:01:27 smarty run.sh[942818]: 3.37.924.069 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  24576, progress = 0.28, t =   8.82 s / 2787.62 tokens per second
+Aug 19 18:01:28 smarty run.sh[942818]: 3.38.757.842 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  26624, progress = 0.31, t =   9.65 s / 2759.68 tokens per second
+Aug 19 18:01:28 smarty run.sh[942818]: 3.38.961.306 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  27126, progress = 0.31, t =   9.88 s / 2744.77 tokens per second
+Aug 19 18:01:29 smarty run.sh[942818]: 3.39.880.951 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  29174, progress = 0.34, t =  10.77 s / 2710.01 tokens per second
+Aug 19 18:01:30 smarty run.sh[942818]: 3.40.748.555 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  31222, progress = 0.36, t =  11.63 s / 2684.11 tokens per second
+Aug 19 18:01:31 smarty run.sh[942818]: 3.41.643.428 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  33270, progress = 0.38, t =  12.52 s / 2656.79 tokens per second
+Aug 19 18:01:32 smarty run.sh[942818]: 3.42.566.063 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  35318, progress = 0.41, t =  13.44 s / 2627.60 tokens per second
+Aug 19 18:01:33 smarty run.sh[942818]: 3.43.519.798 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  37366, progress = 0.43, t =  14.39 s / 2596.57 tokens per second
+Aug 19 18:01:34 smarty run.sh[942818]: 3.44.499.373 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  39414, progress = 0.45, t =  15.37 s / 2565.04 tokens per second
+Aug 19 18:01:35 smarty run.sh[942818]: 3.45.500.447 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  41462, progress = 0.48, t =  16.36 s / 2533.78 tokens per second
+Aug 19 18:01:36 smarty run.sh[942818]: 3.46.521.962 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  43510, progress = 0.50, t =  17.38 s / 2503.17 tokens per second
+Aug 19 18:01:37 smarty run.sh[942818]: 3.47.563.222 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  45558, progress = 0.52, t =  18.42 s / 2473.18 tokens per second
+Aug 19 18:01:38 smarty run.sh[942818]: 3.48.622.277 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  47606, progress = 0.55, t =  19.48 s / 2444.28 tokens per second
+Aug 19 18:01:39 smarty run.sh[942818]: 3.49.701.026 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  49654, progress = 0.57, t =  20.55 s / 2416.11 tokens per second
+Aug 19 18:01:40 smarty run.sh[942818]: 3.50.795.967 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  51702, progress = 0.59, t =  21.64 s / 2388.79 tokens per second
+Aug 19 18:01:41 smarty run.sh[942818]: 3.51.908.744 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  53750, progress = 0.62, t =  22.75 s / 2362.26 tokens per second
+Aug 19 18:01:43 smarty run.sh[942818]: 3.53.041.548 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  55798, progress = 0.64, t =  23.88 s / 2336.29 tokens per second
+Aug 19 18:01:44 smarty run.sh[942818]: 3.54.190.698 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  57846, progress = 0.66, t =  25.03 s / 2311.11 tokens per second
+Aug 19 18:01:45 smarty run.sh[942818]: 3.55.359.799 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  59894, progress = 0.69, t =  26.20 s / 2286.43 tokens per second
+Aug 19 18:01:46 smarty run.sh[942818]: 3.56.547.002 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  61942, progress = 0.71, t =  27.38 s / 2262.32 tokens per second
+Aug 19 18:01:47 smarty run.sh[942818]: 3.57.752.274 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  63990, progress = 0.74, t =  28.58 s / 2238.73 tokens per second
+Aug 19 18:01:48 smarty run.sh[942818]: 3.58.977.254 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  66038, progress = 0.76, t =  29.80 s / 2215.67 tokens per second
+Aug 19 18:01:50 smarty run.sh[942818]: 4.00.220.691 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  68086, progress = 0.78, t =  31.04 s / 2193.20 tokens per second
+Aug 19 18:01:51 smarty run.sh[942818]: 4.01.581.101 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  70134, progress = 0.81, t =  32.36 s / 2167.11 tokens per second
+Aug 19 18:01:52 smarty run.sh[942818]: 4.02.900.644 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  72182, progress = 0.83, t =  33.72 s / 2140.69 tokens per second
+Aug 19 18:01:54 smarty run.sh[942818]: 4.04.202.658 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  74230, progress = 0.85, t =  35.02 s / 2119.81 tokens per second
+Aug 19 18:01:55 smarty run.sh[942818]: 4.05.523.053 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  76278, progress = 0.88, t =  36.34 s / 2099.29 tokens per second
+Aug 19 18:01:56 smarty run.sh[942818]: 4.06.862.244 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  78326, progress = 0.90, t =  37.67 s / 2079.18 tokens per second
+Aug 19 18:01:58 smarty run.sh[942818]: 4.08.222.063 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  80374, progress = 0.92, t =  39.03 s / 2059.42 tokens per second
+Aug 19 18:01:59 smarty run.sh[942818]: 4.09.602.073 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  82422, progress = 0.95, t =  40.41 s / 2039.88 tokens per second
+Aug 19 18:02:01 smarty run.sh[942818]: 4.11.002.203 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  84470, progress = 0.97, t =  41.80 s / 2020.71 tokens per second
+Aug 19 18:02:02 smarty run.sh[942818]: 4.12.422.694 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  86476, progress = 0.99, t =  43.22 s / 2000.83 tokens per second
+Aug 19 18:02:02 smarty run.sh[942818]: 4.12.911.171 I slot print_timing: id  0 | task 1055 | prompt processing, n_tokens =  86988, progress = 1.00, t =  43.77 s / 1987.27 tokens per second
+Aug 19 18:02:06 smarty run.sh[942818]: 4.16.116.497 I slot print_timing: id  0 | task 1055 | n_gen =    211, tg =  69.63 t/s, tg_3s =  69.96 t/s
+Aug 19 18:02:09 smarty run.sh[942818]: 4.19.129.992 I slot print_timing: id  0 | task 1055 | n_gen =    423, tg =  69.99 t/s, tg_3s =  70.35 t/s
+Aug 19 18:02:12 smarty run.sh[942818]: 4.22.150.862 I slot print_timing: id  0 | task 1055 | n_gen =    629, tg =  69.39 t/s, tg_3s =  68.19 t/s
+Aug 19 18:02:15 smarty run.sh[942818]: 4.25.172.611 I slot print_timing: id  0 | task 1055 | n_gen =    838, tg =  69.33 t/s, tg_3s =  69.17 t/s
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.522.523 I slot print_timing: id  0 | task 1055 | prompt eval time =   44115.50 ms / 86992 tokens (    0.51 ms per token,  1971.91 tokens per second)
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.522.525 I slot print_timing: id  0 | task 1055 |        eval time =   13421.91 ms /   937 tokens (   14.34 ms per token,    69.74 tokens per second)
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.522.525 I slot print_timing: id  0 | task 1055 |       total time =   57537.41 ms / 87929 tokens
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.522.526 I slot print_timing: id  0 | task 1055 |    graphs reused =       1530
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.522.527 I slot print_timing: id  0 | task 1055 | draft acceptance = 0.76792 (  407 accepted /   530 generated), mean len =  1.77
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.524.030 I slot      release: id  0 | task 1055 | stop processing: n_tokens = 87929, truncated = 0
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.763.579 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.980 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:02:16 smarty run.sh[942818]: 4.26.764.088 I slot launch_slot_: id  0 | task 1631 | processing task, is_child = 0
+Aug 19 18:02:21 smarty run.sh[942818]: 4.31.430.221 I slot print_timing: id  0 | task 1631 | n_gen =    215, tg =  70.78 t/s, tg_3s =  71.11 t/s
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.350.585 I slot print_timing: id  0 | task 1631 | prompt eval time =    1642.45 ms /  1838 tokens (    0.89 ms per token,  1119.06 tokens per second)
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.350.587 I slot print_timing: id  0 | task 1631 |        eval time =    3943.89 ms /   287 tokens (   13.79 ms per token,    72.52 tokens per second)
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.350.588 I slot print_timing: id  0 | task 1631 |       total time =    5586.34 ms /  2125 tokens
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.350.588 I slot print_timing: id  0 | task 1631 |    graphs reused =       1683
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.350.589 I slot print_timing: id  0 | task 1631 | draft acceptance = 0.84516 (  131 accepted /   155 generated), mean len =  1.85
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.352.150 I slot      release: id  0 | task 1631 | stop processing: n_tokens = 90053, truncated = 0
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.633.214 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.998 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:02:22 smarty run.sh[942818]: 4.32.633.766 I slot launch_slot_: id  0 | task 1790 | processing task, is_child = 0
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.156.588 I slot print_timing: id  0 | task 1790 | prompt eval time =     518.60 ms /   171 tokens (    3.03 ms per token,   329.73 tokens per second)
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.156.590 I slot print_timing: id  0 | task 1790 |        eval time =    2004.07 ms /   144 tokens (   14.01 ms per token,    71.35 tokens per second)
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.156.590 I slot print_timing: id  0 | task 1790 |       total time =    2522.67 ms /   315 tokens
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.156.590 I slot print_timing: id  0 | task 1790 |    graphs reused =       1761
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.156.591 I slot print_timing: id  0 | task 1790 | draft acceptance = 0.82278 (   65 accepted /    79 generated), mean len =  1.82
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.158.098 I slot      release: id  0 | task 1790 | stop processing: n_tokens = 90368, truncated = 0
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.432.610 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.986 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:02:25 smarty run.sh[942818]: 4.35.433.113 I slot launch_slot_: id  0 | task 1872 | processing task, is_child = 0
+Aug 19 18:02:29 smarty run.sh[942818]: 4.39.737.796 I slot print_timing: id  0 | task 1872 | n_gen =    209, tg =  69.29 t/s, tg_3s =  69.62 t/s
+Aug 19 18:02:32 smarty run.sh[942818]: 4.42.755.184 I slot print_timing: id  0 | task 1872 | n_gen =    418, tg =  69.28 t/s, tg_3s =  69.27 t/s
+Aug 19 18:02:34 smarty run.sh[942818]: 4.44.598.017 I slot print_timing: id  0 | task 1872 | prompt eval time =    1302.52 ms /  1327 tokens (    0.98 ms per token,  1018.80 tokens per second)
+Aug 19 18:02:34 smarty run.sh[942818]: 4.44.598.018 I slot print_timing: id  0 | task 1872 |        eval time =    7862.20 ms /   558 tokens (   14.12 ms per token,    70.85 tokens per second)
+Aug 19 18:02:34 smarty run.sh[942818]: 4.44.598.019 I slot print_timing: id  0 | task 1872 |       total time =    9164.72 ms /  1885 tokens
+Aug 19 18:02:34 smarty run.sh[942818]: 4.44.598.019 I slot print_timing: id  0 | task 1872 |    graphs reused =       2063
+Aug 19 18:02:34 smarty run.sh[942818]: 4.44.598.020 I slot print_timing: id  0 | task 1872 | draft acceptance = 0.82623 (  252 accepted /   305 generated), mean len =  1.83
+Aug 19 18:02:34 smarty run.sh[942818]: 4.44.599.590 I slot      release: id  0 | task 1872 | stop processing: n_tokens = 92252, truncated = 0
+Aug 19 18:02:35 smarty run.sh[942818]: 4.45.133.547 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.969 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:02:35 smarty run.sh[942818]: 4.45.134.078 I slot launch_slot_: id  0 | task 2181 | processing task, is_child = 0
+Aug 19 18:02:40 smarty run.sh[942818]: 4.50.620.677 I slot print_timing: id  0 | task 2181 | n_gen =    211, tg =  69.52 t/s, tg_3s =  69.85 t/s
+Aug 19 18:02:43 smarty run.sh[942818]: 4.53.631.078 I slot print_timing: id  0 | task 2181 | n_gen =    410, tg =  67.82 t/s, tg_3s =  66.10 t/s
+Aug 19 18:02:46 smarty run.sh[942818]: 4.56.642.642 I slot print_timing: id  0 | task 2181 | n_gen =    605, tg =  66.80 t/s, tg_3s =  64.75 t/s
+Aug 19 18:02:49 smarty run.sh[942818]: 4.59.661.454 I slot print_timing: id  0 | task 2181 | n_gen =    805, tg =  66.66 t/s, tg_3s =  66.25 t/s
+Aug 19 18:02:52 smarty run.sh[942818]: 5.02.662.986 I slot print_timing: id  0 | task 2181 | n_gen =   1017, tg =  67.45 t/s, tg_3s =  70.63 t/s
+Aug 19 18:02:54 smarty run.sh[942818]: 5.04.191.067 I slot print_timing: id  0 | task 2181 | prompt eval time =    2465.92 ms /  2929 tokens (    0.84 ms per token,  1187.79 tokens per second)
+Aug 19 18:02:54 smarty run.sh[942818]: 5.04.191.069 I slot print_timing: id  0 | task 2181 |        eval time =   16590.91 ms /  1130 tokens (   14.70 ms per token,    68.05 tokens per second)
+Aug 19 18:02:54 smarty run.sh[942818]: 5.04.191.069 I slot print_timing: id  0 | task 2181 |       total time =   19056.83 ms /  4059 tokens
+Aug 19 18:02:54 smarty run.sh[942818]: 5.04.191.069 I slot print_timing: id  0 | task 2181 |    graphs reused =       2690
+Aug 19 18:02:54 smarty run.sh[942818]: 5.04.191.071 I slot print_timing: id  0 | task 2181 | draft acceptance = 0.78515 (  497 accepted /   633 generated), mean len =  1.79
+Aug 19 18:02:54 smarty run.sh[942818]: 5.04.192.635 I slot      release: id  0 | task 2181 | stop processing: n_tokens = 96311, truncated = 0
+Aug 19 18:03:02 smarty run.sh[942818]: 5.12.454.059 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.967 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:03:02 smarty run.sh[942818]: 5.12.454.604 I slot launch_slot_: id  0 | task 2819 | processing task, is_child = 0
+Aug 19 18:03:08 smarty run.sh[942818]: 5.18.301.098 I slot print_timing: id  0 | task 2819 | n_gen =    208, tg =  68.80 t/s, tg_3s =  69.13 t/s
+Aug 19 18:03:11 smarty run.sh[942818]: 5.21.304.009 I slot print_timing: id  0 | task 2819 | n_gen =    409, tg =  67.87 t/s, tg_3s =  66.94 t/s
+Aug 19 18:03:14 smarty run.sh[942818]: 5.24.324.468 I slot print_timing: id  0 | task 2819 | n_gen =    620, tg =  68.53 t/s, tg_3s =  69.86 t/s
+Aug 19 18:03:17 smarty run.sh[942818]: 5.27.346.544 I slot print_timing: id  0 | task 2819 | n_gen =    824, tg =  68.28 t/s, tg_3s =  67.50 t/s
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.362.246 I slot print_timing: id  0 | task 2819 | n_gen =   1036, tg =  68.68 t/s, tg_3s =  70.30 t/s
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.762.949 I slot print_timing: id  0 | task 2819 | prompt eval time =    2837.62 ms /  3289 tokens (    0.86 ms per token,  1159.07 tokens per second)
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.762.951 I slot print_timing: id  0 | task 2819 |        eval time =   15470.57 ms /  1065 tokens (   14.54 ms per token,    68.78 tokens per second)
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.762.951 I slot print_timing: id  0 | task 2819 |       total time =   18308.19 ms /  4354 tokens
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.762.951 I slot print_timing: id  0 | task 2819 |    graphs reused =       3266
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.762.952 I slot print_timing: id  0 | task 2819 | draft acceptance = 0.83133 (  483 accepted /   581 generated), mean len =  1.83
+Aug 19 18:03:20 smarty run.sh[942818]: 5.30.764.581 I slot      release: id  0 | task 2819 | stop processing: n_tokens = 100664, truncated = 0
+Aug 19 18:03:21 smarty run.sh[942818]: 5.31.029.498 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.991 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:03:21 smarty run.sh[942818]: 5.31.029.992 I slot launch_slot_: id  0 | task 3405 | processing task, is_child = 0
+Aug 19 18:03:25 smarty run.sh[942818]: 5.35.058.144 I slot print_timing: id  0 | task 3405 | n_gen =    215, tg =  70.89 t/s, tg_3s =  71.21 t/s
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.070.226 I slot print_timing: id  0 | task 3405 | n_gen =    418, tg =  69.14 t/s, tg_3s =  67.40 t/s
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.420.372 I slot print_timing: id  0 | task 3405 | prompt eval time =    1009.06 ms /   880 tokens (    1.15 ms per token,   872.10 tokens per second)
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.420.374 I slot print_timing: id  0 | task 3405 |        eval time =    6381.16 ms /   444 tokens (   14.40 ms per token,    69.42 tokens per second)
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.420.374 I slot print_timing: id  0 | task 3405 |       total time =    7390.22 ms /  1324 tokens
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.420.375 I slot print_timing: id  0 | task 3405 |    graphs reused =       3501
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.420.376 I slot print_timing: id  0 | task 3405 | draft acceptance = 0.86134 (  205 accepted /   238 generated), mean len =  1.86
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.422.097 I slot      release: id  0 | task 3405 | stop processing: n_tokens = 101987, truncated = 0
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.726.414 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.997 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:03:28 smarty run.sh[942818]: 5.38.726.971 I slot launch_slot_: id  0 | task 3647 | processing task, is_child = 0
+Aug 19 18:03:32 smarty run.sh[942818]: 5.42.412.479 I slot print_timing: id  0 | task 3647 | n_gen =    203, tg =  67.30 t/s, tg_3s =  67.63 t/s
+Aug 19 18:03:35 smarty run.sh[942818]: 5.45.432.914 I slot print_timing: id  0 | task 3647 | n_gen =    403, tg =  66.76 t/s, tg_3s =  66.22 t/s
+Aug 19 18:03:38 smarty run.sh[942818]: 5.48.459.010 I slot print_timing: id  0 | task 3647 | n_gen =    610, tg =  67.31 t/s, tg_3s =  68.40 t/s
+Aug 19 18:03:41 smarty run.sh[942818]: 5.51.460.585 I slot print_timing: id  0 | task 3647 | n_gen =    813, tg =  67.39 t/s, tg_3s =  67.63 t/s
+Aug 19 18:03:44 smarty run.sh[942818]: 5.54.472.247 I slot print_timing: id  0 | task 3647 | n_gen =   1014, tg =  67.26 t/s, tg_3s =  66.74 t/s
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.151.191 I slot print_timing: id  0 | task 3647 | prompt eval time =     683.90 ms /   326 tokens (    2.10 ms per token,   476.67 tokens per second)
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.151.193 I slot print_timing: id  0 | task 3647 |        eval time =   16740.16 ms /  1132 tokens (   14.80 ms per token,    67.56 tokens per second)
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.151.193 I slot print_timing: id  0 | task 3647 |       total time =   17424.06 ms /  1458 tokens
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.151.194 I slot print_timing: id  0 | task 3647 |    graphs reused =       4115
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.151.195 I slot print_timing: id  0 | task 3647 | draft acceptance = 0.82419 (  511 accepted /   620 generated), mean len =  1.82
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.152.897 I slot      release: id  0 | task 3647 | stop processing: n_tokens = 103444, truncated = 0
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.363.568 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:03:46 smarty run.sh[942818]: 5.56.364.104 I slot launch_slot_: id  0 | task 4270 | processing task, is_child = 0
+Aug 19 18:03:49 smarty run.sh[942818]: 5.59.863.614 I slot print_timing: id  0 | task 4270 | n_gen =    202, tg =  66.53 t/s, tg_3s =  66.86 t/s
+Aug 19 18:03:50 smarty run.sh[942818]: 6.00.707.149 I slot print_timing: id  0 | task 4270 | prompt eval time =     478.09 ms /    79 tokens (    6.05 ms per token,   165.24 tokens per second)
+Aug 19 18:03:50 smarty run.sh[942818]: 6.00.707.151 I slot print_timing: id  0 | task 4270 |        eval time =    3864.79 ms /   261 tokens (   14.86 ms per token,    67.27 tokens per second)
+Aug 19 18:03:50 smarty run.sh[942818]: 6.00.707.151 I slot print_timing: id  0 | task 4270 |       total time =    4342.88 ms /   340 tokens
+Aug 19 18:03:50 smarty run.sh[942818]: 6.00.707.152 I slot print_timing: id  0 | task 4270 |    graphs reused =       4256
+Aug 19 18:03:50 smarty run.sh[942818]: 6.00.707.153 I slot print_timing: id  0 | task 4270 | draft acceptance = 0.81818 (  117 accepted /   143 generated), mean len =  1.82
+Aug 19 18:03:50 smarty run.sh[942818]: 6.00.708.918 I slot      release: id  0 | task 4270 | stop processing: n_tokens = 103783, truncated = 0
+Aug 19 18:03:51 smarty run.sh[942818]: 6.01.018.861 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:03:51 smarty run.sh[942818]: 6.01.019.395 I slot launch_slot_: id  0 | task 4416 | processing task, is_child = 0
+Aug 19 18:03:54 smarty run.sh[942818]: 6.04.584.392 I slot print_timing: id  0 | task 4416 | n_gen =    198, tg =  65.49 t/s, tg_3s =  65.82 t/s
+Aug 19 18:03:57 smarty run.sh[942818]: 6.07.591.245 I slot print_timing: id  0 | task 4416 | n_gen =    409, tg =  67.83 t/s, tg_3s =  70.17 t/s
+Aug 19 18:04:00 smarty run.sh[942818]: 6.10.599.723 I slot print_timing: id  0 | task 4416 | n_gen =    612, tg =  67.71 t/s, tg_3s =  67.48 t/s
+Aug 19 18:04:03 smarty run.sh[942818]: 6.13.604.957 I slot print_timing: id  0 | task 4416 | n_gen =    817, tg =  67.84 t/s, tg_3s =  68.21 t/s
+Aug 19 18:04:06 smarty run.sh[942818]: 6.16.612.301 I slot print_timing: id  0 | task 4416 | n_gen =   1010, tg =  67.11 t/s, tg_3s =  64.18 t/s
+Aug 19 18:04:09 smarty run.sh[942818]: 6.19.623.930 I slot print_timing: id  0 | task 4416 | n_gen =   1202, tg =  66.55 t/s, tg_3s =  63.75 t/s
+Aug 19 18:04:12 smarty run.sh[942818]: 6.22.632.041 I slot print_timing: id  0 | task 4416 | n_gen =   1395, tg =  66.21 t/s, tg_3s =  64.16 t/s
+Aug 19 18:04:15 smarty run.sh[942818]: 6.25.656.061 I slot print_timing: id  0 | task 4416 | n_gen =   1600, tg =  66.40 t/s, tg_3s =  67.79 t/s
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.123.358 I slot print_timing: id  0 | task 4416 | prompt eval time =     556.87 ms /   152 tokens (    3.66 ms per token,   272.96 tokens per second)
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.123.360 I slot print_timing: id  0 | task 4416 |        eval time =   24546.93 ms /  1632 tokens (   15.05 ms per token,    66.44 tokens per second)
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.123.360 I slot print_timing: id  0 | task 4416 |       total time =   25103.80 ms /  1784 tokens
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.123.360 I slot print_timing: id  0 | task 4416 |    graphs reused =       5145
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.123.362 I slot print_timing: id  0 | task 4416 | draft acceptance = 0.82031 (  735 accepted /   896 generated), mean len =  1.82
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.125.135 I slot      release: id  0 | task 4416 | stop processing: n_tokens = 105566, truncated = 0
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.345.065 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.982 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:04:16 smarty run.sh[942818]: 6.26.345.611 I slot launch_slot_: id  0 | task 5315 | processing task, is_child = 0
+Aug 19 18:04:21 smarty run.sh[942818]: 6.31.266.227 I slot print_timing: id  0 | task 5315 | n_gen =    201, tg =  66.50 t/s, tg_3s =  66.83 t/s
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.291.527 I slot print_timing: id  0 | task 5315 | n_gen =    404, tg =  66.80 t/s, tg_3s =  67.10 t/s
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.375.057 I slot print_timing: id  0 | task 5315 | prompt eval time =    1912.77 ms /  1892 tokens (    1.01 ms per token,   989.14 tokens per second)
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.375.059 I slot print_timing: id  0 | task 5315 |        eval time =    6116.49 ms /   410 tokens (   14.95 ms per token,    66.87 tokens per second)
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.375.059 I slot print_timing: id  0 | task 5315 |       total time =    8029.27 ms /  2302 tokens
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.375.059 I slot print_timing: id  0 | task 5315 |    graphs reused =       5363
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.375.061 I slot print_timing: id  0 | task 5315 | draft acceptance = 0.85068 (  188 accepted /   221 generated), mean len =  1.85
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.376.863 I slot      release: id  0 | task 5315 | stop processing: n_tokens = 107867, truncated = 0
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.615.630 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.925 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:04:24 smarty run.sh[942818]: 6.34.616.186 I slot launch_slot_: id  0 | task 5540 | processing task, is_child = 0
+Aug 19 18:04:27 smarty run.sh[942818]: 6.37.959.624 I slot print_timing: id  0 | task 5540 | prompt processing, n_tokens =   4096, progress = 0.96, t =   3.08 s / 1329.09 tokens per second
+Aug 19 18:04:29 smarty run.sh[942818]: 6.39.669.302 I slot print_timing: id  0 | task 5540 | prompt processing, n_tokens =   6144, progress = 0.98, t =   4.79 s / 1282.74 tokens per second
+Aug 19 18:04:31 smarty run.sh[942818]: 6.41.431.497 I slot print_timing: id  0 | task 5540 | prompt processing, n_tokens =   8178, progress = 1.00, t =   6.53 s / 1251.48 tokens per second
+Aug 19 18:04:32 smarty run.sh[942818]: 6.42.052.215 I slot print_timing: id  0 | task 5540 | prompt processing, n_tokens =   8690, progress = 1.00, t =   7.25 s / 1199.10 tokens per second
+Aug 19 18:04:35 smarty run.sh[942818]: 6.45.305.879 I slot print_timing: id  0 | task 5540 | n_gen =    190, tg =  62.56 t/s, tg_3s =  62.89 t/s
+Aug 19 18:04:38 smarty run.sh[942818]: 6.48.317.825 I slot print_timing: id  0 | task 5540 | n_gen =    391, tg =  64.65 t/s, tg_3s =  66.73 t/s
+Aug 19 18:04:41 smarty run.sh[942818]: 6.51.337.130 I slot print_timing: id  0 | task 5540 | n_gen =    583, tg =  64.29 t/s, tg_3s =  63.59 t/s
+Aug 19 18:04:44 smarty run.sh[942818]: 6.54.358.116 I slot print_timing: id  0 | task 5540 | n_gen =    775, tg =  64.11 t/s, tg_3s =  63.56 t/s
+Aug 19 18:04:47 smarty run.sh[942818]: 6.57.381.623 I slot print_timing: id  0 | task 5540 | n_gen =    957, tg =  63.32 t/s, tg_3s =  60.19 t/s
+Aug 19 18:04:50 smarty run.sh[942818]: 7.00.408.101 I slot print_timing: id  0 | task 5540 | n_gen =   1127, tg =  62.13 t/s, tg_3s =  56.17 t/s
+Aug 19 18:04:53 smarty run.sh[942818]: 7.03.430.930 I slot print_timing: id  0 | task 5540 | n_gen =   1299, tg =  61.38 t/s, tg_3s =  56.90 t/s
+Aug 19 18:04:56 smarty run.sh[942818]: 7.06.440.207 I slot print_timing: id  0 | task 5540 | n_gen =   1481, tg =  61.27 t/s, tg_3s =  60.48 t/s
+Aug 19 18:04:59 smarty run.sh[942818]: 7.09.449.242 I slot print_timing: id  0 | task 5540 | n_gen =   1667, tg =  61.33 t/s, tg_3s =  61.81 t/s
+Aug 19 18:05:02 smarty run.sh[942818]: 7.12.457.805 I slot print_timing: id  0 | task 5540 | n_gen =   1847, tg =  61.18 t/s, tg_3s =  59.83 t/s
+Aug 19 18:05:05 smarty run.sh[942818]: 7.15.460.288 I slot print_timing: id  0 | task 5540 | n_gen =   2024, tg =  60.98 t/s, tg_3s =  58.95 t/s
+Aug 19 18:05:08 smarty run.sh[942818]: 7.18.468.465 I slot print_timing: id  0 | task 5540 | n_gen =   2209, tg =  61.02 t/s, tg_3s =  61.50 t/s
+Aug 19 18:05:11 smarty run.sh[942818]: 7.21.488.528 I slot print_timing: id  0 | task 5540 | n_gen =   2394, tg =  61.04 t/s, tg_3s =  61.26 t/s
+Aug 19 18:05:14 smarty run.sh[942818]: 7.24.512.875 I slot print_timing: id  0 | task 5540 | n_gen =   2580, tg =  61.07 t/s, tg_3s =  61.50 t/s
+Aug 19 18:05:17 smarty run.sh[942818]: 7.27.538.756 I slot print_timing: id  0 | task 5540 | n_gen =   2779, tg =  61.39 t/s, tg_3s =  65.77 t/s
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.563.153 I slot print_timing: id  0 | task 5540 | n_gen =   2979, tg =  61.68 t/s, tg_3s =  66.13 t/s
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.679.319 I slot print_timing: id  0 | task 5540 | prompt eval time =    7668.53 ms /  8694 tokens (    0.88 ms per token,  1133.72 tokens per second)
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.679.320 I slot print_timing: id  0 | task 5540 |        eval time =   48394.45 ms /  2986 tokens (   16.21 ms per token,    61.68 tokens per second)
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.679.321 I slot print_timing: id  0 | task 5540 |       total time =   56062.98 ms / 11680 tokens
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.679.321 I slot print_timing: id  0 | task 5540 |    graphs reused =       7027
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.679.322 I slot print_timing: id  0 | task 5540 | draft acceptance = 0.78162 ( 1310 accepted /  1676 generated), mean len =  1.78
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.681.169 I slot      release: id  0 | task 5540 | stop processing: n_tokens = 119547, truncated = 0
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.742.757 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 177527014753
+Aug 19 18:05:20 smarty run.sh[942818]: 7.30.753.603 W srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 4318.977 MiB)
+Aug 19 18:05:23 smarty run.sh[942818]: 7.33.018.440 I slot launch_slot_: id  0 | task 7223 | processing task, is_child = 0
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.252 I slot print_timing: id  0 | task 7223 | prompt eval time =     483.12 ms /   746 tokens (    0.65 ms per token,  1544.13 tokens per second)
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.255 I slot print_timing: id  0 | task 7223 |        eval time =    1210.54 ms /   130 tokens (    9.38 ms per token,   106.56 tokens per second)
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.255 I slot print_timing: id  0 | task 7223 |       total time =    1693.66 ms /   876 tokens
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.256 I slot print_timing: id  0 | task 7223 |    graphs reused =       7096
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.257 I slot print_timing: id  0 | task 7223 | draft acceptance = 0.83099 (   59 accepted /    71 generated), mean len =  1.83
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.290 I slot      release: id  0 | task 7223 | stop processing: n_tokens = 876, truncated = 0
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.373 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 177531045874
+Aug 19 18:05:24 smarty run.sh[942818]: 7.34.712.591 W srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 7626.873 MiB)
+Aug 19 18:05:25 smarty run.sh[942818]: 7.35.039.777 I slot launch_slot_: id  0 | task 7224 | processing task, is_child = 0
+Aug 19 18:05:28 smarty run.sh[942818]: 7.38.648.954 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  10240, progress = 0.09, t =   3.50 s / 2925.75 tokens per second
+Aug 19 18:05:29 smarty run.sh[942818]: 7.39.416.126 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  12288, progress = 0.10, t =   4.26 s / 2881.23 tokens per second
+Aug 19 18:05:30 smarty run.sh[942818]: 7.40.198.410 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  14336, progress = 0.12, t =   5.04 s / 2842.35 tokens per second
+Aug 19 18:05:30 smarty run.sh[942818]: 7.40.993.764 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  16384, progress = 0.14, t =   5.84 s / 2806.90 tokens per second
+Aug 19 18:05:31 smarty run.sh[942818]: 7.41.802.031 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  18432, progress = 0.15, t =   6.64 s / 2774.60 tokens per second
+Aug 19 18:05:32 smarty run.sh[942818]: 7.42.625.232 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  20480, progress = 0.17, t =   7.46 s / 2743.80 tokens per second
+Aug 19 18:05:33 smarty run.sh[942818]: 7.43.462.847 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  22528, progress = 0.19, t =   8.30 s / 2714.40 tokens per second
+Aug 19 18:05:34 smarty run.sh[942818]: 7.44.315.028 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  24576, progress = 0.20, t =   9.15 s / 2686.25 tokens per second
+Aug 19 18:05:35 smarty run.sh[942818]: 7.45.182.451 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  26624, progress = 0.22, t =  10.01 s / 2658.94 tokens per second
+Aug 19 18:05:35 smarty run.sh[942818]: 7.45.394.251 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  27126, progress = 0.23, t =  10.26 s / 2644.35 tokens per second
+Aug 19 18:05:36 smarty run.sh[942818]: 7.46.344.268 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  29174, progress = 0.24, t =  11.17 s / 2611.85 tokens per second
+Aug 19 18:05:37 smarty run.sh[942818]: 7.47.249.168 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  31222, progress = 0.26, t =  12.07 s / 2586.31 tokens per second
+Aug 19 18:05:38 smarty run.sh[942818]: 7.48.177.767 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  33270, progress = 0.28, t =  13.00 s / 2559.50 tokens per second
+Aug 19 18:05:39 smarty run.sh[942818]: 7.49.138.259 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  35318, progress = 0.29, t =  13.95 s / 2530.96 tokens per second
+Aug 19 18:05:40 smarty run.sh[942818]: 7.50.135.044 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  37366, progress = 0.31, t =  14.94 s / 2500.58 tokens per second
+Aug 19 18:05:41 smarty run.sh[942818]: 7.51.154.963 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  39414, progress = 0.33, t =  15.96 s / 2469.28 tokens per second
+Aug 19 18:05:42 smarty run.sh[942818]: 7.52.197.683 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  41462, progress = 0.35, t =  17.00 s / 2438.80 tokens per second
+Aug 19 18:05:43 smarty run.sh[942818]: 7.53.261.776 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  43510, progress = 0.36, t =  18.06 s / 2408.93 tokens per second
+Aug 19 18:05:44 smarty run.sh[942818]: 7.54.343.446 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  45558, progress = 0.38, t =  19.14 s / 2380.15 tokens per second
+Aug 19 18:05:45 smarty run.sh[942818]: 7.55.444.456 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  47606, progress = 0.40, t =  20.24 s / 2352.23 tokens per second
+Aug 19 18:05:46 smarty run.sh[942818]: 7.56.564.267 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  49654, progress = 0.41, t =  21.36 s / 2325.16 tokens per second
+Aug 19 18:05:47 smarty run.sh[942818]: 7.57.702.208 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  51702, progress = 0.43, t =  22.49 s / 2298.85 tokens per second
+Aug 19 18:05:48 smarty run.sh[942818]: 7.58.859.941 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  53750, progress = 0.45, t =  23.64 s / 2273.22 tokens per second
+Aug 19 18:05:50 smarty run.sh[942818]: 8.00.035.577 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  55798, progress = 0.47, t =  24.82 s / 2248.37 tokens per second
+Aug 19 18:05:51 smarty run.sh[942818]: 8.01.228.387 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  57846, progress = 0.48, t =  26.01 s / 2224.22 tokens per second
+Aug 19 18:05:52 smarty run.sh[942818]: 8.02.528.727 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  59894, progress = 0.50, t =  27.27 s / 2196.67 tokens per second
+Aug 19 18:05:53 smarty run.sh[942818]: 8.03.844.599 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  61942, progress = 0.52, t =  28.62 s / 2164.49 tokens per second
+Aug 19 18:05:55 smarty run.sh[942818]: 8.05.096.610 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  63990, progress = 0.53, t =  29.87 s / 2142.55 tokens per second
+Aug 19 18:05:56 smarty run.sh[942818]: 8.06.368.374 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  66038, progress = 0.55, t =  31.13 s / 2121.04 tokens per second
+Aug 19 18:05:57 smarty run.sh[942818]: 8.07.659.099 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  68086, progress = 0.57, t =  32.42 s / 2099.97 tokens per second
+Aug 19 18:05:58 smarty run.sh[942818]: 8.08.971.333 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  70134, progress = 0.58, t =  33.73 s / 2079.19 tokens per second
+Aug 19 18:06:00 smarty run.sh[942818]: 8.10.302.106 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  72182, progress = 0.60, t =  35.06 s / 2058.85 tokens per second
+Aug 19 18:06:01 smarty run.sh[942818]: 8.11.652.425 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  74230, progress = 0.62, t =  36.41 s / 2038.92 tokens per second
+Aug 19 18:06:03 smarty run.sh[942818]: 8.13.022.044 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  76278, progress = 0.64, t =  37.77 s / 2019.36 tokens per second
+Aug 19 18:06:04 smarty run.sh[942818]: 8.14.411.597 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  78326, progress = 0.65, t =  39.16 s / 2000.21 tokens per second
+Aug 19 18:06:05 smarty run.sh[942818]: 8.15.819.870 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  80374, progress = 0.67, t =  40.56 s / 1981.39 tokens per second
+Aug 19 18:06:07 smarty run.sh[942818]: 8.17.248.319 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  82422, progress = 0.69, t =  41.99 s / 1962.90 tokens per second
+Aug 19 18:06:08 smarty run.sh[942818]: 8.18.697.152 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  84470, progress = 0.70, t =  43.44 s / 1944.71 tokens per second
+Aug 19 18:06:10 smarty run.sh[942818]: 8.20.166.550 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  86518, progress = 0.72, t =  44.90 s / 1926.85 tokens per second
+Aug 19 18:06:11 smarty run.sh[942818]: 8.21.654.207 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  88566, progress = 0.74, t =  46.39 s / 1909.32 tokens per second
+Aug 19 18:06:13 smarty run.sh[942818]: 8.23.159.982 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  90614, progress = 0.76, t =  47.89 s / 1892.14 tokens per second
+Aug 19 18:06:14 smarty run.sh[942818]: 8.24.688.962 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  92662, progress = 0.77, t =  49.41 s / 1875.22 tokens per second
+Aug 19 18:06:16 smarty run.sh[942818]: 8.26.237.085 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  94710, progress = 0.79, t =  50.96 s / 1858.51 tokens per second
+Aug 19 18:06:17 smarty run.sh[942818]: 8.27.804.064 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  96758, progress = 0.81, t =  52.52 s / 1842.16 tokens per second
+Aug 19 18:06:19 smarty run.sh[942818]: 8.29.391.763 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens =  98806, progress = 0.82, t =  54.11 s / 1826.09 tokens per second
+Aug 19 18:06:20 smarty run.sh[942818]: 8.30.996.015 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 100854, progress = 0.84, t =  55.71 s / 1810.37 tokens per second
+Aug 19 18:06:22 smarty run.sh[942818]: 8.32.619.118 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 102902, progress = 0.86, t =  57.33 s / 1794.91 tokens per second
+Aug 19 18:06:24 smarty run.sh[942818]: 8.34.263.455 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 104950, progress = 0.87, t =  58.97 s / 1779.65 tokens per second
+Aug 19 18:06:25 smarty run.sh[942818]: 8.35.926.904 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 106998, progress = 0.89, t =  60.63 s / 1764.68 tokens per second
+Aug 19 18:06:27 smarty run.sh[942818]: 8.37.612.714 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 109046, progress = 0.91, t =  62.31 s / 1749.96 tokens per second
+Aug 19 18:06:29 smarty run.sh[942818]: 8.39.316.296 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 111094, progress = 0.93, t =  64.01 s / 1735.44 tokens per second
+Aug 19 18:06:31 smarty run.sh[942818]: 8.41.040.215 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 113142, progress = 0.94, t =  65.74 s / 1721.16 tokens per second
+Aug 19 18:06:32 smarty run.sh[942818]: 8.42.782.490 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 115190, progress = 0.96, t =  67.48 s / 1707.14 tokens per second
+Aug 19 18:06:34 smarty run.sh[942818]: 8.44.543.918 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 117238, progress = 0.98, t =  69.23 s / 1693.35 tokens per second
+Aug 19 18:06:36 smarty run.sh[942818]: 8.46.326.866 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 119286, progress = 0.99, t =  71.01 s / 1679.81 tokens per second
+Aug 19 18:06:36 smarty run.sh[942818]: 8.46.456.993 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 119427, progress = 1.00, t =  71.36 s / 1673.58 tokens per second
+Aug 19 18:06:37 smarty run.sh[942818]: 8.47.079.936 I slot print_timing: id  0 | task 7224 | prompt processing, n_tokens = 119939, progress = 1.00, t =  71.84 s / 1669.46 tokens per second
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.342.320 I slot print_timing: id  0 | task 7224 | n_gen =    193, tg =  63.52 t/s, tg_3s =  63.85 t/s
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.488.819 I slot print_timing: id  0 | task 7224 | prompt eval time =   72279.86 ms / 119943 tokens (    0.60 ms per token,  1659.42 tokens per second)
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.488.821 I slot print_timing: id  0 | task 7224 |        eval time =    3169.02 ms /   202 tokens (   15.77 ms per token,    63.43 tokens per second)
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.488.821 I slot print_timing: id  0 | task 7224 |       total time =   75448.88 ms / 120145 tokens
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.488.821 I slot print_timing: id  0 | task 7224 |    graphs reused =       7203
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.488.822 I slot print_timing: id  0 | task 7224 | draft acceptance = 0.85321 (   93 accepted /   109 generated), mean len =  1.85
+Aug 19 18:06:40 smarty run.sh[942818]: 8.50.490.682 I slot      release: id  0 | task 7224 | stop processing: n_tokens = 120145, truncated = 0
+Aug 19 18:06:42 smarty run.sh[942818]: 8.52.468.614 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:06:42 smarty run.sh[942818]: 8.52.469.121 I slot launch_slot_: id  0 | task 7471 | processing task, is_child = 0
+Aug 19 18:06:45 smarty run.sh[942818]: 8.55.909.620 I slot print_timing: id  0 | task 7471 | prompt eval time =     544.59 ms /   124 tokens (    4.39 ms per token,   227.70 tokens per second)
+Aug 19 18:06:45 smarty run.sh[942818]: 8.55.909.621 I slot print_timing: id  0 | task 7471 |        eval time =    2895.75 ms /   198 tokens (   14.70 ms per token,    68.03 tokens per second)
+Aug 19 18:06:45 smarty run.sh[942818]: 8.55.909.622 I slot print_timing: id  0 | task 7471 |       total time =    3440.34 ms /   322 tokens
+Aug 19 18:06:45 smarty run.sh[942818]: 8.55.909.622 I slot print_timing: id  0 | task 7471 |    graphs reused =       7301
+Aug 19 18:06:45 smarty run.sh[942818]: 8.55.909.623 I slot print_timing: id  0 | task 7471 | draft acceptance = 0.97000 (   97 accepted /   100 generated), mean len =  1.97
+Aug 19 18:06:45 smarty run.sh[942818]: 8.55.911.534 I slot      release: id  0 | task 7471 | stop processing: n_tokens = 120466, truncated = 0
+Aug 19 18:06:47 smarty run.sh[942818]: 8.57.498.447 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:06:47 smarty run.sh[942818]: 8.57.498.977 I slot launch_slot_: id  0 | task 7574 | processing task, is_child = 0
+Aug 19 18:06:49 smarty run.sh[942818]: 8.59.572.432 I slot print_timing: id  0 | task 7574 | prompt eval time =     548.83 ms /   105 tokens (    5.23 ms per token,   191.32 tokens per second)
+Aug 19 18:06:49 smarty run.sh[942818]: 8.59.572.434 I slot print_timing: id  0 | task 7574 |        eval time =    1524.45 ms /   104 tokens (   14.80 ms per token,    67.57 tokens per second)
+Aug 19 18:06:49 smarty run.sh[942818]: 8.59.572.434 I slot print_timing: id  0 | task 7574 |       total time =    2073.28 ms /   209 tokens
+Aug 19 18:06:49 smarty run.sh[942818]: 8.59.572.435 I slot print_timing: id  0 | task 7574 |    graphs reused =       7352
+Aug 19 18:06:49 smarty run.sh[942818]: 8.59.572.436 I slot print_timing: id  0 | task 7574 | draft acceptance = 0.96226 (   51 accepted /    53 generated), mean len =  1.96
+Aug 19 18:06:49 smarty run.sh[942818]: 8.59.574.510 I slot      release: id  0 | task 7574 | stop processing: n_tokens = 120675, truncated = 0
+Aug 19 18:06:51 smarty run.sh[942818]: 9.01.632.640 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.996 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:06:51 smarty run.sh[942818]: 9.01.633.189 I slot launch_slot_: id  0 | task 7630 | processing task, is_child = 0
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.482.501 I slot print_timing: id  0 | task 7630 | n_gen =    190, tg =  62.80 t/s, tg_3s =  63.13 t/s
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.744.514 I slot print_timing: id  0 | task 7630 | prompt eval time =     839.50 ms /   449 tokens (    1.87 ms per token,   534.84 tokens per second)
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.744.516 I slot print_timing: id  0 | task 7630 |        eval time =    3271.60 ms /   206 tokens (   15.96 ms per token,    62.66 tokens per second)
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.744.517 I slot print_timing: id  0 | task 7630 |       total time =    4111.10 ms /   655 tokens
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.744.517 I slot print_timing: id  0 | task 7630 |    graphs reused =       7464
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.744.518 I slot print_timing: id  0 | task 7630 | draft acceptance = 0.82301 (   93 accepted /   113 generated), mean len =  1.82
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.746.617 I slot      release: id  0 | task 7630 | stop processing: n_tokens = 121330, truncated = 0
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.993.742 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.982 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:06:55 smarty run.sh[942818]: 9.05.994.241 I slot launch_slot_: id  0 | task 7746 | processing task, is_child = 0
+Aug 19 18:07:01 smarty run.sh[942818]: 9.11.418.006 I slot print_timing: id  0 | task 7746 | n_gen =    185, tg =  61.11 t/s, tg_3s =  61.44 t/s
+Aug 19 18:07:04 smarty run.sh[942818]: 9.14.427.970 I slot print_timing: id  0 | task 7746 | n_gen =    360, tg =  59.63 t/s, tg_3s =  58.14 t/s
+Aug 19 18:07:07 smarty run.sh[942818]: 9.17.431.087 I slot print_timing: id  0 | task 7746 | n_gen =    523, tg =  57.85 t/s, tg_3s =  54.28 t/s
+Aug 19 18:07:10 smarty run.sh[942818]: 9.20.435.133 I slot print_timing: id  0 | task 7746 | n_gen =    699, tg =  58.03 t/s, tg_3s =  58.59 t/s
+Aug 19 18:07:13 smarty run.sh[942818]: 9.23.444.620 I slot print_timing: id  0 | task 7746 | n_gen =    870, tg =  57.79 t/s, tg_3s =  56.82 t/s
+Aug 19 18:07:16 smarty run.sh[942818]: 9.26.454.707 I slot print_timing: id  0 | task 7746 | n_gen =   1049, tg =  58.07 t/s, tg_3s =  59.47 t/s
+Aug 19 18:07:19 smarty run.sh[942818]: 9.29.472.319 I slot print_timing: id  0 | task 7746 | n_gen =   1217, tg =  57.73 t/s, tg_3s =  55.67 t/s
+Aug 19 18:07:22 smarty run.sh[942818]: 9.32.492.675 I slot print_timing: id  0 | task 7746 | n_gen =   1379, tg =  57.21 t/s, tg_3s =  53.64 t/s
+Aug 19 18:07:25 smarty run.sh[942818]: 9.35.522.499 I slot print_timing: id  0 | task 7746 | n_gen =   1558, tg =  57.42 t/s, tg_3s =  59.08 t/s
+Aug 19 18:07:28 smarty run.sh[942818]: 9.38.523.835 I slot print_timing: id  0 | task 7746 | n_gen =   1742, tg =  57.81 t/s, tg_3s =  61.31 t/s
+Aug 19 18:07:31 smarty run.sh[942818]: 9.41.528.743 I slot print_timing: id  0 | task 7746 | n_gen =   1914, tg =  57.76 t/s, tg_3s =  57.24 t/s
+Aug 19 18:07:34 smarty run.sh[942818]: 9.44.542.567 I slot print_timing: id  0 | task 7746 | n_gen =   2092, tg =  57.87 t/s, tg_3s =  59.06 t/s
+Aug 19 18:07:37 smarty run.sh[942818]: 9.47.554.369 I slot print_timing: id  0 | task 7746 | n_gen =   2269, tg =  57.94 t/s, tg_3s =  58.77 t/s
+Aug 19 18:07:40 smarty run.sh[942818]: 9.50.574.871 I slot print_timing: id  0 | task 7746 | n_gen =   2439, tg =  57.82 t/s, tg_3s =  56.28 t/s
+Aug 19 18:07:43 smarty run.sh[942818]: 9.53.591.292 I slot print_timing: id  0 | task 7746 | n_gen =   2614, tg =  57.83 t/s, tg_3s =  58.02 t/s
+Aug 19 18:07:46 smarty run.sh[942818]: 9.56.607.201 I slot print_timing: id  0 | task 7746 | n_gen =   2789, tg =  57.84 t/s, tg_3s =  58.03 t/s
+Aug 19 18:07:49 smarty run.sh[942818]: 9.59.628.351 I slot print_timing: id  0 | task 7746 | n_gen =   2961, tg =  57.79 t/s, tg_3s =  56.93 t/s
+Aug 19 18:07:52 smarty run.sh[942818]: 10.02.641.299 I slot print_timing: id  0 | task 7746 | n_gen =   3141, tg =  57.90 t/s, tg_3s =  59.74 t/s
+Aug 19 18:07:55 smarty run.sh[942818]: 10.05.659.629 I slot print_timing: id  0 | task 7746 | n_gen =   3338, tg =  58.29 t/s, tg_3s =  65.27 t/s
+Aug 19 18:07:58 smarty run.sh[942818]: 10.08.666.753 I slot print_timing: id  0 | task 7746 | n_gen =   3532, tg =  58.60 t/s, tg_3s =  64.51 t/s
+Aug 19 18:08:01 smarty run.sh[942818]: 10.11.676.688 I slot print_timing: id  0 | task 7746 | n_gen =   3718, tg =  58.75 t/s, tg_3s =  61.80 t/s
+Aug 19 18:08:04 smarty run.sh[942818]: 10.14.694.829 I slot print_timing: id  0 | task 7746 | n_gen =   3894, tg =  58.73 t/s, tg_3s =  58.31 t/s
+Aug 19 18:08:07 smarty run.sh[942818]: 10.17.711.237 I slot print_timing: id  0 | task 7746 | n_gen =   4065, tg =  58.64 t/s, tg_3s =  56.69 t/s
+Aug 19 18:08:10 smarty run.sh[942818]: 10.20.727.951 I slot print_timing: id  0 | task 7746 | n_gen =   4232, tg =  58.50 t/s, tg_3s =  55.36 t/s
+Aug 19 18:08:13 smarty run.sh[942818]: 10.23.746.261 I slot print_timing: id  0 | task 7746 | n_gen =   4414, tg =  58.58 t/s, tg_3s =  60.30 t/s
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.491.757 I slot print_timing: id  0 | task 7746 | prompt eval time =    2412.76 ms /  2225 tokens (    1.08 ms per token,   922.18 tokens per second)
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.491.759 I slot print_timing: id  0 | task 7746 |        eval time =   77084.59 ms /  4521 tokens (   17.05 ms per token,    58.64 tokens per second)
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.491.760 I slot print_timing: id  0 | task 7746 |       total time =   79497.35 ms /  6746 tokens
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.491.760 I slot print_timing: id  0 | task 7746 |    graphs reused =      10026
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.491.762 I slot print_timing: id  0 | task 7746 | draft acceptance = 0.75165 ( 1940 accepted /  2581 generated), mean len =  1.75
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.493.738 I slot      release: id  0 | task 7746 | stop processing: n_tokens = 128076, truncated = 0
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.770.746 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.995 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:08:15 smarty run.sh[942818]: 10.25.771.311 I slot launch_slot_: id  0 | task 10331 | processing task, is_child = 0
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.411.859 I slot print_timing: id  0 | task 10331 | prompt eval time =    1086.48 ms /   692 tokens (    1.57 ms per token,   636.92 tokens per second)
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.411.861 I slot print_timing: id  0 | task 10331 |        eval time =    1553.90 ms /   100 tokens (   15.70 ms per token,    63.71 tokens per second)
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.411.861 I slot print_timing: id  0 | task 10331 |       total time =    2640.38 ms /   792 tokens
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.411.862 I slot print_timing: id  0 | task 10331 |    graphs reused =      10077
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.411.863 I slot print_timing: id  0 | task 10331 | draft acceptance = 0.92308 (   48 accepted /    52 generated), mean len =  1.92
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.413.967 I slot      release: id  0 | task 10331 | stop processing: n_tokens = 128868, truncated = 0
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.672.646 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.992 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:08:18 smarty run.sh[942818]: 10.28.673.201 I slot launch_slot_: id  0 | task 10387 | processing task, is_child = 0
+Aug 19 18:08:23 smarty run.sh[942818]: 10.33.124.823 I slot print_timing: id  0 | task 10387 | n_gen =    185, tg =  61.15 t/s, tg_3s =  61.48 t/s
+Aug 19 18:08:26 smarty run.sh[942818]: 10.36.134.952 I slot print_timing: id  0 | task 10387 | n_gen =    378, tg =  62.64 t/s, tg_3s =  64.12 t/s
+Aug 19 18:08:29 smarty run.sh[942818]: 10.39.143.730 I slot print_timing: id  0 | task 10387 | n_gen =    571, tg =  63.14 t/s, tg_3s =  64.15 t/s
+Aug 19 18:08:32 smarty run.sh[942818]: 10.42.159.526 I slot print_timing: id  0 | task 10387 | n_gen =    749, tg =  62.11 t/s, tg_3s =  59.02 t/s
+Aug 19 18:08:35 smarty run.sh[942818]: 10.45.182.683 I slot print_timing: id  0 | task 10387 | n_gen =    947, tg =  62.79 t/s, tg_3s =  65.49 t/s
+Aug 19 18:08:38 smarty run.sh[942818]: 10.48.210.623 I slot print_timing: id  0 | task 10387 | n_gen =   1141, tg =  63.00 t/s, tg_3s =  64.07 t/s
+Aug 19 18:08:41 smarty run.sh[942818]: 10.51.211.759 I slot print_timing: id  0 | task 10387 | n_gen =   1321, tg =  62.57 t/s, tg_3s =  59.98 t/s
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.557.677 I slot print_timing: id  0 | task 10387 | prompt eval time =    1442.64 ms /  1075 tokens (    1.34 ms per token,   745.16 tokens per second)
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.557.679 I slot print_timing: id  0 | task 10387 |        eval time =   22441.68 ms /  1406 tokens (   15.97 ms per token,    62.61 tokens per second)
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.557.679 I slot print_timing: id  0 | task 10387 |       total time =   23884.32 ms /  2481 tokens
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.557.679 I slot print_timing: id  0 | task 10387 |    graphs reused =      10807
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.557.681 I slot print_timing: id  0 | task 10387 | draft acceptance = 0.90773 (  669 accepted /   737 generated), mean len =  1.91
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.559.740 I slot      release: id  0 | task 10387 | stop processing: n_tokens = 131349, truncated = 0
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.833.654 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.998 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:08:42 smarty run.sh[942818]: 10.52.834.214 I slot launch_slot_: id  0 | task 11128 | processing task, is_child = 0
+Aug 19 18:08:46 smarty run.sh[942818]: 10.56.600.810 I slot print_timing: id  0 | task 11128 | n_gen =    191, tg =  63.06 t/s, tg_3s =  63.39 t/s
+Aug 19 18:08:49 smarty run.sh[942818]: 10.59.604.004 I slot print_timing: id  0 | task 11128 | n_gen =    381, tg =  63.16 t/s, tg_3s =  63.27 t/s
+Aug 19 18:08:52 smarty run.sh[942818]: 11.02.606.698 I slot print_timing: id  0 | task 11128 | n_gen =    577, tg =  63.87 t/s, tg_3s =  65.27 t/s
+Aug 19 18:08:55 smarty run.sh[942818]: 11.05.610.624 I slot print_timing: id  0 | task 11128 | n_gen =    773, tg =  64.21 t/s, tg_3s =  65.25 t/s
+Aug 19 18:08:58 smarty run.sh[942818]: 11.08.639.638 I slot print_timing: id  0 | task 11128 | n_gen =    971, tg =  64.44 t/s, tg_3s =  65.37 t/s
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.615.154 I slot print_timing: id  0 | task 11128 | prompt eval time =     753.58 ms /   289 tokens (    2.61 ms per token,   383.50 tokens per second)
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.615.156 I slot print_timing: id  0 | task 11128 |        eval time =   18027.21 ms /  1163 tokens (   15.51 ms per token,    64.46 tokens per second)
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.615.156 I slot print_timing: id  0 | task 11128 |       total time =   18780.78 ms /  1452 tokens
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.615.156 I slot print_timing: id  0 | task 11128 |    graphs reused =      11391
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.615.157 I slot print_timing: id  0 | task 11128 | draft acceptance = 0.97453 (  574 accepted /   589 generated), mean len =  1.97
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.617.306 I slot      release: id  0 | task 11128 | stop processing: n_tokens = 132801, truncated = 0
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.919.673 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.995 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:01 smarty run.sh[942818]: 11.11.920.375 I slot launch_slot_: id  0 | task 11720 | processing task, is_child = 0
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.683.145 I slot print_timing: id  0 | task 11720 | prompt eval time =    1085.87 ms /   642 tokens (    1.69 ms per token,   591.23 tokens per second)
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.683.146 I slot print_timing: id  0 | task 11720 |        eval time =    1676.71 ms /   103 tokens (   16.44 ms per token,    60.83 tokens per second)
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.683.147 I slot print_timing: id  0 | task 11720 |       total time =    2762.58 ms /   745 tokens
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.683.147 I slot print_timing: id  0 | task 11720 |    graphs reused =      11445
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.683.148 I slot print_timing: id  0 | task 11720 | draft acceptance = 0.85455 (   47 accepted /    55 generated), mean len =  1.85
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.685.368 I slot      release: id  0 | task 11720 | stop processing: n_tokens = 133545, truncated = 0
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.955.259 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.985 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:04 smarty run.sh[942818]: 11.14.955.847 I slot launch_slot_: id  0 | task 11779 | processing task, is_child = 0
+Aug 19 18:09:10 smarty run.sh[942818]: 11.20.426.511 I slot print_timing: id  0 | task 11779 | n_gen =    173, tg =  56.99 t/s, tg_3s =  57.32 t/s
+Aug 19 18:09:13 smarty run.sh[942818]: 11.23.434.878 I slot print_timing: id  0 | task 11779 | n_gen =    337, tg =  55.75 t/s, tg_3s =  54.51 t/s
+Aug 19 18:09:16 smarty run.sh[942818]: 11.26.133.913 I slot print_timing: id  0 | task 11779 | prompt eval time =    2452.32 ms /  2066 tokens (    1.19 ms per token,   842.47 tokens per second)
+Aug 19 18:09:16 smarty run.sh[942818]: 11.26.133.915 I slot print_timing: id  0 | task 11779 |        eval time =    8725.58 ms /   503 tokens (   17.38 ms per token,    57.53 tokens per second)
+Aug 19 18:09:16 smarty run.sh[942818]: 11.26.133.915 I slot print_timing: id  0 | task 11779 |       total time =   11177.90 ms /  2569 tokens
+Aug 19 18:09:16 smarty run.sh[942818]: 11.26.133.916 I slot print_timing: id  0 | task 11779 |    graphs reused =      11724
+Aug 19 18:09:16 smarty run.sh[942818]: 11.26.133.917 I slot print_timing: id  0 | task 11779 | draft acceptance = 0.78014 (  220 accepted /   282 generated), mean len =  1.78
+Aug 19 18:09:16 smarty run.sh[942818]: 11.26.136.161 I slot      release: id  0 | task 11779 | stop processing: n_tokens = 136113, truncated = 0
+Aug 19 18:09:18 smarty run.sh[942818]: 11.28.687.149 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:18 smarty run.sh[942818]: 11.28.687.707 I slot launch_slot_: id  0 | task 12065 | processing task, is_child = 0
+Aug 19 18:09:22 smarty run.sh[942818]: 11.32.375.084 I slot print_timing: id  0 | task 12065 | n_gen =    187, tg =  61.67 t/s, tg_3s =  62.00 t/s
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.275.280 I slot print_timing: id  0 | task 12065 | prompt eval time =     671.18 ms /   138 tokens (    4.86 ms per token,   205.61 tokens per second)
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.275.281 I slot print_timing: id  0 | task 12065 |        eval time =    3916.23 ms /   244 tokens (   16.12 ms per token,    62.05 tokens per second)
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.275.282 I slot print_timing: id  0 | task 12065 |       total time =    4587.40 ms /   382 tokens
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.275.282 I slot print_timing: id  0 | task 12065 |    graphs reused =      11849
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.275.283 I slot print_timing: id  0 | task 12065 | draft acceptance = 0.91339 (  116 accepted /   127 generated), mean len =  1.91
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.277.522 I slot      release: id  0 | task 12065 | stop processing: n_tokens = 136494, truncated = 0
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.633.475 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:23 smarty run.sh[942818]: 11.33.634.041 I slot launch_slot_: id  0 | task 12195 | processing task, is_child = 0
+Aug 19 18:09:26 smarty run.sh[942818]: 11.36.814.696 I slot print_timing: id  0 | task 12195 | prompt eval time =     554.57 ms /    29 tokens (   19.12 ms per token,    52.29 tokens per second)
+Aug 19 18:09:26 smarty run.sh[942818]: 11.36.814.698 I slot print_timing: id  0 | task 12195 |        eval time =    2625.92 ms /   166 tokens (   15.91 ms per token,    62.84 tokens per second)
+Aug 19 18:09:26 smarty run.sh[942818]: 11.36.814.698 I slot print_timing: id  0 | task 12195 |       total time =    3180.50 ms /   195 tokens
+Aug 19 18:09:26 smarty run.sh[942818]: 11.36.814.698 I slot print_timing: id  0 | task 12195 |    graphs reused =      11933
+Aug 19 18:09:26 smarty run.sh[942818]: 11.36.814.700 I slot print_timing: id  0 | task 12195 | draft acceptance = 0.95294 (   81 accepted /    85 generated), mean len =  1.95
+Aug 19 18:09:26 smarty run.sh[942818]: 11.36.816.863 I slot      release: id  0 | task 12195 | stop processing: n_tokens = 136689, truncated = 0
+Aug 19 18:09:28 smarty run.sh[942818]: 11.38.302.538 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:28 smarty run.sh[942818]: 11.38.303.087 I slot launch_slot_: id  0 | task 12283 | processing task, is_child = 0
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.552.048 I slot print_timing: id  0 | task 12283 | prompt eval time =     567.73 ms /    62 tokens (    9.16 ms per token,   109.21 tokens per second)
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.552.050 I slot print_timing: id  0 | task 12283 |        eval time =    1681.06 ms /   106 tokens (   16.01 ms per token,    62.46 tokens per second)
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.552.050 I slot print_timing: id  0 | task 12283 |       total time =    2248.79 ms /   168 tokens
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.552.050 I slot print_timing: id  0 | task 12283 |    graphs reused =      11987
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.552.051 I slot print_timing: id  0 | task 12283 | draft acceptance = 0.92727 (   51 accepted /    55 generated), mean len =  1.93
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.554.320 I slot      release: id  0 | task 12283 | stop processing: n_tokens = 136857, truncated = 0
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.814.115 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.997 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:30 smarty run.sh[942818]: 11.40.814.697 I slot launch_slot_: id  0 | task 12341 | processing task, is_child = 0
+Aug 19 18:09:34 smarty run.sh[942818]: 11.44.769.801 I slot print_timing: id  0 | task 12341 | n_gen =    169, tg =  55.78 t/s, tg_3s =  56.11 t/s
+Aug 19 18:09:37 smarty run.sh[942818]: 11.47.782.057 I slot print_timing: id  0 | task 12341 | n_gen =    351, tg =  58.10 t/s, tg_3s =  60.42 t/s
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.519.296 I slot print_timing: id  0 | task 12341 | prompt eval time =     942.92 ms /   462 tokens (    2.04 ms per token,   489.97 tokens per second)
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.519.298 I slot print_timing: id  0 | task 12341 |        eval time =    7761.53 ms /   460 tokens (   16.91 ms per token,    59.14 tokens per second)
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.519.298 I slot print_timing: id  0 | task 12341 |       total time =    8704.44 ms /   922 tokens
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.519.298 I slot print_timing: id  0 | task 12341 |    graphs reused =      12235
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.519.300 I slot print_timing: id  0 | task 12341 | draft acceptance = 0.83267 (  209 accepted /   251 generated), mean len =  1.83
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.521.543 I slot      release: id  0 | task 12341 | stop processing: n_tokens = 137779, truncated = 0
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.881.264 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.998 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:09:39 smarty run.sh[942818]: 11.49.881.847 I slot launch_slot_: id  0 | task 12595 | processing task, is_child = 0
+Aug 19 18:09:43 smarty run.sh[942818]: 11.53.649.170 I slot print_timing: id  0 | task 12595 | n_gen =    178, tg =  58.68 t/s, tg_3s =  59.00 t/s
+Aug 19 18:09:46 smarty run.sh[942818]: 11.56.672.801 I slot print_timing: id  0 | task 12595 | n_gen =    346, tg =  57.12 t/s, tg_3s =  55.56 t/s
+Aug 19 18:09:49 smarty run.sh[942818]: 11.59.695.925 I slot print_timing: id  0 | task 12595 | n_gen =    522, tg =  57.48 t/s, tg_3s =  58.22 t/s
+Aug 19 18:09:52 smarty run.sh[942818]: 12.02.722.405 I slot print_timing: id  0 | task 12595 | n_gen =    696, tg =  57.49 t/s, tg_3s =  57.49 t/s
+Aug 19 18:09:55 smarty run.sh[942818]: 12.05.732.239 I slot print_timing: id  0 | task 12595 | n_gen =    850, tg =  56.23 t/s, tg_3s =  51.17 t/s
+Aug 19 18:09:58 smarty run.sh[942818]: 12.08.762.238 I slot print_timing: id  0 | task 12595 | n_gen =   1019, tg =  56.15 t/s, tg_3s =  55.78 t/s
+Aug 19 18:10:01 smarty run.sh[942818]: 12.11.791.652 I slot print_timing: id  0 | task 12595 | n_gen =   1196, tg =  56.48 t/s, tg_3s =  58.43 t/s
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.635.274 I slot print_timing: id  0 | task 12595 | prompt eval time =     750.60 ms /   260 tokens (    2.89 ms per token,   346.39 tokens per second)
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.635.276 I slot print_timing: id  0 | task 12595 |        eval time =   22002.67 ms /  1247 tokens (   17.66 ms per token,    56.63 tokens per second)
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.635.276 I slot print_timing: id  0 | task 12595 |       total time =   22753.27 ms /  1507 tokens
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.635.276 I slot print_timing: id  0 | task 12595 |    graphs reused =      12931
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.635.278 I slot print_timing: id  0 | task 12595 | draft acceptance = 0.77493 (  544 accepted /   702 generated), mean len =  1.77
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.637.474 I slot      release: id  0 | task 12595 | stop processing: n_tokens = 139285, truncated = 0
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.987.917 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:02 smarty run.sh[942818]: 12.12.988.500 I slot launch_slot_: id  0 | task 13300 | processing task, is_child = 0
+Aug 19 18:10:06 smarty run.sh[942818]: 12.16.577.954 I slot print_timing: id  0 | task 13300 | n_gen =    172, tg =  56.75 t/s, tg_3s =  57.08 t/s
+Aug 19 18:10:09 smarty run.sh[942818]: 12.19.588.619 I slot print_timing: id  0 | task 13300 | n_gen =    344, tg =  56.94 t/s, tg_3s =  57.13 t/s
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.134.179 I slot print_timing: id  0 | task 13300 | prompt eval time =     576.17 ms /    51 tokens (   11.30 ms per token,    88.52 tokens per second)
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.134.180 I slot print_timing: id  0 | task 13300 |        eval time =    8569.34 ms /   498 tokens (   17.24 ms per token,    58.00 tokens per second)
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.134.181 I slot print_timing: id  0 | task 13300 |       total time =    9145.51 ms /   549 tokens
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.134.181 I slot print_timing: id  0 | task 13300 |    graphs reused =      13202
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.134.182 I slot print_timing: id  0 | task 13300 | draft acceptance = 0.81387 (  223 accepted /   274 generated), mean len =  1.81
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.136.434 I slot      release: id  0 | task 13300 | stop processing: n_tokens = 139833, truncated = 0
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.402.265 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.998 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:12 smarty run.sh[942818]: 12.22.402.856 I slot launch_slot_: id  0 | task 13577 | processing task, is_child = 0
+Aug 19 18:10:16 smarty run.sh[942818]: 12.26.414.227 I slot print_timing: id  0 | task 13577 | n_gen =    186, tg =  61.32 t/s, tg_3s =  61.65 t/s
+Aug 19 18:10:19 smarty run.sh[942818]: 12.29.432.502 I slot print_timing: id  0 | task 13577 | n_gen =    368, tg =  60.81 t/s, tg_3s =  60.30 t/s
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.166.861 I slot print_timing: id  0 | task 13577 | prompt eval time =     994.20 ms /   288 tokens (    3.45 ms per token,   289.68 tokens per second)
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.166.862 I slot print_timing: id  0 | task 13577 |        eval time =    7769.60 ms /   472 tokens (   16.50 ms per token,    60.62 tokens per second)
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.166.862 I slot print_timing: id  0 | task 13577 |       total time =    8763.79 ms /   760 tokens
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.166.863 I slot print_timing: id  0 | task 13577 |    graphs reused =      13447
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.166.864 I slot print_timing: id  0 | task 13577 | draft acceptance = 0.89919 (  223 accepted /   248 generated), mean len =  1.90
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.169.362 I slot      release: id  0 | task 13577 | stop processing: n_tokens = 140592, truncated = 0
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.464.865 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.998 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:21 smarty run.sh[942818]: 12.31.465.445 I slot launch_slot_: id  0 | task 13829 | processing task, is_child = 0
+Aug 19 18:10:25 smarty run.sh[942818]: 12.35.322.558 I slot print_timing: id  0 | task 13829 | n_gen =    185, tg =  60.75 t/s, tg_3s =  61.07 t/s
+Aug 19 18:10:28 smarty run.sh[942818]: 12.38.341.328 I slot print_timing: id  0 | task 13829 | n_gen =    377, tg =  62.17 t/s, tg_3s =  63.60 t/s
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.038.809 I slot print_timing: id  0 | task 13829 | prompt eval time =     827.95 ms /   304 tokens (    2.72 ms per token,   367.17 tokens per second)
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.038.810 I slot print_timing: id  0 | task 13829 |        eval time =    7745.26 ms /   483 tokens (   16.07 ms per token,    62.23 tokens per second)
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.038.811 I slot print_timing: id  0 | task 13829 |       total time =    8573.21 ms /   787 tokens
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.038.811 I slot print_timing: id  0 | task 13829 |    graphs reused =      13691
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.038.812 I slot print_timing: id  0 | task 13829 | draft acceptance = 0.95547 (  236 accepted /   247 generated), mean len =  1.96
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.041.025 I slot      release: id  0 | task 13829 | stop processing: n_tokens = 141379, truncated = 0
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.723.924 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.996 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:30 smarty run.sh[942818]: 12.40.724.508 I slot launch_slot_: id  0 | task 14079 | processing task, is_child = 0
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.525.607 I slot print_timing: id  0 | task 14079 | prompt eval time =    1052.31 ms /   560 tokens (    1.88 ms per token,   532.17 tokens per second)
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.525.608 I slot print_timing: id  0 | task 14079 |        eval time =    2748.62 ms /   162 tokens (   17.07 ms per token,    58.57 tokens per second)
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.525.609 I slot print_timing: id  0 | task 14079 |       total time =    3800.93 ms /   722 tokens
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.525.609 I slot print_timing: id  0 | task 14079 |    graphs reused =      13777
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.525.611 I slot print_timing: id  0 | task 14079 | draft acceptance = 0.84091 (   74 accepted /    88 generated), mean len =  1.84
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.527.980 I slot      release: id  0 | task 14079 | stop processing: n_tokens = 142101, truncated = 0
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.841.774 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:34 smarty run.sh[942818]: 12.44.842.321 I slot launch_slot_: id  0 | task 14171 | processing task, is_child = 0
+Aug 19 18:10:38 smarty run.sh[942818]: 12.48.442.003 I slot print_timing: id  0 | task 14171 | n_gen =    184, tg =  60.75 t/s, tg_3s =  61.08 t/s
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.471.889 I slot print_timing: id  0 | task 14171 | n_gen =    376, tg =  62.07 t/s, tg_3s =  63.37 t/s
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.915.154 I slot print_timing: id  0 | task 14171 | prompt eval time =     587.40 ms /    54 tokens (   10.88 ms per token,    91.93 tokens per second)
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.915.156 I slot print_timing: id  0 | task 14171 |        eval time =    6485.27 ms /   404 tokens (   16.09 ms per token,    62.14 tokens per second)
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.915.157 I slot print_timing: id  0 | task 14171 |       total time =    7072.67 ms /   458 tokens
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.915.157 I slot print_timing: id  0 | task 14171 |    graphs reused =      13981
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.915.158 I slot print_timing: id  0 | task 14171 | draft acceptance = 0.95631 (  197 accepted /   206 generated), mean len =  1.96
+Aug 19 18:10:41 smarty run.sh[942818]: 12.51.917.429 I slot      release: id  0 | task 14171 | stop processing: n_tokens = 142558, truncated = 0
+Aug 19 18:10:42 smarty run.sh[942818]: 12.52.585.073 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:42 smarty run.sh[942818]: 12.52.585.661 I slot launch_slot_: id  0 | task 14380 | processing task, is_child = 0
+Aug 19 18:10:46 smarty run.sh[942818]: 12.56.199.188 I slot print_timing: id  0 | task 14380 | n_gen =    183, tg =  60.46 t/s, tg_3s =  60.79 t/s
+Aug 19 18:10:49 smarty run.sh[942818]: 12.59.200.090 I slot print_timing: id  0 | task 14380 | n_gen =    350, tg =  58.06 t/s, tg_3s =  55.65 t/s
+Aug 19 18:10:52 smarty run.sh[942818]: 13.02.210.358 I slot print_timing: id  0 | task 14380 | n_gen =    532, tg =  58.86 t/s, tg_3s =  60.46 t/s
+Aug 19 18:10:55 smarty run.sh[942818]: 13.05.224.023 I slot print_timing: id  0 | task 14380 | n_gen =    719, tg =  59.66 t/s, tg_3s =  62.05 t/s
+Aug 19 18:10:58 smarty run.sh[942818]: 13.08.242.612 I slot print_timing: id  0 | task 14380 | n_gen =    907, tg =  60.18 t/s, tg_3s =  62.28 t/s
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.546.223 I slot print_timing: id  0 | task 14380 | prompt eval time =     603.20 ms /    83 tokens (    7.27 ms per token,   137.60 tokens per second)
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.546.224 I slot print_timing: id  0 | task 14380 |        eval time =   16357.19 ms /   987 tokens (   16.59 ms per token,    60.28 tokens per second)
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.546.225 I slot print_timing: id  0 | task 14380 |       total time =   16960.39 ms /  1070 tokens
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.546.225 I slot print_timing: id  0 | task 14380 |    graphs reused =      14493
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.546.226 I slot print_timing: id  0 | task 14380 | draft acceptance = 0.90909 (  470 accepted /   517 generated), mean len =  1.91
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.548.506 I slot      release: id  0 | task 14380 | stop processing: n_tokens = 143628, truncated = 0
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.902.331 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:10:59 smarty run.sh[942818]: 13.09.902.900 I slot launch_slot_: id  0 | task 14900 | processing task, is_child = 0
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.032.408 I slot print_timing: id  0 | task 14900 | prompt eval time =     593.46 ms /    54 tokens (   10.99 ms per token,    90.99 tokens per second)
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.032.410 I slot print_timing: id  0 | task 14900 |        eval time =    1535.82 ms /    95 tokens (   16.34 ms per token,    61.21 tokens per second)
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.032.411 I slot print_timing: id  0 | task 14900 |       total time =    2129.28 ms /   149 tokens
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.032.411 I slot print_timing: id  0 | task 14900 |    graphs reused =      14541
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.032.412 I slot print_timing: id  0 | task 14900 | draft acceptance = 0.91837 (   45 accepted /    49 generated), mean len =  1.92
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.034.954 I slot      release: id  0 | task 14900 | stop processing: n_tokens = 143776, truncated = 0
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.916.554 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.100 (> 0.100 thold), f_keep = 0.022
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.921.165 W srv         alloc:  - prompt state size 9130.556 MiB exceeds cache size limit 8192.000 MiB, skipping
+Aug 19 18:11:02 smarty run.sh[942818]: 13.12.921.663 I slot launch_slot_: id  0 | task 14952 | processing task, is_child = 0
+Aug 19 18:11:06 smarty run.sh[942818]: 13.16.642.363 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  10240, progress = 0.32, t =   3.61 s / 2835.77 tokens per second
+Aug 19 18:11:07 smarty run.sh[942818]: 13.17.416.280 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  12288, progress = 0.39, t =   4.38 s / 2804.23 tokens per second
+Aug 19 18:11:08 smarty run.sh[942818]: 13.18.203.830 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  14336, progress = 0.45, t =   5.17 s / 2774.62 tokens per second
+Aug 19 18:11:09 smarty run.sh[942818]: 13.19.004.754 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  16384, progress = 0.51, t =   5.97 s / 2746.31 tokens per second
+Aug 19 18:11:09 smarty run.sh[942818]: 13.19.820.058 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  18432, progress = 0.58, t =   6.78 s / 2718.99 tokens per second
+Aug 19 18:11:10 smarty run.sh[942818]: 13.20.649.813 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  20480, progress = 0.64, t =   7.61 s / 2692.54 tokens per second
+Aug 19 18:11:11 smarty run.sh[942818]: 13.21.101.926 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  21544, progress = 0.68, t =   8.14 s / 2645.94 tokens per second
+Aug 19 18:11:12 smarty run.sh[942818]: 13.22.011.662 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  23592, progress = 0.74, t =   8.96 s / 2632.29 tokens per second
+Aug 19 18:11:12 smarty run.sh[942818]: 13.22.877.848 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  25640, progress = 0.81, t =   9.83 s / 2608.83 tokens per second
+Aug 19 18:11:13 smarty run.sh[942818]: 13.23.758.963 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  27688, progress = 0.87, t =  10.71 s / 2586.15 tokens per second
+Aug 19 18:11:14 smarty run.sh[942818]: 13.24.657.265 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  29736, progress = 0.93, t =  11.60 s / 2563.08 tokens per second
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.250.322 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  31040, progress = 0.98, t =  12.25 s / 2534.72 tokens per second
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.360.911 W find_slot: non-consecutive token position 31040 after 31039 for sequence 0 with 512 new tokens
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.360.914 W find_slot: non-consecutive token position 31040 after 31040 for sequence 0 with 256 new tokens
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.361.227 W find_slot: non-consecutive token position 31040 after 31039 for sequence 0 with 512 new tokens
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.482.011 W find_slot: non-consecutive token position 31040 after 31040 for sequence 0 with 256 new tokens
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.644.052 W find_slot: non-consecutive token position 31075 after 31040 for sequence 0 with 4 new tokens
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.644.066 W find_slot: non-consecutive token position 31075 after 31040 for sequence 0 with 4 new tokens
+Aug 19 18:11:15 smarty run.sh[942818]: 13.25.711.212 I slot print_timing: id  0 | task 14952 | prompt processing, n_tokens =  31812, progress = 1.00, t =  12.78 s / 2489.43 tokens per second
+Aug 19 18:11:18 smarty run.sh[942818]: 13.28.832.761 I slot print_timing: id  0 | task 14952 | n_gen =    267, tg =  88.34 t/s, tg_3s =  88.66 t/s
+Aug 19 18:11:21 smarty run.sh[942818]: 13.31.851.104 I slot print_timing: id  0 | task 14952 | n_gen =    524, tg =  86.74 t/s, tg_3s =  85.15 t/s
+Aug 19 18:11:24 smarty run.sh[942818]: 13.34.859.379 I slot print_timing: id  0 | task 14952 | n_gen =    794, tg =  87.74 t/s, tg_3s =  89.75 t/s
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.283.040 I slot print_timing: id  0 | task 14952 | prompt eval time =   12899.71 ms / 31816 tokens (    0.41 ms per token,  2466.41 tokens per second)
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.283.041 I slot print_timing: id  0 | task 14952 |        eval time =   11461.52 ms /  1011 tokens (   11.35 ms per token,    88.12 tokens per second)
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.283.042 I slot print_timing: id  0 | task 14952 |       total time =   24361.23 ms / 32827 tokens
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.283.042 I slot print_timing: id  0 | task 14952 |    graphs reused =      15101
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.283.043 I slot print_timing: id  0 | task 14952 | draft acceptance = 0.78938 (  446 accepted /   565 generated), mean len =  1.79
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.283.676 I slot      release: id  0 | task 14952 | stop processing: n_tokens = 32827, truncated = 0
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.425.893 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.630 (> 0.100 thold), f_keep = 0.656
+Aug 19 18:11:27 smarty run.sh[942818]: 13.37.426.394 I slot launch_slot_: id  0 | task 15536 | processing task, is_child = 0
+Aug 19 18:11:31 smarty run.sh[942818]: 13.41.083.805 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  10240, progress = 0.30, t =   3.55 s / 2886.44 tokens per second
+Aug 19 18:11:31 smarty run.sh[942818]: 13.41.859.285 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  12288, progress = 0.36, t =   4.32 s / 2844.33 tokens per second
+Aug 19 18:11:32 smarty run.sh[942818]: 13.42.648.654 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  14336, progress = 0.42, t =   5.11 s / 2807.56 tokens per second
+Aug 19 18:11:33 smarty run.sh[942818]: 13.43.451.182 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  16384, progress = 0.48, t =   5.91 s / 2773.57 tokens per second
+Aug 19 18:11:34 smarty run.sh[942818]: 13.44.268.466 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  18432, progress = 0.54, t =   6.72 s / 2742.05 tokens per second
+Aug 19 18:11:35 smarty run.sh[942818]: 13.45.100.600 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  20480, progress = 0.60, t =   7.55 s / 2712.11 tokens per second
+Aug 19 18:11:35 smarty run.sh[942818]: 13.45.779.883 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  22081, progress = 0.65, t =   8.30 s / 2660.20 tokens per second
+Aug 19 18:11:36 smarty run.sh[942818]: 13.46.694.526 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  24129, progress = 0.71, t =   9.14 s / 2639.84 tokens per second
+Aug 19 18:11:37 smarty run.sh[942818]: 13.47.567.841 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  26177, progress = 0.77, t =  10.01 s / 2614.60 tokens per second
+Aug 19 18:11:38 smarty run.sh[942818]: 13.48.456.255 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  28225, progress = 0.83, t =  10.90 s / 2590.01 tokens per second
+Aug 19 18:11:39 smarty run.sh[942818]: 13.49.361.056 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  30273, progress = 0.89, t =  11.80 s / 2565.67 tokens per second
+Aug 19 18:11:39 smarty run.sh[942818]: 13.49.959.907 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  31577, progress = 0.92, t =  12.45 s / 2536.18 tokens per second
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.034.215 W find_slot: non-consecutive token position 31577 after 31576 for sequence 0 with 512 new tokens
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.034.218 W find_slot: non-consecutive token position 31577 after 31577 for sequence 0 with 256 new tokens
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.034.519 W find_slot: non-consecutive token position 31577 after 31576 for sequence 0 with 512 new tokens
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.166.468 W find_slot: non-consecutive token position 31577 after 31577 for sequence 0 with 256 new tokens
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.332.563 W find_slot: non-consecutive token position 32120 after 31577 for sequence 0 with 512 new tokens
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.332.936 W find_slot: non-consecutive token position 32120 after 31577 for sequence 0 with 512 new tokens
+Aug 19 18:11:40 smarty run.sh[942818]: 13.50.886.162 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  33381, progress = 0.98, t =  13.42 s / 2487.17 tokens per second
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.000.242 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  33393, progress = 0.98, t =  13.56 s / 2461.73 tokens per second
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.065.866 W find_slot: non-consecutive token position 32657 after 32656 for sequence 0 with 512 new tokens
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.065.869 W find_slot: non-consecutive token position 32657 after 32657 for sequence 0 with 256 new tokens
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.066.158 W find_slot: non-consecutive token position 32657 after 32656 for sequence 0 with 512 new tokens
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.191.657 W find_slot: non-consecutive token position 32657 after 32657 for sequence 0 with 256 new tokens
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.360.508 W find_slot: non-consecutive token position 32692 after 32657 for sequence 0 with 4 new tokens
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.360.524 W find_slot: non-consecutive token position 32692 after 32657 for sequence 0 with 4 new tokens
+Aug 19 18:11:41 smarty run.sh[942818]: 13.51.429.866 I slot print_timing: id  0 | task 15536 | prompt processing, n_tokens =  34165, progress = 1.00, t =  13.99 s / 2441.63 tokens per second
+Aug 19 18:11:44 smarty run.sh[942818]: 13.54.549.903 I slot print_timing: id  0 | task 15536 | n_gen =    278, tg =  92.08 t/s, tg_3s =  92.41 t/s
+Aug 19 18:11:47 smarty run.sh[942818]: 13.57.556.918 I slot print_timing: id  0 | task 15536 | n_gen =    543, tg =  90.10 t/s, tg_3s =  88.13 t/s
+Aug 19 18:11:50 smarty run.sh[942818]: 14.00.576.534 I slot print_timing: id  0 | task 15536 | n_gen =    821, tg =  90.76 t/s, tg_3s =  92.06 t/s
+Aug 19 18:11:53 smarty run.sh[942818]: 14.03.588.843 I slot print_timing: id  0 | task 15536 | n_gen =   1100, tg =  91.22 t/s, tg_3s =  92.62 t/s
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.173.093 I slot print_timing: id  0 | task 15536 | prompt eval time =   14115.09 ms / 34169 tokens (    0.41 ms per token,  2420.74 tokens per second)
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.173.095 I slot print_timing: id  0 | task 15536 |        eval time =   12631.45 ms /  1147 tokens (   11.02 ms per token,    90.73 tokens per second)
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.173.095 I slot print_timing: id  0 | task 15536 |       total time =   26746.55 ms / 35316 tokens
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.173.096 I slot print_timing: id  0 | task 15536 |    graphs reused =      15702
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.173.097 I slot print_timing: id  0 | task 15536 | draft acceptance = 0.89421 (  541 accepted /   605 generated), mean len =  1.89
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.173.765 I slot      release: id  0 | task 15536 | stop processing: n_tokens = 35315, truncated = 0
+Aug 19 18:11:54 smarty run.sh[942818]: 14.04.525.978 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 177920507349
+Aug 19 18:11:55 smarty run.sh[942818]: 14.05.187.843 I slot launch_slot_: id  0 | task 16162 | processing task, is_child = 0
+Aug 19 18:11:58 smarty run.sh[942818]: 14.08.847.658 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  10240, progress = 0.07, t =   3.55 s / 2884.81 tokens per second
+Aug 19 18:11:59 smarty run.sh[942818]: 14.09.622.978 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  12288, progress = 0.09, t =   4.32 s / 2842.88 tokens per second
+Aug 19 18:12:00 smarty run.sh[942818]: 14.10.412.617 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  14336, progress = 0.10, t =   5.11 s / 2805.65 tokens per second
+Aug 19 18:12:01 smarty run.sh[942818]: 14.11.216.884 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  16384, progress = 0.11, t =   5.91 s / 2771.61 tokens per second
+Aug 19 18:12:02 smarty run.sh[942818]: 14.12.035.431 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  18432, progress = 0.13, t =   6.73 s / 2739.78 tokens per second
+Aug 19 18:12:02 smarty run.sh[942818]: 14.12.869.073 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  20480, progress = 0.14, t =   7.56 s / 2709.49 tokens per second
+Aug 19 18:12:03 smarty run.sh[942818]: 14.13.717.331 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  22528, progress = 0.16, t =   8.40 s / 2680.57 tokens per second
+Aug 19 18:12:04 smarty run.sh[942818]: 14.14.580.520 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  24576, progress = 0.17, t =   9.26 s / 2652.59 tokens per second
+Aug 19 18:12:05 smarty run.sh[942818]: 14.15.457.990 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  26624, progress = 0.18, t =  10.14 s / 2625.67 tokens per second
+Aug 19 18:12:05 smarty run.sh[942818]: 14.15.672.649 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  27126, progress = 0.19, t =  10.39 s / 2611.64 tokens per second
+Aug 19 18:12:06 smarty run.sh[942818]: 14.16.631.565 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  29174, progress = 0.20, t =  11.31 s / 2579.76 tokens per second
+Aug 19 18:12:07 smarty run.sh[942818]: 14.17.544.833 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  31222, progress = 0.22, t =  12.22 s / 2554.88 tokens per second
+Aug 19 18:12:08 smarty run.sh[942818]: 14.18.486.265 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  33270, progress = 0.23, t =  13.16 s / 2528.80 tokens per second
+Aug 19 18:12:09 smarty run.sh[942818]: 14.19.458.143 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  35318, progress = 0.24, t =  14.12 s / 2500.46 tokens per second
+Aug 19 18:12:10 smarty run.sh[942818]: 14.20.463.533 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  37366, progress = 0.26, t =  15.12 s / 2470.59 tokens per second
+Aug 19 18:12:11 smarty run.sh[942818]: 14.21.495.514 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  39414, progress = 0.27, t =  16.15 s / 2440.08 tokens per second
+Aug 19 18:12:12 smarty run.sh[942818]: 14.22.551.437 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  41462, progress = 0.29, t =  17.21 s / 2409.84 tokens per second
+Aug 19 18:12:13 smarty run.sh[942818]: 14.23.628.331 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  43510, progress = 0.30, t =  18.28 s / 2380.47 tokens per second
+Aug 19 18:12:14 smarty run.sh[942818]: 14.24.722.490 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  45558, progress = 0.32, t =  19.37 s / 2351.97 tokens per second
+Aug 19 18:12:15 smarty run.sh[942818]: 14.25.835.647 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  47606, progress = 0.33, t =  20.48 s / 2324.44 tokens per second
+Aug 19 18:12:16 smarty run.sh[942818]: 14.26.969.398 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  49654, progress = 0.34, t =  21.61 s / 2297.79 tokens per second
+Aug 19 18:12:18 smarty run.sh[942818]: 14.28.120.387 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  51702, progress = 0.36, t =  22.76 s / 2271.78 tokens per second
+Aug 19 18:12:19 smarty run.sh[942818]: 14.29.292.585 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  53750, progress = 0.37, t =  23.93 s / 2246.42 tokens per second
+Aug 19 18:12:20 smarty run.sh[942818]: 14.30.482.231 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  55798, progress = 0.39, t =  25.11 s / 2221.73 tokens per second
+Aug 19 18:12:21 smarty run.sh[942818]: 14.31.691.409 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  57846, progress = 0.40, t =  26.32 s / 2197.77 tokens per second
+Aug 19 18:12:22 smarty run.sh[942818]: 14.32.919.363 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  59894, progress = 0.41, t =  27.55 s / 2174.35 tokens per second
+Aug 19 18:12:24 smarty run.sh[942818]: 14.34.167.598 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  61942, progress = 0.43, t =  28.79 s / 2151.46 tokens per second
+Aug 19 18:12:25 smarty run.sh[942818]: 14.35.436.298 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  63990, progress = 0.44, t =  30.06 s / 2129.06 tokens per second
+Aug 19 18:12:26 smarty run.sh[942818]: 14.36.723.007 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  66038, progress = 0.46, t =  31.34 s / 2107.16 tokens per second
+Aug 19 18:12:28 smarty run.sh[942818]: 14.38.028.658 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  68086, progress = 0.47, t =  32.64 s / 2085.80 tokens per second
+Aug 19 18:12:29 smarty run.sh[942818]: 14.39.355.970 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  70134, progress = 0.49, t =  33.97 s / 2064.85 tokens per second
+Aug 19 18:12:30 smarty run.sh[942818]: 14.40.702.049 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  72182, progress = 0.50, t =  35.31 s / 2044.31 tokens per second
+Aug 19 18:12:32 smarty run.sh[942818]: 14.42.066.737 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  74230, progress = 0.51, t =  36.67 s / 2024.22 tokens per second
+Aug 19 18:12:33 smarty run.sh[942818]: 14.43.449.704 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  76278, progress = 0.53, t =  38.05 s / 2004.60 tokens per second
+Aug 19 18:12:34 smarty run.sh[942818]: 14.44.850.798 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  78326, progress = 0.54, t =  39.45 s / 1985.45 tokens per second
+Aug 19 18:12:36 smarty run.sh[942818]: 14.46.273.175 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  80374, progress = 0.56, t =  40.87 s / 1966.66 tokens per second
+Aug 19 18:12:37 smarty run.sh[942818]: 14.47.715.853 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  82422, progress = 0.57, t =  42.31 s / 1948.14 tokens per second
+Aug 19 18:12:39 smarty run.sh[942818]: 14.49.181.124 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  84470, progress = 0.59, t =  43.77 s / 1929.98 tokens per second
+Aug 19 18:12:40 smarty run.sh[942818]: 14.50.666.523 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  86518, progress = 0.60, t =  45.25 s / 1912.00 tokens per second
+Aug 19 18:12:42 smarty run.sh[942818]: 14.52.169.546 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  88566, progress = 0.61, t =  46.75 s / 1894.39 tokens per second
+Aug 19 18:12:43 smarty run.sh[942818]: 14.53.693.138 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  90614, progress = 0.63, t =  48.27 s / 1877.14 tokens per second
+Aug 19 18:12:45 smarty run.sh[942818]: 14.55.237.452 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  92662, progress = 0.64, t =  49.81 s / 1860.16 tokens per second
+Aug 19 18:12:46 smarty run.sh[942818]: 14.56.803.454 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  94710, progress = 0.66, t =  51.38 s / 1843.48 tokens per second
+Aug 19 18:12:48 smarty run.sh[942818]: 14.58.387.175 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  96758, progress = 0.67, t =  52.96 s / 1827.11 tokens per second
+Aug 19 18:12:49 smarty run.sh[942818]: 14.59.990.818 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens =  98806, progress = 0.68, t =  54.56 s / 1811.06 tokens per second
+Aug 19 18:12:51 smarty run.sh[942818]: 15.01.614.017 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 100854, progress = 0.70, t =  56.18 s / 1795.26 tokens per second
+Aug 19 18:12:53 smarty run.sh[942818]: 15.03.256.167 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 102902, progress = 0.71, t =  57.82 s / 1779.76 tokens per second
+Aug 19 18:12:54 smarty run.sh[942818]: 15.04.922.397 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 104950, progress = 0.73, t =  59.48 s / 1764.50 tokens per second
+Aug 19 18:12:56 smarty run.sh[942818]: 15.06.603.721 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 106998, progress = 0.74, t =  61.16 s / 1749.53 tokens per second
+Aug 19 18:12:58 smarty run.sh[942818]: 15.08.304.279 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 109046, progress = 0.76, t =  62.86 s / 1734.88 tokens per second
+Aug 19 18:13:00 smarty run.sh[942818]: 15.10.026.308 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 111094, progress = 0.77, t =  64.57 s / 1720.44 tokens per second
+Aug 19 18:13:01 smarty run.sh[942818]: 15.11.766.031 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 113142, progress = 0.78, t =  66.31 s / 1706.23 tokens per second
+Aug 19 18:13:03 smarty run.sh[942818]: 15.13.525.798 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 115190, progress = 0.80, t =  68.07 s / 1692.29 tokens per second
+Aug 19 18:13:05 smarty run.sh[942818]: 15.15.305.465 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 117238, progress = 0.81, t =  69.84 s / 1678.56 tokens per second
+Aug 19 18:13:07 smarty run.sh[942818]: 15.17.103.062 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 119286, progress = 0.83, t =  71.64 s / 1665.07 tokens per second
+Aug 19 18:13:08 smarty run.sh[942818]: 15.18.921.262 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 121334, progress = 0.84, t =  73.45 s / 1651.82 tokens per second
+Aug 19 18:13:10 smarty run.sh[942818]: 15.20.759.301 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 123382, progress = 0.85, t =  75.29 s / 1638.75 tokens per second
+Aug 19 18:13:12 smarty run.sh[942818]: 15.22.613.799 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 125430, progress = 0.87, t =  77.14 s / 1625.97 tokens per second
+Aug 19 18:13:14 smarty run.sh[942818]: 15.24.488.312 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 127478, progress = 0.88, t =  79.01 s / 1613.40 tokens per second
+Aug 19 18:13:16 smarty run.sh[942818]: 15.26.384.992 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 129526, progress = 0.90, t =  80.91 s / 1600.94 tokens per second
+Aug 19 18:13:18 smarty run.sh[942818]: 15.28.299.779 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 131574, progress = 0.91, t =  82.82 s / 1588.70 tokens per second
+Aug 19 18:13:20 smarty run.sh[942818]: 15.30.234.819 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 133622, progress = 0.93, t =  84.75 s / 1576.68 tokens per second
+Aug 19 18:13:22 smarty run.sh[942818]: 15.32.183.957 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 135670, progress = 0.94, t =  86.70 s / 1564.89 tokens per second
+Aug 19 18:13:24 smarty run.sh[942818]: 15.34.160.104 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 137718, progress = 0.95, t =  88.67 s / 1553.17 tokens per second
+Aug 19 18:13:26 smarty run.sh[942818]: 15.36.156.295 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 139766, progress = 0.97, t =  90.66 s / 1541.63 tokens per second
+Aug 19 18:13:26 smarty run.sh[942818]: 15.36.468.770 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 140068, progress = 0.97, t =  91.15 s / 1536.61 tokens per second
+Aug 19 18:13:28 smarty run.sh[942818]: 15.38.699.520 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 142116, progress = 0.98, t =  93.20 s / 1524.86 tokens per second
+Aug 19 18:13:30 smarty run.sh[942818]: 15.40.462.952 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 143858, progress = 1.00, t =  95.09 s / 1512.85 tokens per second
+Aug 19 18:13:31 smarty run.sh[942818]: 15.41.176.065 I slot print_timing: id  0 | task 16162 | prompt processing, n_tokens = 144370, progress = 1.00, t =  95.76 s / 1507.58 tokens per second
+Aug 19 18:13:34 smarty run.sh[942818]: 15.44.451.338 I slot print_timing: id  0 | task 16162 | n_gen =    173, tg =  57.26 t/s, tg_3s =  57.59 t/s
+Aug 19 18:13:37 smarty run.sh[942818]: 15.47.479.187 I slot print_timing: id  0 | task 16162 | n_gen =    346, tg =  57.20 t/s, tg_3s =  57.14 t/s
+Aug 19 18:13:40 smarty run.sh[942818]: 15.50.492.405 I slot print_timing: id  0 | task 16162 | n_gen =    508, tg =  56.06 t/s, tg_3s =  53.76 t/s
+Aug 19 18:13:43 smarty run.sh[942818]: 15.53.503.845 I slot print_timing: id  0 | task 16162 | n_gen =    678, tg =  56.15 t/s, tg_3s =  56.45 t/s
+Aug 19 18:13:46 smarty run.sh[942818]: 15.56.525.523 I slot print_timing: id  0 | task 16162 | n_gen =    843, tg =  55.84 t/s, tg_3s =  54.61 t/s
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.548.327 I slot print_timing: id  0 | task 16162 | n_gen =   1027, tg =  56.68 t/s, tg_3s =  60.87 t/s
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.773.915 I slot print_timing: id  0 | task 16162 | prompt eval time =   96259.72 ms / 144374 tokens (    0.67 ms per token,  1499.84 tokens per second)
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.773.917 I slot print_timing: id  0 | task 16162 |        eval time =   18326.16 ms /  1041 tokens (   17.62 ms per token,    56.75 tokens per second)
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.773.917 I slot print_timing: id  0 | task 16162 |       total time =  114585.88 ms / 145415 tokens
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.773.917 I slot print_timing: id  0 | task 16162 |    graphs reused =      16267
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.773.919 I slot print_timing: id  0 | task 16162 | draft acceptance = 0.82137 (  469 accepted /   571 generated), mean len =  1.82
+Aug 19 18:13:49 smarty run.sh[942818]: 15.59.776.323 I slot      release: id  0 | task 16162 | stop processing: n_tokens = 145414, truncated = 0
+Aug 19 18:13:53 smarty run.sh[942818]: 16.03.096.885 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:13:53 smarty run.sh[942818]: 16.03.097.489 I slot launch_slot_: id  0 | task 16808 | processing task, is_child = 0
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.699.991 I slot print_timing: id  0 | task 16808 | n_gen =    164, tg =  54.27 t/s, tg_3s =  54.60 t/s
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.923.381 I slot print_timing: id  0 | task 16808 | prompt eval time =     599.02 ms /    51 tokens (   11.75 ms per token,    85.14 tokens per second)
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.923.382 I slot print_timing: id  0 | task 16808 |        eval time =    3226.71 ms /   178 tokens (   18.23 ms per token,    54.85 tokens per second)
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.923.383 I slot print_timing: id  0 | task 16808 |       total time =    3825.73 ms /   229 tokens
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.923.383 I slot print_timing: id  0 | task 16808 |    graphs reused =      16363
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.923.384 I slot print_timing: id  0 | task 16808 | draft acceptance = 0.82474 (   80 accepted /    97 generated), mean len =  1.82
+Aug 19 18:13:56 smarty run.sh[942818]: 16.06.925.594 I slot      release: id  0 | task 16808 | stop processing: n_tokens = 145642, truncated = 0
+Aug 19 18:13:57 smarty run.sh[942818]: 16.07.243.187 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:13:57 smarty run.sh[942818]: 16.07.243.763 I slot launch_slot_: id  0 | task 16908 | processing task, is_child = 0
+Aug 19 18:14:00 smarty run.sh[942818]: 16.10.835.418 I slot print_timing: id  0 | task 16908 | n_gen =    189, tg =  62.44 t/s, tg_3s =  62.76 t/s
+Aug 19 18:14:03 smarty run.sh[942818]: 16.13.360.311 I slot print_timing: id  0 | task 16908 | prompt eval time =     580.40 ms /    32 tokens (   18.14 ms per token,    55.13 tokens per second)
+Aug 19 18:14:03 smarty run.sh[942818]: 16.13.360.313 I slot print_timing: id  0 | task 16908 |        eval time =    5535.99 ms /   342 tokens (   16.23 ms per token,    61.60 tokens per second)
+Aug 19 18:14:03 smarty run.sh[942818]: 16.13.360.313 I slot print_timing: id  0 | task 16908 |       total time =    6116.38 ms /   374 tokens
+Aug 19 18:14:03 smarty run.sh[942818]: 16.13.360.314 I slot print_timing: id  0 | task 16908 |    graphs reused =      16535
+Aug 19 18:14:03 smarty run.sh[942818]: 16.13.360.315 I slot print_timing: id  0 | task 16908 | draft acceptance = 0.95977 (  167 accepted /   174 generated), mean len =  1.96
+Aug 19 18:14:03 smarty run.sh[942818]: 16.13.362.642 I slot      release: id  0 | task 16908 | stop processing: n_tokens = 146015, truncated = 0
+Aug 19 18:14:04 smarty run.sh[942818]: 16.14.027.524 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.998 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:14:04 smarty run.sh[942818]: 16.14.028.132 I slot launch_slot_: id  0 | task 17085 | processing task, is_child = 0
+Aug 19 18:14:07 smarty run.sh[942818]: 16.17.802.941 I slot print_timing: id  0 | task 17085 | n_gen =    166, tg =  54.56 t/s, tg_3s =  54.89 t/s
+Aug 19 18:14:10 smarty run.sh[942818]: 16.20.814.362 I slot print_timing: id  0 | task 17085 | n_gen =    342, tg =  56.50 t/s, tg_3s =  58.44 t/s
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.830.983 I slot print_timing: id  0 | task 17085 | n_gen =    528, tg =  58.22 t/s, tg_3s =  61.66 t/s
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.863.057 I slot print_timing: id  0 | task 17085 | prompt eval time =     750.46 ms /   222 tokens (    3.38 ms per token,   295.82 tokens per second)
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.863.058 I slot print_timing: id  0 | task 17085 |        eval time =    9084.31 ms /   530 tokens (   17.17 ms per token,    58.23 tokens per second)
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.863.059 I slot print_timing: id  0 | task 17085 |       total time =    9834.77 ms /   752 tokens
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.863.059 I slot print_timing: id  0 | task 17085 |    graphs reused =      16816
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.863.060 I slot print_timing: id  0 | task 17085 | draft acceptance = 0.86268 (  245 accepted /   284 generated), mean len =  1.86
+Aug 19 18:14:13 smarty run.sh[942818]: 16.23.865.353 I slot      release: id  0 | task 17085 | stop processing: n_tokens = 146766, truncated = 0
+Aug 19 18:14:14 smarty run.sh[942818]: 16.24.537.677 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:14:14 smarty run.sh[942818]: 16.24.538.237 I slot launch_slot_: id  0 | task 17372 | processing task, is_child = 0
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.199.813 I slot print_timing: id  0 | task 17372 | n_gen =    176, tg =  57.86 t/s, tg_3s =  58.19 t/s
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.583.782 I slot print_timing: id  0 | task 17372 | prompt eval time =     636.84 ms /    95 tokens (    6.70 ms per token,   149.17 tokens per second)
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.583.784 I slot print_timing: id  0 | task 17372 |        eval time =    3408.55 ms /   199 tokens (   17.21 ms per token,    58.09 tokens per second)
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.583.784 I slot print_timing: id  0 | task 17372 |       total time =    4045.39 ms /   294 tokens
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.583.784 I slot print_timing: id  0 | task 17372 |    graphs reused =      16921
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.583.786 I slot print_timing: id  0 | task 17372 | draft acceptance = 0.85981 (   92 accepted /   107 generated), mean len =  1.86
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.586.085 I slot      release: id  0 | task 17372 | stop processing: n_tokens = 147060, truncated = 0
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.880.372 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:14:18 smarty run.sh[942818]: 16.28.880.944 I slot launch_slot_: id  0 | task 17482 | processing task, is_child = 0
+Aug 19 18:14:22 smarty run.sh[942818]: 16.32.495.847 I slot print_timing: id  0 | task 17482 | n_gen =    186, tg =  61.04 t/s, tg_3s =  61.37 t/s
+Aug 19 18:14:23 smarty run.sh[942818]: 16.33.492.349 I slot print_timing: id  0 | task 17482 | prompt eval time =     584.17 ms /    31 tokens (   18.84 ms per token,    53.07 tokens per second)
+Aug 19 18:14:23 smarty run.sh[942818]: 16.33.492.351 I slot print_timing: id  0 | task 17482 |        eval time =    4027.06 ms /   248 tokens (   16.30 ms per token,    61.34 tokens per second)
+Aug 19 18:14:23 smarty run.sh[942818]: 16.33.492.352 I slot print_timing: id  0 | task 17482 |       total time =    4611.23 ms /   279 tokens
+Aug 19 18:14:23 smarty run.sh[942818]: 16.33.492.352 I slot print_timing: id  0 | task 17482 |    graphs reused =      17045
+Aug 19 18:14:23 smarty run.sh[942818]: 16.33.492.353 I slot print_timing: id  0 | task 17482 | draft acceptance = 0.96032 (  121 accepted /   126 generated), mean len =  1.96
+Aug 19 18:14:23 smarty run.sh[942818]: 16.33.494.773 I slot      release: id  0 | task 17482 | stop processing: n_tokens = 147338, truncated = 0
+Aug 19 18:14:24 smarty run.sh[942818]: 16.34.412.824 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:14:24 smarty run.sh[942818]: 16.34.413.437 I slot launch_slot_: id  0 | task 17611 | processing task, is_child = 0
+Aug 19 18:14:28 smarty run.sh[942818]: 16.38.041.701 I slot print_timing: id  0 | task 17611 | n_gen =    176, tg =  57.94 t/s, tg_3s =  58.27 t/s
+Aug 19 18:14:31 smarty run.sh[942818]: 16.41.054.121 I slot print_timing: id  0 | task 17611 | n_gen =    335, tg =  55.36 t/s, tg_3s =  52.78 t/s
+Aug 19 18:14:34 smarty run.sh[942818]: 16.44.079.860 I slot print_timing: id  0 | task 17611 | n_gen =    511, tg =  56.30 t/s, tg_3s =  58.17 t/s
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.109.613 I slot print_timing: id  0 | task 17611 | n_gen =    697, tg =  57.58 t/s, tg_3s =  61.39 t/s
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.950.622 I slot print_timing: id  0 | task 17611 | prompt eval time =     607.59 ms /    69 tokens (    8.81 ms per token,   113.56 tokens per second)
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.950.624 I slot print_timing: id  0 | task 17611 |        eval time =   12929.42 ms /   747 tokens (   17.33 ms per token,    57.70 tokens per second)
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.950.624 I slot print_timing: id  0 | task 17611 |       total time =   13537.01 ms /   816 tokens
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.950.624 I slot print_timing: id  0 | task 17611 |    graphs reused =      17444
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.950.626 I slot print_timing: id  0 | task 17611 | draft acceptance = 0.85112 (  343 accepted /   403 generated), mean len =  1.85
+Aug 19 18:14:37 smarty run.sh[942818]: 16.47.953.120 I slot      release: id  0 | task 17611 | stop processing: n_tokens = 148153, truncated = 0
+Aug 19 18:14:38 smarty run.sh[942818]: 16.48.684.356 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:14:38 smarty run.sh[942818]: 16.48.685.050 I slot launch_slot_: id  0 | task 18017 | processing task, is_child = 0
+Aug 19 18:14:42 smarty run.sh[942818]: 16.52.325.287 I slot print_timing: id  0 | task 18017 | n_gen =    168, tg =  55.34 t/s, tg_3s =  55.66 t/s
+Aug 19 18:14:45 smarty run.sh[942818]: 16.55.328.785 I slot print_timing: id  0 | task 18017 | n_gen =    339, tg =  56.13 t/s, tg_3s =  56.93 t/s
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.302.600 I slot print_timing: id  0 | task 18017 | prompt eval time =     622.14 ms /    81 tokens (    7.68 ms per token,   130.20 tokens per second)
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.302.601 I slot print_timing: id  0 | task 18017 |        eval time =    8995.25 ms /   519 tokens (   17.37 ms per token,    57.59 tokens per second)
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.302.602 I slot print_timing: id  0 | task 18017 |       total time =    9617.39 ms /   600 tokens
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.302.602 I slot print_timing: id  0 | task 18017 |    graphs reused =      17720
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.302.603 I slot print_timing: id  0 | task 18017 | draft acceptance = 0.85663 (  239 accepted /   279 generated), mean len =  1.86
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.304.901 I slot      release: id  0 | task 18017 | stop processing: n_tokens = 148752, truncated = 0
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.594.091 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:14:48 smarty run.sh[942818]: 16.58.594.648 I slot launch_slot_: id  0 | task 18299 | processing task, is_child = 0
+Aug 19 18:14:52 smarty run.sh[942818]: 17.02.281.347 I slot print_timing: id  0 | task 18299 | n_gen =    162, tg =  53.31 t/s, tg_3s =  53.64 t/s
+Aug 19 18:14:55 smarty run.sh[942818]: 17.05.291.678 I slot print_timing: id  0 | task 18299 | n_gen =    333, tg =  55.05 t/s, tg_3s =  56.80 t/s
+Aug 19 18:14:58 smarty run.sh[942818]: 17.08.312.556 I slot print_timing: id  0 | task 18299 | n_gen =    507, tg =  55.90 t/s, tg_3s =  57.60 t/s
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.205.299 I slot print_timing: id  0 | task 18299 | prompt eval time =     666.51 ms /    85 tokens (    7.84 ms per token,   127.53 tokens per second)
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.205.300 I slot print_timing: id  0 | task 18299 |        eval time =   11943.97 ms /   679 tokens (   17.62 ms per token,    56.77 tokens per second)
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.205.301 I slot print_timing: id  0 | task 18299 |       total time =   12610.47 ms /   764 tokens
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.205.301 I slot print_timing: id  0 | task 18299 |    graphs reused =      18085
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.205.302 I slot print_timing: id  0 | task 18299 | draft acceptance = 0.83740 (  309 accepted /   369 generated), mean len =  1.84
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.207.748 I slot      release: id  0 | task 18299 | stop processing: n_tokens = 149515, truncated = 0
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.506.852 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.999 (> 0.100 thold), f_keep = 1.000
+Aug 19 18:15:01 smarty run.sh[942818]: 17.11.507.429 I slot launch_slot_: id  0 | task 18671 | processing task, is_child = 0
+Aug 19 18:15:05 smarty run.sh[942818]: 17.15.270.363 I slot print_timing: id  0 | task 18671 | n_gen =    161, tg =  53.17 t/s, tg_3s =  53.50 t/s
+Aug 19 18:15:08 smarty run.sh[942818]: 17.18.297.017 I slot print_timing: id  0 | task 18671 | n_gen =    339, tg =  56.00 t/s, tg_3s =  58.81 t/s
+Aug 19 18:15:11 smarty run.sh[942818]: 17.21.324.215 I slot print_timing: id  0 | task 18671 | n_gen =    524, tg =  57.71 t/s, tg_3s =  61.11 t/s
+Aug 19 18:15:11 smarty run.sh[942818]: 17.21.747.263 W srv          stop: cancel task, id_task = 18671
+Aug 19 18:15:11 smarty run.sh[942818]: 17.21.779.649 I slot      release: id  0 | task 18671 | stop processing: n_tokens = 150289, truncated = 0
