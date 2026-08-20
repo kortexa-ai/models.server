@@ -1,0 +1,2 @@
+Aug 19 17:19:22 smarty kernel: NVRM: krcWatchdog_IMPL: RC watchdog: GPU is probably locked!  Notify Timeout Seconds: 7
+Aug 19 17:19:22 smarty kernel: NVRM: Xid (PCI:0000:01:00): 8, pid=918640, name=llama-server, channel 0x0000000d

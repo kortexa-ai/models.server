@@ -11,7 +11,7 @@
     "repo": "unsloth/Qwen3.8-27B-GGUF",
     "quant": "UD-Q4_K_XL",
     "mtp": true,
-    "mtp_n_max": 3,
+    "mtp_n_max": 1,
     "reasoning_effort": "medium"
   },
   "mlx": {

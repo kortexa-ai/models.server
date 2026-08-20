@@ -331,9 +331,9 @@ rare driver fault remains possible. The best current target is a specific
 MTP, CUDA graph, prompt-cache, or checkpoint state transition that this
 stochastic replay did not select.
 
-After the test, the runtime power limit was restored to 450 W. The managed
-service was started with MTP enabled and depth 3. Its live arguments include
-`--spec-type draft-mtp --spec-draft-n-max 3`, and its health endpoint passed.
+After the heat-soak test, the runtime power limit was restored to 450 W and the
+managed service was temporarily returned to MTP depth 3. A later controlled
+replay superseded that production setting; see below.
 
 MTP depth 1 was tested before the approval-mode mismatch was found. It
 completed two long turns totaling 10,982 output tokens at 67.32 tok/s, but it
@@ -347,3 +347,32 @@ It is a community bootstrap/transplant, not DFlash2 and not an official
 Qwen3.8-trained drafter. Its observed 33.6% first-turn acceptance closely
 matches its publisher's approximately 34% overall claim. It used about
 1.5 GiB more GPU memory than MTP in this shared-workload snapshot.
+
+## Magicapp reproducible session
+
+A later OMP session from `~/src/magicapp` reproduced the original fault at
+16:50:18 PDT with MTP depth 3 and the 450 W limit. It is preserved under
+`magicapp-20260819T165018/` with its matching client log, checksums, replayed
+sessions, service logs, kernel events, and one-second GPU telemetry.
+
+The exact preserved input was replayed through OMP's `/retry` operation using
+the managed service, yolo approval mode, `medium` thinking, one llama.cpp slot,
+and a fresh server process for each depth.
+
+| MTP depth | First decode | Completed turns | Generated tokens | Last context | Peak temp | Result |
+|---:|---:|---:|---:|---:|---:|---|
+| 3 | 80.78 tok/s | 26 | 16,367 | 115,787 | 80 C | Xid 8 |
+| 2 | 82.44 tok/s | 60 | 28,205 | 127,726 | 84 C | Xid 8 |
+| 1 | 71.52 tok/s | 82 | 42,032 | 146,887 | 86 C | completed |
+
+Depth 2 changed the stochastic trajectory and ran longer, but did not solve
+the fault. Depth 1 was 11.5% slower than depth 3 on the matched first turn and
+completed the full workflow. Because the passing run was longer and hotter
+than either failure, the result further weakens context capacity, temperature,
+and cumulative load as primary explanations. It implicates a depth-dependent
+multi-token draft/verify, rollback, CUDA-graph, or cache-state transition,
+although one successful depth-1 run cannot establish long-term safety.
+
+The final managed state is MTP depth 1 at a persistent 450 W limit. The Qwen
+service is active and healthy with live arguments
+`--spec-type draft-mtp --spec-draft-n-max 1`.

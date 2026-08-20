@@ -1,0 +1,6 @@
+Aug 19 17:02:19 smarty kernel: pcieport 0000:00:06.0: AER: Correctable error message received from 0000:00:06.0
+Aug 19 17:02:19 smarty kernel: pcieport 0000:00:06.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+Aug 19 17:02:19 smarty kernel: pcieport 0000:00:06.0:   device [8086:a74d] error status/mask=00000001/00002000
+Aug 19 17:02:19 smarty kernel: pcieport 0000:00:06.0:    [ 0] RxErr                  (First)
+Aug 19 17:05:51 smarty kernel: NVRM: krcWatchdog_IMPL: RC watchdog: GPU is probably locked!  Notify Timeout Seconds: 7
+Aug 19 17:05:51 smarty kernel: NVRM: Xid (PCI:0000:01:00): 8, pid=905909, name=llama-server, channel 0x0000000b

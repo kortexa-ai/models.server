@@ -22,6 +22,8 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
    OMP output for each isolated run.
 7. Restore the default 600 W power limit and run the depth-3 replay again to
    compare throughput, temperature, sustained load, and fault behavior.
+8. Preserve the later `magicapp` crash session and replay it through the
+   managed service at MTP depths 3, 2, and 1 under the persistent 450 W cap.
 
 ## Status
 
@@ -59,8 +61,15 @@ the RTX PRO 6000 Blackwell Xid 8 lock.
   reached 157,381 context tokens and 91 C. This strongly reduces the
   probability of context size, temperature, or cumulative load as the primary
   trigger.
-- The final production state is restored: 450 W, MTP enabled, depth 3, managed
-  service active, port 2053 healthy, and the live launch arguments verified.
+- A later `magicapp` session provided a stronger reproducer. At 450 W, fresh
+  managed-service runs failed with the same Xid 8 at MTP depth 3 after 26
+  completed turns and at depth 2 after 60 completed turns. MTP depth 1
+  completed all 82 turns, generated 42,032 tokens, and reached 146,887 context
+  tokens without an Xid. The passing run peaked at 86 C, above both failures.
+- The final production state is 450 W, MTP enabled at depth 1, managed service
+  active, port 2053 healthy, and the live launch arguments verified. The host
+  applies the cap at boot with a systemd unit deliberately kept outside the
+  repository and outside `ktxsvc` discovery.
 
 ---
 

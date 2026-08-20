@@ -26,6 +26,49 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | **192.168.2.144** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 | **192.168.2.145** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 
+### Persistent GPU Power Limit
+
+`smarty` applies a 450 W limit to GPU 0 at boot with the host-local
+`/etc/systemd/system/nvidia-power-limit.service`. The oneshot unit runs
+`nvidia-smi --id=0 --power-limit=450` and is enabled for `multi-user.target`.
+It deliberately lives outside this repository so `ktxsvc` does not discover it
+as a managed application service.
+
+The power-limit unit's relevant settings are:
+
+```ini
+[Unit]
+After=systemd-modules-load.service nvidia-persistenced.service
+Before=kortexa-ai-llm-qwen-3.8-27b.service
+ConditionPathExists=/dev/nvidia0
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nvidia-smi --id=0 --power-limit=450
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Qwen 3.8's installed unit has a host-local drop-in at
+`/etc/systemd/system/kortexa-ai-llm-qwen-3.8-27b.service.d/10-nvidia-power-limit.conf`:
+
+```ini
+[Unit]
+Requires=nvidia-power-limit.service
+After=nvidia-power-limit.service
+```
+
+Recreate those two files and run the following after rebuilding the host:
+
+```bash
+systemctl daemon-reload
+systemctl enable --now nvidia-power-limit.service
+systemctl status nvidia-power-limit.service
+nvidia-smi --query-gpu=power.limit --format=csv,noheader
+```
+
 ## Model Inventory
 
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |

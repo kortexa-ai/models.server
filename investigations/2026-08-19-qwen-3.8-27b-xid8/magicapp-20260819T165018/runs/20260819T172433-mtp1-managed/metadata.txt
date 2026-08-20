@@ -1,0 +1,9 @@
+started=2026-08-19T17:24:33-07:00
+variant=mtp1-managed
+approval_mode=yolo
+power_limit_w=450
+source_session_sha256=2570600738ad744b4adca283a9dc1d272ac665bd7db21bd526ed9068d0f3b3e3
+omp_status=0
+outcome=completed
+finished=2026-08-19T17:39:39-07:00
+remote_fixture=/tmp/qwen-xid8-magicapp-20260819T172433-mtp1-managed/session.jsonl
