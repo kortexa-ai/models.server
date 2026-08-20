@@ -183,6 +183,29 @@ slots. For example, Qwen 3.8 uses `llama.context=786432` and
 `llama.parallel=3`, which gives three 262K slots without changing the 262K
 per-request context used by its MLX and vLLM configurations.
 
+#### Prime Agent long-context cache misses
+
+**Symptom:** a warm Prime Agent session can suddenly prefill its full context
+again even though `llama-server` is still running. **Cause:** llama.cpp reuses
+only a matching prompt prefix, while Prime Agent auto-refinement can update its
+continual harness and rebuild the system prompt at the front of the request.
+The request can therefore miss even when it returns to the same live KV slot.
+
+**Workaround:** disable automatic refinement in
+`~/.prime/agent/settings.json`; manual `/refine` remains available:
+
+```json
+"autoRefine": {
+  "enabled": false
+}
+```
+
+This can recur after manual refinement, after auto-refinement is re-enabled,
+or whenever a client changes the system prompt or tool definitions near the
+front of a long conversation. Confirm it in the service log: a miss selects a
+slot by LRU and evaluates the full prompt, while a warm hit selects by LCP
+similarity and evaluates only the new suffix.
+
 llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B explicitly uses depth 3, its fastest measured llama.cpp setting; see `bench/BENCHMARKS.md`.
 
 The shared llama.cpp launcher disables CUDA graphs by default at runtime with
