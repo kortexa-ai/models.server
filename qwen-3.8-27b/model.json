@@ -10,8 +10,8 @@
   "llama": {
     "repo": "unsloth/Qwen3.8-27B-GGUF",
     "quant": "UD-Q4_K_XL",
-    "context": 786432,
-    "parallel": 3,
+    "context": 262144,
+    "parallel": 2,
     "mtp": true,
     "mtp_n_max": 3,
     "reasoning_effort": "medium"
