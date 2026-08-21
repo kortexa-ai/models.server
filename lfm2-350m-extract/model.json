@@ -2,6 +2,7 @@
   "name": "LFM2 350M Extract",
   "id": "lfm2-350m-extract",
   "multimodal": false,
+  "extraction": true,
   "port": 2047,
   "host": "192.168.2.6",
   "context": 512000,

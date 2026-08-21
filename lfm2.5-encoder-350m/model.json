@@ -3,6 +3,7 @@
   "id": "lfm2.5-encoder-350m",
   "hf_model": "LiquidAI/LFM2.5-Encoder-350M",
   "multimodal": false,
+  "encoder": true,
   "port": 2048,
   "host": "192.168.2.6",
   "context": 8192,
