@@ -59,7 +59,20 @@ if rg -q '^GGML_CUDA_ENABLE_UNIFIED_MEMORY=' \
 else
     UNIFIED_MEMORY_STATE="disabled"
 fi
-if rg -q '^GGML_CUDA_DISABLE_GRAPHS=' \
+if nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits \
+    | tr -d ' ' | rg -qx "$SERVER_PID"; then
+    GPU_RESIDENT="true"
+else
+    GPU_RESIDENT="false"
+fi
+if rg -q -- '(^| )--device none( |$)' "${OUTPUT_DIR}/process-command.txt"; then
+    CUDA_INFERENCE="false"
+else
+    CUDA_INFERENCE="$GPU_RESIDENT"
+fi
+if [[ "$CUDA_INFERENCE" == "false" ]]; then
+    CUDA_GRAPH_STATE="not_applicable"
+elif rg -q '^GGML_CUDA_DISABLE_GRAPHS=' \
     "${OUTPUT_DIR}/process-environment.txt"; then
     CUDA_GRAPH_STATE="disabled"
 else
@@ -125,6 +138,8 @@ jq -n \
     --arg gpu_power_limit_w "$GPU_POWER_LIMIT" \
     --arg cuda_graphs "$CUDA_GRAPH_STATE" \
     --arg unified_memory "$UNIFIED_MEMORY_STATE" \
+    --argjson gpu_resident "$GPU_RESIDENT" \
+    --argjson cuda_inference "$CUDA_INFERENCE" \
     '{
         schema_version: ($schema_version | tonumber),
         captured_local: $captured_local,
@@ -144,6 +159,8 @@ jq -n \
             executable: $server_executable,
             executable_sha256: $server_sha256,
             version: $server_version,
+            gpu_resident: $gpu_resident,
+            cuda_inference: $cuda_inference,
             cuda_graphs: $cuda_graphs,
             cuda_unified_memory: $unified_memory
         },

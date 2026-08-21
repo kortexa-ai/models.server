@@ -88,7 +88,10 @@ Each run directory contains:
 
 - `manifest.json`: timestamps, host and OS, repository commits, executable
   version and SHA-256, live PID, exact command line, filtered GGML/CUDA
-  environment, CUDA graph state, unified-memory state, and GPU power cap.
+  environment, GPU residency, CUDA graph state, unified-memory state, and GPU
+  power cap. CPU-only processes using `--device none` record CUDA inference as
+  false and graph state as `not_applicable`, even if the CUDA build creates a
+  small driver context visible to `nvidia-smi`.
 - `model.json`: byte-for-byte snapshot of the model configuration.
 - `effective-config.env`: values produced by `scripts/parse-config.py`.
 - `props.json`: the live llama-server `/props` response.

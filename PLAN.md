@@ -1,3 +1,24 @@
+# 2026-08-20 llama.cpp benchmark rebaseline
+
+## Goal
+
+Rebaseline Qwen 3.8, the LFM family, and Gemma 4 on `smarty` with auditable
+runtime provenance, without unified CUDA memory or overlapping model servers.
+
+## Status
+
+- Completed. Thirteen runs covered Qwen 3.8 27B; all applicable LFM2/LFM2.5
+  models from VL 3B through 230M; Gemma 4 E4B, E2B, and 12B; plus preliminary
+  task-specific serving canaries for LFM Extract and Embedding.
+- Every CUDA run used the 450 W cap with CUDA graphs disabled and unified
+  memory absent. CPU runs were explicitly recorded as CUDA-inference false.
+- No OOM or GPU fault occurred. The LFM VL 450M tool-call grammar failure and
+  LFM 350M CPU long-context collapse are recorded rather than discarded.
+- The temporary services were uninstalled. The exact original service set—
+  Qwen 3.8 27B, LFM2.5 VL 3B, and Gemma 4 E2B—was restored and health-checked.
+
+---
+
 # Benchmark methodology reset
 
 ## Goal

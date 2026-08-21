@@ -8,4 +8,5 @@ logs/
 .config/
 .engines/
 bench-logs/
+bench-results/
 .DS_Store
