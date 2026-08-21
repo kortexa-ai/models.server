@@ -89,10 +89,10 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 512/slot | 2 |
 | 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit / CPU Q4_K_M | q8_0 (CPU q4_0) | 32K/slot | 4 |
-| 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K/slot | 3 / 4 |
+| 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 131K/slot (llama); 262K/seq (MLX/vLLM) | 2 / 1 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
-| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 262K/slot | 3 |
+| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 131K/slot | 2 |
 | 2057 | Ornith 1.5 9B | agentic dense | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
