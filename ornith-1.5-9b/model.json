@@ -1,0 +1,21 @@
+{
+  "name": "Ornith 1.5 9B",
+  "id": "ornith-1.5-9b",
+  "multimodal": true,
+  "port": 2057,
+  "host": "192.168.2.6",
+  "context": 262144,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "protoLabsAI/Ornith-1.5-9B-MTP-GGUF",
+    "quant": "Q4_K_M",
+    "mtp": true,
+    "mtp_n_max": 2
+  },
+  "mlx": {
+    "repo": "ornith-ai/Ornith-1.5-9B-MLX-4bit",
+    "backend": "mlx_vlm"
+  },
+  "cpu": null
+}

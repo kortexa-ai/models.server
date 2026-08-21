@@ -4,8 +4,8 @@
   "multimodal": true,
   "port": 2036,
   "host": "192.168.2.6",
-  "context": 524288,
-  "parallel": 8,
+  "context": 262144,
+  "parallel": 1,
   "cache_type": "q8_0",
   "llama": {
     "repo": "unsloth/gemma-4-26B-A4B-it-GGUF",
@@ -25,7 +25,7 @@
     "kv_cache_dtype": "fp8",
     "attention_backend": "TRITON_ATTN",
     "kv_cache_bytes": 4294967296,
-    "max_num_seqs": 4,
+    "max_num_seqs": 1,
     "tool_call_parser": "pythonic"
   },
   "cpu": null

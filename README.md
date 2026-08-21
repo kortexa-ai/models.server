@@ -65,10 +65,10 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
-| 2025 | Qwen 3.5 9B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
+| 2025 | Qwen 3.5 9B | agentic dense | UD-Q4_K_XL / MLX 4-bit | q8_0 | 262K | 1 |
 | 2026 | LFM2.5 1.2B Thinking | reasoning dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2027 | LFM2.5 2.6B | agentic dense | Q8_0 / MLX 8-bit | q8_0 | 128K | 1 |
-| 2028 | Qwen 3.6 35B A3B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
+| 2028 | Qwen 3.6 35B A3B | agentic MoE | UD-Q4_K_XL / MLX 4-bit | q8_0 | 262K | 1 |
 | 2029 | Qwen 3.5 4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2030 | Qwen 3.5 2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2031 | Qwen 3.5 0.8B | small dense | Q8_0 | q8_0 | 32K | 2 |
@@ -76,13 +76,13 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2033 | Qwen3 TTS 0.6B CustomVoice | streaming TTS | BF16 / MLX BF16 | — | 4K | 1 |
 | 2034 | Audio8 TTS Preview 0.6B | cloning TTS | BF16 / MLX BF16 | — | 2K | 1 |
 | 2035 | Qwen3 TTS 1.7B CustomVoice | streaming controlled TTS | BF16 / MLX BF16 | — | 4K | 1 |
-| 2036 | Gemma 4 26B-A4B | MoE | UD-Q4_K_XL | q8_0 | 64K | 8 |
+| 2036 | Gemma 4 26B-A4B | agentic MoE | UD-Q4_K_XL / MLX 4-bit | q8_0 | 262K | 1 |
 | 2037 | Gemma 4 31B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2038 | Gemma 4 E4B | small dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2039 | Gemma 4 E2B | small dense | Q8_0 | q8_0 | 32K | 2 |
 | 2040 | Qwen3 Embedding 0.6B | embedding | Q8_0 | q8_0 | 32K | 4 |
 | 2041 | EmbeddingGemma 300M | embedding | Q4_0 | q8_0 | 2K | 1 |
-| 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
+| 2043 | Gemma 4 12B | agentic dense | UD-Q4_K_XL / MLX 4-bit | q8_0 | 131K | 1 |
 | 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 32K/slot | 4 |
 | 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 / MLX 8-bit / CPU Q4_K_M | q8_0 (CPU q4_0) | 32K/slot | 4 |
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 | q8_0 | 128K/slot | 4 |
@@ -93,6 +93,8 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
 | 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 262K/slot | 3 |
+| 2057 | Ornith 1.5 9B | agentic dense | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
+| 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
 
 The `penumbra/model.json` entry intentionally lets `control.server` discover
@@ -206,7 +208,7 @@ front of a long conversation. Confirm it in the service log: a miss selects a
 slot by LRU and evaluates the full prompt, while a warm hit selects by LCP
 similarity and evaluates only the new suffix.
 
-llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B explicitly uses depth 3, its fastest measured llama.cpp setting; see `bench/BENCHMARKS.md`.
+llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B and 35B-A3B use measured depth 3. Ornith 1.5 9B uses the protoLabs distilled head at measured depth 2; Ornith 1.5 35B-A3B explicitly disables its native head because it reduced matched throughput. See `bench/BENCHMARKS.md`.
 
 The shared llama.cpp launcher disables CUDA graphs by default at runtime with
 `GGML_CUDA_DISABLE_GRAPHS=1`; no llama.cpp rebuild is required. A model can
@@ -245,7 +247,11 @@ path to `mlx-lm`. LFM2.5 2.6B uses this for the official `8bit/` checkpoint.
 
 LFM2.5 VL 450M uses LiquidAI's official 8-bit MLX checkpoint on snappy. It has a 32K multimodal context per sequence and up to four concurrent sequences; `mlx-vlm>=0.6.14` is required for that concurrency flag plus the LFM2-VL loader and tokenizer fixes.
 
-**Gemma 4 MTP drafters** work but only help large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s; see `bench/BENCHMARKS.md`); 26B-A4B/31B keep `draft_enabled=true` pending an MLX bench. The Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260), `AttributeError: 'list' object has no attribute 'max'`) is fixed upstream in `mlx-vlm 0.6.1` (our PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)). The old local patch has been removed; the current setup floor also includes the later LFM2-VL fixes.
+**Gemma 4 MTP drafters** work but only help large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s). Gemma 12B keeps MTP enabled after a matched 28.9 versus 21.1 tok/s win. The 26B-A4B/31B entries keep `draft_enabled=true` pending matched MLX tests. The Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260), `AttributeError: 'list' object has no attribute 'max'`) is fixed upstream in `mlx-vlm 0.6.1` (our PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)). The old local patch has been removed; the current setup floor also includes the later LFM2-VL fixes.
+
+The Ornith MLX entries use the official 4-bit repositories without a separate
+drafter. No matched Ornith or Gemma 26B MLX result was run during the smarty
+rebaseline because snappy was busy.
 
 ### MLX-Audio
 
@@ -411,6 +417,15 @@ curl http://localhost:2048/v1/fill-mask \
 ```
 
 ## Quantization Standards
+
+The agentic workstation profile is shared by Qwen 3.5 9B, Qwen 3.6 35B-A3B,
+Gemma 4 12B, Gemma 4 26B-A4B, and both Ornith 1.5 models: one request slot,
+the chosen GGUF artifact's native maximum context, Q4-class weights, q8 KV on
+llama.cpp, and 4-bit MLX weights on snappy. Dense versus MoE does not change
+that base serving shape. Speculative decoding is enabled only where a matched
+on/off test shows a win. Gemma 4 12B is the sole context exception: its current
+Unsloth GGUF reports a 131,072-token trained context even though the upstream
+Transformers configuration advertises 262,144.
 
 | Model size | Weight quant | KV cache | Context | Parallel slots |
 |------------|-------------|----------|---------|----------------|

@@ -1,0 +1,20 @@
+{
+  "name": "Ornith 1.5 35B A3B",
+  "id": "ornith-1.5-35b-a3b",
+  "multimodal": true,
+  "port": 2058,
+  "host": "192.168.2.6",
+  "context": 262144,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "ornith-ai/Ornith-1.5-35B-A3B-GGUF",
+    "quant": "Q4_K_M",
+    "mtp": false
+  },
+  "mlx": {
+    "repo": "ornith-ai/Ornith-1.5-35B-A3B-MLX-4bit",
+    "backend": "mlx_vlm"
+  },
+  "cpu": null
+}

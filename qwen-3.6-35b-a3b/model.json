@@ -4,13 +4,14 @@
   "multimodal": true,
   "port": 2028,
   "host": "192.168.2.6",
-  "context": 524288,
-  "parallel": 8,
+  "context": 262144,
+  "parallel": 1,
   "cache_type": "q8_0",
   "llama": {
     "repo": "unsloth/Qwen3.6-35B-A3B-MTP-GGUF",
     "quant": "UD-Q4_K_XL",
-    "mtp": true
+    "mtp": true,
+    "mtp_n_max": 3
   },
   "mlx": {
     "repo": "unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit",
@@ -23,8 +24,8 @@
     "quantization": "fp8",
     "kv_cache_dtype": "fp8",
     "attention_backend": "TRITON_ATTN",
-    "max_num_seqs": 8,
-    "max_model_len": 163840,
+    "max_num_seqs": 1,
+    "max_model_len": 262144,
     "tool_call_parser": "qwen3_coder"
   },
   "cpu": null

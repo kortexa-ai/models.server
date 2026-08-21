@@ -96,3 +96,54 @@ could not parse the generated grammar. The failure is part of the result.
 | `15-lfm2.5-350m-gpu-native-context` | `6502611b316b7ec6a6c47bc24f5d1877f0ad0e0748cf0e09e7ed3399e74eaab4` |
 | `16-lfm2.5-230m-native-context` | `08fc0ccf89bf33f3191327c6ce10e87d211e1e60ed1bccc66032e4befc0ffded` |
 | `17-lfm2.5-vl-450m-four-slot` | `f7338481d62344ad48b8b7781bd3d790fca89c3b5cebe092a4b37b3b2dc62e58` |
+
+### 2026-08-21 agentic family rebaseline on smarty
+
+These six results use a common single-request workstation profile: one slot,
+Q4-class weights, q8_0 K/V cache, the selected GGUF's maximum usable context,
+450 W, and disabled CUDA graphs. `GGML_CUDA_ENABLE_UNIFIED_MEMORY` was absent
+from every live process. Gemma 4 12B is the only context exception because its
+selected GGUF reports a 131,072-token trained context; the other five use
+262,144. All models passed 5/5 text, required-tool, and vision canaries.
+
+The llama.cpp revision was
+`9ee9fc04c136ef2ae729bfc60d18961b23c13ddf` (build 10524), and SPEED-Bench
+used dataset revision `487aa718444e816458d1a0a52bfce7a454285cf4`.
+Raw local records are under `bench-results/20260821-agentic-layer/`.
+
+Numbers are average prompt-processing/decode tokens per second.
+
+| Model | Quant / speculative mode | Slots x context | Qualitative | 1K / 512 | 8K / 512 | 32K / 512 |
+|---|---|---:|---:|---:|---:|---:|
+| Ornith 1.5 9B | Q4_K_M, MTP-2 | 1 x 262,144 | 1,799.63 / 293.29 | 4,789.12 / 279.37 | 5,804.77 / 274.07 | 4,262.75 / 247.34 |
+| Gemma 4 12B | UD-Q4_K_XL, no MTP | 1 x 131,072 | 1,750.43 / 128.39 | 3,744.73 / 127.30 | 4,331.79 / 124.56 | 3,115.97 / 121.47 |
+| Ornith 1.5 35B-A3B | Q4_K_M, no MTP | 1 x 262,144 | 1,485.65 / 263.49 | 4,314.67 / 264.06 | 4,837.57 / 258.35 | 3,509.52 / 241.60 |
+| Qwen 3.5 9B | UD-Q4_K_XL, no MTP | 1 x 262,144 | 2,138.75 / 194.75 | 6,153.62 / 194.13 | 6,536.62 / 190.37 | 4,791.91 / 180.63 |
+| Qwen 3.6 35B-A3B | UD-Q4_K_XL, MTP-3 | 1 x 262,144 | 1,279.06 / 323.95 | 3,782.22 / 313.83 | 4,711.82 / 302.22 | 3,430.62 / 290.79 |
+| Gemma 4 26B-A4B | UD-Q4_K_XL, no MTP | 1 x 262,144 | 2,291.07 / 194.26 | 5,644.32 / 192.88 | 6,649.21 / 187.25 | 4,657.99 / 176.63 |
+
+#### Speculative-decoding selections
+
+Ornith 1.5 9B's official checkpoint does not contain its declared MTP head.
+The selected protoLabs distilled-head GGUF was tested at depths 2, 3, and 4.
+Depth 2 won at 314.14 decode tok/s with 74.5% acceptance, versus 202.51 for
+the official no-MTP GGUF: a 55.1% improvement. Depths 3 and 4 reached 296.42
+and 283.01 tok/s.
+
+Ornith 1.5 35B-A3B's native MTP head lost its matched smoke: 234.05 tok/s and
+32.5% acceptance versus 261.72 tok/s without MTP. MTP remains explicitly off.
+Qwen 3.6 35B-A3B's depth-3 head won its match at 357.80 tok/s and 81.0%
+acceptance versus 237.99 without MTP, a 50.3% gain. MTP remains on at an
+explicit depth 3. Qwen 3.5 9B and both selected Gemma GGUFs have no compatible
+llama.cpp draft implementation configured.
+
+#### Provenance index
+
+| Run directory | Model config SHA-256 |
+|---|---|
+| `01-ornith-1.5-9b-mtp2` | `eff3200e756dab64470b0834cff673fe5c1afbc9372b2ea09cedc8ef549f04da` |
+| `02-gemma-4-12b` | `5520690b0e6d13eb085b3e5c7f9811dca5159b1f79afc9e718672204b7895bc2` |
+| `03-ornith-1.5-35b-a3b-no-mtp` | `76e829c7f3ac3c9e9ab9cc0ba7de052ec1ee8c43c78853cd5ee72543d8fdf57f` |
+| `04-qwen-3.5-9b` | `10f3acb23fc0c9c4bff92dad974ce014c324a98640ceeeaaa0786334ae443118` |
+| `05-qwen-3.6-35b-a3b-mtp3` | `087e7fbdc2fb345cd85530320c5fcf267f74a854194be072097e4a4bcd216313` |
+| `06-gemma-4-26b-a4b` | `f5780f90d15e518b4dfb7fc26581642646bb09d969c0a933f671759eb1ad33a5` |

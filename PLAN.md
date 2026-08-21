@@ -1,3 +1,41 @@
+# Ornith 1.5 onboarding and agentic-model profile alignment
+
+## Goal
+
+Add Ornith 1.5 9B and 35B-A3B on `smarty` llama.cpp and `snappy` MLX, select
+the best supported MTP mode by measurement, and align the comparable Qwen 3.x
+and Gemma 4 models around one single-request serving policy.
+
+## Work plan
+
+1. Verify native context, official GGUF/MLX artifacts, and available MTP heads.
+2. Add managed model entries on unused ports and normalize both comparison
+   families to Q4 weights, q8 KV, one slot, and native maximum context.
+3. Launch each Ornith model on smarty to populate the normal cache, run
+   multimodal/tool canaries, and compare MTP on/off where a real head exists.
+4. Validate the MLX repository/config metadata without starting work on busy
+   snappy; leave matched MLX runtime tests for a separate window.
+5. Record results, restore the original smarty service set, validate, commit,
+   push, and sync the relevant hosts.
+
+## Status
+
+- Complete on smarty. Official Ornith GGUF repositories provide `Q4_K_M`, not
+  an Unsloth dynamic quant; official 4-bit MLX repositories exist for both.
+- The upstream models advertise 262,144-token context. The common profile is
+  therefore 262K and one slot across dense and MoE families, except for the
+  selected Gemma 12B GGUF, which reports a 131,072-token trained context.
+- Ornith 9B uses the protoLabs distilled MTP GGUF at depth 2; it was 55.1%
+  faster than the official no-MTP GGUF in the matched smoke. Ornith 35B keeps
+  its official GGUF with MTP disabled; its native head was 10.6% slower.
+- Qwen 3.6 35B-A3B keeps MTP depth 3 after a fresh 50.3% matched win. Qwen 3.5
+  9B and both Gemma llama.cpp targets run without a compatible GGUF drafter.
+- All six models completed the standard 450 W smarty suite. The original
+  Qwen 3.8, LFM2.5 VL 3B, and Gemma 4 E2B services were restored and verified
+  healthy. Snappy was intentionally left untouched while it was busy.
+
+---
+
 # 2026-08-20 llama.cpp benchmark rebaseline
 
 ## Goal
