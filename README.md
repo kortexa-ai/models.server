@@ -84,7 +84,7 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2041 | EmbeddingGemma 300M | embedding | Q4_0 | q8_0 | 2K | 1 |
 | 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 128K/slot | 4 |
-| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
+| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (GPU / CPU) | q8_0 | 128K/slot | 4 |
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
@@ -330,7 +330,12 @@ checkpoint with natural-language instruction control.
 ### CPU llama-server
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
 
-LFM2.5 350M and LFM2 350M Extract default to the same CPU engine on every platform. The CPU launcher explicitly disables device offload. Both use LiquidAI's official `Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash attention, and warm prompt reuse. Pass `--engine llama` only when GPU offload is intentionally wanted.
+LFM2.5 350M follows platform auto-detection: CUDA-backed llama.cpp on Linux
+GPU hosts such as smarty and scrappy, Metal-backed llama.cpp on snappy, and
+the CPU engine on ARM Linux without CUDA, including both Raspberry Pis. LFM2
+350M Extract remains CPU-first on every platform. Both use LiquidAI's official
+`Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash
+attention, and warm prompt reuse on the CPU path.
 
 LFM2.5 VL 450M and 3B use LiquidAI's official `Q8_0` GGUFs and matching
 vision projectors with llama.cpp. Both keep a 32K multimodal context in one
@@ -343,6 +348,43 @@ checkpoints on `snappy`. They run one request at a time with their supported
 32K, 32K, and 128K contexts, respectively. None has a CPU backend configured.
 
 LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2042 with two slots sharing 2K total context. Port 2049 is deliberately skipped because Fetch implementations block the historical NFS port.
+
+#### LFM default platform matrix
+
+This is the engine selected by `run.sh` without `--engine`. `llama GPU` means
+full CUDA offload on NVIDIA hosts and Metal offload on snappy.
+
+| Model | smarty | scrappy (WSL) | sparky | snappy | Raspberry Pis |
+|---|---|---|---|---|---|
+| LFM2.5 230M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
+| LFM2.5 350M | llama GPU | llama GPU | llama GPU | llama GPU | llama CPU |
+| LFM2 350M Extract | llama CPU | llama CPU | llama CPU | llama CPU | llama CPU |
+| LFM2.5 Embedding 350M | llama CPU | llama CPU | llama CPU | llama GPU | llama CPU |
+| LFM2.5 Encoder 350M | Transformers CPU | Transformers CPU | Transformers CPU | Transformers MPS | Transformers CPU |
+| LFM2.5 VL 450M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
+| LFM2.5 1.2B Thinking | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
+| LFM2.5 1.2B Instruct | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
+| LFM2.5 2.6B | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
+| LFM2.5 VL 3B | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
+
+| Model | llama weight / KV | Pi CPU weight / KV | MLX weight / KV | Configured context / slots |
+|---|---|---|---|---:|
+| LFM2.5 230M | Q8_0 / q8_0 | Q4_K_M / q4_0 | 8-bit / default unquantized | 512K / 4 (128K each) |
+| LFM2.5 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 512K / 4 (128K each) |
+| LFM2 350M Extract | Q8_0 / q8_0 (override) | Q8_0 / q8_0 | — | 512K / 4 (128K each) |
+| LFM2.5 Embedding 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 2K / 2 (1K each) |
+| LFM2.5 Encoder 350M | FP32 / — | FP32 / — | FP32 MPS / — | 8K / 1 |
+| LFM2.5 VL 450M | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 32K / 1 |
+| LFM2.5 1.2B Thinking | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
+| LFM2.5 1.2B Instruct | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
+| LFM2.5 2.6B | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 128K / 1 |
+| LFM2.5 VL 3B | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
+
+The MLX launchers do not currently configure KV quantization. The common
+context value is enforced by llama.cpp; MLX uses checkpoint/backend defaults
+unless its model entry supplies an MLX-specific limit. Optional vLLM configs
+are not platform defaults: VL 450M and VL 3B specify FP8 weights and FP8 KV at
+32K, while 230M specifies automatic weight/KV dtype at 128K.
 
 ### Transformers (MPS / CPU)
 
@@ -367,9 +409,10 @@ LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_
 LFM2.5 1.2B Thinking, 1.2B Instruct, 2.6B, and VL 3B are single-slot Q8
 exceptions; they use MLX on macOS and CUDA-backed llama.cpp on Linux.
 The smaller LFM generative, vision-language, and embedding models use `Q8_0`;
-the generative models default to CPU, the VLM defaults to MLX on Darwin, and
-the embedder selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M
-stays FP32 because its bidirectional masked-LM checkpoint has no GGUF.
+230M and 350M now auto-select GPU serving where available and their explicit
+CPU configs on the Pis. VLMs default to MLX on Darwin, while the embedder
+selects Metal on Darwin and CPU on Linux. LFM2.5 Encoder 350M stays FP32
+because its bidirectional masked-LM checkpoint has no GGUF.
 
 The TTS entries use their publishers' BF16/MLX checkpoints and codec-aware
 serving engines; the GGUF quantization table does not apply to them.

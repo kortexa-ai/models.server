@@ -13,6 +13,7 @@ This is the post-reset benchmark scope and sweep status. Results are in
 | `gemma-4-e4b` | text, tools, vision | 450 W baseline complete |
 | `gemma-4-12b` | text, tools, vision | 450 W baseline complete |
 | `lfm2.5-230m` | text | 450 W CUDA Q8_0 baseline complete; CPU/Pi results remain separate |
+| `lfm2.5-350m` | text | 450 W CUDA Q8_0 baseline complete; CPU/Pi results remain separate |
 | `lfm2.5-1.2b-instruct` | text | 450 W baseline complete |
 | `lfm2.5-1.2b-thinking` | text, reasoning | 450 W serving baseline complete; future quality work must label thinking mode |
 | `lfm2.5-2.6b` | text, tools | 450 W baseline complete |
@@ -25,7 +26,7 @@ These models should not be mixed into the CUDA generation ranking:
 
 | Model ID | Suite |
 |---|---|
-| `lfm2.5-350m` | CPU generation baseline complete; 32K collapse documented |
+| `lfm2.5-350m` | CPU baseline complete; 32K collapse documented; CUDA baseline is in the primary sweep |
 | `lfm2-350m-extract` | Serving smoke complete; extraction accuracy and task throughput pending |
 | `lfm2.5-embedding-350m` | Endpoint canary complete; embedding throughput and retrieval quality pending |
 | `embeddinggemma-300m` | Embedding latency, throughput, dimension, and retrieval quality |

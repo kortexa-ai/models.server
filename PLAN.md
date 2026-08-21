@@ -16,6 +16,10 @@ runtime provenance, without unified CUDA memory or overlapping model servers.
   LFM 350M CPU long-context collapse are recorded rather than discarded.
 - The temporary services were uninstalled. The exact original service set—
   Qwen 3.8 27B, LFM2.5 VL 3B, and Gemma 4 E2B—was restored and health-checked.
+- LFM2.5 350M was subsequently changed from CPU-first everywhere to platform
+  auto-detection, matching 230M's GPU-on-smarty/CPU-on-Pi behavior. Its 450 W
+  CUDA rebaseline completed without errors, and the original services were
+  restored again.
 
 ---
 

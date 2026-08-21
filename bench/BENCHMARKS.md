@@ -34,6 +34,7 @@ properties, telemetry, canary responses, and raw samples.
 | LFM2.5 1.2B Instruct | 1 x 32,768 | 3/3 | 26,044.24 / 754.12 | 40,534.31 / 749.79 | 44,286.17 / 726.02 | - |
 | LFM2.5 VL 450M | 1 x 32,768 | 4/5 | 36,431.63 / 1,316.20 | 63,708.88 / 1,310.32 | 77,325.81 / 1,245.80 | - |
 | LFM2.5 350M CPU | 4 x 128,000 | 3/3 | 1,121.77 / 84.37 | 578.15 / 81.19 | 300.78 / 62.42 | 36.58 / 19.46* |
+| LFM2.5 350M GPU | 4 x 128,000 | 3/3 | 36,863.20 / 1,327.52 | 64,905.81 / 1,316.03 | 78,493.70 / 1,258.64 | 49,399.32 / 1,175.67 |
 | LFM2.5 230M | 4 x 128,000 | 3/3 | 45,980.40 / 1,589.22 | 79,072.36 / 1,566.17 | 96,124.74 / 1,479.25 | 57,440.40 / 1,379.29 |
 | Gemma 4 E4B | 1 x 131,072 | 5/5 | 3,424.09 / 207.91 | 9,040.24 / 206.36 | 10,082.42 / 198.35 | 6,888.33 / 182.88 |
 | Gemma 4 E2B | 1 x 131,072 | 5/5 | 4,709.95 / 267.21 | 13,780.48 / 265.17 | 16,699.43 / 254.73 | 10,578.04 / 244.68 |
@@ -42,9 +43,12 @@ properties, telemetry, canary responses, and raw samples.
 Qwen's two-client pass delivered 128.86 aggregate completion tok/s, 81.39
 average per-request decode tok/s, and 7.05 s average latency. LFM2.5 230M's
 four-client pass delivered 1,513.18 aggregate completion tok/s, 1,063.50
-average per-request decode tok/s, and 0.66 s average latency. LFM2.5 350M CPU's
-four-client pass recorded 62.21 average per-request decode tok/s and 10.71 s
-average latency; its direct wrapper run predates aggregate-wall-time capture.
+average per-request decode tok/s, and 0.66 s average latency. LFM2.5 350M
+GPU's four-client pass delivered 1,339.02 aggregate completion tok/s, 918.92
+average per-request decode tok/s, and 0.76 s average latency. Its CPU pass
+recorded 62.21 average per-request decode tok/s and 10.71 s average latency;
+that direct wrapper run predates aggregate-wall-time capture. GPU offload was
+15.7x faster on qualitative decode than the matching smarty CPU service.
 
 The LFM2.5 350M CPU 32K entry marked `*` is one bounded high-entropy sample,
 not the normal 15-sample aggregate. The standard pass was stopped after the
@@ -79,3 +83,4 @@ could not parse the generated grammar. The failure is part of the result.
 | `11-gemma-4-e4b` | `aae7ba98a88983a2209b8914fe1a16585485b0c7724255ae93d3e5293d5755f2` |
 | `12-gemma-4-e2b` | `359d189c91e46e30e2d06dea8e51f06b94c5d74fed615ecf49091de40f247b64` |
 | `13-gemma-4-12b` | `5520690b0e6d13eb085b3e5c7f9811dca5159b1f79afc9e718672204b7895bc2` |
+| `14-lfm2.5-350m-gpu` | `e70e52784c7ca3f03ffc8bcc5fc371a58265bae183bde2419b864f4bb349770d` |

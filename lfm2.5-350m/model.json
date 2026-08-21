@@ -7,7 +7,6 @@
   "context": 512000,
   "parallel": 4,
   "cache_type": "q8_0",
-  "default_engine": "cpu",
   "llama": {
     "repo": "LiquidAI/LFM2.5-350M-GGUF",
     "quant": "Q8_0"
