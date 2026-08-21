@@ -38,13 +38,15 @@ The power-limit unit's relevant settings are:
 
 ```ini
 [Unit]
+Wants=nvidia-persistenced.service
 After=systemd-modules-load.service nvidia-persistenced.service
-ConditionPathExists=/dev/nvidia0
 
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/nvidia-smi --id=0 --power-limit=450
 RemainAfterExit=yes
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -55,11 +57,16 @@ host. Model units intentionally have no dependency or drop-in for the cap, so
 they remain identical to their repository definitions.
 
 ```bash
-systemctl daemon-reload
-systemctl enable --now nvidia-power-limit.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now nvidia-power-limit.service
 systemctl status nvidia-power-limit.service
 nvidia-smi --query-gpu=power.limit --format=csv,noheader
 ```
+
+The expected production reading is always `450.00 W`. The card's 600 W
+factory limit is only for an explicitly authorized temporary experiment, and
+the experiment must restore 450 W when it exits. Do not restore a previously
+observed 600 W value: treat it as configuration drift.
 
 ## Model Inventory
 
