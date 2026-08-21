@@ -1,3 +1,32 @@
+# Benchmark methodology reset
+
+## Goal
+
+Archive unauditable llama.cpp benchmark records and prepare a reproducible,
+endpoint-only benchmark workflow without starting or stopping any model.
+
+## Work plan
+
+1. Archive the pre-reset benchmark log and bespoke direct-launch harnesses.
+2. Define the current model matrix, exclusions, test battery, and acceptance
+   rules.
+3. Add automatic capture of exact model configuration, live arguments and
+   safe environment, llama.cpp revision, GPU power cap, CUDA graph state, and
+   telemetry.
+4. Integrate upstream SPEED-Bench for standard qualitative, fixed-shape, and
+   concurrency workloads.
+5. Add capability canaries and validate all tools in dry-run mode only.
+
+## Status
+
+- Completed 2026-08-20. The old log and direct-launch harnesses are archived.
+  The new endpoint-only workflow captures exact configuration, live runtime
+  state, GPU power and telemetry, pins the SPEED-Bench dataset revision, and
+  refuses CUDA unified memory. Syntax, dry-run, fixture, and metadata capture
+  validation passed without inference or service changes.
+
+---
+
 # Qwen 3.8 27B Xid 8 investigation
 
 ## Goal

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy direct-launch harness archived with the pre-reset benchmark log.
 set -euo pipefail
 
 export PATH=/home/francip/bin:/home/francip/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin
