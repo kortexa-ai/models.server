@@ -1,3 +1,23 @@
+# OrcaRouter Qwen 3.8 27B uncensored alignment
+
+## Goal
+
+Use the official OrcaRouter collection for llama.cpp Q4_K_M, MLX 4-bit, and
+vLLM FP8, and configure the embedded MTP head where the runtime supports it.
+
+## Status
+
+- Configuration complete. Both Qwen 3.8 variants now share the same serving
+  knobs. llama.cpp and vLLM use MTP depth 3; both MLX entries use `mlx_vlm`
+  with their repository-root 4-bit models and no separate drafter.
+- Static launcher/config validation complete. Runtime download, capability
+  canaries, and the matched MTP depth/on-off benchmark remain pending because
+  the current production GPU services were not interrupted.
+- The authenticated smarty Hugging Face account still needs access approval
+  for the gated FP8 repository before vLLM can download it.
+
+---
+
 # Ornith 1.5 onboarding and agentic-model profile alignment
 
 ## Goal

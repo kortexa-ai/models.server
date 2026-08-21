@@ -18,11 +18,7 @@
   },
   "mlx": {
     "repo": "mlx-community/Qwen3.8-27B-4bit",
-    "backend": "mlx_lm",
-    "chat_template_args": {
-      "enable_thinking": true,
-      "reasoning_effort": "medium"
-    }
+    "backend": "mlx_vlm"
   },
   "vllm": {
     "model": "Qwen/Qwen3.8-27B-FP8",

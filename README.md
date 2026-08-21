@@ -92,7 +92,7 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 131K/slot (llama); 262K/seq (MLX/vLLM) | 2 / 1 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
-| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M | q8_0 | 131K/slot | 2 |
+| 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M / MLX 4-bit / FP8 | q8_0 / fp8 | 131K/slot (llama); 262K/seq (MLX/vLLM) | 2 / 1 / 4 |
 | 2057 | Ornith 1.5 9B | agentic dense | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 4007 | Penumbra | `control.server` discovery | — | — | — | — |
@@ -208,7 +208,7 @@ front of a long conversation. Confirm it in the service log: a miss selects a
 slot by LRU and evaluates the full prompt, while a warm hit selects by LCP
 similarity and evaluates only the new suffix.
 
-llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Qwen 3.6 27B and 35B-A3B use measured depth 3. Ornith 1.5 9B uses the protoLabs distilled head at measured depth 2; Ornith 1.5 35B-A3B explicitly disables its native head because it reduced matched throughput. See `bench/BENCHMARKS.md`.
+llama.cpp [PR #22673](https://github.com/ggml-org/llama.cpp/pull/22673) adds MTP (Multi-Token Prediction) speculative decoding using draft heads baked into the main GGUF (no separate drafter file). Set `llama.mtp=true` in `model.json` to pass `--spec-type draft-mtp`; optional `llama.mtp_n_max` overrides `--spec-draft-n-max`. Requires a llama.cpp build from after PR #22673 and a GGUF repo that ships MTP heads (e.g. unsloth's `*-MTP-GGUF` variants). Standard Qwen 3.8 27B and both Qwen 3.6 models use measured depth 3. The official OrcaRouter Qwen 3.8 27B Uncensored GGUF also embeds its MTP head and provisionally uses depth 3 pending a matched sweep. Ornith 1.5 9B uses the protoLabs distilled head at measured depth 2; Ornith 1.5 35B-A3B explicitly disables its native head because it reduced matched throughput. See `bench/BENCHMARKS.md`.
 
 The shared llama.cpp launcher disables CUDA graphs by default at runtime with
 `GGML_CUDA_DISABLE_GRAPHS=1`; no llama.cpp rebuild is required. A model can

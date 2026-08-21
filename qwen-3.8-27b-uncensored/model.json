@@ -8,13 +8,32 @@
   "parallel": 1,
   "cache_type": "q8_0",
   "llama": {
-    "repo": "chimingw/Qwen3.8-27B-Uncensored-OrcaRouter-GGUF",
+    "repo": "orcarouter/Qwen3.8-27B-Uncensored-GGUF",
     "quant": "Q4_K_M",
     "context": 262144,
     "parallel": 2,
+    "mtp": true,
+    "mtp_n_max": 3,
     "reasoning_effort": "medium"
   },
-  "mlx": null,
-  "vllm": null,
+  "mlx": {
+    "repo": "orcarouter/Qwen3.8-27B-Uncensored-MLX",
+    "backend": "mlx_vlm"
+  },
+  "vllm": {
+    "model": "orcarouter/Qwen3.8-27B-Uncensored-FP8",
+    "quantization": "auto",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "auto",
+    "kv_cache_bytes": 10194124800,
+    "gpu_memory_utilization": 0.6,
+    "max_num_seqs": 4,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "qwen3",
+    "speculative_config": {
+      "method": "mtp",
+      "num_speculative_tokens": 3
+    }
+  },
   "cpu": null
 }
