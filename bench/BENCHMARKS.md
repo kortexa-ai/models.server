@@ -147,3 +147,41 @@ llama.cpp draft implementation configured.
 | `04-qwen-3.5-9b` | `10f3acb23fc0c9c4bff92dad974ce014c324a98640ceeeaaa0786334ae443118` |
 | `05-qwen-3.6-35b-a3b-mtp3` | `087e7fbdc2fb345cd85530320c5fcf267f74a854194be072097e4a4bcd216313` |
 | `06-gemma-4-26b-a4b` | `f5780f90d15e518b4dfb7fc26581642646bb09d969c0a933f671759eb1ad33a5` |
+
+### 2026-08-21 Qwen 3.8 vanilla versus uncensored on smarty
+
+This is a paired comparison on llama.cpp revision
+`3af988fabcf79fd81f8720505e684d2aa5bfc786` (build 10572), at 450 W, with
+CUDA graphs disabled and `GGML_CUDA_ENABLE_UNIFIED_MEMORY` absent. Both models
+used two 131,072-token slots, q8_0 K/V cache, MTP depth 3, and identical
+runtime arguments other than model identity and weights. Vanilla used
+Unsloth `UD-Q4_K_XL`; uncensored used OrcaRouter `Q4_K_M`, so this measures
+the selected production artifacts rather than isolating ablation effects.
+Both models passed all five text, required-tool, and vision canaries.
+
+Numbers are average prompt-processing/decode tokens per second. The delta is
+uncensored relative to vanilla.
+
+| Workload | Vanilla | Uncensored | Decode delta |
+|---|---:|---:|---:|
+| Qualitative | 675.29 / 124.28 | 670.54 / 123.00 | -1.0% |
+| 1K / 512 | 1,578.57 / 121.53 | 1,598.99 / 118.81 | -2.2% |
+| 8K / 512 | 1,804.36 / 118.45 | 1,813.83 / 113.95 | -3.8% |
+| 32K / 512 | 1,319.67 / 109.54 | 1,329.34 / 105.39 | -3.8% |
+
+The two-client pass delivered 169.78 aggregate completion tok/s for vanilla
+and 176.74 for uncensored, a 4.1% uncensored advantage. Average per-request
+decode was 116.12 versus 121.60 tok/s. Across the single-request workloads,
+uncensored MTP acceptance was 60.4-64.8%, modestly below vanilla's 62.4-66.5%.
+The practical conclusion is that the two selected models have comparable
+serving speed; uncensored gives up a few percent on long single requests and
+recovers it under this small concurrency sample.
+
+Raw local records are under `bench-results/20260821-qwen38-comparison/`.
+
+#### Provenance index
+
+| Run directory | Model config SHA-256 |
+|---|---|
+| `01-qwen-3.8-27b-mtp3-current` | `1683cc2a11b05f5e341d1775a21a8a3a9f6fe2866c5911599f21487810df7ba3` |
+| `02-qwen-3.8-27b-uncensored-mtp3` | `b0096e94d3c15dcfd2318c7e4026092c37bb35c5027d48b0a82e0f4199bb1f54` |

@@ -7,8 +7,8 @@ This is the post-reset benchmark scope and sweep status. Results are in
 
 | Model ID | Workload | Status / required comparisons |
 |---|---|---|
-| `qwen-3.8-27b` | text, tools, long context | 450 W production MTP baseline complete; optional paired 600 W run remains |
-| `qwen-3.8-27b-uncensored` | text, tools, vision, long context | Pending fresh OrcaRouter Q4_K_M MTP-3 baseline and matched no-MTP comparison |
+| `qwen-3.8-27b` | text, tools, long context | Current-build paired 450 W MTP-3 baseline complete; optional paired 600 W run remains |
+| `qwen-3.8-27b-uncensored` | text, tools, vision, long context | OrcaRouter Q4_K_M MTP-3 baseline and paired vanilla comparison complete; optional matched no-MTP sweep remains |
 | `ornith-1.5-9b` | text, tools, vision, long context | 450 W MTP-2 baseline complete; matched official no-MTP and depth sweep retained |
 | `ornith-1.5-35b-a3b` | text, tools, vision, long context | 450 W no-MTP baseline complete; native MTP lost its matched smoke |
 | `qwen-3.5-9b` | text, tools, vision, long context | 450 W one-slot baseline complete; selected GGUF has no MTP head |

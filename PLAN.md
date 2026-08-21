@@ -10,9 +10,12 @@ vLLM FP8, and configure the embedded MTP head where the runtime supports it.
 - Configuration complete. Both Qwen 3.8 variants now share the same serving
   knobs. llama.cpp and vLLM use MTP depth 3; both MLX entries use `mlx_vlm`
   with their repository-root 4-bit models and no separate drafter.
-- Static launcher/config validation complete. Runtime download, capability
-  canaries, and the matched MTP depth/on-off benchmark remain pending because
-  the current production GPU services were not interrupted.
+- Runtime download and capability validation are complete. The official GGUF
+  passed all five text, tool, and vision canaries. A paired 450 W SPEED-Bench
+  run against vanilla Qwen 3.8 found equivalent practical throughput: the
+  uncensored model was 1.0% slower on the qualitative decode mix, 2.2-3.8%
+  slower on the fixed single-request passes, and 4.1% faster in aggregate with
+  two clients. A matched MTP depth/on-off sweep remains optional tuning work.
 - The authenticated smarty Hugging Face account still needs access approval
   for the gated FP8 repository before vLLM can download it.
 
