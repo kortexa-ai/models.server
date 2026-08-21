@@ -4,7 +4,7 @@
   "multimodal": false,
   "port": 2045,
   "host": "0.0.0.0",
-  "context": 512000,
+  "context": 131072,
   "parallel": 4,
   "cache_type": "q8_0",
   "llama": {
@@ -22,13 +22,13 @@
     "quantization": "auto",
     "kv_cache_dtype": "auto",
     "attention_backend": "TRITON_ATTN",
-    "max_model_len": 128000,
+    "max_model_len": 32768,
     "max_num_seqs": 4
   },
   "cpu": {
     "repo": "LiquidAI/LFM2.5-230M-GGUF",
     "quant": "Q4_K_M",
-    "context": 512000,
+    "context": 131072,
     "parallel": 4,
     "flash_attn": true,
     "checkpoint_min_step": 0

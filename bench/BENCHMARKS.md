@@ -32,18 +32,18 @@ properties, telemetry, canary responses, and raw samples.
 | LFM2.5 2.6B | 1 x 128,000 | 3/3 | 8,222.23 / 369.39 | 18,343.62 / 367.40 | 20,231.20 / 360.68 | 13,959.13 / 342.10 |
 | LFM2.5 1.2B Thinking | 1 x 32,768 | 3/3 | 26,596.34 / 753.82 | 40,431.23 / 750.01 | 44,281.69 / 725.21 | - |
 | LFM2.5 1.2B Instruct | 1 x 32,768 | 3/3 | 26,044.24 / 754.12 | 40,534.31 / 749.79 | 44,286.17 / 726.02 | - |
-| LFM2.5 VL 450M | 1 x 32,768 | 4/5 | 36,431.63 / 1,316.20 | 63,708.88 / 1,310.32 | 77,325.81 / 1,245.80 | - |
+| LFM2.5 VL 450M | 4 x 32,768 | 4/5 | 36,370.39 / 1,329.26 | 63,884.66 / 1,313.42 | 77,864.78 / 1,256.12 | - |
 | LFM2.5 350M CPU (old oversized context) | 4 x 128,000 | 3/3 | 1,121.77 / 84.37 | 578.15 / 81.19 | 300.78 / 62.42 | 36.58 / 19.46* |
 | LFM2.5 350M GPU | 4 x 32,768 | 3/3 | 37,691.80 / 1,331.24 | 65,516.10 / 1,322.71 | 78,755.32 / 1,260.89 | - |
-| LFM2.5 230M | 4 x 128,000 | 3/3 | 45,980.40 / 1,589.22 | 79,072.36 / 1,566.17 | 96,124.74 / 1,479.25 | 57,440.40 / 1,379.29 |
+| LFM2.5 230M | 4 x 32,768 | 3/3 | 46,351.55 / 1,585.85 | 79,229.18 / 1,578.04 | 96,064.82 / 1,488.25 | - |
 | Gemma 4 E4B | 1 x 131,072 | 5/5 | 3,424.09 / 207.91 | 9,040.24 / 206.36 | 10,082.42 / 198.35 | 6,888.33 / 182.88 |
 | Gemma 4 E2B | 1 x 131,072 | 5/5 | 4,709.95 / 267.21 | 13,780.48 / 265.17 | 16,699.43 / 254.73 | 10,578.04 / 244.68 |
 | Gemma 4 12B | 1 x 131,072 | 5/5 | 1,746.52 / 128.20 | 3,725.20 / 126.21 | 4,202.36 / 123.28 | 3,015.35 / 120.07 |
 
 Qwen's two-client pass delivered 128.86 aggregate completion tok/s, 81.39
-average per-request decode tok/s, and 7.05 s average latency. LFM2.5 230M's
-four-client pass delivered 1,513.18 aggregate completion tok/s, 1,063.50
-average per-request decode tok/s, and 0.66 s average latency. The current
+average per-request decode tok/s, and 7.05 s average latency. The current
+LFM2.5 230M four-client pass delivered 1,511.38 aggregate completion tok/s,
+1,052.56 average per-request decode tok/s, and 0.63 s average latency. The current
 LFM2.5 350M GPU four-client pass delivered 1,406.79 aggregate completion tok/s,
 928.87 average per-request decode tok/s, and 0.72 s average latency. Its CPU pass
 recorded 62.21 average per-request decode tok/s and 10.71 s average latency;
@@ -56,6 +56,13 @@ not the normal 15-sample aggregate. The standard pass was stopped after the
 first request exposed a nonlinear collapse; that sample took 270.32 s. The
 completed records were kept as evidence of the bad configuration. The model
 now uses its native 32K per slot, and run `15` is the current CUDA baseline.
+
+The original 230M run `10` used four oversized 128K slots; run `16` supersedes
+it with four native 32K slots. The original VL 450M run `06` used one 32K slot;
+run `17` supersedes it with four. Their single-client throughput remained
+effectively unchanged. VL 450M's four-client pass delivered 1,396.72 aggregate
+completion tok/s, 924.52 average per-request decode tok/s, and 0.72 s average
+latency.
 
 LFM2 350M Extract received a preliminary three-sample CPU serving smoke test:
 687.40 prompt tok/s, 83.10 decode tok/s, and 2.40 s latency. It passed 3/3 text
@@ -87,3 +94,5 @@ could not parse the generated grammar. The failure is part of the result.
 | `13-gemma-4-12b` | `5520690b0e6d13eb085b3e5c7f9811dca5159b1f79afc9e718672204b7895bc2` |
 | `14-lfm2.5-350m-gpu` | `e70e52784c7ca3f03ffc8bcc5fc371a58265bae183bde2419b864f4bb349770d` |
 | `15-lfm2.5-350m-gpu-native-context` | `6502611b316b7ec6a6c47bc24f5d1877f0ad0e0748cf0e09e7ed3399e74eaab4` |
+| `16-lfm2.5-230m-native-context` | `08fc0ccf89bf33f3191327c6ce10e87d211e1e60ed1bccc66032e4befc0ffded` |
+| `17-lfm2.5-vl-450m-four-slot` | `f7338481d62344ad48b8b7781bd3d790fca89c3b5cebe092a4b37b3b2dc62e58` |

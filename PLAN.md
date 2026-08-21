@@ -7,7 +7,7 @@ runtime provenance, without unified CUDA memory or overlapping model servers.
 
 ## Status
 
-- Completed. Thirteen runs covered Qwen 3.8 27B; all applicable LFM2/LFM2.5
+- Completed. Seventeen recorded runs covered Qwen 3.8 27B; all applicable LFM2/LFM2.5
   models from VL 3B through 230M; Gemma 4 E4B, E2B, and 12B; plus preliminary
   task-specific serving canaries for LFM Extract and Embedding.
 - Every CUDA run used the 450 W cap with CUDA graphs disabled and unified
@@ -25,6 +25,14 @@ runtime provenance, without unified CUDA memory or overlapping model servers.
   model's native 32K per slot. Embedding 350M remains llama.cpp-backed because
   no official MLX export exists, but its two slots now match the trained
   512-token maximum instead of allocating 1K each.
+- The edge-serving follow-up normalizes 230M, 350M, and VL 450M to four native
+  32K slots. Their Pi CPU paths use Q4_K_M weights and q4 KV; VL 450M expresses
+  the same shape in MLX as a 32K per-sequence KV limit with four sequences.
+  Extract 350M now selects Metal-backed llama.cpp on snappy while retaining its
+  separate long-context CPU configuration elsewhere.
+- Native-context 230M and four-slot VL 450M CUDA refreshes are complete at
+  450 W. Both retained their single-stream performance; the original
+  oversized/one-slot records remain in the local provenance archive.
 
 ---
 

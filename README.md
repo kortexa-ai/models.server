@@ -83,12 +83,12 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2040 | Qwen3 Embedding 0.6B | embedding | Q8_0 | q8_0 | 32K | 4 |
 | 2041 | EmbeddingGemma 300M | embedding | Q4_0 | q8_0 | 2K | 1 |
 | 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
-| 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 128K/slot | 4 |
-| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 32K/slot | 4 |
-| 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
+| 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 32K/slot | 4 |
+| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 / MLX 8-bit / CPU Q4_K_M | q8_0 (CPU q4_0) | 32K/slot | 4 |
+| 2047 | LFM2 350M Extract | structured extraction | Q8_0 | q8_0 | 128K/slot | 4 |
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
 | 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 512/slot | 2 |
-| 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
+| 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit / CPU Q4_K_M | q8_0 (CPU q4_0) | 32K/slot | 4 |
 | 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K/slot | 3 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2055 | LFM2.5 VL 3B | VLM / edge | Q8_0 / MLX 8-bit / FP8 | q8_0 / fp8 | 32K | 1 |
@@ -230,7 +230,7 @@ without this setting its chat template defaults to `xhigh`.
 ### mlx-vlm / mlx-lm
 Vision Language Models via [mlx-vlm](https://github.com/Blaizzy/mlx-vlm), and text-only MLX models via `mlx-lm` when `mlx.backend` is `mlx_lm`. macOS only (Apple Silicon / MLX). VLMs serve at `/chat/completions` (no `/v1` prefix); `mlx-lm` serves OpenAI-compatible `/v1` routes.
 
-`mlx-lm` does not take a llama-style context flag. Use `mlx.prompt_concurrency` and `mlx.decode_concurrency` for request batching, plus optional prompt-cache fields. `mlx-vlm` exposes different knobs such as `mlx.max_kv_size`, `mlx.vision_cache_size`, and `mlx.prefill_step_size`; these are passed only when set.
+`mlx-lm` does not take a llama-style context flag. Use `mlx.prompt_concurrency` and `mlx.decode_concurrency` for request batching, plus optional prompt-cache fields. For `mlx-vlm`, `mlx.max_kv_size` is the per-sequence KV limit and `mlx.max_num_seqs` is the concurrent-sequence limit; optional vision-cache and prefill fields are also passed when set. Unlike llama.cpp, MLX does not express this as one total context divided among slots.
 
 For `mlx_lm`, optional `mlx.chat_template_args` is serialized as JSON and
 passed through `--chat-template-args`. When the field is absent, the launcher
@@ -243,7 +243,7 @@ path to `mlx-lm`. LFM2.5 2.6B uses this for the official `8bit/` checkpoint.
 
 `mlx-vlm>=0.6.0` supports speculative decoding on the server. Add optional `mlx.draft_model`, `mlx.draft_kind`, and `mlx.draft_block_size` fields in `model.json` to pass `--draft-model`, `--draft-kind`, and `--draft-block-size`; set `MLX_DISABLE_DRAFT=1` when launching to run without the configured drafter.
 
-LFM2.5 VL 450M uses LiquidAI's official 8-bit MLX checkpoint on snappy. It has a 32K multimodal context and one request slot; `mlx-vlm>=0.6.10` is required for the LFM2-VL loader and tokenizer fixes.
+LFM2.5 VL 450M uses LiquidAI's official 8-bit MLX checkpoint on snappy. It has a 32K multimodal context per sequence and up to four concurrent sequences; `mlx-vlm>=0.6.14` is required for that concurrency flag plus the LFM2-VL loader and tokenizer fixes.
 
 **Gemma 4 MTP drafters** work but only help large/slow targets. E2B/E4B run with `mlx.draft_enabled=false` (MTP measured *slower* than no-drafter on E4B — 66.8 vs 70.6 tok/s; see `bench/BENCHMARKS.md`); 26B-A4B/31B keep `draft_enabled=true` pending an MLX bench. The Gemma 4 MTP rollback crash ([mlx-vlm#1260](https://github.com/Blaizzy/mlx-vlm/issues/1260), `AttributeError: 'list' object has no attribute 'max'`) is fixed upstream in `mlx-vlm 0.6.1` (our PR [#1261](https://github.com/Blaizzy/mlx-vlm/pull/1261)). The old local patch has been removed; the current setup floor also includes the later LFM2-VL fixes.
 
@@ -328,20 +328,21 @@ Use port 2035 and model `qwen3-tts-1.7b-customvoice` for the larger Qwen
 checkpoint with natural-language instruction control.
 
 ### CPU llama-server
-ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
+ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`). LFM2.5 230M, 350M, and VL 450M use their `cpu` configs with GGUF `Q4_K_M`, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
 
 LFM2.5 350M follows platform auto-detection: CUDA-backed llama.cpp on Linux
 GPU hosts such as smarty and scrappy, the official 8-bit MLX checkpoint on
 snappy, and the CPU engine on ARM Linux without CUDA, including both Raspberry
 Pis. It uses its native 32K context per request: 128K total across four llama
-slots. LFM2 350M Extract remains CPU-first on every platform with its separate
-512K total configuration. Both CPU paths use q8 KV cache, flash attention, and
-warm prompt reuse.
+slots. LFM2 350M Extract keeps its separate 512K total configuration and CPU
+default on Linux, but uses Metal-backed llama.cpp on snappy. Its CPU path uses
+q8 KV cache, flash attention, and warm prompt reuse.
 
 LFM2.5 VL 450M and 3B use LiquidAI's official `Q8_0` GGUFs and matching
-vision projectors with llama.cpp. Both keep a 32K multimodal context in one
-slot and default to the official 8-bit MLX checkpoint on macOS. The 450M also
-supports the CPU backend; the 3B offers optional FP8 vLLM serving on CUDA.
+vision projectors with llama.cpp. Both keep a 32K multimodal context per slot;
+450M uses four slots while 3B uses one. Both default to the official 8-bit MLX
+checkpoint on macOS. The 450M also supports the Q4_K_M/q4 CPU backend; the 3B
+offers optional FP8 vLLM serving on CUDA.
 
 LFM2.5 1.2B Thinking, LFM2.5 1.2B Instruct, and LFM2.5 2.6B use the official
 `Q8_0` GGUFs with full CUDA offload on `smarty`, and official 8-bit MLX
@@ -353,8 +354,10 @@ does not publish an MLX export for this bidirectional embedding model, and its
 own Mac benchmark uses llama.cpp. The per-platform default therefore selects
 Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including
 smarty. It exposes `/v1/embeddings` on port 2042 with two 512-token slots,
-matching its trained maximum sequence length. Port 2049 is deliberately
-skipped because Fetch implementations block the historical NFS port.
+matching its trained maximum sequence length. Its output vector has 1,024
+dimensions; that dimension count is not its token context. Port 2049 is
+deliberately skipped because Fetch implementations block the historical NFS
+port.
 
 #### LFM default platform matrix
 
@@ -365,7 +368,7 @@ full CUDA offload on NVIDIA hosts and Metal offload on snappy.
 |---|---|---|---|---|---|
 | LFM2.5 230M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
 | LFM2.5 350M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
-| LFM2 350M Extract | llama CPU | llama CPU | llama CPU | llama CPU | llama CPU |
+| LFM2 350M Extract | llama CPU | llama CPU | llama CPU | llama GPU | llama CPU |
 | LFM2.5 Embedding 350M | llama CPU | llama CPU | llama CPU | llama GPU | llama CPU |
 | LFM2.5 Encoder 350M | Transformers CPU | Transformers CPU | Transformers CPU | Transformers MPS | Transformers CPU |
 | LFM2.5 VL 450M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
@@ -376,22 +379,24 @@ full CUDA offload on NVIDIA hosts and Metal offload on snappy.
 
 | Model | llama weight / KV | Pi CPU weight / KV | MLX weight / KV | Configured context / slots |
 |---|---|---|---|---:|
-| LFM2.5 230M | Q8_0 / q8_0 | Q4_K_M / q4_0 | 8-bit / default unquantized | 512K / 4 (128K each) |
-| LFM2.5 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 128K / 4 (32K each) |
-| LFM2 350M Extract | Q8_0 / q8_0 (override) | Q8_0 / q8_0 | — | 512K / 4 (128K each) |
+| LFM2.5 230M | Q8_0 / q8_0 | Q4_K_M / q4_0 | 8-bit / default unquantized | 128K / 4 (32K each) |
+| LFM2.5 350M | Q8_0 / q8_0 | Q4_K_M / q4_0 | 8-bit / default unquantized | 128K / 4 (32K each) |
+| LFM2 350M Extract | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 512K / 4 (128K each) |
 | LFM2.5 Embedding 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 1K / 2 (512 each) |
 | LFM2.5 Encoder 350M | FP32 / — | FP32 / — | FP32 MPS / — | 8K / 1 |
-| LFM2.5 VL 450M | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 32K / 1 |
+| LFM2.5 VL 450M | Q8_0 / q8_0 | Q4_K_M / q4_0 | 8-bit / default unquantized | 128K / 4 (32K each) |
 | LFM2.5 1.2B Thinking | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
 | LFM2.5 1.2B Instruct | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
 | LFM2.5 2.6B | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 128K / 1 |
 | LFM2.5 VL 3B | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
 
-The MLX launchers do not currently configure KV quantization. The common
-context value is enforced by llama.cpp; MLX uses checkpoint/backend defaults
-unless its model entry supplies an MLX-specific limit. Optional vLLM configs
-are not platform defaults: VL 450M and VL 3B specify FP8 weights and FP8 KV at
-32K, while 230M specifies automatic weight/KV dtype at 128K.
+The MLX launchers do not currently configure KV quantization. For llama.cpp,
+the common `context` is the total allocation and each slot receives
+`context / parallel`. MLX-lm uses its own prompt/decode concurrency controls;
+MLX-VLM 450M explicitly sets 32K per sequence and four concurrent sequences.
+Optional vLLM configs are not platform defaults: VL 450M and VL 3B specify FP8
+weights and FP8 KV at 32K per sequence, while 230M specifies automatic
+weight/KV dtype at 32K per sequence.
 
 ### Transformers (MPS / CPU)
 
@@ -412,7 +417,10 @@ curl http://localhost:2048/v1/fill-mask \
 | >= 4B | UD-Q4_K_XL | q8_0 / fp8 | 64K | MoE: 8, big dense: 2, small: 2 |
 | < 4B | Q8_0 | q8_0 / fp8 | 32K | 2 |
 
-LFM2.5 230M is the small-edge exception: CUDA uses Q8_0, while Pi CPU uses Q4_K_M. It is also configured for four 128K slots on llama.cpp-style backends and four-way prompt/decode concurrency on `mlx-lm`.
+LFM2.5 230M, 350M, and VL 450M are small-edge exceptions: CUDA uses Q8_0,
+while Pi CPU uses Q4_K_M with q4 KV. Each is configured for four 32K slots on
+llama.cpp-style backends; the text models use four-way prompt/decode
+concurrency in `mlx-lm`, and VL 450M allows four 32K sequences in `mlx-vlm`.
 LFM2.5 1.2B Thinking, 1.2B Instruct, 2.6B, and VL 3B are single-slot Q8
 exceptions; they use MLX on macOS and CUDA-backed llama.cpp on Linux.
 The smaller LFM generative, vision-language, and embedding models use `Q8_0`;

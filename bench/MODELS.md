@@ -12,12 +12,12 @@ This is the post-reset benchmark scope and sweep status. Results are in
 | `gemma-4-e2b` | text, tools, vision | 450 W baseline complete |
 | `gemma-4-e4b` | text, tools, vision | 450 W baseline complete |
 | `gemma-4-12b` | text, tools, vision | 450 W baseline complete |
-| `lfm2.5-230m` | text | 450 W CUDA Q8_0 baseline complete; CPU/Pi results remain separate |
+| `lfm2.5-230m` | text | Native-context four-slot CUDA baseline complete; old oversized-context record retained; CPU/Pi results remain separate |
 | `lfm2.5-350m` | text | 450 W CUDA Q8_0 baseline complete; CPU/Pi results remain separate |
 | `lfm2.5-1.2b-instruct` | text | 450 W baseline complete |
 | `lfm2.5-1.2b-thinking` | text, reasoning | 450 W serving baseline complete; future quality work must label thinking mode |
 | `lfm2.5-2.6b` | text, tools | 450 W baseline complete |
-| `lfm2.5-vl-450m` | text, vision | 450 W baseline complete; tool-call canary failure recorded |
+| `lfm2.5-vl-450m` | text, vision | Four-slot CUDA baseline complete; old one-slot record and tool-call canary failure retained |
 | `lfm2.5-vl-3b` | text, tools, vision | 450 W baseline complete |
 
 ## Separate CPU and task-specific suites

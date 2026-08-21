@@ -77,6 +77,7 @@ def main():
             ("max_tokens", "MLX_MAX_TOKENS"),
             ("vision_cache_size", "MLX_VISION_CACHE_SIZE"),
             ("max_kv_size", "MLX_MAX_KV_SIZE"),
+            ("max_num_seqs", "MLX_MAX_NUM_SEQS"),
             ("kv_bits", "MLX_KV_BITS"),
             ("kv_quant_scheme", "MLX_KV_QUANT_SCHEME"),
             ("kv_group_size", "MLX_KV_GROUP_SIZE"),

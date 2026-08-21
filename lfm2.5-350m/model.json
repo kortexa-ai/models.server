@@ -19,10 +19,10 @@
   },
   "cpu": {
     "repo": "LiquidAI/LFM2.5-350M-GGUF",
-    "quant": "Q8_0",
+    "quant": "Q4_K_M",
     "context": 131072,
     "parallel": 4,
-    "cache_type": "q8_0",
+    "cache_type": "q4_0",
     "flash_attn": true,
     "checkpoint_min_step": 0
   }

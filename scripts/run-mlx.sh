@@ -74,6 +74,9 @@ fi
 if [[ -n "${MLX_MAX_KV_SIZE:-}" ]]; then
     VLM_ARGS+=(--max-kv-size "$MLX_MAX_KV_SIZE")
 fi
+if [[ -n "${MLX_MAX_NUM_SEQS:-}" ]]; then
+    VLM_ARGS+=(--max-num-seqs "$MLX_MAX_NUM_SEQS")
+fi
 if [[ -n "${MLX_KV_BITS:-}" ]]; then
     VLM_ARGS+=(--kv-bits "$MLX_KV_BITS")
 fi

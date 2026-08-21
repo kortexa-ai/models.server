@@ -7,7 +7,10 @@
   "context": 512000,
   "parallel": 4,
   "cache_type": "q8_0",
-  "default_engine": "cpu",
+  "default_engine": {
+    "Darwin": "llama",
+    "Linux": "cpu"
+  },
   "llama": {
     "repo": "LiquidAI/LFM2-350M-Extract-GGUF",
     "quant": "Q8_0"

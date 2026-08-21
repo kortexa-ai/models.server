@@ -4,8 +4,8 @@
   "multimodal": true,
   "port": 2052,
   "host": "192.168.2.6",
-  "context": 32768,
-  "parallel": 1,
+  "context": 131072,
+  "parallel": 4,
   "cache_type": "q8_0",
   "llama": {
     "repo": "LiquidAI/LFM2.5-VL-450M-GGUF",
@@ -14,7 +14,8 @@
   "mlx": {
     "repo": "LiquidAI/LFM2.5-VL-450M-MLX-8bit",
     "backend": "mlx_vlm",
-    "max_kv_size": 32768
+    "max_kv_size": 32768,
+    "max_num_seqs": 4
   },
   "vllm": {
     "model": "LiquidAI/LFM2.5-VL-450M",
@@ -22,14 +23,14 @@
     "kv_cache_dtype": "fp8",
     "attention_backend": "TRITON_ATTN",
     "max_model_len": 32768,
-    "max_num_seqs": 1
+    "max_num_seqs": 4
   },
   "cpu": {
     "repo": "LiquidAI/LFM2.5-VL-450M-GGUF",
-    "quant": "Q8_0",
-    "context": 32768,
-    "parallel": 1,
-    "cache_type": "q8_0",
+    "quant": "Q4_K_M",
+    "context": 131072,
+    "parallel": 4,
+    "cache_type": "q4_0",
     "flash_attn": true,
     "checkpoint_min_step": 0
   }
