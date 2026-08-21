@@ -84,10 +84,10 @@ nvidia-smi --query-gpu=power.limit --format=csv,noheader
 | 2041 | EmbeddingGemma 300M | embedding | Q4_0 | q8_0 | 2K | 1 |
 | 2043 | Gemma 4 12B | big dense | UD-Q4_K_XL | q8_0 | 64K | 2 |
 | 2045 | LFM2.5 230M | tiny dense / edge | Q8_0 (CPU Q4_K_M) | q8_0 (CPU q4_0) | 128K/slot | 4 |
-| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 (GPU / CPU) | q8_0 | 128K/slot | 4 |
+| 2046 | LFM2.5 350M | tiny dense / edge | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 32K/slot | 4 |
 | 2047 | LFM2 350M Extract | structured extraction | Q8_0 (CPU) | q8_0 | 128K/slot | 4 |
 | 2048 | LFM2.5 Encoder 350M | masked-LM encoder | FP32 (MPS / CPU) | — | 8K | 1 |
-| 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 2K | 2 |
+| 2042 | LFM2.5 Embedding 350M | embedding | Q8_0 (Metal / CPU) | q8_0 | 512/slot | 2 |
 | 2052 | LFM2.5 VL 450M | tiny VLM / edge | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
 | 2053 | Qwen 3.8 27B | big dense | UD-Q4_K_XL / MLX 4-bit / FP8 | q8_0 / fp8 | 262K/slot | 3 / 4 |
 | 2054 | LFM2.5 1.2B Instruct | instruction dense | Q8_0 / MLX 8-bit | q8_0 | 32K | 1 |
@@ -331,11 +331,12 @@ checkpoint with natural-language instruction control.
 ARM Linux without CUDA auto-selects the `cpu` engine. This is mainly for the Raspberry Pi 5 nodes (`192.168.2.144` and `192.168.2.145`); LFM2.5 230M uses its `cpu` config with GGUF `Q4_K_M`, 512K total context across four 128K slots, q4 KV cache, flash attention, and `checkpoint_min_step=0` for effective warm prompt reuse. `Q4_K_M` matches Liquid's general recommended GGUF balance; flash attention is their Pi-specific note.
 
 LFM2.5 350M follows platform auto-detection: CUDA-backed llama.cpp on Linux
-GPU hosts such as smarty and scrappy, Metal-backed llama.cpp on snappy, and
-the CPU engine on ARM Linux without CUDA, including both Raspberry Pis. LFM2
-350M Extract remains CPU-first on every platform. Both use LiquidAI's official
-`Q8_0` GGUFs, 512K total context across four 128K slots, q8 KV cache, flash
-attention, and warm prompt reuse on the CPU path.
+GPU hosts such as smarty and scrappy, the official 8-bit MLX checkpoint on
+snappy, and the CPU engine on ARM Linux without CUDA, including both Raspberry
+Pis. It uses its native 32K context per request: 128K total across four llama
+slots. LFM2 350M Extract remains CPU-first on every platform with its separate
+512K total configuration. Both CPU paths use q8 KV cache, flash attention, and
+warm prompt reuse.
 
 LFM2.5 VL 450M and 3B use LiquidAI's official `Q8_0` GGUFs and matching
 vision projectors with llama.cpp. Both keep a 32K multimodal context in one
@@ -347,7 +348,13 @@ LFM2.5 1.2B Thinking, LFM2.5 1.2B Instruct, and LFM2.5 2.6B use the official
 checkpoints on `snappy`. They run one request at a time with their supported
 32K, 32K, and 128K contexts, respectively. None has a CPU backend configured.
 
-LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Its per-platform default selects Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including smarty. It exposes `/v1/embeddings` on port 2042 with two slots sharing 2K total context. Port 2049 is deliberately skipped because Fetch implementations block the historical NFS port.
+LFM2.5 Embedding 350M uses the official `Q8_0` GGUF on both platforms. Liquid
+does not publish an MLX export for this bidirectional embedding model, and its
+own Mac benchmark uses llama.cpp. The per-platform default therefore selects
+Metal-backed llama.cpp on snappy and CPU-only llama.cpp on Linux, including
+smarty. It exposes `/v1/embeddings` on port 2042 with two 512-token slots,
+matching its trained maximum sequence length. Port 2049 is deliberately
+skipped because Fetch implementations block the historical NFS port.
 
 #### LFM default platform matrix
 
@@ -357,7 +364,7 @@ full CUDA offload on NVIDIA hosts and Metal offload on snappy.
 | Model | smarty | scrappy (WSL) | sparky | snappy | Raspberry Pis |
 |---|---|---|---|---|---|
 | LFM2.5 230M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
-| LFM2.5 350M | llama GPU | llama GPU | llama GPU | llama GPU | llama CPU |
+| LFM2.5 350M | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU |
 | LFM2 350M Extract | llama CPU | llama CPU | llama CPU | llama CPU | llama CPU |
 | LFM2.5 Embedding 350M | llama CPU | llama CPU | llama CPU | llama GPU | llama CPU |
 | LFM2.5 Encoder 350M | Transformers CPU | Transformers CPU | Transformers CPU | Transformers MPS | Transformers CPU |
@@ -370,9 +377,9 @@ full CUDA offload on NVIDIA hosts and Metal offload on snappy.
 | Model | llama weight / KV | Pi CPU weight / KV | MLX weight / KV | Configured context / slots |
 |---|---|---|---|---:|
 | LFM2.5 230M | Q8_0 / q8_0 | Q4_K_M / q4_0 | 8-bit / default unquantized | 512K / 4 (128K each) |
-| LFM2.5 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 512K / 4 (128K each) |
+| LFM2.5 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 128K / 4 (32K each) |
 | LFM2 350M Extract | Q8_0 / q8_0 (override) | Q8_0 / q8_0 | — | 512K / 4 (128K each) |
-| LFM2.5 Embedding 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 2K / 2 (1K each) |
+| LFM2.5 Embedding 350M | Q8_0 / q8_0 | Q8_0 / q8_0 | —; snappy uses llama | 1K / 2 (512 each) |
 | LFM2.5 Encoder 350M | FP32 / — | FP32 / — | FP32 MPS / — | 8K / 1 |
 | LFM2.5 VL 450M | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 32K / 1 |
 | LFM2.5 1.2B Thinking | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |

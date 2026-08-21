@@ -26,7 +26,7 @@ These models should not be mixed into the CUDA generation ranking:
 
 | Model ID | Suite |
 |---|---|
-| `lfm2.5-350m` | CPU baseline complete; 32K collapse documented; CUDA baseline is in the primary sweep |
+| `lfm2.5-350m` | Oversized-context CPU result retained as a failure record; native-context CUDA baseline is in the primary sweep |
 | `lfm2-350m-extract` | Serving smoke complete; extraction accuracy and task throughput pending |
 | `lfm2.5-embedding-350m` | Endpoint canary complete; embedding throughput and retrieval quality pending |
 | `embeddinggemma-300m` | Embedding latency, throughput, dimension, and retrieval quality |

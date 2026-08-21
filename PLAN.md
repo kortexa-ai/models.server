@@ -20,6 +20,11 @@ runtime provenance, without unified CUDA memory or overlapping model servers.
   auto-detection, matching 230M's GPU-on-smarty/CPU-on-Pi behavior. Its 450 W
   CUDA rebaseline completed without errors, and the original services were
   restored again.
+- Its follow-up alignment adds LiquidAI's official 8-bit MLX checkpoint on
+  snappy and replaces the oversized 128K-per-slot llama allocation with the
+  model's native 32K per slot. Embedding 350M remains llama.cpp-backed because
+  no official MLX export exists, but its two slots now match the trained
+  512-token maximum instead of allocating 1K each.
 
 ---
 
