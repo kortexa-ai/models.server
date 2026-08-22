@@ -102,12 +102,6 @@ observed 600 W value: treat it as configuration drift.
 | 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M / MLX 4-bit / FP8 | q8_0 / fp8 | 131K/slot (llama); 262K/seq (MLX/vLLM) | 2 / 1 / 4 |
 | 2057 | Ornith 1.5 9B | agentic dense | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
-| 4007 | Penumbra | `control.server` discovery | — | — | — | — |
-
-The `penumbra/model.json` entry intentionally lets `control.server` discover
-Penumbra as a model. The actual runtime remains the separate `penumbra.server`
-service on port 4007.
-
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
 projector and optional separate MTP companion are preserved with the model

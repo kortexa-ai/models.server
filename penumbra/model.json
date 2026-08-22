@@ -1,7 +1,0 @@
-{
-  "name": "Penumbra",
-  "id": "penumbra",
-  "host": "192.168.2.6",
-  "port": 4007,
-  "hf_model": "karpathy/nanochat_d32"
-}
