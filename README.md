@@ -269,6 +269,11 @@ Qwen3 TTS uses the 0.6B and 1.7B CustomVoice checkpoints from
 chunks by setting `"stream": true`; the current Audio8 MLX implementation
 returns the completed clip, while its CUDA SGLang-Omni path streams chunks.
 
+MLX-Audio 0.5.0 currently requires `setuptools<81`, so its shared environment
+cannot install the Setuptools 83 fix for `PYSEC-2026-3447`. Keep the latest
+compatible Setuptools release until MLX-Audio removes that upper bound; the
+setup script separately enforces fixed Aiohttp and Datasets releases.
+
 ### vLLM
 GPU-accelerated serving via [vLLM](https://github.com/vllm-project/vllm). Linux only (CUDA). Supports online FP8 quantization, Marlin NVFP4, and continuous batching for high-throughput concurrent serving.
 

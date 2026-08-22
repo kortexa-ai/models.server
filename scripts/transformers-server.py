@@ -124,7 +124,7 @@ def make_handler(model, alias, default_top_k):
                     raise ValueError("request body must be between 1 byte and 1 MiB")
                 payload = json.loads(self.rfile.read(content_length))
                 if not isinstance(payload, dict):
-                    raise ValueError("request body must be a JSON object")
+                    raise TypeError("request body must be a JSON object")
                 text = payload.get("input")
                 if not isinstance(text, str) or not text:
                     raise ValueError("input must be a non-empty string")
@@ -141,9 +141,9 @@ def make_handler(model, alias, default_top_k):
                         "data": predictions,
                     },
                 )
-            except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
+            except (json.JSONDecodeError, TypeError, UnicodeDecodeError, ValueError) as exc:
                 self.send_json(400, {"error": str(exc)})
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - HTTP inference boundary.
                 self.log_error("inference failed: %s", exc)
                 self.send_json(500, {"error": "inference failed"})
 

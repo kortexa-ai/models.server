@@ -58,7 +58,7 @@ def guarded_probe(name: str, action: Any) -> dict[str, Any]:
     try:
         result = action()
         return {"name": name, "ok": True, **result}
-    except Exception as error:  # A failed capability is a recorded result.
+    except Exception as error:  # noqa: BLE001 - capability failures are results.
         return {"name": name, "ok": False, "error": str(error)}
 
 

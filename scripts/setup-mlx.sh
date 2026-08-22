@@ -19,6 +19,8 @@ uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
     mlx-lm \
     'mlx-audio[server]>=0.4.7' \
     'transformers>=5.14.1' \
+    'aiohttp>=3.14.3' \
+    'datasets>=5.0.1' \
     soundfile \
     torch \
     torchvision
