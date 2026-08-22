@@ -40,7 +40,7 @@ uv pip uninstall --python "${VENV_PATH}/bin/python" flashinfer-cubin 2>/dev/null
 
 echo "Upgrading Transformers (>=5.14.1 required for the current model stack)..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade \
-    "${TRANSFORMERS_SPEC}" "${NUMPY_SPEC}"
+    "${TRANSFORMERS_SPEC}" "${NUMPY_SPEC}" 'setuptools>=83'
 
 echo "Installing runtime build helpers used by FP4 kernels..."
 uv pip install --python "${VENV_PATH}/bin/python" --upgrade ninja

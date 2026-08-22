@@ -283,6 +283,10 @@ Set `vllm.kv_cache_bytes` to pass an exact `--kv-cache-memory-bytes` pool instea
 
 Qwen 3.6 27B uses a 10,194,124,800-byte FP8 KV pool, which vLLM 0.26.0 reports as exactly 262,144 aggregate tokens with MTP depth 4 and up to four scheduled requests. Four simultaneous 262K requests do not fit; four equally long requests can use about 65K tokens each. The default Linux engine remains llama.cpp because it is faster and smaller for the usual single request. Use `./run.sh qwen-3.6-27b --engine vllm` when continuous batching is more valuable; the measured four-request aggregate was 310 tok/s. Keep the vLLM attention backend on `auto`: forcing Triton caused an illegal-memory-access crash under four-way load.
 
+The vLLM environment enforces the fixed Setuptools 83 floor. Its current
+`diskcache` 5.6.3 dependency still reports `PYSEC-2026-2447`; no fixed
+DiskCache release is available yet.
+
 ### vLLM-Omni
 
 [vLLM-Omni](https://github.com/vllm-project/vllm-omni) provides the CUDA TTS
