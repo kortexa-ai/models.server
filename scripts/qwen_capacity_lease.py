@@ -36,6 +36,8 @@ MAX_HTTP_BYTES = 1_048_576
 MAX_STATE_BYTES = 4_194_304
 MAX_CANARY_PROMPT_TOKENS = 256
 DEFAULT_STATE_FILE = Path.home() / ".local/state/kortexa-qwen-capacity/leases.json"
+RELEASE_OUTCOMES = ("completed", "blocked", "failed", "cancelled")
+PERSISTED_RELEASE_OUTCOMES = (*RELEASE_OUTCOMES, "expired")
 GPU_SUMMARY_COMMAND = (
     "nvidia-smi",
     "--query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu,power.draw,power.limit",
@@ -70,6 +72,15 @@ class Policy:
 
 POLICY = Policy()
 
+OWNER_FIELDS = {
+    "actorId": "actor-id",
+    "harness": "harness",
+    "model": "model",
+    "rootSessionId": "root-session-id",
+    "delegatedWorkerId": "delegated-worker-id",
+    "sessionRef": "session-ref",
+}
+
 HEALTH_ENDPOINTS = {
     "alt-image-gen.server/base": "http://127.0.0.1:4004/health",
     "vision.server": "http://127.0.0.1:4001/health",
@@ -92,11 +103,83 @@ GPU_UNIT_TO_SERVICE = {
 }
 
 SECRET_VALUE_PATTERNS = (
-    re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"),
-    re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
-    re.compile(r"(?i)(?:password|api[_-]?key|access[_-]?token)\s*[:=]\s*\S+"),
-    re.compile(r"(?i)(?:mongodb(?:\+srv)?|postgres(?:ql)?|mysql)://[^\s/:]+:[^\s/@]+@"),
+    re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b"),
+    re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
+    re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
+    re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b"),
+    re.compile(r"-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----"),
+    re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]+"),
+    re.compile(r"(?i)\b[a-z][a-z0-9+.-]*://[^\s/:]+:[^\s/@]+@"),
 )
+
+JSON_UNICODE_ESCAPE_PATTERN = re.compile(r"\\u([0-9a-fA-F]{4})")
+INTER_WORD_COMMENT_PATTERN = re.compile(r"/\*.*?\*/|<!--.*?-->", re.DOTALL)
+PAIRED_HASH_COMMENT_PATTERN = re.compile(r"#[^#\r\n]*#")
+HASH_LINE_COMMENT_PATTERN = re.compile(r"#[^\r\n]*(?:\r?\n|$)")
+ASSIGNMENT_LEFT_BOUNDARIES = frozenset(",;{}\n\r")
+MAX_ASSIGNMENT_KEY_CHARS = 300
+MAX_STRUCTURED_STRING_CHARS = 65_536
+MAX_SECRET_SCAN_CHARS = MAX_STATE_BYTES
+MAX_SECRET_SCAN_NODES = 10_000
+MAX_SECRET_SCAN_DEPTH = 64
+MAX_SECRET_PATH_COMPONENTS = 4
+SECRET_KEY_PHRASES = (
+    ("access", "key", "id"),
+    ("authorization", "header"),
+    ("password", "hash"),
+    ("passwd", "hash"),
+    ("passphrase", "hash"),
+    ("pass", "word"),
+    ("api", "key"),
+    ("access", "token"),
+    ("access", "key"),
+    ("client", "secret"),
+    ("private", "key"),
+    ("secret", "key"),
+    ("signing", "key"),
+    ("password",),
+    ("passwordhash",),
+    ("passwd",),
+    ("passphrase",),
+    ("credential",),
+    ("credentials",),
+    ("token",),
+    ("secret",),
+    ("authorization",),
+)
+SINGLE_SECRET_KEY_WORDS = {phrase[0] for phrase in SECRET_KEY_PHRASES if len(phrase) == 1}
+COLLAPSED_SECRET_KEY_PHRASES = {
+    "".join(phrase): phrase
+    for phrase in SECRET_KEY_PHRASES
+    if len(phrase) > 1 and "".join(phrase) not in SINGLE_SECRET_KEY_WORDS
+}
+COLLAPSED_SECRET_KEY_PATTERN = re.compile(
+    "|".join(
+        re.escape(phrase)
+        for phrase in sorted(
+            COLLAPSED_SECRET_KEY_PHRASES, key=len, reverse=True
+        )
+    )
+)
+BENIGN_CREDENTIAL_QUALIFIERS = {
+    "budget",
+    "documentation",
+    "docs",
+    "file",
+    "id",
+    "identifier",
+    "name",
+    "path",
+    "policy",
+    "ref",
+    "reference",
+    "rotation",
+    "scanner",
+    "status",
+    "test",
+    "tests",
+    "type",
+}
 
 
 def utc_now() -> dt.datetime:
@@ -112,11 +195,203 @@ def parse_timestamp(value: str) -> dt.datetime:
 
 
 def contains_secret(value: str) -> bool:
-    return any(pattern.search(value) for pattern in SECRET_VALUE_PATTERNS)
+    return structured_contains_secret(value)
+
+
+def flat_string_contains_secret(value: str) -> bool:
+    value = decode_json_unicode_escapes(value)
+    if any(pattern.search(value) for pattern in SECRET_VALUE_PATTERNS):
+        return True
+    representations = (value, normalize_inter_word_comments(value))
+    for representation in representations:
+        for key in assignment_key_candidates(representation):
+            if is_secret_assignment_key(key):
+                return True
+    return False
+
+
+def parsed_object_like(value: str) -> Any | None:
+    stripped = value.strip()
+    if not stripped or stripped[0] not in "[{":
+        return None
+    if len(stripped) > MAX_STRUCTURED_STRING_CHARS:
+        raise CapacityError("structured-secret-scan-limit")
+    try:
+        parsed = json.loads(stripped)
+    except json.JSONDecodeError:
+        return None
+    except (MemoryError, RecursionError) as exc:
+        raise CapacityError("structured-secret-scan-limit") from exc
+    return parsed if isinstance(parsed, (dict, list)) else None
+
+
+def structured_contains_secret(root: Any) -> bool:
+    """Boundedly screen strings and semantic key paths in nested structures."""
+    stack: list[tuple[Any, tuple[str, ...], int]] = [(root, (), 0)]
+    nodes = 0
+    scanned_chars = 0
+    while stack:
+        item, path, depth = stack.pop()
+        nodes += 1
+        if nodes > MAX_SECRET_SCAN_NODES or depth > MAX_SECRET_SCAN_DEPTH:
+            return True
+        if isinstance(item, dict):
+            if len(stack) + len(item) > MAX_SECRET_SCAN_NODES:
+                return True
+            for key, child in item.items():
+                if not isinstance(key, str):
+                    key = str(key)
+                scanned_chars += len(key)
+                if scanned_chars > MAX_SECRET_SCAN_CHARS or flat_string_contains_secret(key):
+                    return True
+                child_path = (*path[-(MAX_SECRET_PATH_COMPONENTS - 1) :], key)
+                stack.append((child, child_path, depth + 1))
+            continue
+        if isinstance(item, (list, tuple)):
+            if len(stack) + len(item) > MAX_SECRET_SCAN_NODES:
+                return True
+            stack.extend((child, path, depth + 1) for child in item)
+            continue
+
+        if path and is_secret_assignment_key("/".join(path)):
+            return True
+        if not isinstance(item, str):
+            continue
+        scanned_chars += len(item)
+        if scanned_chars > MAX_SECRET_SCAN_CHARS:
+            return True
+        try:
+            parsed = parsed_object_like(item)
+        except CapacityError:
+            return True
+        if parsed is not None:
+            stack.append((parsed, path, depth))
+        elif flat_string_contains_secret(item):
+            return True
+    return False
+
+
+def decode_json_unicode_escapes(value: str) -> str:
+    """Decode bounded JSON-style Unicode escapes for credential-key screening."""
+    for _ in range(64):
+        decoded = JSON_UNICODE_ESCAPE_PATTERN.sub(
+            lambda match: chr(int(match.group(1), 16)), value
+        )
+        if decoded == value:
+            break
+        value = decoded
+    return value
+
+
+def assignment_key_candidates(value: str) -> Iterator[str]:
+    """Extract bounded assignment keys without depending on wrapper syntax."""
+    value = decode_json_unicode_escapes(value)
+    last_value = len(value) - 1
+    while last_value >= 0 and value[last_value].isspace():
+        last_value -= 1
+    for separator, character in enumerate(value):
+        if character not in {":", "="} or separator >= last_value:
+            continue
+        lower_bound = max(-1, separator - MAX_ASSIGNMENT_KEY_CHARS - 1)
+        start = separator
+        while start - 1 > lower_bound:
+            if value[start - 1] in ASSIGNMENT_LEFT_BOUNDARIES:
+                break
+            start -= 1
+        candidate = value[start:separator].strip()
+        if candidate:
+            yield candidate
+
+
+def normalize_inter_word_comments(key: str) -> str:
+    key = INTER_WORD_COMMENT_PATTERN.sub(" ", key)
+    key = PAIRED_HASH_COMMENT_PATTERN.sub(" ", key)
+    return HASH_LINE_COMMENT_PATTERN.sub(" ", key)
+
+
+def expand_collapsed_key_parts(parts: Iterator[str]) -> tuple[str, ...]:
+    words: list[str] = []
+    for part in parts:
+        cursor = 0
+        for match in COLLAPSED_SECRET_KEY_PATTERN.finditer(part):
+            if match.start() > cursor:
+                words.append(part[cursor : match.start()])
+            words.extend(COLLAPSED_SECRET_KEY_PHRASES[match.group()])
+            cursor = match.end()
+        if cursor < len(part):
+            words.append(part[cursor:])
+    return tuple(words)
+
+
+def assignment_key_word_variants(key: str) -> tuple[tuple[str, ...], ...]:
+    """Return case-normalized and conventional camel-case key tokenizations."""
+    key = normalize_inter_word_comments(decode_json_unicode_escapes(key))
+    normalized = expand_collapsed_key_parts(
+        iter(re.findall(r"[a-z0-9]+", key.lower()))
+    )
+    camel_key = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1 \2", key)
+    camel_key = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", camel_key)
+    camel = expand_collapsed_key_parts(
+        iter(re.findall(r"[a-z0-9]+", camel_key.lower()))
+    )
+    return (normalized,) if camel == normalized else (normalized, camel)
+
+
+def assignment_key_words(key: str) -> tuple[str, ...]:
+    """Return the case-normalized semantic words for an assignment key."""
+    return assignment_key_word_variants(key)[0]
+
+
+def words_contain_secret_phrase(words: tuple[str, ...]) -> bool:
+    index = 0
+    while index < len(words):
+        phrase = next(
+            (
+                candidate
+                for candidate in SECRET_KEY_PHRASES
+                if words[index : index + len(candidate)] == candidate
+            ),
+            None,
+        )
+        if phrase is None:
+            index += 1
+            continue
+        trailing = words[index + len(phrase) :]
+        if not trailing or trailing[0] not in BENIGN_CREDENTIAL_QUALIFIERS:
+            return True
+        index += len(phrase)
+    return False
+
+
+def is_secret_assignment_key(key: str) -> bool:
+    return any(
+        words_contain_secret_phrase(words)
+        for words in assignment_key_word_variants(key)
+    )
+
+
+def validate_release_outcome(value: Any) -> str:
+    if not isinstance(value, str) or value not in RELEASE_OUTCOMES:
+        raise CapacityError("invalid-release-outcome")
+    return value
+
+
+def validate_persisted_state(state: dict[str, Any]) -> None:
+    """Reject secret-shaped strings and invalid outcomes before writing state."""
+    if structured_contains_secret(state):
+        raise CapacityError("secret-shaped-persistent-state")
+
+    for lease in [*state.get("active", {}).values(), *state.get("history", [])]:
+        release = lease.get("release") if isinstance(lease, dict) else None
+        if release is not None and (
+            not isinstance(release, dict)
+            or release.get("outcome") not in PERSISTED_RELEASE_OUTCOMES
+        ):
+            raise CapacityError("invalid-persisted-release-outcome")
 
 
 def validate_identifier(name: str, value: str) -> str:
-    if not value or len(value) > 300:
+    if not isinstance(value, str) or not value or len(value) > 300:
         raise CapacityError(f"invalid-{name}")
     if contains_secret(value):
         raise CapacityError(f"secret-shaped-{name}")
@@ -124,15 +399,24 @@ def validate_identifier(name: str, value: str) -> str:
 
 
 def owner_from_args(args: argparse.Namespace) -> dict[str, str]:
+    return validate_owner(
+        {
+            "actorId": args.actor_id,
+            "harness": args.harness,
+            "model": args.owner_model,
+            "rootSessionId": args.root_session_id,
+            "delegatedWorkerId": args.delegated_worker_id,
+            "sessionRef": args.session_ref,
+        }
+    )
+
+
+def validate_owner(owner: dict[str, str]) -> dict[str, str]:
+    if not isinstance(owner, dict) or set(owner) != set(OWNER_FIELDS):
+        raise CapacityError("invalid-owner")
     return {
-        "actorId": validate_identifier("actor-id", args.actor_id),
-        "harness": validate_identifier("harness", args.harness),
-        "model": validate_identifier("model", args.owner_model),
-        "rootSessionId": validate_identifier("root-session-id", args.root_session_id),
-        "delegatedWorkerId": validate_identifier(
-            "delegated-worker-id", args.delegated_worker_id
-        ),
-        "sessionRef": validate_identifier("session-ref", args.session_ref),
+        field: validate_identifier(name, owner[field])
+        for field, name in OWNER_FIELDS.items()
     }
 
 
@@ -171,6 +455,7 @@ class LeaseRegistry:
         return state
 
     def _write(self, state: dict[str, Any]) -> None:
+        validate_persisted_state(state)
         if len(state["history"]) > MAX_HISTORY:
             raise CapacityError("lease-history-cap-reached")
         self.state_file.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -624,6 +909,7 @@ class LeaseManager:
             }
 
     def acquire(self, owner: dict[str, str], ttl_seconds: int) -> dict[str, Any]:
+        owner = validate_owner(owner)
         ttl_seconds = self._ttl(ttl_seconds)
         with self.registry.transaction() as state:
             self.registry.expire_stale(state)
@@ -675,6 +961,7 @@ class LeaseManager:
     def heartbeat(
         self, lease_id: str, owner: dict[str, str], ttl_seconds: int
     ) -> dict[str, Any]:
+        owner = validate_owner(owner)
         ttl_seconds = self._ttl(ttl_seconds)
         with self.registry.transaction() as state:
             self.registry.expire_stale(state)
@@ -701,6 +988,8 @@ class LeaseManager:
     def release(
         self, lease_id: str, owner: dict[str, str], outcome: str
     ) -> dict[str, Any]:
+        owner = validate_owner(owner)
+        outcome = validate_release_outcome(outcome)
         with self.registry.transaction() as state:
             self.registry.expire_stale(state)
             lease = state["active"].get(lease_id)
@@ -790,7 +1079,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     release.add_argument("--lease-id", required=True)
     release.add_argument(
         "--outcome",
-        choices=("completed", "blocked", "failed", "cancelled"),
+        choices=RELEASE_OUTCOMES,
         required=True,
     )
     return parser.parse_args(argv)

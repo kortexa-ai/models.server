@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import contextlib
 import copy
 import datetime as dt
 import importlib.util
+import io
 import json
 import os
 import stat
@@ -306,6 +308,503 @@ class LeaseTestCase(unittest.TestCase):
         with self.assertRaisesRegex(lease.CapacityError, "secret-shaped-actor-id"):
             lease.owner_from_args(args)
         self.assertFalse(self.state_file.exists())
+
+    def test_formatted_credentials_are_rejected_by_cli_owner_parser(self) -> None:
+        secret_values = (
+            '{"password":"fixture-secret-value"}',
+            '{"authorization":"Bearer fixture-token"}',
+            "AWS_SECRET_ACCESS_KEY=fixture-secret-value",
+            "awsSecretAccessKey=fixture-secret-value",
+            '"client_secret"=fixture-secret-value',
+            '"private-key" = "fixture-key-value"',
+            '{" password ":"fixture-secret-value"}',
+            "' authorizationHeader ': 'Bearer fixture-token'",
+            '{"\\u0070assword":"fixture-secret-value"}',
+            "apiKeyValue=fixture-key-value",
+            "authorizationHeaderValue=Bearer fixture-token",
+            "privateKeyPem=fixture-key-value",
+            '{"header":"Bearer fixture-token"}',
+            "https://fixture-user:fixture-password@example.invalid",
+            "api_key_backup=fixture-key",
+            "private_key_backup=fixture-key",
+            "access_token_copy=fixture-token",
+            "client_secret_previous=fixture-secret",
+            "password_archive=fixture-password",
+            "credentials_backup=fixture-credentials",
+            "dbTokenOld=fixture-token",
+            "secretKeyReplica=fixture-key",
+            "signingKeyDuplicate=fixture-key",
+            "refresh_token_snapshot=fixture-token",
+            "passphraseFormer=fixture-passphrase",
+            "credentialCopy=fixture-credential",
+            "api\\u002fkey_backup=fixture-key",
+            "api/key_backup=fixture-key",
+            '["api_key_backup"]=fixture-key',
+            "`api_key_backup`=fixture-key",
+            '{"api/key_backup":"fixture-key"}',
+            "['private/key_backup']: 'fixture-key'",
+            "export API/KEY_BACKUP=fixture-key",
+            "[authorization/header_previous] = Bearer fixture-token",
+            "`client/secret_archive`: fixture-secret",
+            "auth.api/key_copy = fixture-key",
+            "APIKEY=fixture-value",
+            "CLIENTSECRET: fixture-value",
+            "ACCESSTOKEN = fixture-value",
+            "PRIVATEKEY:=fixture-value",
+            "SECRETKEY => fixture-value",
+            "SIGNINGKEY: fixture-value",
+            "AUTHORIZATIONHEADER = Basic fixture-value",
+            "ACCESSKEYID=fixture-value",
+            '{"APIKEY":"fixture-value"}',
+            '["CLIENTSECRET"]=fixture-value',
+            "`ACCESSTOKEN`: fixture-value",
+            "PRIVATEKEY # deployment backup = fixture-value",
+            '"SECRETKEY" /* rotated */: "fixture-value"',
+            "`SIGNINGKEY` # old: fixture-value",
+            "AUTHORIZATIONHEADER /* transport */ = Basic fixture-value",
+            "ACCESSKEYID # comment=fixture-value",
+            "api/*note*/key=fixture-value",
+            "access/*note*/key=fixture-value",
+            "private/*note*/key=fixture-value",
+            "signing/*note*/key=fixture-value",
+            "pass/*note*/word=fixture-value",
+            "api<!--note-->key=fixture-value",
+            "client<!--note-->secret=fixture-value",
+            '{"api":{"key":"fixture-value"}}',
+            '{"private":{"key":"fixture-value"}}',
+            '{"access":{"token":"fixture-value"}}',
+            '{"client":{"secret":"fixture-value"}}',
+            '{"authorization":{"header":"Basic fixture-value"}}',
+            "PrIvAtE/KeY=fixture-value",
+            "aPi/kEy=fixture-value",
+            "AcCeSs/ToKeN=fixture-value",
+            "ClIeNt/SeCrEt=fixture-value",
+            "AuThOrIzAtIoN/HeAdEr=Basic fixture-value",
+            "PaSs/WoRd=fixture-value",
+            "api#note#key=fixture-value",
+            "api # note\n key = fixture-value",
+            "private# note\n key: fixture-value",
+        )
+        for value in secret_values:
+            args = type(
+                "Args",
+                (),
+                {
+                    "actor_id": "worker",
+                    "harness": "Prime",
+                    "owner_model": "Qwen",
+                    "root_session_id": "root",
+                    "delegated_worker_id": "delegated",
+                    "session_ref": value,
+                },
+            )()
+            with self.subTest(value=value), self.assertRaisesRegex(
+                lease.CapacityError, "secret-shaped-session-ref"
+            ):
+                lease.owner_from_args(args)
+            self.assertFalse(self.state_file.exists())
+
+    def test_compound_and_header_credentials_are_rejected(self) -> None:
+        secret_values = (
+            "passwordHash=fixture-secret",
+            "PASSWORD_HASH = fixture-secret",
+            "Authorization: Bearer fixture-token",
+            "authorization = bearer   fixture-token",
+            "AUTHORIZATION: Basic fixture-credential",
+            "  BeArEr fixture-token  ",
+            "refreshToken=fixture-token",
+            "client_secret: fixture-secret",
+            "privateKey=fixture-key",
+            "github_token: fixture-token",
+        )
+        for value in secret_values:
+            with self.subTest(value=value), self.assertRaisesRegex(
+                lease.CapacityError, "secret-shaped-session-ref"
+            ):
+                lease.validate_identifier("session-ref", value)
+
+    def test_secret_owner_cannot_bypass_cli_validation_or_reach_state(self) -> None:
+        secret_values = (
+            "github_pat_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            "gho_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            "ghu_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            "ghs_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            "ghr_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            "AKIAABCDEFGHIJKLMNOP",
+            "ASIAABCDEFGHIJKLMNOP",
+            "-----BEGIN PRIVATE KEY-----",
+            "-----BEGIN ENCRYPTED PRIVATE KEY-----",
+            "Authorization: Bearer fixture-token",
+            "authorizationHeader = 'Bearer fixture-token'",
+            "label: authorizationHeader=Bearer fixture-token",
+            "passwordHash=fixture-secret",
+            "my password = \"fixture-secret\"",
+            "build_passwd: fixture-secret",
+            "deploy-passphrase = fixture-secret",
+            "credentials='fixture-credential'",
+            "refresh Token = fixture-token",
+            "api Key = fixture-key",
+            "client-secret=fixture-secret",
+            "privateKey=fixture-key",
+            "secret_key = fixture-key",
+            "signing-key: fixture-key",
+            '{"password":"fixture-secret-value"}',
+            '{"authorization":"Bearer fixture-token"}',
+            "AWS_SECRET_ACCESS_KEY=fixture-secret-value",
+            "awsSecretAccessKey=fixture-secret-value",
+            '"client_secret"=fixture-secret-value',
+            '"private-key" = "fixture-key-value"',
+            '{" password ":"fixture-secret-value"}',
+            "' authorizationHeader ': 'Bearer fixture-token'",
+            '{"\\u0070assword":"fixture-secret-value"}',
+            "apiKeyValue=fixture-key-value",
+            "authorizationHeaderValue=Bearer fixture-token",
+            "privateKeyPem=fixture-key-value",
+            '{"header":"Bearer fixture-token"}',
+            "https://fixture-user:fixture-password@example.invalid",
+            "api_key_backup=fixture-key",
+            "private_key_backup=fixture-key",
+            "access_token_copy=fixture-token",
+            "client_secret_previous=fixture-secret",
+            "password_archive=fixture-password",
+            "credentials_backup=fixture-credentials",
+            "dbTokenOld=fixture-token",
+            "secretKeyReplica=fixture-key",
+            "signingKeyDuplicate=fixture-key",
+            "refresh_token_snapshot=fixture-token",
+            "passphraseFormer=fixture-passphrase",
+            "credentialCopy=fixture-credential",
+            "api\\u002fkey_backup=fixture-key",
+            "api/key_backup=fixture-key",
+            '["api_key_backup"]=fixture-key',
+            "`api_key_backup`=fixture-key",
+            '{"api/key_backup":"fixture-key"}',
+            "['private/key_backup']: 'fixture-key'",
+            "export API/KEY_BACKUP=fixture-key",
+            "[authorization/header_previous] = Bearer fixture-token",
+            "`client/secret_archive`: fixture-secret",
+            "auth.api/key_copy = fixture-key",
+            "APIKEY=fixture-value",
+            "CLIENTSECRET: fixture-value",
+            "ACCESSTOKEN = fixture-value",
+            "PRIVATEKEY:=fixture-value",
+            "SECRETKEY => fixture-value",
+            "SIGNINGKEY: fixture-value",
+            "AUTHORIZATIONHEADER = Basic fixture-value",
+            "ACCESSKEYID=fixture-value",
+            '{"APIKEY":"fixture-value"}',
+            '["CLIENTSECRET"]=fixture-value',
+            "`ACCESSTOKEN`: fixture-value",
+            "PRIVATEKEY # deployment backup = fixture-value",
+            '"SECRETKEY" /* rotated */: "fixture-value"',
+            "`SIGNINGKEY` # old: fixture-value",
+            "AUTHORIZATIONHEADER /* transport */ = Basic fixture-value",
+            "ACCESSKEYID # comment=fixture-value",
+            "api/*note*/key=fixture-value",
+            "access/*note*/key=fixture-value",
+            "private/*note*/key=fixture-value",
+            "signing/*note*/key=fixture-value",
+            "pass/*note*/word=fixture-value",
+            "api<!--note-->key=fixture-value",
+            "client<!--note-->secret=fixture-value",
+            '{"api":{"key":"fixture-value"}}',
+            '{"private":{"key":"fixture-value"}}',
+            '{"access":{"token":"fixture-value"}}',
+            '{"client":{"secret":"fixture-value"}}',
+            '{"authorization":{"header":"Basic fixture-value"}}',
+            "PrIvAtE/KeY=fixture-value",
+            "aPi/kEy=fixture-value",
+            "AcCeSs/ToKeN=fixture-value",
+            "ClIeNt/SeCrEt=fixture-value",
+            "AuThOrIzAtIoN/HeAdEr=Basic fixture-value",
+            "PaSs/WoRd=fixture-value",
+            "api#note#key=fixture-value",
+            "api # note\n key = fixture-value",
+            "private# note\n key: fixture-value",
+        )
+        for value in secret_values:
+            with self.subTest(value=value):
+                secret_owner = owner()
+                secret_owner["sessionRef"] = value
+                manager = self.manager()
+
+                with self.assertRaisesRegex(
+                    lease.CapacityError, "secret-shaped-session-ref"
+                ):
+                    manager.acquire(secret_owner, 900)
+                self.assertFalse(self.state_file.exists())
+                self.assertFalse(manager.registry.lock_file.exists())
+
+    def test_invalid_release_outcome_cannot_mutate_state_or_history(self) -> None:
+        manager = self.manager()
+        acquired = manager.acquire(owner(), 900)
+        lease_id = acquired["lease"]["leaseId"]
+        state_before = self.state_file.read_bytes()
+        lock_before = manager.registry.lock_file.stat()
+        invalid_outcomes = (
+            None,
+            "",
+            "expired",
+            " completed ",
+            "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+        )
+
+        for outcome in invalid_outcomes:
+            with self.subTest(outcome=outcome), self.assertRaisesRegex(
+                lease.CapacityError, "invalid-release-outcome"
+            ):
+                manager.release(lease_id, owner(), outcome)  # type: ignore[arg-type]
+            self.assertEqual(state_before, self.state_file.read_bytes())
+            lock_after = manager.registry.lock_file.stat()
+            self.assertEqual(lock_before.st_mtime_ns, lock_after.st_mtime_ns)
+            self.assertEqual(lock_before.st_size, lock_after.st_size)
+
+        state = self.read_state()
+        self.assertIn(lease_id, state["active"])
+        self.assertEqual([], state["history"])
+
+    def test_cli_rejects_invalid_release_outcome_before_state_access(self) -> None:
+        argv = [
+            "release",
+            "--actor-id",
+            "worker",
+            "--harness",
+            "Prime",
+            "--owner-model",
+            "Qwen",
+            "--root-session-id",
+            "root",
+            "--delegated-worker-id",
+            "delegated",
+            "--session-ref",
+            "session",
+            "--lease-id",
+            "qwen-fixture",
+            "--outcome",
+            "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+        ]
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            lease.parse_args(argv)
+        self.assertFalse(self.state_file.exists())
+
+    def test_final_persistence_boundary_rejects_secret_strings(self) -> None:
+        registry = lease.LeaseRegistry(self.state_file, clock=self.clock)
+        secret_values = (
+            '{"\\u0070assword":"fixture-secret-value"}',
+            "api_key_backup=fixture-key",
+            "private_key_backup=fixture-key",
+            "access_token_copy=fixture-token",
+            "client_secret_previous=fixture-secret",
+            "password_archive=fixture-password",
+            "credentials_backup=fixture-credentials",
+            "dbTokenOld=fixture-token",
+            "secretKeyReplica=fixture-key",
+            "signingKeyDuplicate=fixture-key",
+            "refresh_token_snapshot=fixture-token",
+            "passphraseFormer=fixture-passphrase",
+            "credentialCopy=fixture-credential",
+            "api\\u002fkey_backup=fixture-key",
+            "api/key_backup=fixture-key",
+            '["api_key_backup"]=fixture-key',
+            "`api_key_backup`=fixture-key",
+            '{"api/key_backup":"fixture-key"}',
+            "['private/key_backup']: 'fixture-key'",
+            "export API/KEY_BACKUP=fixture-key",
+            "[authorization/header_previous] = Bearer fixture-token",
+            "`client/secret_archive`: fixture-secret",
+            "auth.api/key_copy = fixture-key",
+            "APIKEY=fixture-value",
+            "CLIENTSECRET: fixture-value",
+            "ACCESSTOKEN = fixture-value",
+            "PRIVATEKEY:=fixture-value",
+            "SECRETKEY => fixture-value",
+            "SIGNINGKEY: fixture-value",
+            "AUTHORIZATIONHEADER = Basic fixture-value",
+            "ACCESSKEYID=fixture-value",
+            '{"APIKEY":"fixture-value"}',
+            '["CLIENTSECRET"]=fixture-value',
+            "`ACCESSTOKEN`: fixture-value",
+            "PRIVATEKEY # deployment backup = fixture-value",
+            '"SECRETKEY" /* rotated */: "fixture-value"',
+            "`SIGNINGKEY` # old: fixture-value",
+            "AUTHORIZATIONHEADER /* transport */ = Basic fixture-value",
+            "ACCESSKEYID # comment=fixture-value",
+            "api/*note*/key=fixture-value",
+            "access/*note*/key=fixture-value",
+            "private/*note*/key=fixture-value",
+            "signing/*note*/key=fixture-value",
+            "pass/*note*/word=fixture-value",
+            "api<!--note-->key=fixture-value",
+            "client<!--note-->secret=fixture-value",
+            '{"api":{"key":"fixture-value"}}',
+            '{"private":{"key":"fixture-value"}}',
+            '{"access":{"token":"fixture-value"}}',
+            '{"client":{"secret":"fixture-value"}}',
+            '{"authorization":{"header":"Basic fixture-value"}}',
+            "PrIvAtE/KeY=fixture-value",
+            "aPi/kEy=fixture-value",
+            "AcCeSs/ToKeN=fixture-value",
+            "ClIeNt/SeCrEt=fixture-value",
+            "AuThOrIzAtIoN/HeAdEr=Basic fixture-value",
+            "PaSs/WoRd=fixture-value",
+            "api#note#key=fixture-value",
+            "api # note\n key = fixture-value",
+            "private# note\n key: fixture-value",
+        )
+        for value in secret_values:
+            state = lease.empty_state()
+            state["history"].append(
+                {
+                    "leaseId": "fixture",
+                    "release": {"outcome": "completed"},
+                    "callerControlled": ("safe-metadata", value),
+                }
+            )
+            with self.subTest(value=value), self.assertRaisesRegex(
+                lease.CapacityError, "secret-shaped-persistent-state"
+            ):
+                registry._write(state)
+            self.assertFalse(self.state_file.exists())
+            self.assertFalse(registry.lock_file.exists())
+
+    def test_final_persistence_boundary_rejects_nested_credential_paths(self) -> None:
+        registry = lease.LeaseRegistry(self.state_file, clock=self.clock)
+        secret_structures = (
+            {"api": {"key": "fixture-value"}},
+            {"private": {"key": "fixture-value"}},
+            {"access": {"token": "fixture-value"}},
+            {"access": {"key": {"id": "fixture-value"}}},
+            {"client": {"secret": "fixture-value"}},
+            {"signing": {"key": "fixture-value"}},
+            {"authorization": {"header": "Basic fixture-value"}},
+            {"pass": {"word": "fixture-value"}},
+            {"outer": [{"api": {"key": "fixture-value"}}]},
+        )
+        for value in secret_structures:
+            state = lease.empty_state()
+            state["history"].append(
+                {
+                    "leaseId": "fixture",
+                    "release": {"outcome": "completed"},
+                    "callerControlled": value,
+                }
+            )
+            with self.subTest(value=value), self.assertRaisesRegex(
+                lease.CapacityError, "secret-shaped-persistent-state"
+            ):
+                registry._write(state)
+            self.assertFalse(self.state_file.exists())
+            self.assertFalse(registry.lock_file.exists())
+
+    def test_final_persistence_boundary_accepts_benign_nested_key_metadata(
+        self,
+    ) -> None:
+        registry = lease.LeaseRegistry(self.state_file, clock=self.clock)
+        state = lease.empty_state()
+        state["history"].append(
+            {
+                "leaseId": "fixture",
+                "release": {"outcome": "completed"},
+                "callerControlled": {
+                    "private": {"key": {"path": "fixture.pem"}},
+                    "api": {"key": {"documentation": "approved"}},
+                    "authorization": {"header": {"tests": "enabled"}},
+                },
+            }
+        )
+
+        registry._write(state)
+
+        self.assertTrue(self.state_file.exists())
+        self.assertFalse(registry.lock_file.exists())
+
+    def test_structured_secret_scan_limits_fail_closed_without_recursion(self) -> None:
+        oversized_json = json.dumps(
+            {"safe": "x" * lease.MAX_STRUCTURED_STRING_CHARS}
+        )
+        deeply_nested_json = "[" * 1_000 + "0" + "]" * 1_000
+        too_many_nodes = ["safe"] * (lease.MAX_SECRET_SCAN_NODES + 1)
+
+        self.assertTrue(lease.contains_secret(oversized_json))
+        self.assertTrue(lease.contains_secret(deeply_nested_json))
+        self.assertTrue(lease.structured_contains_secret(too_many_nodes))
+
+    def test_benign_native_and_serialized_structures_have_matching_policy(
+        self,
+    ) -> None:
+        safe_structures = (
+            {"authorization": {"header": {"tests": "enabled"}}},
+            {"private": {"key": {"path": "fixture.pem"}}},
+            {"api": {"key": {"documentation": "approved"}}},
+        )
+        serialized = tuple(json.dumps(value) for value in safe_structures)
+        for native, text in zip(safe_structures, serialized, strict=True):
+            with self.subTest(native=native):
+                self.assertFalse(lease.structured_contains_secret(native))
+                self.assertFalse(lease.contains_secret(text))
+
+        state = lease.empty_state()
+        state["history"].append(
+            {
+                "leaseId": "fixture",
+                "release": {"outcome": "completed"},
+                "native": safe_structures,
+                "serialized": serialized,
+            }
+        )
+        lease.LeaseRegistry(self.state_file, clock=self.clock)._write(state)
+        self.assertTrue(self.state_file.exists())
+
+    def test_benign_credential_policy_identifiers_are_accepted(self) -> None:
+        benign_values = (
+            "password-policy-review",
+            "password-policy=review",
+            "api-key-documentation",
+            "api-key-documentation=approved",
+            "access-token-rotation",
+            "authorization-header-tests",
+            "authorization-header-tests=enabled",
+            "bearer-capacity-worker",
+            "token-budget-4096",
+            "token-budget=4096",
+            "secret-scanner-critic",
+            "secret-scanner=critic",
+            "password-hash-policy=review",
+            "client-secret-scanner=enabled",
+            "private-key-path=fixture.pem",
+            "monkey-business=review",
+            "secretary-role=admin",
+            "tokenizer-mode=fast",
+            "api/key/documentation=approved",
+            "[private/key/path]=fixture.pem",
+            "`secret/scanner`=critic",
+            "password/policy=review",
+            "token/budget=4096",
+            "authorization/header/tests=enabled",
+            "APIKEYPOLICY=review",
+            "CLIENTSECRETSCANNER=enabled",
+            "ACCESSTOKENBUDGET=4096",
+            "PRIVATEKEYPATH=fixture.pem",
+            "SECRETKEYROTATION=scheduled",
+            "SIGNINGKEYDOCUMENTATION=approved",
+            "AUTHORIZATIONHEADERTESTS=enabled",
+            "ACCESSKEYPOLICY=review",
+            "api/*documentation*/key/policy=review",
+            "private<!--documentation-->key/path=fixture.pem",
+            '{"private":{"key":{"path":"fixture.pem"}}}',
+            '{"api":{"key":{"documentation":"approved"}}}',
+            "PrIvAtE/KeY/PaTh=fixture.pem",
+            "AuThOrIzAtIoN/HeAdEr/TeStS=enabled",
+            "api#documentation#key/policy=review",
+            "private # documentation\n key/path = fixture.pem",
+            '{"authorization":{"header":{"tests":"enabled"}}}',
+        )
+        for value in benign_values:
+            with self.subTest(value=value):
+                self.assertEqual(
+                    value, lease.validate_identifier("session-ref", value)
+                )
 
     def test_state_files_are_owner_only_and_store_no_prompt_or_output(self) -> None:
         self.manager().acquire(owner(), 900)
