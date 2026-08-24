@@ -10,12 +10,23 @@ if ! docker images | awk '{print $1":"$2}' | grep -q "^${IMAGE_NAME}:"; then
     docker build -f "$SCRIPT_DIR/Dockerfile.cuda-build" -t "$IMAGE_NAME" "$SCRIPT_DIR"
 fi
 
+# The container only compiles CUDA code; it does not need runtime GPU access.
+# Detect the target architecture on the host so this also works with Docker
+# daemons that do not have the NVIDIA Container Toolkit configured.
+GPU_CAP=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader 2>/dev/null | head -1 | tr -d '[:space:]')
+GPU_ARCH=${GPU_CAP//./}
+if [ -z "$GPU_ARCH" ]; then
+    echo "Could not detect the host GPU compute capability with nvidia-smi"
+    exit 1
+fi
+echo "Building for CUDA architecture: $GPU_ARCH (compute capability $GPU_CAP)"
+
 # Run the build inside Docker container
 echo "Running build in Docker container..."
 if ! docker run --rm \
-    --gpus all \
     --user "$(id -u)":"$(id -g)" \
     -e HOME=/tmp \
+    -e GPU_ARCH="$GPU_ARCH" \
     -v "$HOME/src/llama.cpp:/workspace/llama.cpp" \
     -v "$HOME/bin:/workspace/bin" \
     -w /workspace/llama.cpp \
@@ -30,13 +41,6 @@ if ! docker run --rm \
                 rm -rf build
             fi
         fi
-        # Auto-detect GPU architecture inside container
-        GPU_ARCH=\$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader 2>/dev/null | head -1 | tr -d '.')
-        if [ -z \"\$GPU_ARCH\" ]; then
-            echo 'Could not detect GPU architecture, using native'
-            GPU_ARCH=native
-        fi
-        echo \"Building for CUDA architecture: \$GPU_ARCH\"
         # NCCL is only for multi-GPU collective comms; our machines are all single-GPU,
         # so disable it (also silences the \"NCCL not found\" cmake configure warning).
         cmake -B build -DGGML_CUDA=ON -DLLAMA_OPENSSL=ON -DCMAKE_CUDA_ARCHITECTURES=\$GPU_ARCH -DBUILD_SHARED_LIBS=OFF -DGGML_CUDA_NCCL=OFF
