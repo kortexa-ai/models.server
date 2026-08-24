@@ -467,6 +467,66 @@ serving engines; the GGUF quantization table does not apply to them.
 4. Follow the quantization standards above
 5. Test: `./run.sh <model-id>`
 
+## Smarty Qwen coding-agent capacity lease
+
+Coding agents must acquire a lease before they use the already-running managed
+Qwen 3.8 27B endpoint on `smarty`. The lease is intentionally conservative: it
+allows one agent request at a time, limits context to 65,536 tokens and output
+to 4,096 tokens, and reserves the second Qwen slot plus at least 16 GiB of free
+VRAM for production headroom.
+
+Run the tool on `smarty` from this repository. Supply the same durable owner
+fields to `acquire`, every `heartbeat`, and `release`:
+
+```bash
+python3 scripts/qwen_capacity_lease.py probe
+python3 scripts/qwen_capacity_lease.py acquire \
+  --actor-id worker-123 --harness Codex --owner-model Sol \
+  --root-session-id root-session-123 \
+  --delegated-worker-id delegated-123 --session-ref session-123 \
+  --ttl-seconds 900
+```
+
+An admitted result includes the lease ID, endpoint, fixed budget, heartbeat,
+and expiry. Heartbeat immediately before every inference request. Do not send
+the request unless that heartbeat returns `"decision": "admit"`; queue or stop
+on every `queue`, `blocked`, expired, unreadable, or unknown result. Keep only
+one request in flight, keep the complete request context within the recorded
+context budget, and set the output-token limit no higher than the recorded
+output budget. Direct use without a current same-owner lease is outside this
+contract.
+
+```bash
+python3 scripts/qwen_capacity_lease.py heartbeat \
+  --actor-id worker-123 --harness Codex --owner-model Sol \
+  --root-session-id root-session-123 \
+  --delegated-worker-id delegated-123 --session-ref session-123 \
+  --lease-id qwen-example-lease-id --ttl-seconds 900
+
+python3 scripts/qwen_capacity_lease.py release \
+  --actor-id worker-123 --harness Codex --owner-model Sol \
+  --root-session-id root-session-123 \
+  --delegated-worker-id delegated-123 --session-ref session-123 \
+  --lease-id qwen-example-lease-id --outcome completed
+```
+
+Admission fails closed when Qwen or a protected production service is
+unhealthy, a managed GPU process disagrees with the live `ktxsvc` roster, an
+unknown CUDA process or LegoLM GPU owner exists, GPU load or free VRAM is
+unsafe, the reserved Qwen slot is busy, or another agent lease is active. A
+small canary runs only after those checks and is followed by the same checks
+again before the lease is written.
+
+The tool cannot start, stop, or restart services and cannot signal processes.
+It observes only `ktxsvc list`, two exact read-only `nvidia-smi` queries, the
+Qwen listener, and local health endpoints. It stores owner, capacity, and
+lifecycle metadata in an owner-only local state file; it never stores prompts,
+credentials, or model output. Expired crash leases are recorded and cleared
+under the same lock before a new admission. Any workflow that needs downtime
+must first drain every Qwen worker, stop before mutation, and obtain Franci's
+explicit permission under the Smarty GPU guide. LegoLM work is never mutated
+by this lease workflow.
+
 ## Service Management
 
 ### macOS (launchd)

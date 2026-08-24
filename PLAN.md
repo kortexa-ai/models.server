@@ -1,3 +1,46 @@
+# Issue #4: Smarty Qwen coding-agent capacity lease
+
+## Goal
+
+Provide OMP and Prime Agent workers with a non-disruptive lease for the
+already-running managed Qwen 3.8 27B endpoint on `smarty`. Preserve production
+services, deliberate VRAM and request-slot headroom, other CUDA work, and all
+active LegoLM research.
+
+## Work plan
+
+1. Record the live `ktxsvc` roster, protected health endpoints, Qwen listener,
+   GPU allocation, free VRAM, and any active LegoLM or unknown CUDA owner.
+2. Add an atomic owner-only lease registry with durable owner identity,
+   bounded capacity, heartbeat, expiry, crash recovery, and release evidence.
+3. Admit only after fail-closed preflight, a small request through the existing
+   Qwen endpoint, and a matching postflight. Never manage a service or signal a
+   process from the lease tool.
+4. Exercise concurrent admission, stale lease, agent crash, LegoLM activity,
+   unknown CUDA work, insufficient headroom, slot contention, service health,
+   ownership, secret rejection, and Qwen PID-change behavior in tests.
+5. Recheck the live baseline and exclusive writer claim, validate locally,
+   then Git-sync and run one bounded live acquire/release canary only if the
+   measured state remains safe. Do not stop or restart any service.
+6. Freeze the focused evidence for a different agent to audit. Keep the issue
+   open and do not mark it Done from the builder session.
+
+## Status
+
+- In progress under the explicit non-atomic/manual serialized-writer claim
+  recorded on issue #4. The atomic cross-harness provider remains tracked by
+  `kortexa-ai/esp32-dash#3`; this work does not claim that dependency is done.
+- The approved surfaces are `scripts/qwen_capacity_lease.py`,
+  `tests/test_qwen_capacity_lease.py`, this PLAN section, and the matching
+  README lease section. No other repository surface is in scope.
+- The initial Smarty baseline was read-only: one healthy managed Qwen process
+  owned port 2053 with two idle slots; all observed CUDA PIDs belonged to known
+  managed services; no LegoLM GPU owner or prior agent lease was observed.
+- No production service or LegoLM code, data, job, service, or experiment has
+  been stopped, restarted, started, or changed.
+
+---
+
 # OrcaRouter Qwen 3.8 27B uncensored alignment
 
 ## Goal
