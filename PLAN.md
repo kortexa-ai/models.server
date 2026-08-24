@@ -38,6 +38,11 @@ active LegoLM research.
   managed services; no LegoLM GPU owner or prior agent lease was observed.
 - No production service or LegoLM code, data, job, service, or experiment has
   been stopped, restarted, started, or changed.
+- Candidate 1 (`0a44b65`) passed its synthetic checks but failed the first safe
+  live acquire as `qwen-canary-empty`; it is frozen and rejected in issue #4
+  evidence. Candidate 2 accepts llama.cpp's documented non-empty
+  `message.reasoning_content` as liveness without persisting its value, while
+  continuing to reject empty, error, malformed, and over-budget responses.
 
 ---
 

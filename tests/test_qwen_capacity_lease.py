@@ -324,6 +324,101 @@ class LeaseTestCase(unittest.TestCase):
 
 
 class ParsingAndCommandTests(unittest.TestCase):
+    @staticmethod
+    def canary_result(
+        content: object = "OK",
+        reasoning_content: object = "",
+        prompt_tokens: object = 10,
+        completion_tokens: object = 2,
+    ) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": content,
+                        "reasoning_content": reasoning_content,
+                    }
+                }
+            ],
+            "usage": {
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "total_tokens": (
+                    prompt_tokens + completion_tokens
+                    if isinstance(prompt_tokens, int)
+                    and not isinstance(prompt_tokens, bool)
+                    and isinstance(completion_tokens, int)
+                    and not isinstance(completion_tokens, bool)
+                    else None
+                ),
+            },
+        }
+
+    def test_canary_accepts_content_without_retaining_it(self) -> None:
+        parsed = lease.parse_canary_response(self.canary_result(), 25)
+        self.assertEqual(["content"], parsed["outputChannels"])
+        self.assertFalse(parsed["responseStored"])
+        self.assertNotIn("OK", json.dumps(parsed))
+
+    def test_canary_accepts_observed_reasoning_only_shape(self) -> None:
+        result = self.canary_result(content="", reasoning_content="fixture-reasoning")
+        parsed = lease.parse_canary_response(result, 25)
+        self.assertEqual(["reasoning-content"], parsed["outputChannels"])
+        self.assertNotIn("fixture-reasoning", json.dumps(parsed))
+
+    def test_canary_accepts_openai_typed_text_parts(self) -> None:
+        result = self.canary_result(content=[{"type": "text", "text": "OK"}])
+        parsed = lease.parse_canary_response(result, 25)
+        self.assertEqual(["content-parts"], parsed["outputChannels"])
+
+    def test_canary_accepts_empty_parts_when_reasoning_is_present(self) -> None:
+        result = self.canary_result(content=[], reasoning_content="fixture-reasoning")
+        parsed = lease.parse_canary_response(result, 25)
+        self.assertEqual(["reasoning-content"], parsed["outputChannels"])
+
+    def test_canary_rejects_empty_output_channels(self) -> None:
+        with self.assertRaisesRegex(lease.CapacityError, "qwen-canary-empty"):
+            lease.parse_canary_response(self.canary_result(content=""), 25)
+
+    def test_canary_rejects_error_and_malformed_shapes(self) -> None:
+        malformed = (
+            {"error": {"message": "fixture-error"}},
+            {"choices": []},
+            {"choices": ["not-an-object"]},
+            {"choices": [{"message": {"role": "user", "content": "OK"}}]},
+            {**self.canary_result(), "error": {"message": "fixture-error"}},
+            self.canary_result(content=42),
+            self.canary_result(content="", reasoning_content=["not-a-string"]),
+            self.canary_result(content=[{"type": "image", "text": "not-text"}]),
+        )
+        for result in malformed:
+            with self.subTest(result=result), self.assertRaisesRegex(
+                lease.CapacityError, "qwen-canary-invalid"
+            ):
+                lease.parse_canary_response(result, 25)
+
+    def test_canary_rejects_missing_or_out_of_budget_usage(self) -> None:
+        missing = self.canary_result()
+        del missing["usage"]
+        missing_total = self.canary_result()
+        del missing_total["usage"]["total_tokens"]
+        mismatched_total = self.canary_result()
+        mismatched_total["usage"]["total_tokens"] = 99
+        invalid = (
+            missing,
+            missing_total,
+            mismatched_total,
+            self.canary_result(prompt_tokens=True),
+            self.canary_result(prompt_tokens=-1),
+            self.canary_result(prompt_tokens=257),
+            self.canary_result(completion_tokens=0),
+            self.canary_result(completion_tokens=9),
+        )
+        for result in invalid:
+            with self.subTest(result=result), self.assertRaises(lease.CapacityError):
+                lease.parse_canary_response(result, 25)
+
     def test_ktxsvc_roster_preserves_grouped_service_names(self) -> None:
         output = """\
 PROJECT                        INSTALLED  ENABLED    RUNNING

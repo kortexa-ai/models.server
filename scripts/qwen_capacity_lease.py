@@ -34,6 +34,7 @@ MAX_HISTORY = 256
 MAX_HEARTBEATS = 1_000
 MAX_HTTP_BYTES = 1_048_576
 MAX_STATE_BYTES = 4_194_304
+MAX_CANARY_PROMPT_TOKENS = 256
 DEFAULT_STATE_FILE = Path.home() / ".local/state/kortexa-qwen-capacity/leases.json"
 GPU_SUMMARY_COMMAND = (
     "nvidia-smi",
@@ -304,6 +305,79 @@ def parse_gpu_processes(output: str) -> list[dict[str, Any]]:
     return processes
 
 
+def parse_canary_response(result: Any, elapsed_ms: int) -> dict[str, Any]:
+    """Validate liveness without returning or retaining generated text."""
+    if not isinstance(result, dict) or "error" in result:
+        raise CapacityError("qwen-canary-invalid")
+    choices = result.get("choices")
+    if not isinstance(choices, list) or len(choices) != 1:
+        raise CapacityError("qwen-canary-invalid")
+    choice = choices[0]
+    if not isinstance(choice, dict) or not isinstance(choice.get("message"), dict):
+        raise CapacityError("qwen-canary-invalid")
+    message = choice["message"]
+    if message.get("role") != "assistant":
+        raise CapacityError("qwen-canary-invalid")
+
+    channels: list[str] = []
+    content = message.get("content")
+    if isinstance(content, str):
+        if content.strip():
+            channels.append("content")
+    elif isinstance(content, list):
+        has_text = False
+        for part in content:
+            if (
+                not isinstance(part, dict)
+                or part.get("type") != "text"
+                or not isinstance(part.get("text"), str)
+            ):
+                raise CapacityError("qwen-canary-invalid")
+            has_text = has_text or bool(part["text"].strip())
+        if has_text:
+            channels.append("content-parts")
+    else:
+        raise CapacityError("qwen-canary-invalid")
+
+    reasoning = message.get("reasoning_content", "")
+    if not isinstance(reasoning, str):
+        raise CapacityError("qwen-canary-invalid")
+    if reasoning.strip():
+        channels.append("reasoning-content")
+    if not channels:
+        raise CapacityError("qwen-canary-empty")
+
+    usage = result.get("usage")
+    if not isinstance(usage, dict):
+        raise CapacityError("qwen-canary-invalid")
+    prompt_tokens = usage.get("prompt_tokens")
+    completion_tokens = usage.get("completion_tokens")
+    if (
+        not isinstance(prompt_tokens, int)
+        or isinstance(prompt_tokens, bool)
+        or not 0 <= prompt_tokens <= MAX_CANARY_PROMPT_TOKENS
+        or not isinstance(completion_tokens, int)
+        or isinstance(completion_tokens, bool)
+        or not 1 <= completion_tokens <= 8
+    ):
+        raise CapacityError("qwen-canary-budget-invalid")
+    total_tokens = usage.get("total_tokens")
+    if (
+        not isinstance(total_tokens, int)
+        or isinstance(total_tokens, bool)
+        or total_tokens != prompt_tokens + completion_tokens
+    ):
+        raise CapacityError("qwen-canary-budget-invalid")
+
+    return {
+        "elapsedMs": elapsed_ms,
+        "promptTokens": prompt_tokens,
+        "completionTokens": completion_tokens,
+        "outputChannels": channels,
+        "responseStored": False,
+    }
+
+
 class LiveCollector:
     """Collect a bounded, secret-free Smarty admission snapshot."""
 
@@ -463,25 +537,9 @@ class LiveCollector:
             raise CapacityError("qwen-canary-too-large")
         try:
             result = json.loads(payload)
-            choice = result["choices"][0]
-            content = choice["message"]["content"]
-            usage = result.get("usage", {})
-            prompt_tokens = int(usage.get("prompt_tokens", 0))
-            completion_tokens = int(usage.get("completion_tokens", 0))
-        except (KeyError, IndexError, TypeError, UnicodeError, json.JSONDecodeError) as exc:
+        except (UnicodeError, json.JSONDecodeError) as exc:
             raise CapacityError("qwen-canary-invalid") from exc
-        except ValueError as exc:
-            raise CapacityError("qwen-canary-invalid") from exc
-        if not isinstance(content, str) or not content.strip():
-            raise CapacityError("qwen-canary-empty")
-        if prompt_tokens < 0 or not 0 <= completion_tokens <= 8:
-            raise CapacityError("qwen-canary-budget-invalid")
-        return {
-            "elapsedMs": elapsed_ms,
-            "promptTokens": prompt_tokens,
-            "completionTokens": completion_tokens,
-            "responseStored": False,
-        }
+        return parse_canary_response(result, elapsed_ms)
 
 
 def evaluate_snapshot(
