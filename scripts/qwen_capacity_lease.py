@@ -29,7 +29,8 @@ from pathlib import Path
 from typing import Any
 
 UTC = dt.timezone.utc
-STATE_VERSION = 1
+STATE_VERSION = 2
+LEGACY_STATE_VERSION = 1
 MAX_HISTORY = 256
 MAX_HEARTBEATS = 1_000
 MAX_HTTP_BYTES = 1_048_576
@@ -80,6 +81,42 @@ OWNER_FIELDS = {
     "delegatedWorkerId": "delegated-worker-id",
     "sessionRef": "session-ref",
 }
+
+HARNESS_NAMES = frozenset({"Codex", "OMP", "Prime Agent"})
+AGENT_DECK_SESSION_RE = re.compile(
+    r"(?:codex|claude|hermes|prime):[A-Za-z0-9][A-Za-z0-9._-]{0,159}\Z"
+)
+UUID7_RE = re.compile(
+    r"[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z"
+)
+ACTOR_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,159}\Z")
+OWNER_ID_RE = re.compile(r"[A-Za-z0-9/][A-Za-z0-9._:/@+-]{0,299}\Z")
+MODEL_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,159}\Z")
+LEASE_ID_RE = re.compile(r"qwen-[0-9a-f]{24}\Z")
+CANARY_OUTPUT_CHANNELS = frozenset(
+    {"content", "content-parts", "reasoning-content"}
+)
+PERSISTED_REASON_CODES = frozenset(
+    {
+        "agent-capacity-already-leased",
+        "heartbeat-expired",
+        "heartbeat-history-cap-reached",
+        "insufficient-vram-headroom",
+        "legolm-active",
+        "managed-cuda-roster-mismatch",
+        "managed-qwen-not-running",
+        "production-gpu-load-high",
+        "protected-service-unhealthy",
+        "qwen-health-unavailable",
+        "qwen-port-owner-mismatch",
+        "qwen-process-changed",
+        "qwen-request-capacity-busy",
+        "qwen-slot-state-unknown",
+        "unknown-cuda-process",
+        "wrong-host",
+        "wrong-qwen-endpoint",
+    }
+)
 
 HEALTH_ENDPOINTS = {
     "alt-image-gen.server/base": "http://127.0.0.1:4004/health",
@@ -376,25 +413,237 @@ def validate_release_outcome(value: Any) -> str:
     return value
 
 
-def validate_persisted_state(state: dict[str, Any]) -> None:
-    """Reject secret-shaped strings and invalid outcomes before writing state."""
+def _state_invalid() -> None:
+    raise CapacityError("lease-state-invalid")
+
+
+def _exact_object(value: Any, keys: set[str]) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != keys:
+        _state_invalid()
+    return value
+
+
+def _state_int(value: Any, minimum: int, maximum: int) -> int:
+    if (
+        not isinstance(value, int)
+        or isinstance(value, bool)
+        or not minimum <= value <= maximum
+    ):
+        _state_invalid()
+    return value
+
+
+def _state_timestamp(value: Any) -> dt.datetime:
+    if not isinstance(value, str):
+        _state_invalid()
+    try:
+        parsed = parse_timestamp(value)
+    except (OverflowError, TypeError, ValueError):
+        _state_invalid()
+    if value != timestamp(parsed):
+        _state_invalid()
+    return parsed
+
+
+def _validate_canary(value: Any) -> None:
+    canary = _exact_object(
+        value,
+        {
+            "elapsedMs",
+            "promptTokens",
+            "completionTokens",
+            "outputChannels",
+            "responseStored",
+        },
+    )
+    _state_int(canary["elapsedMs"], 0, 60_000)
+    _state_int(canary["promptTokens"], 0, MAX_CANARY_PROMPT_TOKENS)
+    _state_int(canary["completionTokens"], 1, 8)
+    channels = canary["outputChannels"]
+    if (
+        not isinstance(channels, list)
+        or not 1 <= len(channels) <= len(CANARY_OUTPUT_CHANNELS)
+        or any(not isinstance(channel, str) for channel in channels)
+        or len(set(channels)) != len(channels)
+        or any(channel not in CANARY_OUTPUT_CHANNELS for channel in channels)
+        or canary["responseStored"] is not False
+    ):
+        _state_invalid()
+
+
+def _validate_release(value: Any, status: str) -> dt.datetime:
+    release = _exact_object(value, {"releasedAt", "outcome", "reasonCodes"})
+    released_at = _state_timestamp(release["releasedAt"])
+    outcome = release["outcome"]
+    reasons = release["reasonCodes"]
+    if (
+        outcome not in PERSISTED_RELEASE_OUTCOMES
+        or not isinstance(reasons, list)
+        or len(reasons) > 32
+        or any(not isinstance(reason, str) for reason in reasons)
+        or len(set(reasons)) != len(reasons)
+        or any(reason not in PERSISTED_REASON_CODES for reason in reasons)
+    ):
+        _state_invalid()
+    if status == "expired":
+        if outcome != "expired" or reasons != ["heartbeat-expired"]:
+            _state_invalid()
+    elif outcome not in RELEASE_OUTCOMES or (reasons and outcome != "blocked"):
+        _state_invalid()
+    return released_at
+
+
+def _validate_lease(value: Any, *, active: bool, map_key: str | None = None) -> str:
+    lease = _exact_object(
+        value,
+        {
+            "leaseId",
+            "status",
+            "generation",
+            "owner",
+            "endpoint",
+            "model",
+            "budget",
+            "acquiredAt",
+            "heartbeatAt",
+            "expiresAt",
+            "heartbeats",
+            "release",
+            "admission",
+        },
+    )
+    lease_id = lease["leaseId"]
+    if not isinstance(lease_id, str) or not LEASE_ID_RE.fullmatch(lease_id):
+        _state_invalid()
+    if map_key is not None and map_key != lease_id:
+        _state_invalid()
+    status = lease["status"]
+    if not isinstance(status, str) or status not in (
+        {"active"} if active else {"released", "expired"}
+    ):
+        _state_invalid()
+    _state_int(lease["generation"], 1, 1)
+    try:
+        validate_owner(lease["owner"])
+    except CapacityError:
+        _state_invalid()
+    if lease["endpoint"] != POLICY.endpoint or lease["model"] != POLICY.model:
+        _state_invalid()
+
+    budget = _exact_object(
+        lease["budget"],
+        {"maxConcurrency", "maxContextTokens", "maxOutputTokens"},
+    )
+    _state_int(budget["maxConcurrency"], 1, 1_024)
+    _state_int(budget["maxContextTokens"], 1, 16_777_216)
+    _state_int(budget["maxOutputTokens"], 1, 1_048_576)
+    if budget != {
+        "maxConcurrency": POLICY.max_concurrency,
+        "maxContextTokens": POLICY.max_context_tokens,
+        "maxOutputTokens": POLICY.max_output_tokens,
+    }:
+        _state_invalid()
+
+    acquired = _state_timestamp(lease["acquiredAt"])
+    heartbeat = _state_timestamp(lease["heartbeatAt"])
+    expires = _state_timestamp(lease["expiresAt"])
+    heartbeats = lease["heartbeats"]
+    if not isinstance(heartbeats, list) or not 1 <= len(heartbeats) <= MAX_HEARTBEATS:
+        _state_invalid()
+    parsed_heartbeats = [_state_timestamp(item) for item in heartbeats]
+    if (
+        heartbeats[-1] != lease["heartbeatAt"]
+        or heartbeats[0] != lease["acquiredAt"]
+        or acquired > heartbeat
+        or heartbeat >= expires
+        or expires - heartbeat < dt.timedelta(seconds=POLICY.min_ttl_seconds)
+        or expires - heartbeat > dt.timedelta(seconds=POLICY.max_ttl_seconds)
+        or parsed_heartbeats != sorted(parsed_heartbeats)
+    ):
+        _state_invalid()
+
+    admission = _exact_object(
+        lease["admission"],
+        {"qwenPid", "freeVramMiB", "totalSlots", "reservedSlots", "canary"},
+    )
+    _state_int(admission["qwenPid"], 1, 2_147_483_647)
+    _state_int(admission["freeVramMiB"], 0, 1_048_576)
+    _state_int(admission["totalSlots"], 1, 1_024)
+    _state_int(admission["reservedSlots"], 0, 1_023)
+    if (
+        admission["reservedSlots"] != POLICY.reserved_slots
+        or admission["reservedSlots"] >= admission["totalSlots"]
+    ):
+        _state_invalid()
+    _validate_canary(admission["canary"])
+
+    if active:
+        if lease["release"] is not None:
+            _state_invalid()
+    else:
+        released_at = _validate_release(lease["release"], status)
+        if (
+            released_at < heartbeat
+            or (status == "released" and released_at >= expires)
+            or (status == "expired" and released_at < expires)
+        ):
+            _state_invalid()
+    return lease_id
+
+
+def validate_persisted_state(
+    state: dict[str, Any], *, expected_version: int = STATE_VERSION
+) -> None:
+    """Validate the complete closed state schema at every persistence boundary."""
     if structured_contains_secret(state):
         raise CapacityError("secret-shaped-persistent-state")
 
-    for lease in [*state.get("active", {}).values(), *state.get("history", [])]:
-        release = lease.get("release") if isinstance(lease, dict) else None
-        if release is not None and (
-            not isinstance(release, dict)
-            or release.get("outcome") not in PERSISTED_RELEASE_OUTCOMES
-        ):
-            raise CapacityError("invalid-persisted-release-outcome")
+    root = _exact_object(state, {"version", "active", "history"})
+    _state_int(root["version"], expected_version, expected_version)
+    if root["version"] != expected_version:
+        _state_invalid()
+    active = root["active"]
+    history = root["history"]
+    if not isinstance(active, dict) or len(active) > 1:
+        _state_invalid()
+    if not isinstance(history, list) or len(history) > MAX_HISTORY:
+        _state_invalid()
+    lease_ids = {
+        _validate_lease(item, active=True, map_key=key)
+        for key, item in active.items()
+        if isinstance(key, str)
+    }
+    if len(lease_ids) != len(active):
+        _state_invalid()
+    for item in history:
+        lease_id = _validate_lease(item, active=False)
+        if lease_id in lease_ids:
+            _state_invalid()
+        lease_ids.add(lease_id)
+
+
+def migrate_legacy_state(state: dict[str, Any]) -> dict[str, Any]:
+    """Upgrade only an exact version-1 lease registry; reject every other shape."""
+    validate_persisted_state(state, expected_version=LEGACY_STATE_VERSION)
+    state["version"] = STATE_VERSION
+    validate_persisted_state(state)
+    return state
 
 
 def validate_identifier(name: str, value: str) -> str:
-    if not isinstance(value, str) or not value or len(value) > 300:
+    if not isinstance(value, str):
         raise CapacityError(f"invalid-{name}")
     if contains_secret(value):
         raise CapacityError(f"secret-shaped-{name}")
+    patterns = {
+        "actor-id": ACTOR_ID_RE,
+        "model": MODEL_ID_RE,
+        "delegated-worker-id": OWNER_ID_RE,
+        "session-ref": OWNER_ID_RE,
+    }
+    pattern = patterns.get(name)
+    if pattern is None or not pattern.fullmatch(value):
+        raise CapacityError(f"invalid-{name}")
     return value
 
 
@@ -414,9 +663,26 @@ def owner_from_args(args: argparse.Namespace) -> dict[str, str]:
 def validate_owner(owner: dict[str, str]) -> dict[str, str]:
     if not isinstance(owner, dict) or set(owner) != set(OWNER_FIELDS):
         raise CapacityError("invalid-owner")
+    harness = owner["harness"]
+    if not isinstance(harness, str) or harness not in HARNESS_NAMES:
+        raise CapacityError("invalid-harness")
+    root_session_id = owner["rootSessionId"]
+    if not isinstance(root_session_id, str) or contains_secret(root_session_id):
+        raise CapacityError("invalid-root-session-id")
+    if not (
+        UUID7_RE.fullmatch(root_session_id)
+        or AGENT_DECK_SESSION_RE.fullmatch(root_session_id)
+    ):
+        raise CapacityError("invalid-root-session-id")
     return {
-        field: validate_identifier(name, owner[field])
-        for field, name in OWNER_FIELDS.items()
+        "actorId": validate_identifier("actor-id", owner["actorId"]),
+        "harness": harness,
+        "model": validate_identifier("model", owner["model"]),
+        "rootSessionId": root_session_id,
+        "delegatedWorkerId": validate_identifier(
+            "delegated-worker-id", owner["delegatedWorkerId"]
+        ),
+        "sessionRef": validate_identifier("session-ref", owner["sessionRef"]),
     }
 
 
@@ -445,13 +711,11 @@ class LeaseRegistry:
             state = json.loads(self.state_file.read_text(encoding="utf-8"))
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             raise CapacityError("lease-state-unreadable") from exc
-        if (
-            not isinstance(state, dict)
-            or state.get("version") != STATE_VERSION
-            or not isinstance(state.get("active"), dict)
-            or not isinstance(state.get("history"), list)
-        ):
+        if not isinstance(state, dict):
             raise CapacityError("lease-state-invalid")
+        if state.get("version") == LEGACY_STATE_VERSION:
+            return migrate_legacy_state(state)
+        validate_persisted_state(state)
         return state
 
     def _write(self, state: dict[str, Any]) -> None:

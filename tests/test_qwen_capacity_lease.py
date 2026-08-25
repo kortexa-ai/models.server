@@ -27,10 +27,10 @@ def owner(name: str = "worker-a") -> dict[str, str]:
     return {
         "actorId": name,
         "harness": "Prime Agent",
-        "model": "Qwen",
-        "rootSessionId": f"root-{name}",
-        "delegatedWorkerId": f"delegated-{name}",
-        "sessionRef": f"session-{name}",
+        "model": "qwen-3.8-27b",
+        "rootSessionId": "prime:0198ff96-2e31-7c30-9eca-4d4f22265e90",
+        "delegatedWorkerId": f"/root/{name}",
+        "sessionRef": f"/root/{name}",
     }
 
 
@@ -113,6 +113,7 @@ class FakeCollector:
             "elapsedMs": 125,
             "promptTokens": 12,
             "completionTokens": 2,
+            "outputChannels": ["content"],
             "responseStored": False,
         }
 
@@ -298,11 +299,11 @@ class LeaseTestCase(unittest.TestCase):
             (),
             {
                 "actor_id": "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-                "harness": "Prime",
-                "owner_model": "Qwen",
-                "root_session_id": "root",
-                "delegated_worker_id": "worker",
-                "session_ref": "session",
+                "harness": "Prime Agent",
+                "owner_model": "qwen-3.8-27b",
+                "root_session_id": "prime:0198ff96-2e31-7c30-9eca-4d4f22265e90",
+                "delegated_worker_id": "/root/worker",
+                "session_ref": "/root/worker",
             },
         )()
         with self.assertRaisesRegex(lease.CapacityError, "secret-shaped-actor-id"):
@@ -391,10 +392,10 @@ class LeaseTestCase(unittest.TestCase):
                 (),
                 {
                     "actor_id": "worker",
-                    "harness": "Prime",
-                    "owner_model": "Qwen",
-                    "root_session_id": "root",
-                    "delegated_worker_id": "delegated",
+                    "harness": "Prime Agent",
+                    "owner_model": "qwen-3.8-27b",
+                    "root_session_id": "prime:0198ff96-2e31-7c30-9eca-4d4f22265e90",
+                    "delegated_worker_id": "/root/worker",
                     "session_ref": value,
                 },
             )()
@@ -697,9 +698,7 @@ class LeaseTestCase(unittest.TestCase):
             self.assertFalse(self.state_file.exists())
             self.assertFalse(registry.lock_file.exists())
 
-    def test_final_persistence_boundary_accepts_benign_nested_key_metadata(
-        self,
-    ) -> None:
+    def test_closed_state_rejects_benign_unknown_metadata(self) -> None:
         registry = lease.LeaseRegistry(self.state_file, clock=self.clock)
         state = lease.empty_state()
         state["history"].append(
@@ -714,9 +713,10 @@ class LeaseTestCase(unittest.TestCase):
             }
         )
 
-        registry._write(state)
+        with self.assertRaisesRegex(lease.CapacityError, "lease-state-invalid"):
+            registry._write(state)
 
-        self.assertTrue(self.state_file.exists())
+        self.assertFalse(self.state_file.exists())
         self.assertFalse(registry.lock_file.exists())
 
     def test_structured_secret_scan_limits_fail_closed_without_recursion(self) -> None:
@@ -744,67 +744,92 @@ class LeaseTestCase(unittest.TestCase):
                 self.assertFalse(lease.structured_contains_secret(native))
                 self.assertFalse(lease.contains_secret(text))
 
-        state = lease.empty_state()
-        state["history"].append(
-            {
-                "leaseId": "fixture",
-                "release": {"outcome": "completed"},
-                "native": safe_structures,
-                "serialized": serialized,
-            }
-        )
-        lease.LeaseRegistry(self.state_file, clock=self.clock)._write(state)
-        self.assertTrue(self.state_file.exists())
-
-    def test_benign_credential_policy_identifiers_are_accepted(self) -> None:
+    def test_positive_identifier_grammar_accepts_canonical_shapes(self) -> None:
         benign_values = (
             "password-policy-review",
-            "password-policy=review",
             "api-key-documentation",
-            "api-key-documentation=approved",
             "access-token-rotation",
             "authorization-header-tests",
-            "authorization-header-tests=enabled",
             "bearer-capacity-worker",
             "token-budget-4096",
-            "token-budget=4096",
             "secret-scanner-critic",
-            "secret-scanner=critic",
-            "password-hash-policy=review",
-            "client-secret-scanner=enabled",
-            "private-key-path=fixture.pem",
-            "monkey-business=review",
-            "secretary-role=admin",
-            "tokenizer-mode=fast",
-            "api/key/documentation=approved",
-            "[private/key/path]=fixture.pem",
-            "`secret/scanner`=critic",
-            "password/policy=review",
-            "token/budget=4096",
-            "authorization/header/tests=enabled",
-            "APIKEYPOLICY=review",
-            "CLIENTSECRETSCANNER=enabled",
-            "ACCESSTOKENBUDGET=4096",
-            "PRIVATEKEYPATH=fixture.pem",
-            "SECRETKEYROTATION=scheduled",
-            "SIGNINGKEYDOCUMENTATION=approved",
-            "AUTHORIZATIONHEADERTESTS=enabled",
-            "ACCESSKEYPOLICY=review",
-            "api/*documentation*/key/policy=review",
-            "private<!--documentation-->key/path=fixture.pem",
-            '{"private":{"key":{"path":"fixture.pem"}}}',
-            '{"api":{"key":{"documentation":"approved"}}}',
-            "PrIvAtE/KeY/PaTh=fixture.pem",
-            "AuThOrIzAtIoN/HeAdEr/TeStS=enabled",
-            "api#documentation#key/policy=review",
-            "private # documentation\n key/path = fixture.pem",
-            '{"authorization":{"header":{"tests":"enabled"}}}',
+            "/root/factory_4_builder",
+            "prime:0198ff96-2e31-7c30-9eca-4d4f22265e90",
+            "openai/gpt-5.6-sol:xhigh",
         )
         for value in benign_values:
             with self.subTest(value=value):
                 self.assertEqual(
                     value, lease.validate_identifier("session-ref", value)
                 )
+
+    def test_positive_identifier_grammar_rejects_ambiguous_encodings(self) -> None:
+        invalid_values = (
+            "name=value",
+            "name /* comment */ value",
+            "name<!--comment-->value",
+            "name # comment",
+            '{"id":"worker"}',
+            '["worker"]',
+            " leading",
+            "trailing ",
+            "two words",
+            "worker\nnext",
+            "worker\x00next",
+            "wörker",
+            "a" * 301,
+        )
+        for value in invalid_values:
+            with self.subTest(value=value), self.assertRaisesRegex(
+                lease.CapacityError, "invalid-session-ref"
+            ):
+                lease.validate_identifier("session-ref", value)
+
+    def test_identifier_native_and_serialized_forms_share_closed_policy(self) -> None:
+        canonical = "/root/factory_4_builder"
+        self.assertEqual(
+            canonical, lease.validate_identifier("session-ref", canonical)
+        )
+        for value in (
+            json.dumps(canonical),
+            json.dumps({"sessionRef": canonical}),
+            {"sessionRef": canonical},
+            [canonical],
+        ):
+            with self.subTest(value=value), self.assertRaisesRegex(
+                lease.CapacityError, "invalid-session-ref"
+            ):
+                lease.validate_identifier("session-ref", value)  # type: ignore[arg-type]
+
+    def test_owner_accepts_codex_omp_prime_and_agent_deck_session_shapes(self) -> None:
+        variants = (
+            ("Codex", "codex:01a02f9b-04d8-7be2-bd52-db5f5bbb570d"),
+            ("Codex", "01a02f9b-04d8-7be2-bd52-db5f5bbb570d"),
+            ("OMP", "0198ff96-2e31-7c30-9eca-4d4f22265e90"),
+            ("Prime Agent", "prime:0198ff96-2e31-7c30-9eca-4d4f22265e90"),
+        )
+        for harness, root_session_id in variants:
+            candidate = owner()
+            candidate["harness"] = harness
+            candidate["rootSessionId"] = root_session_id
+            with self.subTest(harness=harness, root_session_id=root_session_id):
+                self.assertEqual(candidate, lease.validate_owner(candidate))
+
+    def test_owner_rejects_unknown_harness_and_noncanonical_session_ids(self) -> None:
+        mutations = (
+            ("harness", "Prime"),
+            ("harness", "codex"),
+            ("rootSessionId", "root-session"),
+            ("rootSessionId", "omp:0198ff96-2e31-7c30-9eca-4d4f22265e90"),
+            ("rootSessionId", "0198ff96-2e31-4c30-9eca-4d4f22265e90"),
+        )
+        for field, value in mutations:
+            candidate = owner()
+            candidate[field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(
+                lease.CapacityError
+            ):
+                lease.validate_owner(candidate)
 
     def test_state_files_are_owner_only_and_store_no_prompt_or_output(self) -> None:
         self.manager().acquire(owner(), 900)
@@ -814,12 +839,135 @@ class LeaseTestCase(unittest.TestCase):
         self.assertEqual(0o600, mode)
         self.assertEqual(0o700, stat.S_IMODE(os.stat(self.state_file.parent).st_mode))
         self.assertNotIn("Reply with exactly", payload)
-        self.assertNotIn('"content"', payload)
+        self.assertNotIn('"content":', payload)
         self.assertNotIn('"response"', payload)
 
     def test_roster_has_explicit_success_decision(self) -> None:
         result = self.manager().roster()
         self.assertEqual("listed", result["decision"])
+
+    def test_closed_state_schema_rejects_unknown_fields_and_wrong_types(self) -> None:
+        self.manager().acquire(owner(), 900)
+        baseline = self.read_state()
+        lease_id = next(iter(baseline["active"]))
+        mutations = (
+            lambda state: state.update({"extra": True}),
+            lambda state: state.update({"version": True}),
+            lambda state: state["active"][lease_id].update({"extra": True}),
+            lambda state: state["active"][lease_id].update({"status": []}),
+            lambda state: state["active"][lease_id].update({"generation": 2}),
+            lambda state: state["active"][lease_id]["owner"].update(
+                {"extra": "worker"}
+            ),
+            lambda state: state["active"][lease_id]["budget"].update(
+                {"maxConcurrency": True}
+            ),
+            lambda state: state["active"][lease_id]["admission"]["canary"].update(
+                {"responseStored": "false"}
+            ),
+            lambda state: state["active"][lease_id]["admission"]["canary"].update(
+                {"outputChannels": [{}]}
+            ),
+            lambda state: state["active"][lease_id]["admission"].update(
+                {"reservedSlots": 0}
+            ),
+            lambda state: state["active"][lease_id].update(
+                {"heartbeats": "2026-08-23T20:00:00Z"}
+            ),
+            lambda state: state["active"][lease_id].update(
+                {"expiresAt": "2026-08-23T20:00:30Z"}
+            ),
+            lambda state: state["active"][lease_id].update(
+                {"acquiredAt": "0001-01-01T00:00:00+14:00"}
+            ),
+            lambda state: state.update({"history": {}}),
+        )
+        for mutate in mutations:
+            candidate = copy.deepcopy(baseline)
+            mutate(candidate)
+            with self.subTest(candidate=candidate), self.assertRaisesRegex(
+                lease.CapacityError, "lease-state-invalid"
+            ):
+                lease.validate_persisted_state(candidate)
+
+    def test_closed_state_schema_rejects_invalid_terminal_lifecycle(self) -> None:
+        manager = self.manager()
+        acquired = manager.acquire(owner(), 900)
+        manager.release(acquired["lease"]["leaseId"], owner(), "completed")
+        baseline = self.read_state()
+        mutations = (
+            lambda state: state["history"][0].update({"status": "active"}),
+            lambda state: state["history"][0]["release"].update(
+                {"outcome": "expected-success"}
+            ),
+            lambda state: state["history"][0]["release"].update(
+                {"reasonCodes": ["caller-defined"]}
+            ),
+            lambda state: state["history"][0]["release"].update(
+                {"reasonCodes": [{}]}
+            ),
+            lambda state: state["history"][0]["release"].update({"extra": True}),
+            lambda state: state["history"][0]["release"].update(
+                {"releasedAt": "2026-08-23T19:59:59Z"}
+            ),
+            lambda state: state["history"][0]["release"].update(
+                {"releasedAt": "2026-08-23T20:15:00Z"}
+            ),
+            lambda state: state["history"][0]["release"].update(
+                {
+                    "outcome": "completed",
+                    "reasonCodes": ["production-gpu-load-high"],
+                }
+            ),
+        )
+        for mutate in mutations:
+            candidate = copy.deepcopy(baseline)
+            mutate(candidate)
+            with self.subTest(candidate=candidate), self.assertRaisesRegex(
+                lease.CapacityError, "lease-state-invalid"
+            ):
+                lease.validate_persisted_state(candidate)
+
+    def test_registry_validates_after_load_and_before_write(self) -> None:
+        manager = self.manager()
+        manager.acquire(owner(), 900)
+        valid_bytes = self.state_file.read_bytes()
+        invalid = self.read_state()
+        invalid["active"][next(iter(invalid["active"]))]["unknown"] = True
+        self.state_file.write_text(json.dumps(invalid), encoding="utf-8")
+
+        with self.assertRaisesRegex(lease.CapacityError, "lease-state-invalid"):
+            manager.registry._load()
+
+        self.state_file.write_bytes(valid_bytes)
+        with (
+            self.assertRaisesRegex(lease.CapacityError, "lease-state-invalid"),
+            manager.registry.transaction() as state,
+        ):
+            state["unknown"] = True
+        self.assertEqual(valid_bytes, self.state_file.read_bytes())
+
+    def test_exact_version_one_state_migrates_and_incompatible_state_fails_closed(
+        self,
+    ) -> None:
+        manager = self.manager()
+        manager.acquire(owner(), 900)
+        legacy = self.read_state()
+        legacy["version"] = lease.LEGACY_STATE_VERSION
+        self.state_file.write_text(
+            json.dumps(legacy, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
+        self.assertEqual("listed", manager.roster()["decision"])
+        self.assertEqual(lease.STATE_VERSION, self.read_state()["version"])
+
+        incompatible = copy.deepcopy(legacy)
+        incompatible["unknown"] = "fixture"
+        payload = json.dumps(incompatible, sort_keys=True).encode()
+        self.state_file.write_bytes(payload)
+        with self.assertRaisesRegex(lease.CapacityError, "lease-state-invalid"):
+            manager.registry._load()
+        self.assertEqual(payload, self.state_file.read_bytes())
 
 
 class ParsingAndCommandTests(unittest.TestCase):

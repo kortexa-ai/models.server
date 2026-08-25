@@ -1,3 +1,47 @@
+# Issue #5: Positive lease identifiers and closed state schema
+
+## Goal
+
+Replace caller-identity denylist acceptance with bounded positive grammars and
+make the local Qwen capacity registry a closed, versioned state machine without
+using a GPU, service, canary, or live lease state during implementation.
+
+## Identity inventory
+
+- [Codex](https://github.com/openai/codex/blob/main/codex-rs/protocol/src/thread_id.rs)
+  documents generated thread IDs as lowercase UUIDv7 values. Agent Deck exposes
+  the same value as `codex:<thread-id>` and bounds public provider IDs to an
+  ASCII provider prefix plus an ASCII identifier.
+- Installed OMP 18.0.4 matches its
+  [canonical session manager](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/session/session-manager.ts),
+  which uses `Bun.randomUUIDv7()` for new persistent sessions.
+- [Prime Agent's session manager](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/core/session-manager.ts)
+  uses UUIDv7. Its tracked Agent Deck hook publishes that exact session ID,
+  which Agent Deck exposes as `prime:<session-id>`.
+- Agent Deck owner fields use ASCII `. _ : / @ + -` separators; Codex delegated
+  task identities use leading-slash paths such as `/root/factory_4_builder`.
+  Factory actor IDs are bounded to 160 characters.
+
+## Work plan
+
+1. Enforce per-field ASCII identifier grammars, a closed harness registry, and
+   exact UUIDv7 or Agent Deck root-session shapes before registry access.
+2. Validate a closed version-2 schema for the root, active/history collections,
+   owner, fixed capacity, canary summary, heartbeat/expiry, and release state
+   both after load and before atomic write.
+3. Migrate only an exact version-1 state under the normal registry lock. Reject
+   incompatible version-1 and every unknown version without rewriting it.
+4. Preserve the issue #4 secret scanner as defense in depth and add deterministic
+   tests for comments, assignments, serialized values, Unicode, unknown fields,
+   wrong types, invalid lifecycle combinations, and migration failure.
+
+Live claim, review, project, and delivery status belongs in the external issue
+ledger. This plan records only the stable design and offline boundary; it does
+not imply authorization for Smarty state, GPU, canary, service, or production
+operations.
+
+---
+
 # Issue #4: Smarty Qwen coding-agent capacity lease
 
 ## Goal
@@ -27,22 +71,15 @@ active LegoLM research.
 
 ## Status
 
-- In progress under the explicit non-atomic/manual serialized-writer claim
-  recorded on issue #4. The atomic cross-harness provider remains tracked by
-  `kortexa-ai/esp32-dash#3`; this work does not claim that dependency is done.
-- The approved surfaces are `scripts/qwen_capacity_lease.py`,
-  `tests/test_qwen_capacity_lease.py`, this PLAN section, and the matching
-  README lease section. No other repository surface is in scope.
-- The initial Smarty baseline was read-only: one healthy managed Qwen process
-  owned port 2053 with two idle slots; all observed CUDA PIDs belonged to known
-  managed services; no LegoLM GPU owner or prior agent lease was observed.
-- No production service or LegoLM code, data, job, service, or experiment has
-  been stopped, restarted, started, or changed.
-- Candidate 1 (`0a44b65`) passed its synthetic checks but failed the first safe
-  live acquire as `qwen-canary-empty`; it is frozen and rejected in issue #4
-  evidence. Candidate 2 accepts llama.cpp's documented non-empty
-  `message.reasoning_content` as liveness without persisting its value, while
-  continuing to reject empty, error, malformed, and over-budget responses.
+- Delivered in `468c6c1` and hardened in `499017be7043130e254f545a9fb62e56cd77b96d`.
+  Issue #4 records the unit and final integration PASS evidence and the released
+  cross-harness claim.
+- The live validation observed one healthy managed Qwen process with two idle
+  slots, known managed CUDA owners, and no active LegoLM or prior agent lease.
+  The bounded canary accepted llama.cpp's non-empty reasoning-only response
+  without retaining model text.
+- No production service or LegoLM code, data, job, service, or experiment was
+  stopped, restarted, started, or changed.
 
 ---
 

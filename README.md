@@ -481,11 +481,21 @@ fields to `acquire`, every `heartbeat`, and `release`:
 ```bash
 python3 scripts/qwen_capacity_lease.py probe
 python3 scripts/qwen_capacity_lease.py acquire \
-  --actor-id worker-123 --harness Codex --owner-model Sol \
-  --root-session-id root-session-123 \
-  --delegated-worker-id delegated-123 --session-ref session-123 \
+  --actor-id builder-sol-a --harness Codex --owner-model gpt-5.6-sol \
+  --root-session-id codex:0198ff96-2e31-7c30-9eca-4d4f22265e90 \
+  --delegated-worker-id /root/builder --session-ref /root/builder \
   --ttl-seconds 900
 ```
+
+Owner values use a positive ASCII grammar, not a secret denylist. `harness` is
+exactly `Codex`, `OMP`, or `Prime Agent`. Actor and model identifiers accept
+letters, digits, and the established `. _ : / @ + -` separators; delegated
+worker and session references also accept a leading `/` for Codex task paths.
+The root session is either a lowercase UUIDv7, as emitted by OMP and Prime, or
+an Agent Deck public ID with the registered `codex:`, `claude:`, `hermes:`, or
+`prime:` prefix. Controls, whitespace, comments, assignments, serialized
+objects or arrays, Unicode lookalikes, unknown harnesses, and oversized values
+are rejected before the state file is opened.
 
 An admitted result includes the lease ID, endpoint, fixed budget, heartbeat,
 and expiry. Heartbeat immediately before every inference request. Do not send
@@ -498,15 +508,15 @@ contract.
 
 ```bash
 python3 scripts/qwen_capacity_lease.py heartbeat \
-  --actor-id worker-123 --harness Codex --owner-model Sol \
-  --root-session-id root-session-123 \
-  --delegated-worker-id delegated-123 --session-ref session-123 \
+  --actor-id builder-sol-a --harness Codex --owner-model gpt-5.6-sol \
+  --root-session-id codex:0198ff96-2e31-7c30-9eca-4d4f22265e90 \
+  --delegated-worker-id /root/builder --session-ref /root/builder \
   --lease-id qwen-example-lease-id --ttl-seconds 900
 
 python3 scripts/qwen_capacity_lease.py release \
-  --actor-id worker-123 --harness Codex --owner-model Sol \
-  --root-session-id root-session-123 \
-  --delegated-worker-id delegated-123 --session-ref session-123 \
+  --actor-id builder-sol-a --harness Codex --owner-model gpt-5.6-sol \
+  --root-session-id codex:0198ff96-2e31-7c30-9eca-4d4f22265e90 \
+  --delegated-worker-id /root/builder --session-ref /root/builder \
   --lease-id qwen-example-lease-id --outcome completed
 ```
 
@@ -521,11 +531,16 @@ The tool cannot start, stop, or restart services and cannot signal processes.
 It observes only `ktxsvc list`, two exact read-only `nvidia-smi` queries, the
 Qwen listener, and local health endpoints. It stores owner, capacity, and
 lifecycle metadata in an owner-only local state file; it never stores prompts,
-credentials, or model output. Expired crash leases are recorded and cleared
-under the same lock before a new admission. Any workflow that needs downtime
-must first drain every Qwen worker, stop before mutation, and obtain Franci's
-explicit permission under the Smarty GPU guide. LegoLM work is never mutated
-by this lease workflow.
+credentials, or model output. State version 2 closes the root, active/history,
+owner, budget, admission, canary, heartbeat, expiry, and release records: an
+unknown member, wrong type, unregistered outcome/reason, or inconsistent
+lifecycle fails closed after load and before write. An exact version-1 state is
+migrated under the existing lock; an incompatible version-1 or unknown-version
+file is rejected without rewrite. Expired crash leases are recorded and
+cleared under the same lock before a new admission. Any workflow that needs
+downtime must first drain every Qwen worker, stop before mutation, and obtain
+Franci's explicit permission under the Smarty GPU guide. LegoLM work is never
+mutated by this lease workflow.
 
 ## Service Management
 
