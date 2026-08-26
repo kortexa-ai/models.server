@@ -1,6 +1,7 @@
 [Unit]
 Description=LFM2 350M Extract LLM
-After=network.target
+Wants=nvidia-persistenced.service
+After=network.target nvidia-persistenced.service
 
 StartLimitIntervalSec=120
 StartLimitBurst=3

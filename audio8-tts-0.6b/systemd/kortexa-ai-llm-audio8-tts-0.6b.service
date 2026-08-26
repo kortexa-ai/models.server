@@ -1,6 +1,7 @@
 [Unit]
 Description=Audio8 TTS Preview 0.6B
-After=network.target
+Wants=nvidia-persistenced.service
+After=network.target nvidia-persistenced.service
 
 StartLimitIntervalSec=120
 StartLimitBurst=3

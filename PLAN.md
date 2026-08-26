@@ -1,3 +1,30 @@
+# Issue #7: Cross-repository NVIDIA service startup ordering
+
+## Goal
+
+Prevent GPU-capable systemd services from starting before NVIDIA persistence
+is ready, without preventing CPU-only model services from starting on
+Raspberry Pi hosts where NVIDIA services do not exist.
+
+## Work plan
+
+1. Add a soft `Wants=` dependency and an `After=` ordering dependency on
+   `nvidia-persistenced.service` to all systemd units in `models.server` and
+   the ASR, TTS, vision, image-generation, and video-generation server units.
+2. Verify every changed unit with systemd tooling and confirm the dependency
+   remains non-fatal when NVIDIA persistence is unavailable.
+3. Install the updated units on `smarty`, restart only the affected running
+   services, and verify endpoints and expected GPU residency.
+4. Commit and push each focused Sparta-repository change on `main`.
+
+## Status
+
+- Complete. All 35 units use a soft persistence dependency, systemd syntax
+  validation passes, and missing NVIDIA services do not block CPU-only hosts.
+  GPU selection and pinning remain explicitly out of scope.
+
+---
+
 # Issue #5: Positive lease identifiers and closed state schema
 
 ## Goal

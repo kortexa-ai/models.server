@@ -1,6 +1,7 @@
 [Unit]
 Description=LFM2.5 VL 3B vision-language model
-After=network.target
+Wants=nvidia-persistenced.service
+After=network.target nvidia-persistenced.service
 
 StartLimitIntervalSec=120
 StartLimitBurst=3
