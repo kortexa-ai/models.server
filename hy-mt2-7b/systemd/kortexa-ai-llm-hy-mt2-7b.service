@@ -15,7 +15,9 @@ Group=francip
 WorkingDirectory=/home/francip/src/models.server
 
 Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6
 
+ExecStartPre=/usr/bin/nvidia-smi --id=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6 --query-gpu=uuid --format=csv,noheader
 ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/hy-mt2-7b
 
 Restart=always
