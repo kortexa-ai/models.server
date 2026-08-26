@@ -1,3 +1,26 @@
+# Issue #11: Production GPU placement
+
+## Goal
+
+Restore the retained production stack with ASR and TTS hard-pinned to the RTX
+4090 eGPU and vision, Z-Image Base, Gemma 4 E2B, LFM2.5 VL 3B, and Qwen 3.8
+27B hard-pinned to the RTX PRO 6000.
+
+## Work plan
+
+1. Select each assigned GPU by stable UUID and fail service preflight when it
+   is absent instead of silently falling back to CPU.
+2. Validate and install the seven updated systemd units through `ktxsvc`.
+3. Start the retained production set and verify endpoint health and actual GPU
+   residency.
+4. Record post-start memory use for the next RTX 4090 placement decision.
+
+## Status
+
+- In progress.
+
+---
+
 # Issue #10: LFM2.5 8B-A1B onboarding and GPU comparison
 
 ## Goal
