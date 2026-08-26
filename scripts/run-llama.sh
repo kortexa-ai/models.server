@@ -17,6 +17,11 @@ QUANT="${QUANT:-$LLAMA_QUANT}"
 CACHE_TYPE="${CACHE_TYPE:-$MODEL_CACHE_TYPE}"
 CONTEXT="${CONTEXT:-$LLAMA_CONTEXT}"
 PARALLEL="${PARALLEL:-$LLAMA_PARALLEL}"
+TEMPERATURE="${TEMPERATURE:-$LLAMA_TEMPERATURE}"
+TOP_K="${TOP_K:-$LLAMA_TOP_K}"
+TOP_P="${TOP_P:-$LLAMA_TOP_P}"
+REPEAT_PENALTY="${REPEAT_PENALTY:-$LLAMA_REPEAT_PENALTY}"
+MAX_TOKENS="${MAX_TOKENS:-$LLAMA_MAX_TOKENS}"
 
 # CUDA graphs are disabled by default. A model can opt in with
 # `llama.cuda_graphs: true` in model.json. Presence of the environment variable
@@ -87,9 +92,11 @@ exec llama-server \
     --threads -1 \
     --parallel "$PARALLEL" \
     --no-context-shift \
-    --temp 0.6 \
-    --top-k 20 \
-    --top-p 0.95 \
+    --temp "$TEMPERATURE" \
+    --top-k "$TOP_K" \
+    --top-p "$TOP_P" \
+    --repeat-penalty "$REPEAT_PENALTY" \
+    --n-predict "$MAX_TOKENS" \
     --load-mode none \
     --flash-attn on \
     --cache-type-k "$CACHE_TYPE" \

@@ -35,6 +35,14 @@ def main():
     print(f"MODEL_EMBEDDING={'true' if m.get('embedding') else 'false'}")
     print(f"MODEL_TTS={'true' if m.get('tts') else 'false'}")
 
+    # Model-specific server sampling defaults. Requests can still override these.
+    sampling = m.get("sampling", {})
+    emit("LLAMA_TEMPERATURE", sampling.get("temperature", 0.6))
+    emit("LLAMA_TOP_K", sampling.get("top_k", 20))
+    emit("LLAMA_TOP_P", sampling.get("top_p", 0.95))
+    emit("LLAMA_REPEAT_PENALTY", sampling.get("repeat_penalty", 1.0))
+    emit("LLAMA_MAX_TOKENS", sampling.get("max_tokens", -1))
+
     # llama
     llama = m.get("llama")
     if llama:

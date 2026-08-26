@@ -1,0 +1,22 @@
+{
+  "name": "Hy-MT2 7B",
+  "id": "hy-mt2-7b",
+  "multimodal": false,
+  "port": 2060,
+  "host": "0.0.0.0",
+  "context": 8192,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "sampling": {
+    "temperature": 0.7,
+    "top_p": 0.6,
+    "top_k": 20,
+    "repeat_penalty": 1.05,
+    "max_tokens": 4096
+  },
+  "llama": {
+    "repo": "tencent/Hy-MT2-7B-GGUF",
+    "quant": "Q4_K_M"
+  },
+  "cpu": null
+}

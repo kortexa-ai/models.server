@@ -103,6 +103,7 @@ observed 600 W value: treat it as configuration drift.
 | 2057 | Ornith 1.5 9B | agentic dense | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2059 | LFM2.5 8B-A1B | reasoning MoE | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 128K | 1 |
+| 2060 | Hy-MT2 7B | translation dense | Q4_K_M | q8_0 | 8K | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -464,6 +465,14 @@ because its bidirectional masked-LM checkpoint has no GGUF.
 
 The TTS entries use their publishers' BF16/MLX checkpoints and codec-aware
 serving engines; the GGUF quantization table does not apply to them.
+
+Hy-MT2 7B is a translation-specific exception to the general >=4B profile.
+It uses Tencent's official Q4_K_M GGUF and the publisher's recommended 8K
+operating context instead of the 262K architectural limit in the checkpoint
+metadata. Its server defaults are temperature 0.7, top-p 0.6, top-k 20, and
+repeat penalty 1.05, with at most 4,096 generated tokens. The model has no
+default system prompt; callers should send the translation instruction and
+source text as the user message.
 
 ## Adding a New Model
 
