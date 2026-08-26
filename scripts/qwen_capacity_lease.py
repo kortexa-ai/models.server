@@ -121,7 +121,7 @@ PERSISTED_REASON_CODES = frozenset(
 HEALTH_ENDPOINTS = {
     "alt-image-gen.server/base": "http://127.0.0.1:4004/health",
     "vision.server": "http://127.0.0.1:4001/health",
-    "models/gemma-4-e2b": "http://127.0.0.1:2039/health",
+    "models/lfm2.5-8b-a1b": "http://127.0.0.1:2059/health",
     "tts.server": "http://127.0.0.1:4003/health",
     "asr.server": "http://127.0.0.1:4002/health",
     "models/lfm2.5-vl-3b": "http://127.0.0.1:2055/health",
@@ -132,7 +132,7 @@ HEALTH_ENDPOINTS = {
 GPU_UNIT_TO_SERVICE = {
     "kortexa-ai-comfyui-server.service": "comfyui.server",
     "kortexa-ai-llm-lfm2.5-vl-3b.service": "models/lfm2.5-vl-3b",
-    "kortexa-ai-llm-gemma-4-e2b.service": "models/gemma-4-e2b",
+    "kortexa-ai-llm-lfm2.5-8b-a1b.service": "models/lfm2.5-8b-a1b",
     "kortexa-ai-llm-qwen-3.8-27b.service": "models/qwen-3.8-27b",
     "kortexa-ai-tts-server.service": "tts.server",
     "kortexa-ai-asr-server.service": "asr.server",
