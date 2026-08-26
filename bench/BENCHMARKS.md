@@ -10,6 +10,47 @@ arguments and safe runtime environment, GPU telemetry, and raw suite output.
 
 ## Results
 
+### 2026-08-25 LFM2.5 8B-A1B GPU comparison on smarty
+
+LiquidAI's official LFM2.5 8B-A1B `Q8_0` GGUF ran with one 128,000-token
+slot, q8_0 K/V cache, disabled CUDA graphs, and no unified memory. Both GPUs
+used llama.cpp revision `d222767c7a6516559a3f49e7721b6c6b1acc87b4`
+(build 10630) and SPEED-Bench dataset revision
+`487aa718444e816458d1a0a52bfce7a454285cf4`. The RTX PRO 6000 used its 450 W
+production cap; the external RTX 4090 kept its existing 480 W cap. Both passed
+3/3 text and required-tool canaries.
+
+Numbers are average prompt-processing/decode tokens per second.
+
+| Workload | RTX PRO 6000 | RTX 4090 | 6000 / 4090 prompt | 6000 / 4090 decode |
+|---|---:|---:|---:|---:|
+| Qualitative | 6,709.54 / 493.45 | 3,763.37 / 230.77 | 1.78x | 2.14x |
+| 1K / 512 | 17,319.44 / 489.96 | 9,744.88 / 231.48 | 1.78x | 2.12x |
+| 8K / 512 | 20,747.51 / 480.76 | 11,012.34 / 226.40 | 1.88x | 2.12x |
+| 32K / 512 | 14,156.26 / 461.45 | 5,964.26 / 218.81 | 2.37x | 2.11x |
+
+The one-slot full-context process occupied 10,404 MiB on the 6000 and 10,230
+MiB on the 4090. A separate 1,024-token-cache load on the 4090 occupied 9,078
+MiB. The measured difference implies approximately 1,161 MiB for each full
+128K q8 slot. On the 4090, the resulting process-residency estimates are
+10,230 MiB for one slot, 11,391 MiB for two, 13,713 MiB for four, and 18,357
+MiB for eight. Against the observed empty-card baseline, four slots leave
+about 8.8 GiB free while eight leave only about 4.2 GiB. These multi-slot
+figures are allocation estimates, not concurrent-throughput measurements.
+
+The 6000 averaged 388.57 W during the suite and peaked at 465.21 W / 74 C.
+The 4090 averaged 225.93 W and peaked at 297.70 W / 59 C. Median or average
+utilization is not used to infer arithmetic occupancy; the recorded NVIDIA
+samples reached 100% kernel-busy time on both cards.
+
+Raw local records are under `bench-results/20260825-lfm25-8b-a1b/`. The
+configuration SHA-256 is
+`9b01faf66e9d49cc01d4453647067e7121e47ec57c8e1816d602c973a52ae230`, and
+the official GGUF Hub revision is
+`49c14831707011e64d70b2ebd8462ba08d608434`.
+
+---
+
 ### 2026-08-25 RTX 4090 comparison on smarty
 
 LFM2.5 VL 3B and Gemma 4 E2B were launched directly and sequentially on the

@@ -22,6 +22,7 @@ This is the post-reset benchmark scope and sweep status. Results are in
 | `lfm2.5-1.2b-instruct` | text | 450 W baseline complete |
 | `lfm2.5-1.2b-thinking` | text, reasoning | 450 W serving baseline complete; future quality work must label thinking mode |
 | `lfm2.5-2.6b` | text, tools | 450 W baseline complete |
+| `lfm2.5-8b-a1b` | text, tools, long context | Matched RTX PRO 6000 / RTX 4090 Q8 baseline and one-slot full-context memory measurement complete |
 | `lfm2.5-vl-450m` | text, vision | Four-slot CUDA baseline complete; old one-slot record and tool-call canary failure retained |
 | `lfm2.5-vl-3b` | text, tools, vision | 450 W baseline complete |
 

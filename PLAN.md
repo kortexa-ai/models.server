@@ -1,3 +1,31 @@
+# Issue #10: LFM2.5 8B-A1B onboarding and GPU comparison
+
+## Goal
+
+Add LFM2.5 8B-A1B with the standard cross-platform profile, then measure
+matched RTX PRO 6000 and RTX 4090 throughput and one-slot full-context VRAM
+use before selecting production parallelism.
+
+## Work plan
+
+1. Add official Q8_0 GGUF and MLX configurations with q8_0 KV, native 128K
+   context, one slot, CUDA, CPU fallback, and MLX support.
+2. Validate configuration and run functional canaries.
+3. Run matched benchmarks on the RTX PRO 6000 and RTX 4090.
+4. Measure one-slot full-context VRAM use and record the evidence for the slot
+   count decision.
+
+## Status
+
+- Complete. The official Q8 GGUF and 8-bit MLX profiles are configured with
+  optional Q8 CPU serving. Both GPUs passed 3/3 canaries and completed the
+  matched suite. One full 128K q8 slot uses 10,404 MiB on the RTX PRO 6000 and
+  10,230 MiB on the RTX 4090; each additional full slot is estimated to add
+  about 1,161 MiB. Production parallelism and GPU pinning remain separate
+  follow-up decisions. All managed GPU services remain stopped as authorized.
+
+---
+
 # Issue #9: RTX 4090 model benchmarks
 
 ## Goal

@@ -1,0 +1,27 @@
+{
+  "name": "LFM2.5 8B A1B",
+  "id": "lfm2.5-8b-a1b",
+  "multimodal": false,
+  "port": 2059,
+  "host": "0.0.0.0",
+  "context": 128000,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "llama": {
+    "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
+    "quant": "Q8_0"
+  },
+  "mlx": {
+    "repo": "LiquidAI/LFM2.5-8B-A1B-MLX-8bit",
+    "backend": "mlx_lm",
+    "prompt_concurrency": 1,
+    "decode_concurrency": 1
+  },
+  "cpu": {
+    "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
+    "quant": "Q8_0",
+    "context": 128000,
+    "parallel": 1,
+    "cache_type": "q8_0"
+  }
+}

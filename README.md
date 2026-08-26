@@ -102,6 +102,8 @@ observed 600 W value: treat it as configuration drift.
 | 2056 | Qwen 3.8 27B Uncensored | uncensored big dense | Q4_K_M / MLX 4-bit / FP8 | q8_0 / fp8 | 131K/slot (llama); 262K/seq (MLX/vLLM) | 2 / 1 / 4 |
 | 2057 | Ornith 1.5 9B | agentic dense | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
+| 2059 | LFM2.5 8B-A1B | reasoning MoE | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 128K | 1 |
+
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
 projector and optional separate MTP companion are preserved with the model
@@ -392,6 +394,10 @@ full CUDA offload on NVIDIA hosts and Metal offload on snappy.
 | LFM2.5 1.2B Instruct | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
 | LFM2.5 2.6B | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
 | LFM2.5 VL 3B | llama GPU | llama GPU | llama GPU | MLX GPU | unsupported |
+| LFM2.5 8B-A1B | llama GPU | llama GPU | llama GPU | MLX GPU | llama CPU* |
+
+`*` The 8B-A1B CPU path is available for sufficiently large CPU hosts. Its
+Q8 weights and full 128K q8 KV allocation do not fit an 8 GB Raspberry Pi.
 
 | Model | llama weight / KV | Pi CPU weight / KV | MLX weight / KV | Configured context / slots |
 |---|---|---|---|---:|
@@ -405,6 +411,7 @@ full CUDA offload on NVIDIA hosts and Metal offload on snappy.
 | LFM2.5 1.2B Instruct | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
 | LFM2.5 2.6B | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 128K / 1 |
 | LFM2.5 VL 3B | Q8_0 / q8_0 | unsupported | 8-bit / default unquantized | 32K / 1 |
+| LFM2.5 8B-A1B | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 128K / 1 |
 
 The MLX launchers do not currently configure KV quantization. For llama.cpp,
 the common `context` is the total allocation and each slot receives
@@ -446,8 +453,9 @@ LFM2.5 230M, 350M, and VL 450M are small-edge exceptions: CUDA uses Q8_0,
 while Pi CPU uses Q4_K_M with q4 KV. Each is configured for four 32K slots on
 llama.cpp-style backends; the text models use four-way prompt/decode
 concurrency in `mlx-lm`, and VL 450M allows four 32K sequences in `mlx-vlm`.
-LFM2.5 1.2B Thinking, 1.2B Instruct, 2.6B, and VL 3B are single-slot Q8
-exceptions; they use MLX on macOS and CUDA-backed llama.cpp on Linux.
+LFM2.5 1.2B Thinking, 1.2B Instruct, 2.6B, VL 3B, and 8B-A1B are single-slot
+Q8 exceptions; they use MLX on macOS and CUDA-backed llama.cpp on Linux. The
+8B-A1B also exposes the same Q8/q8 profile through the optional CPU engine.
 The smaller LFM generative, vision-language, and embedding models use `Q8_0`;
 230M and 350M now auto-select GPU serving where available and their explicit
 CPU configs on the Pis. VLMs default to MLX on Darwin, while the embedder
