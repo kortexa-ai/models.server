@@ -1,3 +1,19 @@
+# Issue #8: Ada and Blackwell llama.cpp build
+
+## Goal
+
+Build llama.cpp with CUDA kernels for both the RTX 4090 (`sm_89`) and RTX PRO
+6000 (`sm_120`) regardless of which GPUs are connected during configuration.
+
+## Status
+
+- Complete. Both native and Docker build paths use the explicit `89;120`
+  architecture list. llama.cpp was updated to build 10630 (`d222767c7`), and
+  the installed CUDA library contains both `sm_89` and `sm_120` kernels. GPU
+  service pinning remains out of scope.
+
+---
+
 # Issue #7: Cross-repository NVIDIA service startup ordering
 
 ## Goal

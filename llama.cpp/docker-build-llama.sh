@@ -11,15 +11,9 @@ if ! docker images | awk '{print $1":"$2}' | grep -q "^${IMAGE_NAME}:"; then
 fi
 
 # The container only compiles CUDA code; it does not need runtime GPU access.
-# Detect the target architecture on the host so this also works with Docker
-# daemons that do not have the NVIDIA Container Toolkit configured.
-GPU_CAP=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader 2>/dev/null | head -1 | tr -d '[:space:]')
-GPU_ARCH=${GPU_CAP//./}
-if [ -z "$GPU_ARCH" ]; then
-    echo "Could not detect the host GPU compute capability with nvidia-smi"
-    exit 1
-fi
-echo "Building for CUDA architecture: $GPU_ARCH (compute capability $GPU_CAP)"
+# Build for both GPUs used on smarty even when the external Ada GPU is absent.
+GPU_ARCH="89;120"
+echo "Building for CUDA architectures: $GPU_ARCH (Ada and Blackwell)"
 
 # Run the build inside Docker container
 echo "Running build in Docker container..."

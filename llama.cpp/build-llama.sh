@@ -62,11 +62,10 @@ if [ "$OS" = "Linux" ]; then
                 sudo apt install -y nvidia-cuda-toolkit
             fi
             
-            # Auto-detect GPU architecture
-            # Use 'native' to let cmake detect the exact arch (handles suffixes like 121a for Blackwell)
-            GPU_ARCH=native
-            GPU_CAP=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1)
-            echo "Detected GPU compute capability: $GPU_CAP (using native cmake detection)"
+            # Build for both GPUs used on smarty. Keep the explicit list so an
+            # eGPU disconnect during configuration does not drop Ada support.
+            GPU_ARCH="89;120"
+            echo "Building for CUDA architectures: $GPU_ARCH (Ada and Blackwell)"
 
             if [ "$should_use_docker" = true ]; then
                 echo "Detected Ubuntu 25.x or glibc >= 2.41 - using Docker build to avoid CUDA compatibility issues"
