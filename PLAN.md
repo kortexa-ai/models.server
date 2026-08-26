@@ -17,7 +17,11 @@ Restore the retained production stack with ASR and TTS hard-pinned to the RTX
 
 ## Status
 
-- In progress.
+- Complete. All seven endpoints are healthy. Gemma 4 E2B, LFM2.5 VL 3B,
+  Qwen 3.8 27B, and vision hold 54,647 MiB on the RTX PRO 6000, leaving
+  42,595 MiB free; Z-Image Base is pinned there but has no idle CUDA
+  allocation. ASR and TTS hold 9,781 MiB on the RTX 4090, leaving 12,776 MiB
+  free. Process-level GPU UUIDs match every assignment.
 
 ---
 
