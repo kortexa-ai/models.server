@@ -7,6 +7,8 @@
   "context": 128000,
   "parallel": 1,
   "cache_type": "q8_0",
+  "reasoning": true,
+  "reasoning_effort": false,
   "llama": {
     "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
     "quant": "Q8_0"
