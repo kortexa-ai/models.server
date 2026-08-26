@@ -10,6 +10,120 @@ arguments and safe runtime environment, GPU telemetry, and raw suite output.
 
 ## Results
 
+### 2026-08-25 RTX 4090 comparison on smarty
+
+LFM2.5 VL 3B and Gemma 4 E2B were launched directly and sequentially on the
+external RTX 4090 at its unchanged 480 W power limit. Both used their normal
+production arguments, disabled CUDA graphs, no unified memory, llama.cpp
+revision `d222767c7a6516559a3f49e7721b6c6b1acc87b4` (build 10630), and
+SPEED-Bench dataset revision
+`487aa718444e816458d1a0a52bfce7a454285cf4`. Both passed 5/5 canaries.
+
+Numbers are average prompt-processing/decode tokens per second. The comparison
+column is the recorded RTX PRO 6000 result from 2026-08-20 at 450 W and build
+10524, divided by the new 4090 result. It is therefore a production-artifact
+comparison, not a same-build GPU ablation.
+
+| Model / workload | RTX 4090 | Recorded RTX PRO 6000 | 6000 / 4090 prompt | 6000 / 4090 decode |
+|---|---:|---:|---:|---:|
+| LFM2.5 VL 3B qualitative | 7,346.44 / 176.45 | 12,416.02 / 367.26 | 1.69x | 2.08x |
+| LFM2.5 VL 3B 1K / 512 | 11,502.05 / 176.48 | 17,915.99 / 365.95 | 1.56x | 2.07x |
+| LFM2.5 VL 3B 8K / 512 | 12,017.59 / 172.36 | 19,797.50 / 358.49 | 1.65x | 2.08x |
+| Gemma 4 E2B qualitative | 2,107.94 / 111.18 | 4,709.95 / 267.21 | 2.23x | 2.40x |
+| Gemma 4 E2B 1K / 512 | 5,316.23 / 110.62 | 13,780.48 / 265.17 | 2.59x | 2.40x |
+| Gemma 4 E2B 8K / 512 | 6,025.66 / 107.08 | 16,699.43 / 254.73 | 2.77x | 2.38x |
+| Gemma 4 E2B 32K / 512 | 3,664.53 / 102.45 | 10,578.04 / 244.68 | 2.89x | 2.39x |
+
+The 480 W limit did not constrain either run. LFM averaged 245.35 W with 95%
+median GPU utilization and peaked at 285.67 W / 63 C. Gemma averaged 184.91 W
+with 94% median utilization and peaked at 219.06 W / 60 C. Here GPU
+utilization is kernel-busy time over NVIDIA's short sampling window, not the
+fraction of arithmetic capacity in use.
+
+An approved one-off A/B also compared small production workloads on both GPUs.
+Each excluded its first warm-up. ASR used identical 6.876 s and 30.000 s WAV
+fixtures with five runs each. TTS used identical short and long text, the
+Adrian voice, and WAV output with three runs each; real-time factor accounts
+for stochastic output duration. Vision called the production
+`VisionService.detect()` path on the same 1024 x 1024 image, with three warm-ups
+followed by 20 YOLO26n or 10 RF-DETR 2XL synchronized runs. Depth, segmentation,
+LingBot, and ML-Sharp were not loaded.
+
+| Workload | RTX 4090 | RTX PRO 6000 | 6000 advantage |
+|---|---:|---:|---:|
+| ASR, 6.876 s audio | 0.170 s (40.45x real time) | 0.172 s (39.98x) | tie |
+| ASR, 30.000 s audio | 0.536 s (55.97x real time) | 0.544 s (55.15x) | tie |
+| TTS, mean real-time factor | 0.264 (3.79x real time) | 0.223 (4.49x) | 1.18x |
+| YOLO26n detection | 5.672 ms | 4.247 ms | 1.34x |
+| RF-DETR 2XL detection | 33.543 ms | 15.699 ms | 2.14x |
+
+YOLO returned 12 detections and RF-DETR returned 11 on both cards. Raw local
+records, one-second or finer GPU telemetry, server logs, per-run timings, and
+the generated comparison summary are under
+`bench-results/20260825-rtx4090-comparison/`.
+
+The same approved downtime included three generative-production paths. Z-Image
+Base used its normal CPU-offloaded BF16 pipeline, one 512 x 512 one-step
+warm-up, then one 1024 x 1024 40-step image. ACE-Step 1.5 Music used its
+normal turbo DiT, 5 Hz 1.7B language model, BF16, and a fixed 15-second,
+eight-step request after one warm-up. MiniMax H3 used the normal ComfyUI
+DynamicVRAM path with 10 GiB reserved; because its selected weights total about
+59 GiB, only its 4090 fit and behavior were measured in this pass.
+
+| Workload | RTX 4090 | RTX PRO 6000 | 6000 advantage |
+|---|---:|---:|---:|
+| Z-Image Base, 1024 x 1024 / 40 steps | 92.156 s | 31.490 s | 2.93x |
+| Z-Image Base, cold 512 x 512 / 1 step | 51.430 s | 7.825 s | 6.57x |
+| ACE-Step Music, 15 s / 8 steps | 1.851 s (8.10x real time) | 1.316 s (11.40x) | 1.41x |
+| MiniMax H3, 608 x 352 / 5 s / 20 steps | 240.03 s (0.021x real time) | not run | - |
+
+Z-Image peaked at 14.31 GiB on the 4090 but repeatedly moved components over
+the DDR4 and OCuLink path; it is usable for a slow asynchronous queue, not an
+interactive endpoint. ACE-Step occupied about 14.20 GiB on the 4090 and is
+fast enough there in isolation, but it cannot share that card with both ASR
+and TTS. H3 completed a smaller 256 x 256, half-second, one-step canary in
+57.53 seconds before its production-shaped run. Dynamic offload made the
+59-GiB model set technically viable on 22 GiB of usable VRAM, but the measured
+speed makes it a batch-only option.
+
+Ornith 1.5 9B then ran its unchanged production profile on the 4090: Q4_K_M,
+MTP-2, one 262,144-token slot, q8_0 K/V cache, disabled CUDA graphs, and no
+unified memory. It occupied 13,692 MiB at idle, passed 5/5 canaries, and used
+the same build 10630 and SPEED-Bench revision as the other 4090 llama.cpp
+runs. The comparison is against the recorded build-10524 6000 result, so it is
+again a production-artifact comparison rather than a same-build ablation.
+
+| Ornith 1.5 9B workload | RTX 4090 | Recorded RTX PRO 6000 | 6000 / 4090 prompt | 6000 / 4090 decode |
+|---|---:|---:|---:|---:|
+| Qualitative | 613.80 / 131.05 | 1,799.63 / 293.29 | 2.93x | 2.24x |
+| 1K / 512 | 1,834.78 / 128.47 | 4,789.12 / 279.37 | 2.61x | 2.17x |
+| 8K / 512 | 2,743.98 / 120.67 | 5,804.77 / 274.07 | 2.12x | 2.27x |
+| 32K / 512 | 1,803.57 / 111.68 | 4,262.75 / 247.34 | 2.36x | 2.21x |
+
+The 9B run averaged 271.15 W, reached 382.09 W and 68 C, and had 93% median
+GPU utilization. The 480 W limit did not constrain it.
+
+Ornith 1.5 35B-A3B did not fit its unchanged Q4_K_M, one-slot 262,144-token,
+q8_0 K/V configuration. The current Hub revision's 20.22 GiB model and 0.84
+GiB projector loaded, but llama.cpp then failed a 2,720 MiB CUDA allocation
+for the KV cache. The process exited cleanly. No context, cache precision, GPU
+layers, or other production setting was reduced to manufacture a passing run.
+
+#### Provenance index
+
+| Run directory | Source revisions |
+|---|---|
+| `lfm2.5-vl-3b` | models.server `57223dc`; llama.cpp `d222767c7` |
+| `gemma-4-e2b` | models.server `57223dc`; llama.cpp `d222767c7` |
+| `ad-hoc/asr` | asr.server `6b15f7f` |
+| `ad-hoc/tts` | tts.server `f865edb` |
+| `ad-hoc/vision` | vision.server `524cc5f` |
+| `ad-hoc/alt-image` | alt-image-gen.server `dc9578b` |
+| `ad-hoc/music` | music-gen.server `18cd93c` |
+| `ad-hoc/alt-video` | alt-video-gen.server `c081fd0`; comfyui.server `09979a7` |
+| `ornith-1.5-9b` | models.server config `eff3200e`; llama.cpp `d222767c7` |
+| `ornith-1.5-35b-a3b-fit` | Hub `12393612`; models.server config `76e829c7`; llama.cpp `d222767c7` |
+
 ### 2026-08-20 llama.cpp rebaseline on smarty
 
 All results below used the production `llama-server` path on the RTX PRO 6000

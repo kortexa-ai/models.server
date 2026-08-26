@@ -1,3 +1,35 @@
+# Issue #9: RTX 4090 model benchmarks
+
+## Goal
+
+Benchmark the candidate workloads for the external RTX 4090 before selecting
+the new two-GPU service layout. Use current production configurations, compare
+against recorded RTX PRO 6000 results when available, record the 4090's 480 W
+power limit, and preserve raw evidence across the affected repositories.
+
+## Work plan
+
+1. Compare LFM2.5 VL 3B and Gemma 4 E2B with their recorded 6000 baselines.
+2. Run matched ASR, TTS, YOLO26n, and RF-DETR 2XL one-off measurements on both
+   GPUs; leave LingBot and ML-Sharp out of this pass.
+3. Measure the current Music and Z-Image Base production paths on both GPUs.
+4. Test MiniMax H3 alternate video generation and both Ornith configurations
+   on the 4090, preserving a bounded failure when a current configuration does
+   not fit.
+5. Curate the results, validate the benchmark harness, and leave all GPU
+   services down for the separate pinning decision.
+
+## Status
+
+- Complete. LFM2.5 VL 3B, Gemma 4 E2B, ASR, TTS, YOLO26n, RF-DETR 2XL,
+  Music, Z-Image Base, MiniMax H3, and Ornith 1.5 9B measurements are recorded.
+  Ornith 1.5 35B-A3B does not fit the 4090 with its current 262K/q8_0 profile;
+  the bounded load failure is preserved. Production GPU downtime remains
+  explicitly authorized, and all managed GPU services remain stopped for the
+  separate pinning decision.
+
+---
+
 # Issue #8: Ada and Blackwell llama.cpp build
 
 ## Goal

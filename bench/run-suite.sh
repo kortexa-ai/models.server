@@ -143,7 +143,8 @@ printf '%s\n' "$DATASET_REVISION" \
     >"${OUTPUT_DIR}/speed-bench-dataset-revision.txt"
 INITIAL_POWER_LIMIT="$(jq -er '.system.gpu_power_limit_w' "${OUTPUT_DIR}/manifest.json")"
 INITIAL_SERVER_PID="$(jq -er '.process.pid' "${OUTPUT_DIR}/manifest.json")"
-nvidia-smi \
+BENCH_GPU_UUID="$(jq -er '.system.gpu_uuid' "${OUTPUT_DIR}/manifest.json")"
+nvidia-smi --id="$BENCH_GPU_UUID" \
     --query-gpu=name,uuid,driver_version,pstate,power.limit,power.draw,clocks.current.graphics,clocks.current.memory,temperature.gpu,memory.total,memory.used,memory.free \
     --format=csv >"${OUTPUT_DIR}/gpu-before-suite.csv"
 
@@ -159,7 +160,7 @@ cleanup() {
 }
 trap cleanup EXIT HUP INT TERM
 
-nvidia-smi \
+nvidia-smi --id="$BENCH_GPU_UUID" \
     --query-gpu=timestamp,power.draw,power.limit,utilization.gpu,clocks.current.graphics,clocks.current.memory,temperature.gpu,memory.used,memory.free \
     --format=csv -l 1 >"${OUTPUT_DIR}/gpu-telemetry.csv" &
 TELEMETRY_PID=$!
@@ -235,10 +236,10 @@ if [[ -n "$TELEMETRY_PID" ]] && kill -0 "$TELEMETRY_PID" 2>/dev/null; then
     wait "$TELEMETRY_PID" 2>/dev/null || true
     TELEMETRY_PID=""
 fi
-nvidia-smi \
+nvidia-smi --id="$BENCH_GPU_UUID" \
     --query-gpu=name,uuid,driver_version,pstate,power.limit,power.draw,clocks.current.graphics,clocks.current.memory,temperature.gpu,memory.total,memory.used,memory.free \
     --format=csv >"${OUTPUT_DIR}/gpu-after.csv"
-FINAL_POWER_LIMIT="$(nvidia-smi --query-gpu=power.limit --format=csv,noheader,nounits | awk '{printf "%.0f", $1}')"
+FINAL_POWER_LIMIT="$(nvidia-smi --id="$BENCH_GPU_UUID" --query-gpu=power.limit --format=csv,noheader,nounits | awk '{printf "%.0f", $1}')"
 if [[ "$FINAL_POWER_LIMIT" != "$INITIAL_POWER_LIMIT" ]]; then
     echo "Power limit changed during run: ${INITIAL_POWER_LIMIT} W -> ${FINAL_POWER_LIMIT} W" >&2
     exit 1

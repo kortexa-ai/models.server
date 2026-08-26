@@ -59,12 +59,28 @@ if rg -q '^GGML_CUDA_ENABLE_UNIFIED_MEMORY=' \
 else
     UNIFIED_MEMORY_STATE="disabled"
 fi
-if nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits \
-    | tr -d ' ' | rg -qx "$SERVER_PID"; then
+mapfile -t SERVER_GPU_UUIDS < <(
+    nvidia-smi --query-compute-apps=pid,gpu_uuid --format=csv,noheader,nounits \
+        | awk -F, -v pid="$SERVER_PID" '
+            {
+                current_pid=$1
+                uuid=$2
+                gsub(/[[:space:]]/, "", current_pid)
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", uuid)
+                if (current_pid == pid) print uuid
+            }
+        ' | LC_ALL=C sort -u
+)
+if ((${#SERVER_GPU_UUIDS[@]} > 0)); then
     GPU_RESIDENT="true"
 else
     GPU_RESIDENT="false"
 fi
+if ((${#SERVER_GPU_UUIDS[@]} != 1)); then
+    echo "Expected live PID $SERVER_PID on exactly one GPU; found ${#SERVER_GPU_UUIDS[@]}." >&2
+    exit 1
+fi
+SERVER_GPU_UUID="${SERVER_GPU_UUIDS[0]}"
 if rg -q -- '(^| )--device none( |$)' "${OUTPUT_DIR}/process-command.txt"; then
     CUDA_INFERENCE="false"
 else
@@ -96,7 +112,7 @@ else
     : >"${OUTPUT_DIR}/python-packages.txt"
 fi
 
-nvidia-smi \
+nvidia-smi --id="$SERVER_GPU_UUID" \
     --query-gpu=name,uuid,driver_version,pstate,power.limit,power.default_limit,clocks.current.graphics,clocks.current.memory,temperature.gpu,memory.total,memory.used,memory.free \
     --format=csv >"${OUTPUT_DIR}/gpu-before.csv"
 
@@ -110,7 +126,7 @@ PROJECT_STATUS="$(git -C "$PROJECT_ROOT" status --porcelain)"
 LLAMA_STATUS="$(git -C "$LLAMA_ROOT" status --porcelain)"
 HOST_NAME="$(hostname)"
 KERNEL="$(uname -srvmo)"
-GPU_POWER_LIMIT="$(nvidia-smi --query-gpu=power.limit --format=csv,noheader,nounits | awk '{printf "%.0f", $1}')"
+GPU_POWER_LIMIT="$(nvidia-smi --id="$SERVER_GPU_UUID" --query-gpu=power.limit --format=csv,noheader,nounits | awk '{printf "%.0f", $1}')"
 PROCESS_COMMAND="$(<"${OUTPUT_DIR}/process-command.txt")"
 PROCESS_CGROUP="$(<"${OUTPUT_DIR}/process-cgroup.txt")"
 SERVER_VERSION="$(<"${OUTPUT_DIR}/server-version.txt")"
@@ -135,6 +151,7 @@ jq -n \
     --arg llama_status "$LLAMA_STATUS" \
     --arg hostname "$HOST_NAME" \
     --arg kernel "$KERNEL" \
+    --arg gpu_uuid "$SERVER_GPU_UUID" \
     --arg gpu_power_limit_w "$GPU_POWER_LIMIT" \
     --arg cuda_graphs "$CUDA_GRAPH_STATE" \
     --arg unified_memory "$UNIFIED_MEMORY_STATE" \
@@ -173,6 +190,7 @@ jq -n \
         system: {
             hostname: $hostname,
             kernel: $kernel,
+            gpu_uuid: $gpu_uuid,
             gpu_power_limit_w: ($gpu_power_limit_w | tonumber)
         }
     }' >"${OUTPUT_DIR}/manifest.json"
