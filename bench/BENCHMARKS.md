@@ -10,6 +10,62 @@ arguments and safe runtime environment, GPU telemetry, and raw suite output.
 
 ## Results
 
+### 2026-08-27 unified-KV workload tests on smarty
+
+Qwen 3.8 27B and LFM2.5 VL 3B used llama.cpp unified KV allocation on the RTX
+PRO 6000 at 450 W. CUDA graphs and CUDA unified memory were disabled. The
+server was build 10630 at llama.cpp revision `d222767c7`; models.server was
+`bbd3dfb`. Every run passed 5/5 capability canaries, every focused request
+completed, and all live commands contained `--kv-unified`.
+
+Qwen kept its 524,288-token shared allocation, two request slots, q8_0 K/V
+cache, and MTP depth 3. Four sessions with approximately 512, 8K, 32K, and
+131K words of history were interleaved across two request slots for two rounds.
+The API reported exact prompt sizes of 730, 10,660, 42,396, and 178,797 tokens
+in round one. All eight requests passed in 364.49 seconds at an aggregate
+1,276.54 prompt tokens/s. The run peaked at 63,219 MiB total GPU memory and
+retained about 34 GiB free.
+
+| Session | Round 1 latency | Round 2 latency | Round 2 cached / evaluated tokens |
+|---|---:|---:|---:|
+| Short | 4.71 s | 2.37 s | 726 / 34 |
+| Medium | 4.68 s | 9.93 s | 10,656 / 34 |
+| Long | 33.31 s | 22.46 s | 42,392 / 34 |
+| Very long | 180.43 s | 169.41 s | 20 / 178,809 |
+
+The uneven history mix demonstrates the intended shared capacity, but also
+shows the two-slot cache tradeoff: the three smaller sessions found their
+prefixes on round two, while intervening traffic evicted the 178K-token
+session. Unified KV removes the rigid partition; it does not make every live
+history simultaneously resident.
+
+LFM used one shared 32,768-token q8_0 KV allocation at every slot count. Each
+run sent 16 distinct deterministic 1024px images as independent requests with
+prompt caching disabled and a 64-token response bound. GPU memory peaked at
+25,737-25,741 MiB for the complete card in all four runs, confirming that the
+unified allocation did not multiply with the slot count.
+
+| Slots / clients | Images/s | Median latency | P95 latency | Completion tok/s |
+|---:|---:|---:|---:|---:|
+| 1 | 3.844 | 0.258 s | 0.270 s | 132.14 |
+| 2 | 4.858 | 0.410 s | 0.422 s | 166.68 |
+| 4 | 5.627 | 0.708 s | 0.719 s | 192.72 |
+| 8 | 6.032 | 1.296 s | 1.368 s | 206.58 |
+
+Eight slots delivered the highest saturated throughput, 56.9% above one slot,
+but only 7.2% above four slots while nearly doubling median latency. Four
+slots are the balanced choice for interactive work; eight are the measured
+choice for a continuously backlogged picture-processing queue. Production
+remains at one LFM slot pending a separate configuration decision.
+
+Raw local records are on `smarty` under
+`bench-results/20260827-kv-unified-bbd3dfb-*`. The Qwen config SHA-256 is
+`72854a06443c88ebc1db00f83b6269e784a552d0b0d7edfbb6c8557ed010c0d9`; the
+LFM config SHA-256 is
+`413d5097da33ceb4213d7929732f70c21b34dfa4345823e3a2a726e525d41d00`.
+
+---
+
 ### 2026-08-25 LFM2.5 8B-A1B GPU comparison on smarty
 
 LiquidAI's official LFM2.5 8B-A1B `Q8_0` GGUF ran with one 128,000-token
