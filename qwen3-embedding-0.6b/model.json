@@ -10,6 +10,8 @@
   "cache_type": "q8_0",
   "llama": {
     "repo": "Qwen/Qwen3-Embedding-0.6B-GGUF",
-    "quant": "Q8_0"
+    "quant": "Q8_0",
+    "context": 131072,
+    "parallel": 4
   }
 }

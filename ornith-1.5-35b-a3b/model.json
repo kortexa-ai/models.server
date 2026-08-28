@@ -10,6 +10,8 @@
   "llama": {
     "repo": "ornith-ai/Ornith-1.5-35B-A3B-GGUF",
     "quant": "Q4_K_M",
+    "context": 524288,
+    "parallel": 8,
     "mtp": false
   },
   "mlx": {

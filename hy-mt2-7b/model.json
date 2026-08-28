@@ -16,7 +16,9 @@
   },
   "llama": {
     "repo": "tencent/Hy-MT2-7B-GGUF",
-    "quant": "Q4_K_M"
+    "quant": "Q4_K_M",
+    "context": 16384,
+    "parallel": 8
   },
   "cpu": null
 }

@@ -8,6 +8,46 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_DIR = ROOT / "hy-mt2-7b"
 
+EXPECTED_LLAMA_CAPACITY = {
+    "qwen-3.5-0.8b": (524288, 8),
+    "qwen-3.5-2b": (524288, 8),
+    "qwen-3.5-4b": (524288, 8),
+    "qwen-3.5-9b": (524288, 8),
+    "qwen-3.6-27b": (524288, 8),
+    "qwen-3.6-35b-a3b": (524288, 8),
+    "qwen-3.8-27b": (524288, 8),
+    "qwen-3.8-27b-uncensored": (524288, 8),
+    "ornith-1.5-9b": (524288, 8),
+    "ornith-1.5-35b-a3b": (524288, 8),
+    "gemma-4-e2b": (262144, 8),
+    "gemma-4-e4b": (262144, 8),
+    "gemma-4-12b": (262144, 8),
+    "gemma-4-26b-a4b": (524288, 8),
+    "gemma-4-31b": (524288, 8),
+    "lfm2-350m-extract": (65536, 16),
+    "lfm2.5-230m": (65536, 16),
+    "lfm2.5-350m": (65536, 16),
+    "lfm2.5-1.2b-instruct": (65536, 16),
+    "lfm2.5-1.2b-thinking": (65536, 16),
+    "lfm2.5-vl-450m": (65536, 16),
+    "lfm2.5-vl-3b": (65536, 16),
+    "lfm2.5-2.6b": (131072, 8),
+    "lfm2.5-8b-a1b": (128000, 8),
+    "qwen3-embedding-0.6b": (131072, 4),
+    "embeddinggemma-300m": (8192, 4),
+    "lfm2.5-embedding-350m": (2048, 4),
+    "hy-mt2-7b": (16384, 8),
+}
+
+
+class LlamaCapacityPolicyTest(unittest.TestCase):
+    def test_family_capacity_policy(self):
+        for model_id, expected in EXPECTED_LLAMA_CAPACITY.items():
+            with self.subTest(model_id=model_id):
+                config = json.loads((ROOT / model_id / "model.json").read_text())
+                llama = config["llama"]
+                self.assertEqual((llama["context"], llama["parallel"]), expected)
+
 
 class HyMt2ConfigTest(unittest.TestCase):
     def test_translation_profile(self):

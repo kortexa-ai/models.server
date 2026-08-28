@@ -10,8 +10,8 @@
   "llama": {
     "repo": "orcarouter/Qwen3.8-27B-Uncensored-GGUF",
     "quant": "Q4_K_M",
-    "context": 262144,
-    "parallel": 2,
+    "context": 524288,
+    "parallel": 8,
     "mtp": true,
     "mtp_n_max": 3,
     "reasoning_effort": "medium"

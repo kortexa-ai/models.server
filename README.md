@@ -191,9 +191,9 @@ context while capacity remains in the shared pool; simultaneous requests must
 still fit collectively. Continuous batching remains enabled through
 llama-server's default.
 
-For example, Qwen 3.8 uses `llama.context=524288` and `llama.parallel=2`.
-Either slot can grow to the model's 262K training context, while short requests
-leave the rest of the shared 524K allocation available to the other slot.
+For example, Qwen 3.8 uses `llama.context=524288` and `llama.parallel=8`.
+Any slot can grow to the model's 262K training context while capacity remains,
+and short requests let the eight slots share the 524K allocation dynamically.
 
 #### Prime Agent long-context cache misses
 

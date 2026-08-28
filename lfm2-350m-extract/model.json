@@ -14,7 +14,9 @@
   },
   "llama": {
     "repo": "LiquidAI/LFM2-350M-Extract-GGUF",
-    "quant": "Q8_0"
+    "quant": "Q8_0",
+    "context": 65536,
+    "parallel": 16
   },
   "cpu": {
     "repo": "LiquidAI/LFM2-350M-Extract-GGUF",

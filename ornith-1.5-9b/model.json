@@ -10,6 +10,8 @@
   "llama": {
     "repo": "protoLabsAI/Ornith-1.5-9B-MTP-GGUF",
     "quant": "Q4_K_M",
+    "context": 524288,
+    "parallel": 8,
     "mtp": true,
     "mtp_n_max": 2
   },

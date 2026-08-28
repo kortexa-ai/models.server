@@ -9,7 +9,9 @@
   "cache_type": "q8_0",
   "llama": {
     "repo": "LiquidAI/LFM2.5-1.2B-Thinking-GGUF",
-    "quant": "Q8_0"
+    "quant": "Q8_0",
+    "context": 65536,
+    "parallel": 16
   },
   "mlx": {
     "repo": "LiquidAI/LFM2.5-1.2B-Thinking-MLX-8bit",

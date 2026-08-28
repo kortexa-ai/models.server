@@ -11,7 +11,9 @@
   "reasoning_effort": false,
   "llama": {
     "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
-    "quant": "Q8_0"
+    "quant": "Q8_0",
+    "context": 128000,
+    "parallel": 8
   },
   "mlx": {
     "repo": "LiquidAI/LFM2.5-8B-A1B-MLX-8bit",

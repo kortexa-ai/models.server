@@ -14,7 +14,9 @@
   },
   "llama": {
     "repo": "LiquidAI/LFM2.5-Embedding-350M-GGUF",
-    "quant": "Q8_0"
+    "quant": "Q8_0",
+    "context": 2048,
+    "parallel": 4
   },
   "cpu": {
     "repo": "LiquidAI/LFM2.5-Embedding-350M-GGUF",

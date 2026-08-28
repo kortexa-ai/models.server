@@ -9,7 +9,9 @@
   "cache_type": "q8_0",
   "llama": {
     "repo": "unsloth/Qwen3.5-0.8B-GGUF",
-    "quant": "Q8_0"
+    "quant": "Q8_0",
+    "context": 524288,
+    "parallel": 8
   },
   "mlx": {
     "repo": "mlx-community/Qwen3.5-0.8B-MLX-4bit",
