@@ -1,6 +1,7 @@
 {
   "name": "Qwen 3.5 4B",
   "id": "qwen-3.5-4b",
+  "context_window": 262144,
   "multimodal": true,
   "port": 2029,
   "host": "192.168.2.6",

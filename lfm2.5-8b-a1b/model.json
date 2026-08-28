@@ -1,6 +1,7 @@
 {
   "name": "LFM2.5 8B A1B",
   "id": "lfm2.5-8b-a1b",
+  "context_window": 128000,
   "multimodal": false,
   "port": 2059,
   "host": "0.0.0.0",

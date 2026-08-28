@@ -1,6 +1,7 @@
 {
   "name": "Ornith 1.5 9B",
   "id": "ornith-1.5-9b",
+  "context_window": 262144,
   "multimodal": true,
   "port": 2057,
   "host": "192.168.2.6",

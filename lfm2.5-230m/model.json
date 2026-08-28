@@ -1,6 +1,7 @@
 {
   "name": "LFM2.5 230M",
   "id": "lfm2.5-230m",
+  "context_window": 32768,
   "multimodal": false,
   "port": 2045,
   "host": "0.0.0.0",

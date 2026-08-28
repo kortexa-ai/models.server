@@ -1,6 +1,7 @@
 {
   "name": "EmbeddingGemma 300M",
   "id": "embeddinggemma-300m",
+  "context_window": 2048,
   "multimodal": false,
   "embedding": true,
   "port": 2041,

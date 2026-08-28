@@ -1,6 +1,7 @@
 {
   "name": "Qwen 3.6 35B A3B",
   "id": "qwen-3.6-35b-a3b",
+  "context_window": 262144,
   "multimodal": true,
   "port": 2028,
   "host": "192.168.2.6",

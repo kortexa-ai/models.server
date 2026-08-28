@@ -1,6 +1,7 @@
 {
   "name": "Hy-MT2 7B",
   "id": "hy-mt2-7b",
+  "context_window": 8192,
   "multimodal": false,
   "port": 2060,
   "host": "0.0.0.0",

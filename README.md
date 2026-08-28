@@ -191,6 +191,11 @@ context while capacity remains in the shared pool; simultaneous requests must
 still fit collectively. Continuous batching remains enabled through
 llama-server's default.
 
+`model.context_window` is separate metadata: it is the publisher-trained or
+task-specific per-request limit advertised by `api.server`. It must not be
+derived from a backend's shared KV allocation, parallel slot count, or model
+architecture metadata.
+
 For example, Qwen 3.8 uses `llama.context=524288` and `llama.parallel=8`.
 Any slot can grow to the model's 262K training context while capacity remains,
 and short requests let the eight slots share the 524K allocation dynamically.

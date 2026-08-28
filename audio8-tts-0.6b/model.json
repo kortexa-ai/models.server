@@ -1,6 +1,7 @@
 {
   "name": "Audio8 TTS Preview 0.6B",
   "id": "audio8-tts-0.6b",
+  "context_window": 2048,
   "tts": true,
   "port": 2034,
   "host": "192.168.2.6",

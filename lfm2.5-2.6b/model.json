@@ -1,6 +1,7 @@
 {
   "name": "LFM2.5 2.6B",
   "id": "lfm2.5-2.6b",
+  "context_window": 131072,
   "multimodal": false,
   "port": 2027,
   "host": "0.0.0.0",

@@ -1,6 +1,7 @@
 {
   "name": "LFM2 350M Extract",
   "id": "lfm2-350m-extract",
+  "context_window": 32768,
   "multimodal": false,
   "extraction": true,
   "port": 2047,

@@ -1,6 +1,7 @@
 {
   "name": "LFM2.5 Encoder 350M",
   "id": "lfm2.5-encoder-350m",
+  "context_window": 8192,
   "hf_model": "LiquidAI/LFM2.5-Encoder-350M",
   "multimodal": false,
   "encoder": true,

@@ -39,6 +39,41 @@ EXPECTED_LLAMA_CAPACITY = {
     "hy-mt2-7b": (16384, 8),
 }
 
+EXPECTED_CONTEXT_WINDOWS = {
+    "audio8-tts-0.6b": 2048,
+    "embeddinggemma-300m": 2048,
+    "gemma-4-12b": 131072,
+    "gemma-4-26b-a4b": 262144,
+    "gemma-4-31b": 262144,
+    "gemma-4-e2b": 131072,
+    "gemma-4-e4b": 131072,
+    "hy-mt2-7b": 8192,
+    "lfm2-350m-extract": 32768,
+    "lfm2.5-1.2b-instruct": 32768,
+    "lfm2.5-1.2b-thinking": 32768,
+    "lfm2.5-2.6b": 131072,
+    "lfm2.5-230m": 32768,
+    "lfm2.5-350m": 32768,
+    "lfm2.5-8b-a1b": 128000,
+    "lfm2.5-embedding-350m": 512,
+    "lfm2.5-encoder-350m": 8192,
+    "lfm2.5-vl-3b": 32768,
+    "lfm2.5-vl-450m": 32768,
+    "ornith-1.5-35b-a3b": 262144,
+    "ornith-1.5-9b": 262144,
+    "qwen-3.5-0.8b": 262144,
+    "qwen-3.5-2b": 262144,
+    "qwen-3.5-4b": 262144,
+    "qwen-3.5-9b": 262144,
+    "qwen-3.6-27b": 262144,
+    "qwen-3.6-35b-a3b": 262144,
+    "qwen-3.8-27b": 262144,
+    "qwen-3.8-27b-uncensored": 262144,
+    "qwen3-embedding-0.6b": 32768,
+    "qwen3-tts-0.6b-customvoice": 32768,
+    "qwen3-tts-1.7b-customvoice": 32768,
+}
+
 
 class LlamaCapacityPolicyTest(unittest.TestCase):
     def test_family_capacity_policy(self):
@@ -47,6 +82,17 @@ class LlamaCapacityPolicyTest(unittest.TestCase):
                 config = json.loads((ROOT / model_id / "model.json").read_text())
                 llama = config["llama"]
                 self.assertEqual((llama["context"], llama["parallel"]), expected)
+
+    def test_every_model_declares_its_advertised_context_window(self):
+        config_paths = sorted(ROOT.glob("*/model.json"))
+        self.assertEqual({path.parent.name for path in config_paths}, set(EXPECTED_CONTEXT_WINDOWS))
+        for config_path in config_paths:
+            with self.subTest(model_id=config_path.parent.name):
+                config = json.loads(config_path.read_text())
+                self.assertEqual(
+                    config["context_window"],
+                    EXPECTED_CONTEXT_WINDOWS[config_path.parent.name],
+                )
 
 
 class HyMt2ConfigTest(unittest.TestCase):

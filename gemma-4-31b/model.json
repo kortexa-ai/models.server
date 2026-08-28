@@ -1,6 +1,7 @@
 {
   "name": "Gemma 4 31B",
   "id": "gemma-4-31b",
+  "context_window": 262144,
   "multimodal": true,
   "port": 2037,
   "host": "192.168.2.6",

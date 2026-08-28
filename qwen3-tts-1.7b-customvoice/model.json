@@ -1,6 +1,7 @@
 {
   "name": "Qwen3 TTS 1.7B CustomVoice",
   "id": "qwen3-tts-1.7b-customvoice",
+  "context_window": 32768,
   "tts": true,
   "port": 2035,
   "host": "192.168.2.6",

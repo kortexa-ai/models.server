@@ -1,6 +1,7 @@
 {
   "name": "Qwen3 Embedding 0.6B",
   "id": "qwen3-embedding-0.6b",
+  "context_window": 32768,
   "multimodal": false,
   "embedding": true,
   "port": 2040,
