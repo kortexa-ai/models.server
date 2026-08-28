@@ -10,10 +10,13 @@ bash -n \
     bench/run-suite.sh
 python3 -m py_compile \
     bench/capability-probe.py \
-    bench/run-speed-bench.py
+    bench/run-speed-bench.py \
+    bench/workload_bench.py
 
 ./bench/run-suite.sh lfm2.5-vl-3b >/dev/null
 ./bench/run-suite.sh qwen-3.8-27b --suite smoke >/dev/null
+./bench/run-suite.sh qwen-3.8-27b --suite smoke --workload mixed-chat >/dev/null
+./bench/run-suite.sh lfm2.5-vl-3b --suite smoke --workload vision-pipeline >/dev/null
 ./bench/run-suite.sh lfm2.5-embedding-350m >/dev/null
 
 echo "Benchmark tool syntax and dry runs passed; no inference requests were sent."

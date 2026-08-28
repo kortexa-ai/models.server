@@ -1,3 +1,24 @@
+# Issue #16: Unified llama.cpp KV cache and focused concurrency workloads
+
+## Goal
+
+Use one shared llama.cpp KV allocation across parallel request slots, then
+measure the two production traffic shapes that depend most on the change:
+uneven long-lived Qwen chat histories and independent LFM vision jobs.
+
+## Work plan
+
+1. Enable `--kv-unified` in every generic llama.cpp launch path while leaving
+   continuous batching at llama-server's enabled default.
+2. Replace fixed `context / parallel` assumptions in documentation and live
+   benchmark checks with shared-allocation and per-request-limit semantics.
+3. Measure Qwen with concurrent 512-word through 131K-word histories across
+   two rounds so slot selection and prefix reuse are both exercised.
+4. Measure LFM2.5 VL 3B with distinct 1024px single-image requests, prompt
+   caching disabled, and separate live runs at candidate slot counts.
+
+---
+
 # Issue #11: Production GPU placement
 
 ## Goal

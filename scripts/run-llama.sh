@@ -70,6 +70,7 @@ if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
         -ngl 99 \
         --threads -1 \
         --parallel "$PARALLEL" \
+        --kv-unified \
         --load-mode none \
         --flash-attn on \
         --cache-type-k "$CACHE_TYPE" \
@@ -91,6 +92,7 @@ exec llama-server \
     -ngl 99 \
     --threads -1 \
     --parallel "$PARALLEL" \
+    --kv-unified \
     --no-context-shift \
     --temp "$TEMPERATURE" \
     --top-k "$TOP_K" \

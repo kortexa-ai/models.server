@@ -182,12 +182,18 @@ that predate llama.cpp's CORS controls. CORS is not a network ACL; LAN and
 Tailnet access remains the responsibility of the host and network firewalls,
 while public model access goes through the authenticated `api.server` proxy.
 
-`model.context` is the default total llama.cpp context. Optional
+`model.context` is the default total llama.cpp KV allocation. Optional
 `llama.context` and `llama.parallel` values override the shared defaults for
-that backend. With `parallel > 1`, llama.cpp divides the total context across
-slots. For example, Qwen 3.8 uses `llama.context=786432` and
-`llama.parallel=3`, which gives three 262K slots without changing the 262K
-per-request context used by its MLX and vLLM configurations.
+that backend. The launcher enables llama.cpp's unified KV cache, so parallel
+slots draw dynamically from one shared allocation instead of receiving rigid
+`context / parallel` partitions. A request can grow to the model's training
+context while capacity remains in the shared pool; simultaneous requests must
+still fit collectively. Continuous batching remains enabled through
+llama-server's default.
+
+For example, Qwen 3.8 uses `llama.context=524288` and `llama.parallel=2`.
+Either slot can grow to the model's 262K training context, while short requests
+leave the rest of the shared 524K allocation available to the other slot.
 
 #### Prime Agent long-context cache misses
 
@@ -415,8 +421,9 @@ Q8 weights and full 128K q8 KV allocation do not fit an 8 GB Raspberry Pi.
 | LFM2.5 8B-A1B | Q8_0 / q8_0 | Q8_0 / q8_0 | 8-bit / default unquantized | 128K / 1 |
 
 The MLX launchers do not currently configure KV quantization. For llama.cpp,
-the common `context` is the total allocation and each slot receives
-`context / parallel`. MLX-lm uses its own prompt/decode concurrency controls;
+the common `context` is one shared KV allocation across all configured slots;
+each request remains bounded by the model's training context. MLX-lm uses its
+own prompt/decode concurrency controls;
 MLX-VLM 450M explicitly sets 32K per sequence and four concurrent sequences.
 Optional vLLM configs are not platform defaults: VL 450M and VL 3B specify FP8
 weights and FP8 KV at 32K per sequence, while 230M specifies automatic

@@ -72,6 +72,7 @@ class HyMt2ConfigTest(unittest.TestCase):
             )
 
         arguments = result.stdout.splitlines()
+        self.assertIn("--kv-unified", arguments)
         for flag, value in (
             ("--temp", "0.7"),
             ("--top-k", "20"),

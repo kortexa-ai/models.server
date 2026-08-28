@@ -3,10 +3,12 @@ set -euo pipefail
 
 usage() {
     cat >&2 <<'EOF'
-Usage: bench/run-suite.sh <model-id> [--suite smoke|standard] [--output DIR] [--execute]
+Usage: bench/run-suite.sh <model-id> [--suite smoke|standard] [--workload NAME] [--output DIR] [--execute]
 
 Without --execute, print the plan and send no inference requests.
 The script only benchmarks an already-running endpoint; it never manages services.
+
+Focused workloads: none, mixed-chat, vision-pipeline.
 EOF
 }
 
@@ -18,6 +20,7 @@ EOF
 MODEL_ID="$1"
 shift
 SUITE="standard"
+WORKLOAD="none"
 OUTPUT_DIR=""
 EXECUTE=0
 while [[ $# -gt 0 ]]; do
@@ -25,6 +28,11 @@ while [[ $# -gt 0 ]]; do
         --suite)
             [[ $# -ge 2 ]] || { usage; exit 2; }
             SUITE="$2"
+            shift 2
+            ;;
+        --workload)
+            [[ $# -ge 2 ]] || { usage; exit 2; }
+            WORKLOAD="$2"
             shift 2
             ;;
         --output)
@@ -47,12 +55,18 @@ done
     echo "Unknown suite: $SUITE" >&2
     exit 2
 }
+[[ "$WORKLOAD" == "none" || "$WORKLOAD" == "mixed-chat" \
+    || "$WORKLOAD" == "vision-pipeline" ]] || {
+    echo "Unknown workload: $WORKLOAD" >&2
+    exit 2
+}
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 MODEL_FILE="${PROJECT_ROOT}/${MODEL_ID}/model.json"
 LLAMA_ROOT="$(cd "${PROJECT_ROOT}/../llama.cpp" && pwd)"
 SPEED_BENCH="${LLAMA_ROOT}/tools/server/bench/speed-bench/speed_bench.py"
 SPEED_BENCH_WRAPPER="${PROJECT_ROOT}/bench/run-speed-bench.py"
+WORKLOAD_BENCH="${PROJECT_ROOT}/bench/workload_bench.py"
 BENCH_PYTHON="${PROJECT_ROOT}/.venv-bench/bin/python"
 [[ -f "$MODEL_FILE" ]] || {
     echo "Unknown model or missing model.json: $MODEL_ID" >&2
@@ -63,14 +77,23 @@ MODEL_PORT="$(jq -er '.port' "$MODEL_FILE")"
 MODEL_CONTEXT="$(jq -er '.llama.context // .context' "$MODEL_FILE")"
 MODEL_PARALLEL="$(jq -er '.llama.parallel // .parallel // 1' "$MODEL_FILE")"
 MODEL_EMBEDDING="$(jq -r '.embedding // false' "$MODEL_FILE")"
-CONTEXT_PER_SLOT="$((MODEL_CONTEXT / MODEL_PARALLEL))"
+MODEL_MULTIMODAL="$(jq -r '.multimodal // false' "$MODEL_FILE")"
 BASE_URL="http://127.0.0.1:${MODEL_PORT}"
+
+if [[ "$MODEL_EMBEDDING" == "true" && "$WORKLOAD" != "none" ]]; then
+    echo "Focused generation workloads do not support embedding models." >&2
+    exit 2
+fi
+if [[ "$WORKLOAD" == "vision-pipeline" && "$MODEL_MULTIMODAL" != "true" ]]; then
+    echo "vision-pipeline requires a multimodal model." >&2
+    exit 2
+fi
 
 echo "Benchmark plan"
 printf '  model: %s\n  endpoint: %s\n  suite: %s\n' \
     "$MODEL_ID" "$BASE_URL" "$SUITE"
-printf '  configured context: %s total, %s per slot, %s slots\n' \
-    "$MODEL_CONTEXT" "$CONTEXT_PER_SLOT" "$MODEL_PARALLEL"
+printf '  configured KV allocation: %s shared across %s slots\n' \
+    "$MODEL_CONTEXT" "$MODEL_PARALLEL"
 echo "  capability probes: enabled"
 if [[ "$MODEL_EMBEDDING" == "true" ]]; then
     echo "  SPEED-Bench: skipped (embedding suite is separate)"
@@ -79,7 +102,7 @@ elif [[ "$SUITE" == "smoke" ]]; then
 else
     echo "  SPEED-Bench: qualitative all; OSL 512; limit 5"
     echo "  SPEED-Bench: throughput_1k and throughput_8k; OSL 512; limit 5"
-    if ((CONTEXT_PER_SLOT >= 33280)); then
+    if ((MODEL_CONTEXT >= 33280)); then
         echo "  SPEED-Bench: throughput_32k; OSL 512; limit 5"
     else
         echo "  SPEED-Bench: throughput_32k skipped (does not fit one slot)"
@@ -87,6 +110,11 @@ else
     if ((MODEL_PARALLEL > 1)); then
         echo "  concurrency pass: ${MODEL_PARALLEL} clients"
     fi
+fi
+if [[ "$WORKLOAD" == "mixed-chat" ]]; then
+    echo "  focused workload: mixed chat histories (512 through 131072 target words), two rounds"
+elif [[ "$WORKLOAD" == "vision-pipeline" ]]; then
+    echo "  focused workload: 16 distinct 1024px images, independent requests, prompt cache disabled"
 fi
 
 if [[ "$EXECUTE" -ne 1 ]]; then
@@ -124,15 +152,14 @@ mkdir -p "$OUTPUT_DIR"
 
 "${PROJECT_ROOT}/bench/capture-metadata.sh" "$MODEL_ID" "$OUTPUT_DIR"
 LIVE_PARALLEL="$(jq -er '.total_slots' "${OUTPUT_DIR}/props.json")"
-LIVE_CONTEXT_PER_SLOT="$(jq -er '.default_generation_settings.n_ctx' \
+LIVE_REQUEST_CONTEXT="$(jq -er '.default_generation_settings.n_ctx' \
     "${OUTPUT_DIR}/props.json")"
-if [[ "$LIVE_PARALLEL" != "$MODEL_PARALLEL" \
-    || "$LIVE_CONTEXT_PER_SLOT" != "$CONTEXT_PER_SLOT" ]]; then
-    printf 'Live runtime overrides configured dimensions: context_per_slot=%s slots=%s\n' \
-        "$LIVE_CONTEXT_PER_SLOT" "$LIVE_PARALLEL"
+if [[ "$LIVE_PARALLEL" != "$MODEL_PARALLEL" ]]; then
+    printf 'Live runtime overrides configured slot count: configured=%s live=%s\n' \
+        "$MODEL_PARALLEL" "$LIVE_PARALLEL"
 fi
 MODEL_PARALLEL="$LIVE_PARALLEL"
-CONTEXT_PER_SLOT="$LIVE_CONTEXT_PER_SLOT"
+REQUEST_CONTEXT_LIMIT="$LIVE_REQUEST_CONTEXT"
 DATASET_REVISION="$("$BENCH_PYTHON" - <<'PY'
 from huggingface_hub import HfApi
 
@@ -217,7 +244,7 @@ if [[ "$MODEL_EMBEDDING" != "true" ]]; then
         run_speed_bench throughput-8k \
             --bench throughput_8k --category all \
             --osl 512 --limit 5 --concurrency 1
-        if ((CONTEXT_PER_SLOT >= 33280)); then
+        if ((REQUEST_CONTEXT_LIMIT >= 33280)); then
             run_speed_bench throughput-32k \
                 --bench throughput_32k --category all \
                 --osl 512 --limit 5 --concurrency 1
@@ -229,6 +256,16 @@ if [[ "$MODEL_EMBEDDING" != "true" ]]; then
                 --concurrency "$MODEL_PARALLEL"
         fi
     fi
+fi
+
+if [[ "$WORKLOAD" != "none" ]]; then
+    WORKLOAD_REQUESTS=16
+    "$BENCH_PYTHON" "$WORKLOAD_BENCH" \
+        "$MODEL_FILE" "${OUTPUT_DIR}/workload-${WORKLOAD}.json" \
+        --scenario "$WORKLOAD" \
+        --concurrency "$MODEL_PARALLEL" \
+        --requests "$WORKLOAD_REQUESTS" \
+        --execute | tee "${OUTPUT_DIR}/workload-${WORKLOAD}.log"
 fi
 
 if [[ -n "$TELEMETRY_PID" ]] && kill -0 "$TELEMETRY_PID" 2>/dev/null; then

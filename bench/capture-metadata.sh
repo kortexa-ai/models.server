@@ -59,6 +59,11 @@ if rg -q '^GGML_CUDA_ENABLE_UNIFIED_MEMORY=' \
 else
     UNIFIED_MEMORY_STATE="disabled"
 fi
+if rg -q -- '(^| )--kv-unified( |$)' "${OUTPUT_DIR}/process-command.txt"; then
+    KV_UNIFIED_STATE="enabled"
+else
+    KV_UNIFIED_STATE="disabled"
+fi
 mapfile -t SERVER_GPU_UUIDS < <(
     nvidia-smi --query-compute-apps=pid,gpu_uuid --format=csv,noheader,nounits \
         | awk -F, -v pid="$SERVER_PID" '
@@ -155,6 +160,7 @@ jq -n \
     --arg gpu_power_limit_w "$GPU_POWER_LIMIT" \
     --arg cuda_graphs "$CUDA_GRAPH_STATE" \
     --arg unified_memory "$UNIFIED_MEMORY_STATE" \
+    --arg kv_unified "$KV_UNIFIED_STATE" \
     --argjson gpu_resident "$GPU_RESIDENT" \
     --argjson cuda_inference "$CUDA_INFERENCE" \
     '{
@@ -179,7 +185,8 @@ jq -n \
             gpu_resident: $gpu_resident,
             cuda_inference: $cuda_inference,
             cuda_graphs: $cuda_graphs,
-            cuda_unified_memory: $unified_memory
+            cuda_unified_memory: $unified_memory,
+            llama_kv_unified: $kv_unified
         },
         source: {
             models_server_commit: $project_commit,
@@ -200,6 +207,6 @@ if [[ "$UNIFIED_MEMORY_STATE" == "enabled" ]]; then
     exit 3
 fi
 
-printf 'Captured model=%s pid=%s power_limit_w=%s cuda_graphs=%s unified_memory=%s\n' \
+printf 'Captured model=%s pid=%s power_limit_w=%s cuda_graphs=%s unified_memory=%s kv_unified=%s\n' \
     "$MODEL_ID" "$SERVER_PID" "$GPU_POWER_LIMIT" \
-    "$CUDA_GRAPH_STATE" "$UNIFIED_MEMORY_STATE"
+    "$CUDA_GRAPH_STATE" "$UNIFIED_MEMORY_STATE" "$KV_UNIFIED_STATE"

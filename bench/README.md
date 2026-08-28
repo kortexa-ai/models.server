@@ -74,6 +74,8 @@ Useful overrides:
 ```bash
 ./bench/run-suite.sh qwen-3.8-27b --execute --suite smoke
 ./bench/run-suite.sh qwen-3.8-27b --execute --suite standard
+./bench/run-suite.sh qwen-3.8-27b --execute --suite smoke --workload mixed-chat
+./bench/run-suite.sh lfm2.5-vl-3b --execute --suite smoke --workload vision-pipeline
 ./bench/run-suite.sh qwen-3.8-27b --execute --output bench-results/manual-name
 ```
 
@@ -81,6 +83,19 @@ The default `standard` suite runs capability canaries, the qualitative
 SPEED-Bench split, fixed 1K and 8K input splits, a 32K split when the live
 context permits it, and a live-slot concurrency pass when the model has
 more than one slot. The `smoke` suite uses one sample from three categories.
+
+The optional `mixed-chat` workload runs four independent Qwen-style sessions
+with approximately 512, 8K, 32K, and 131K words of existing history. It sends
+two rounds per session with prompt caching enabled, retaining the first model
+response in the second request. This exposes latency, throughput, and cache
+reuse under uneven simultaneous KV demand.
+
+The optional `vision-pipeline` workload sends 16 distinct deterministic 1024px
+images as independent sessions. Prompt caching is disabled, and each response
+is bounded to 64 tokens. Run it once for each deliberately prepared live slot
+count; the client concurrency follows `/props.total_slots`, so comparisons of
+1, 2, 4, and 8 slots measure the server configuration rather than a client
+queue setting.
 
 ## Required run record
 
@@ -100,6 +115,7 @@ Each run directory contains:
 - `gpu-before.csv`, `gpu-telemetry.csv`, and `gpu-after.csv`.
 - `canaries.json`: text, tool-call, vision, or embedding capability probes.
 - `speed-*.json` and matching console logs from SPEED-Bench.
+- `workload-*.json` and matching console logs for an optional focused workload.
 
 Keep raw results local because they can be large. Add a concise summary to
 `BENCHMARKS.md` with the run directory name, model ID, model-config SHA-256,
@@ -139,7 +155,8 @@ combine samples across power caps or CUDA graph states.
 - CUDA graph state must come from the live process environment, not an
   assumption based on source configuration.
 - Warm-ups do not count as measured samples.
-- Compare only matching model, quant, KV type, context per slot, slot count,
-  speculative mode/depth, graph state, power cap, workload, and client version.
+- Compare only matching model, quant, KV type, total KV allocation, per-request
+  context limit, unified-KV state, slot count, speculative mode/depth, graph
+  state, power cap, workload, and client version.
 - Record failures. A crash, invalid tool call, or failed vision request is a
   result, not a sample to quietly throw into the swamp.
