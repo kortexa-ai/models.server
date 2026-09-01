@@ -97,3 +97,21 @@ stacks, all controls clean, artifacts always intact after recovery).
 3. If a run of quiet weeks follows a future driver release, re-run the
    hottest reproducer (9B FP32 training cells) as acceptance before
    trusting it.
+
+## AD102 control burn (registered 2026-08-31 23:35 PDT, before data)
+
+Franci granted both smarty GPUs for the night. Control experiment: loop
+the 0.8B FP32 PA pilot training cell on the RTX 4090 (AD102, same host,
+same driver 610.43.02, same PyTorch stack) until ~05:00 PDT with the
+4090 trio (asr, tts, lfm2.5-8b-a1b) stopped and process-owned restore.
+The 0.8B profile is submission-density-heavy (small kernels at high
+rate) — arguably a hotter trigger profile than 9B per the leading
+hypothesis. Interpretation registered in advance: GB202 locking while
+AD102 stays clean over ~5 h of saturation isolates the fault to
+GB202 silicon/GSP; an AD102 lock would instead implicate the shared
+driver/stack/host and materially change the NVIDIA report.
+
+Ledger event 14: 2026-08-31 23:27:50 PDT — 9B canonical, s2042 prefix
+train attempt 1 (pid 116380, channel 0x2, driver 610); restart engaged.
+Post-event nvidia-bug-report captured 23:28:10 (20 s after the lock):
+captures/nvidia-bug-report-postevent-20260831T232810.gz.
