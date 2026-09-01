@@ -1,5 +1,7 @@
 # Qwen 3.8 27B Xid 8 investigation
 
+> Consolidated living status: [STATUS.md](STATUS.md) (occurrence ledger, ruled-out list, hypothesis ranking, next steps).
+
 ## Purpose
 
 Preserve the known failing OMP session and the observed server state before
