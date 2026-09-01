@@ -115,3 +115,15 @@ Ledger event 14: 2026-08-31 23:27:50 PDT — 9B canonical, s2042 prefix
 train attempt 1 (pid 116380, channel 0x2, driver 610); restart engaged.
 Post-event nvidia-bug-report captured 23:28:10 (20 s after the lock):
 captures/nvidia-bug-report-postevent-20260831T232810.gz.
+
+## AD102 control burn result (2026-09-01 05:00 PDT)
+
+**AD102 CLEAN: 26,912 training steps over 19,244 s (5.35 h) of continuous
+FP32 saturation on the RTX 4090 — zero Xid events** (kernel log count
+unchanged at 4, all on the GB202). Same host, same driver 610.43.02,
+same PyTorch stack, submission-density-heavy 0.8B profile, ~21 GB
+resident, 100% utilization throughout. Per the pre-registered
+interpretation this **isolates the fault to the GB202 card** (silicon or
+the GSP path as exercised on GB202) and exonerates the shared
+driver/stack/host. Trio restored clean (4002/4003/2059 all 200).
+The NVIDIA report draft is updated with this control.

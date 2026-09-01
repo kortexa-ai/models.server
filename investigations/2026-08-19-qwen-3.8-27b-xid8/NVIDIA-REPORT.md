@@ -47,6 +47,12 @@ at ~100% for tens of minutes.
 - Same-prompt replays fail at different decode positions after clean
   restarts → stochastic, not input-deterministic.
 
+- Control experiment: 26,912 steps (5.35 h) of the identical FP32 training
+  stack on the RTX 4090 (AD102) in the SAME host under the SAME driver
+  (610.43.02) produced zero events, while the GB202 locked five times in
+  the same evening under comparable sustained load. The fault isolates to
+  the GB202 card.
+
 **Ask:** Is this a known GSP-RM / channel-scheduling issue on GB202
 under sustained high-density kernel submission? Fresh
 `nvidia-bug-report.log.gz` captured within a minute of an event is
