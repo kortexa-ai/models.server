@@ -408,3 +408,7 @@ three 262K slots, MTP depth 3, CUDA graphs disabled through that launcher
 default, and the persistent 450 W limit active. It leaves 13,174 MiB of VRAM
 free at idle, and a three-request canary completed on all slots. The endpoint
 is healthy.
+
+## 2026-09-01 — Submitted to NVIDIA
+
+Forum thread (Graphics / Linux): https://forums.developer.nvidia.com/t/recurring-xid-8-rc-watchdog-gpu-probably-locked-on-rtx-pro-6000-blackwell-under-sustained-compute-595-84-and-610-43-02-open/382055 (topic 382055). Post-event nvidia-bug-report attached; body includes the AD102 control and the 2026-09-01 bf16 zero-event day. Watch the thread for driver-team follow-up.
