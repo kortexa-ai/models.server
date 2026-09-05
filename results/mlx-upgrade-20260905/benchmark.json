@@ -1,0 +1,3482 @@
+{
+  "source": "hamster-orchestra d4cc839 calibration-verbatim.json",
+  "versions": {
+    "mlx-lm": "0.31.3",
+    "mlx-vlm": "0.6.17",
+    "mlx": "0.32.1"
+  },
+  "note": "Same text backend; repeated tiny cache-friendly workload, not evidence of upgrade speedup.",
+  "runs": [
+    {
+      "concurrency": 1,
+      "wallMs": 797.598542,
+      "correct": 25,
+      "rows": [
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-fd11edc9-3c83-43c4-ba77-dd2dcd433a1f",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584350,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 182.28400000000002
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-bc4f47d7-db37-4284-8467-533c89f8e785",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 38
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 36.327124999999995
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-c388f5d7-e6c0-41ba-8ba2-4c0210b13d17",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 38
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 17.91187499999998
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-84dba2e5-60da-4576-a4f8-ecb633dc8495",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 38
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 15.221041999999983
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-dd0363d0-4864-48c1-9217-bad286ff7974",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 38
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 17.498334
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-b7f70107-38b4-4670-b0bc-97c96b7f4d09",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 13.462041999999997
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-33881c6c-3251-4008-86ec-6cfbc769b2a9",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 27.83895799999999
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-50630e58-365d-4eac-84e9-12f88c44464c",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 29.799915999999996
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-574a55af-1912-404f-a63b-b14dda918068",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 24.69383399999998
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-4460f849-8150-4f7b-ac29-cb7d5db06b79",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 26.48733299999998
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-d476df98-39f7-4e30-a38b-5e63ae0abaca",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 28.91779200000002
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-045b0486-69f8-4ee0-afac-e18a2697e368",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 27.87966700000004
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-c80da9f3-760e-4bdc-bb9b-ae829eafc71e",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 28.07091700000001
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-b6f3d69e-c2d2-4105-8d56-349a5042c566",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 22.41545899999994
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-45fd672d-1187-477c-803d-7f821ea54eef",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 29.907499999999914
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-aaeda703-dc81-430f-9248-ca3853c43cc2",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 25.239000000000033
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-ac55199d-eb90-4b2c-b594-10f1febd9b74",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 28.916541999999936
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-e027c72d-51ee-40ae-987c-af2a37bf4052",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 25.529916999999955
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-8ecf9d0b-d08c-497c-b398-fb601496b105",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 21.673958999999968
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-b49015d5-7a84-427d-b232-1155610ceac8",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 24.943083
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-b7d77f27-c5d0-4d63-8adc-e66288e765b7",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 29.31466599999999
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-ce4a9809-c664-4964-a5fb-2dd107d47bb0",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 33.63204100000007
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-a3939ebe-15fa-4ac4-9165-2bf529e3e771",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 34.68225000000007
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-83626f28-4487-4bd8-8f29-f0c91f4aac1d",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 25.078750000000014
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-30d7a704-141b-4806-a8a9-f5384cd73706",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 19.79983399999992
+        }
+      ]
+    },
+    {
+      "concurrency": 4,
+      "wallMs": 255.65658299999996,
+      "correct": 25,
+      "rows": [
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-3529afaa-3c8e-428d-bfc5-3824571fb3db",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 21.44962499999997
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-1e4e4ea4-0c80-4211-b90d-4860d581cc83",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 21.69591700000001
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-8724dd7a-c0cf-4c4d-bb24-3822c05ac237",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 21.94150000000002
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-078860a1-6d24-4b55-9c97-9b4ac597aec5",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 16.286249999999995
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-4f0d9dd3-dd11-4f4a-a251-cebb0107deb7",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 16.707666000000017
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-25af1ec6-cf8d-4020-9295-21173c4371bc",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 29.695707999999968
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-52892f43-23ba-4cce-abe1-3eccd93da280",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 29.670374999999922
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-dc897c9b-2ba2-4f3a-b16d-cd411e80a096",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 29.60800000000006
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-da64b847-b258-42b0-85f7-92f90caa1a19",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 13.087791000000038
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-55855b78-9d49-4d50-aec8-0e0a3bab4a01",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 17.19433300000003
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-d03f9f95-d6ab-41b6-8b25-260f7a2aeb21",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 57.18324999999993
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-7a34c183-e749-46c3-a671-7b4745ed8eb0",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 57.206500000000005
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-c5e90c2d-331f-4f75-9c18-48ae8d4da807",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 58.460000000000036
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-fc2fe742-40ff-42f4-a4a2-00ef1256c599",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 30.43616700000007
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-6846b5e0-4d9b-4001-bc68-2dd226a4be55",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 59.69891700000005
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-34b80cda-4cc9-4830-bd7c-56b442d309f3",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 45.814500000000066
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-cdc8491a-090d-4e55-a653-d8b49e15b6b4",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 45.64408400000002
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-4385df6a-8b99-4c1c-bd3d-270c21080a90",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 44.335750000000075
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-9bcfbf4e-7f84-4c8d-a8d8-381853a30649",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 32.87737500000003
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-44ee3639-8f8e-452d-839c-26e4ac616702",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 44.41204200000004
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-e64a6a41-425c-456a-ae73-6757f8133ef3",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 44.90062499999999
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-9df798a4-f84e-4fcb-9d38-a8eb3356cfae",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 44.42983300000003
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-f522d8fa-3229-46eb-897a-56f148a54c6b",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 35.685333000000014
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-f80bdb17-0233-4430-9daa-d16e795effd1",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 50.93720799999994
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-a3ba0d91-f683-4441-b6d9-1dd7f7d34874",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 56.62462500000004
+        }
+      ]
+    },
+    {
+      "concurrency": 8,
+      "wallMs": 316.2453330000001,
+      "correct": 25,
+      "rows": [
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-27269160-775b-44fb-9722-bd77f97c135e",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 59.06000000000017
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-1b44719b-ac1f-4063-b163-41932654c68e",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 59.4052079999999
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-6cbf6f70-d5b5-49a0-a12e-52fe9b2a8416",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 59.77600000000007
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-3859cb29-5b97-40c6-bfac-18d9ab3f52ac",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 44.78241700000012
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-ec1b967c-7baa-4507-91fb-05be59402091",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 72.41270800000007
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-fe9b3afa-ed15-4181-aeb1-90eb311d6a83",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 174.09275000000002
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-d875da06-4719-4c95-8815-12be7e5df6cb",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 160.65449999999987
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-7adeeb16-491b-4a6d-b083-2090a12963eb",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 173.55012499999998
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-d086783f-52c4-451d-9270-9cc0e883cc50",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 67.71504199999981
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-01392772-daaf-4618-b526-473df825208f",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 79.94174999999996
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-cae04cd9-4d18-40ba-aaff-dbc88991f914",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 79.89325000000008
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-49124edb-f320-432a-a293-4a653a0f7c79",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584351,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 79.73279200000002
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-dd480825-f3b7-47ee-855a-d6cfdd164af1",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 101.98345900000004
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-47d96183-d23e-4321-bd71-d71e7372043d",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 102.02379199999996
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-0b56b2df-1054-4052-ae02-96e91e63ef54",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 104.71845800000006
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-c6eb5b57-b101-4e59-9da8-6e97aa35d9e2",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 104.95695799999999
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-873d5f70-861b-4b9b-91fb-015af2a9dd1e",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 104.47504200000003
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-82b98c39-8c0d-44ae-9047-82ba49def9c6",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 109.04512499999987
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-d52d5bb3-68f5-4b31-9344-d999ec868d73",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 96.43329100000005
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-02b44ba5-d937-4acb-86c1-3535450a4ecc",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 106.90362499999992
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is north. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "north",
+          "response": {
+            "id": "chatcmpl-0696e64f-68e6-412e-8372-1ad1dc2c148b",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "north"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 106.84391700000015
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is east. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "east",
+          "response": {
+            "id": "chatcmpl-b169d316-605e-4dec-9248-62cb366a6fa4",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "east"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 101.19374999999991
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is south. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "south",
+          "response": {
+            "id": "chatcmpl-22d27c5f-8e3e-4266-aa7a-1c63ad95c8e7",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "south"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 72.42062499999997
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is west. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "west",
+          "response": {
+            "id": "chatcmpl-0f53f250-0290-4939-960e-258f919a302e",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "west"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 2,
+              "total_tokens": 55,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 66.83220800000004
+        },
+        {
+          "payload": {
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Copy the verified answer supplied by the user. Reply with exactly one of north, east, south, west, stay and no other text."
+              },
+              {
+                "role": "user",
+                "content": "The verified answer is stay. Return it exactly."
+              }
+            ],
+            "temperature": 0,
+            "max_tokens": 8,
+            "stream": false
+          },
+          "expected": "stay",
+          "response": {
+            "id": "chatcmpl-c008280e-6115-45bb-9339-aa43a5eabeff",
+            "system_fingerprint": "0.31.3-0.32.1-macOS-26.6.2-arm64-arm-64bit-applegpu_g16s",
+            "object": "chat.completion",
+            "model": "LiquidAI/LFM2.5-230M-MLX-8bit",
+            "created": 1788584352,
+            "choices": [
+              {
+                "index": 0,
+                "finish_reason": "stop",
+                "message": {
+                  "role": "assistant",
+                  "content": "stay"
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 3,
+              "total_tokens": 56,
+              "prompt_tokens_details": {
+                "cached_tokens": 52
+              }
+            }
+          },
+          "correct": true,
+          "latencyMs": 71.84145899999999
+        }
+      ]
+    }
+  ]
+}
