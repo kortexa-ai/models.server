@@ -1,0 +1,55 @@
+{
+  "time": 1789071193.8475828,
+  "checks": [
+    {
+      "port": 8050,
+      "status": 200,
+      "body": "{\"system\": {\"os\": \"linux\", \"ram_total\": 132699262976, \"ram_free\": 107326418944, \"comfyui_version\": \"0.33.0\", \"required_frontend_version\": \"1.48.7\", \"installed_templates_version\": \"0.11.41\", \"required_templates_version\": \"0.11.41\", \"comfy_package_versions\": [{\"name\": \"comfyui-frontend-package\", \"installed\": \"1.48.7\", \"required\": \"1.48.7\"}, {\"name\": \"comfyui-workflow-templates\", \"installed\": \"0.11.41\", \"required\": \"0.11.41\"}, {\"name\": \"comfyui-embedded-docs\", \"installed\": \"0.5.9\", \"required\": \"0.5.9\"}, {\"name\": \"comfy-kitchen\", \"installed\": \"0.2.31\", \"required\": \"0.2.31\"}, {\"name\": \"comfy-aimdo\", \"installed\": \"0.4.13\", \"required\": \"0.4.13\"}], \"python_version\": \"3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]\", \"pytorch_version\": \"2.11.0+cu130\", \"embedded_python\": false, \"deploy_environment\": \"local-git\", \"argv\": [\"/home/francip/src/ComfyUI/main.py\", \"--listen\", \"127.0.0.1,192.168.2.3\", \"--port\", \"8050\", \"--input-directory\", \"/home/francip/src/comfyui.server/data/input\", \"--output-directory\", \"/home/francip/src/comfyui.server/data/output\", \"--temp-directory\", \"/home/francip/src/comfyui.server/data\", \"--user-directory\", \"/home/francip/src/comfyui.server/data/user\", \"--database-url\", \"sqlite:////home/francip/src/comfyui.server/data/user/comfyui.db\", \"--extra-model-paths-config\", \"/home/francip/src/comfyui.server/config/extra_model_paths.yaml\", \"--disable-auto-launch\", \"--reserve-vram\", \"10\", \"--enable-cors-header\", \"*\"]}, \"devices\": [{\"name\": \"cuda:0 NVIDIA RTX PRO 6000 Blackwell Workstation Edition : cudaMallocAsync\", \"type\": \"cuda\", \"index\": 0, \"vram_total\": 102005407744, \"vram_free\": 26794983424, \"torch_vram_total\": 0, \"torch_vram_free\": 0}]}"
+    },
+    {
+      "port": 4004,
+      "status": 200,
+      "body": "{\"status\":\"ok\",\"device\":\"cuda\",\"dtype\":\"torch.bfloat16\",\"model_id\":\"Tongyi-MAI/Z-Image\"}"
+    },
+    {
+      "port": 2053,
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "port": 2055,
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "port": 2060,
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "port": 4001,
+      "status": 200,
+      "body": "{\"status\":\"healthy\",\"model\":\"yolo26n.pt\",\"device\":\"cuda:0\"}"
+    },
+    {
+      "port": 4002,
+      "status": 200,
+      "body": "{\"status\":\"healthy\",\"model\":\"Qwen/Qwen3-ASR-1.7B\",\"device\":\"cuda:0\"}"
+    },
+    {
+      "port": 4003,
+      "status": 200,
+      "body": "{\"status\":\"ok\",\"ready\":true,\"backend\":\"faster-qwen3\",\"platform\":{\"system\":\"Linux\",\"machine\":\"x86_64\"},\"model\":{\"id\":\"qwen3-tts-customvoice-1.7b\",\"repo\":\"Qwen/Qwen3-TTS-12Hz-1.7B-Base\"},\"sample_rate\":24000,\"voice_count\":4,\"default_voice\":\"adrian\",\"load_error\":null}"
+    },
+    {
+      "port": 2059,
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "actual_inference": true,
+      "status": 200,
+      "body": "{\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"4\"}}],\"created\":1789071193,\"model\":\"qwen-3.8-27b\",\"system_fingerprint\":\"b10884-434ddbbc0\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":2,\"prompt_tokens\":26,\"total_tokens\":28,\"prompt_tokens_details\":{\"cached_tokens\":0}},\"id\":\"chatcmpl-DfIqDjldxvCwl5ML1Ch1h1fejjlZFLNw\",\"timings\":{\"cache_n\":0,\"prompt_n\":26,\"prompt_ms\":151.114,\"prompt_per_token_ms\":5.812076923076924,\"prompt_per_second\":172.05553423243379,\"predicted_n\":2,\"predicted_ms\":22.244,\"predicted_per_token_ms\":22.244,\"predicted_per_second\":44.95594317568783,\"draft_n\":3,\"draft_n_accepted\":3}}"
+    }
+  ]
+}

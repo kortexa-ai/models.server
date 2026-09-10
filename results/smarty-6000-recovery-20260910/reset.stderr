@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/francip/src/models.server/scripts/recover-smarty-6000.py", line 146, in <module>
+    main()
+    ~~~~^^
+  File "/home/francip/src/models.server/scripts/recover-smarty-6000.py", line 100, in main
+    run(['ktxsvc', 'stop', service], check=True)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/francip/src/models.server/scripts/recover-smarty-6000.py", line 48, in run
+    raise RuntimeError('Command failed: ' + ' '.join(argv))
+RuntimeError: Command failed: ktxsvc stop comfyui.server
