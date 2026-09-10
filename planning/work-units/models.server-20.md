@@ -17,3 +17,10 @@ did not establish GPU health.
 and restores the captured set in `finally`. It never escalates to a bus reset,
 shared driver unload, 4090 reset, or host reboot. CUDA arithmetic and real model
 inference are separate checks from process and HTTP health.
+
+The attempted managed ComfyUI stop and restoration timed out before any reset.
+An explicitly authorized direct SIGKILL did not release its remaining thread.
+Franci performed host recovery. Both GPUs, the CUDA arithmetic check, all nine
+service endpoints, and actual 27B inference passed after the full shutdown and
+startup. See `results/smarty-6000-recovery-20260910/REPORT.md` for the outcome and
+the preserved evidence. No configuration change was needed.
