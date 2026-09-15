@@ -1,0 +1,47 @@
+{
+  "name": "K2 Horizon 7B",
+  "id": "k2-horizon-7b",
+  "context_window": 524288,
+  "multimodal": false,
+  "port": 2061,
+  "host": "192.168.2.6",
+  "context": 131072,
+  "parallel": 1,
+  "cache_type": "q8_0",
+  "default_engine": {
+    "Darwin": "omlx",
+    "Linux": "vllm"
+  },
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "max_tokens": 32768
+  },
+  "omlx": {
+    "repo": "mlx-community/K2-Horizon-7B-oQ6e",
+    "max_concurrent_requests": 1,
+    "max_context_window": 131072,
+    "max_tokens": 32768,
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "chat_template_args": {
+      "reasoning_effort": "high",
+      "tool_call_format": "xml"
+    },
+    "turboquant_kv_bits": 4,
+    "memory_guard": "safe",
+    "no_cache": true
+  },
+  "vllm": {
+    "model": "IFM/K2-Horizon-7B-FP8",
+    "quantization": "auto",
+    "kv_cache_dtype": "fp8",
+    "attention_backend": "auto",
+    "max_model_len": 131072,
+    "max_num_seqs": 1,
+    "trust_remote_code": true,
+    "tool_call_parser": "k2_horizon",
+    "reasoning_parser": "k2_horizon"
+  },
+  "cpu": null
+}

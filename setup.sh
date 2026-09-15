@@ -13,6 +13,9 @@ case "$OS" in
     Darwin)
         echo "Detected macOS (${ARCH}) — setting up MLX environment..."
         "${ROOT}/scripts/setup-mlx.sh"
+        echo ""
+        echo "--- Setting up patched oMLX environment ---"
+        "${ROOT}/scripts/setup-omlx.sh"
         ;;
     Linux)
         echo "Detected Linux (${ARCH})"

@@ -104,6 +104,22 @@ def main():
     else:
         print("MLX_SUPPORTED=false")
 
+    # oMLX
+    omlx = m.get("omlx")
+    if omlx:
+        print(f"OMLX_REPO='{quote(omlx['repo'])}'")
+        emit(
+            "OMLX_MAX_CONCURRENT_REQUESTS",
+            omlx.get("max_concurrent_requests", m.get("parallel", 1)),
+        )
+        if omlx.get("memory_guard"):
+            emit("OMLX_MEMORY_GUARD", omlx["memory_guard"])
+        if omlx.get("memory_guard_gb"):
+            emit("OMLX_MEMORY_GUARD_GB", omlx["memory_guard_gb"])
+        print(f"OMLX_NO_CACHE={'true' if omlx.get('no_cache') else 'false'}")
+    else:
+        print("OMLX_SUPPORTED=false")
+
     # mlx-audio
     mlx_audio = m.get("mlx_audio")
     if mlx_audio:

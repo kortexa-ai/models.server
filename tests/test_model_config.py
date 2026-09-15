@@ -48,6 +48,7 @@ EXPECTED_CONTEXT_WINDOWS = {
     "gemma-4-e2b": 131072,
     "gemma-4-e4b": 131072,
     "hy-mt2-7b": 8192,
+    "k2-horizon-7b": 524288,
     "lfm2-350m-extract": 32768,
     "lfm2.5-1.2b-instruct": 32768,
     "lfm2.5-1.2b-thinking": 32768,
@@ -167,6 +168,74 @@ class HyMt2ConfigTest(unittest.TestCase):
             ("--n-predict", "4096"),
         ):
             self.assertEqual(arguments[arguments.index(flag) + 1], value)
+
+
+class K2HorizonConfigTest(unittest.TestCase):
+    def test_reasoning_profile(self):
+        model_dir = ROOT / "k2-horizon-7b"
+        config = json.loads((model_dir / "model.json").read_text())
+
+        self.assertEqual(
+            config["default_engine"],
+            {"Darwin": "omlx", "Linux": "vllm"},
+        )
+        self.assertEqual(config["context"], 131072)
+        self.assertEqual(
+            config["sampling"],
+            {
+                "temperature": 1.0,
+                "top_p": 0.95,
+                "max_tokens": 32768,
+            },
+        )
+        self.assertEqual(config["omlx"]["repo"], "mlx-community/K2-Horizon-7B-oQ6e")
+        self.assertEqual(config["omlx"]["max_concurrent_requests"], 1)
+        self.assertEqual(config["omlx"]["max_context_window"], 131072)
+        self.assertEqual(config["omlx"]["max_tokens"], 32768)
+        self.assertEqual(config["omlx"]["temperature"], 1.0)
+        self.assertEqual(config["omlx"]["top_p"], 0.95)
+        self.assertEqual(
+            config["omlx"]["chat_template_args"],
+            {"reasoning_effort": "high", "tool_call_format": "xml"},
+        )
+        self.assertEqual(config["omlx"]["turboquant_kv_bits"], 4)
+        self.assertEqual(config["omlx"]["memory_guard"], "safe")
+        self.assertTrue(config["omlx"]["no_cache"])
+        self.assertEqual(config["vllm"]["model"], "IFM/K2-Horizon-7B-FP8")
+        self.assertEqual(config["vllm"]["max_model_len"], 131072)
+        self.assertEqual(config["vllm"]["tool_call_parser"], "k2_horizon")
+        self.assertEqual(config["vllm"]["reasoning_parser"], "k2_horizon")
+
+    def test_parser_emits_omlx_settings(self):
+        model_dir = ROOT / "k2-horizon-7b"
+        result = subprocess.run(
+            [
+                "python3",
+                str(ROOT / "scripts/parse-config.py"),
+                str(model_dir / "model.json"),
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        for assignment in (
+            "OMLX_REPO='mlx-community/K2-Horizon-7B-oQ6e'",
+            "OMLX_MAX_CONCURRENT_REQUESTS='1'",
+            "OMLX_MEMORY_GUARD='safe'",
+            "OMLX_NO_CACHE=true",
+        ):
+            self.assertIn(assignment, result.stdout)
+
+    def test_service_definitions_exist(self):
+        model_dir = ROOT / "k2-horizon-7b"
+        expected = (
+            "launchd/ai.kortexa.k2-horizon-7b.plist",
+            "launchd/kortexa-k2-horizon-7b.sh",
+            "systemd/kortexa-ai-llm-k2-horizon-7b.service",
+        )
+        for relative_path in expected:
+            self.assertTrue((model_dir / relative_path).is_file(), relative_path)
 
 
 if __name__ == "__main__":

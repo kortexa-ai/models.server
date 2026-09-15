@@ -13,6 +13,7 @@ This is the post-reset benchmark scope and sweep status. Results are in
 | `ornith-1.5-35b-a3b` | text, tools, vision, long context | 450 W no-MTP baseline complete; native MTP lost its matched smoke |
 | `qwen-3.5-9b` | text, tools, vision, long context | 450 W one-slot baseline complete; selected GGUF has no MTP head |
 | `qwen-3.6-35b-a3b` | text, tools, vision, long context | 450 W one-slot MTP-3 baseline complete; matched no-MTP smoke retained |
+| `k2-horizon-7b` | text, tools, reasoning, long context | New model; CUDA FP8 and Apple MLX serving smoke plus baseline pending |
 | `gemma-4-e2b` | text, tools, vision | 450 W baseline complete |
 | `gemma-4-e4b` | text, tools, vision | 450 W baseline complete |
 | `gemma-4-12b` | text, tools, vision | 450 W baseline complete |

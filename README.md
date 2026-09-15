@@ -104,6 +104,7 @@ observed 600 W value: treat it as configuration drift.
 | 2058 | Ornith 1.5 35B-A3B | agentic MoE | Q4_K_M / MLX 4-bit | q8_0 | 262K | 1 |
 | 2059 | LFM2.5 8B-A1B | reasoning MoE | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 128K | 1 |
 | 2060 | Hy-MT2 7B | translation dense | Q4_K_M | q8_0 | 8K | 1 |
+| 2061 | K2 Horizon 7B | reasoning dense | FP8 / MLX oQ6e | fp8 / MLX | 512K trained; 128K served | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -111,6 +112,16 @@ projector and optional separate MTP companion are preserved with the model
 weights on `smarty`, but MTP is not enabled until that release's runtime path
 is validated. The publisher describes the model as refusal-removed; keep it
 behind application-level access controls and safeguards.
+
+K2 Horizon 7B uses its official FP8 checkpoint with vLLM on CUDA and the
+`mlx-community` oQ6e conversion through a pinned oMLX K2-support patch on Apple
+Silicon. The vLLM path enables K2 Horizon's reasoning and tool parsers; clients
+should request high reasoning effort, XML tool calls, temperature 1.0, top-p
+0.95, and at least 32K output tokens as recommended by IFM. The model is
+trained for 512K context, but the CUDA serving budget defaults to 128K and the
+Mac path caps requests at 128K with a 4-bit TurboQuant KV cache and an adaptive
+safe memory guard. Its GGUF is not configured while K2 Horizon architecture
+support remains pending upstream in llama.cpp.
 
 ### Available and Reserved Ports
 
@@ -130,6 +141,7 @@ models.server/
 │   ├── run-llama.sh        # Generic llama.cpp launcher
 │   ├── run-mlx.sh          # Generic MLX launcher
 │   ├── run-mlx-audio.sh    # Generic MLX-Audio TTS launcher
+│   ├── run-omlx.sh         # Patched oMLX launcher for K2 Horizon
 │   ├── run-vllm.sh         # Generic vLLM launcher
 │   ├── run-vllm-omni.sh    # Generic vLLM-Omni TTS launcher
 │   ├── run-sglang-omni.sh  # Generic SGLang-Omni launcher
@@ -143,12 +155,14 @@ models.server/
 │   ├── setup-vllm-omni.sh   # Creates/updates .venv-vllm-omni
 │   ├── setup-sglang-omni.sh # Installs Audio8's pinned SGLang adapter
 │   ├── setup-mlx.sh         # Creates/updates .venv-mlx
+│   ├── setup-omlx.sh        # Installs the pinned K2 Horizon oMLX patch
 │   └── setup-transformers.sh # Creates/updates the Transformers .venv
 ├── <model-id>/
 │   ├── model.json          # All config: ports, quants, engine settings
 │   ├── launchd/            # macOS service unit
 │   └── systemd/            # Linux service unit
 ├── .venv-mlx/              # Shared MLX venv (macOS)
+├── .venv-omlx/             # Patched oMLX venv for K2 Horizon (macOS)
 ├── .venv-vllm/             # Shared vLLM venv (Linux)
 ├── .venv-vllm-omni/        # Isolated vLLM-Omni venv (Linux)
 ├── .venv-sglang-omni/      # Isolated Audio8 SGLang-Omni venv (Linux)
@@ -168,6 +182,9 @@ models.server/
 - **Linux with CUDA** → `llama` (llama.cpp), or `vllm` if model has no GGUF (NVFP4)
 
 Override with `--engine`: `./run.sh qwen-3.5-4b --engine vllm`
+
+Models may override platform auto-detection. K2 Horizon 7B selects its pinned
+`omlx` engine on macOS until native `mlx-lm` architecture support lands.
 
 ## Serving Backends
 
