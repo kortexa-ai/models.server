@@ -22,6 +22,9 @@ HOST="${HOST:-0.0.0.0}"
 
 BACKEND="${MLX_BACKEND:-mlx_vlm}"
 
+# mlx_vlm server reads the token queue timeout from the environment, not CLI args
+export MLX_VLM_TOKEN_QUEUE_TIMEOUT="${MLX_VLM_TOKEN_QUEUE_TIMEOUT:-}"
+
 echo "Starting ${MODEL_NAME} via ${BACKEND} on port ${PORT}..."
 MODEL_PATH="$MLX_REPO"
 if [[ -n "${MLX_SUBDIR:-}" ]]; then

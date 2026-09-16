@@ -90,6 +90,7 @@ def main():
             ("kv_quant_scheme", "MLX_KV_QUANT_SCHEME"),
             ("kv_group_size", "MLX_KV_GROUP_SIZE"),
             ("quantized_kv_start", "MLX_QUANTIZED_KV_START"),
+            ("token_queue_timeout", "MLX_VLM_TOKEN_QUEUE_TIMEOUT"),
         ):
             if key in mlx:
                 emit(env, mlx[key])
