@@ -5,6 +5,8 @@ MODEL_DIR="$1"; shift
 SCRIPTS_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPTS_DIR}/.." && pwd)"
 
+# Caller environment wins over model.json, matching the PORT/HOST convention below
+TQT_ENV="${MLX_VLM_TOKEN_QUEUE_TIMEOUT:-}"
 eval "$(python3 "${SCRIPTS_DIR}/parse-config.py" "${MODEL_DIR}/model.json")"
 
 if [[ "${MLX_SUPPORTED:-}" == "false" ]]; then
@@ -23,6 +25,9 @@ HOST="${HOST:-0.0.0.0}"
 BACKEND="${MLX_BACKEND:-mlx_vlm}"
 
 # mlx_vlm server reads the token queue timeout from the environment, not CLI args
+if [[ -n "$TQT_ENV" ]]; then
+    MLX_VLM_TOKEN_QUEUE_TIMEOUT="$TQT_ENV"
+fi
 export MLX_VLM_TOKEN_QUEUE_TIMEOUT="${MLX_VLM_TOKEN_QUEUE_TIMEOUT:-}"
 
 echo "Starting ${MODEL_NAME} via ${BACKEND} on port ${PORT}..."
