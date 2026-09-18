@@ -164,9 +164,12 @@ class BonsaiRuntimeTest(unittest.TestCase):
             plist = plistlib.load(stream)
         self.assertEqual(plist["Label"], f"ai.kortexa.{MODEL_ID}")
         self.assertEqual(plist["ProgramArguments"][-1], f"/Users/francip/src/models.server/{MODEL_ID}")
-        self.assertFalse(plist["RunAtLoad"])
+        self.assertTrue(plist["RunAtLoad"])
         self.assertNotIn("--engine", plist["ProgramArguments"])
         service = (model_dir / f"systemd/kortexa-ai-llm-{MODEL_ID}.service").read_text()
+        gpu = "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6"
+        self.assertIn(f"Environment=CUDA_VISIBLE_DEVICES={gpu}", service)
+        self.assertIn(f"ExecStartPre=/usr/bin/nvidia-smi --id={gpu} --query-gpu=uuid --format=csv,noheader", service)
         self.assertIn(f"ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/{MODEL_ID}", service)
 
     def fake_build_tools(self):
