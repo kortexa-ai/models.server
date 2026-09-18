@@ -105,6 +105,7 @@ observed 600 W value: treat it as configuration drift.
 | 2059 | LFM2.5 8B-A1B | reasoning MoE | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 128K | 1 |
 | 2060 | Hy-MT2 7B | translation dense | Q4_K_M | q8_0 | 8K | 1 |
 | 2061 | K2 Horizon 7B | reasoning dense | FP8 / MLX oQ6e | fp8 / MLX | 512K trained; 128K served | 1 |
+| 2062 | Bonsai 2 27B | reasoning dense / VLM | PQ2_0 (Prism fork, CUDA / Metal) | q8_0 | 262K | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -187,6 +188,49 @@ Models may override platform auto-detection. K2 Horizon 7B selects its pinned
 `omlx` engine on macOS until native `mlx-lm` architecture support lands.
 
 ## Serving Backends
+
+### Bonsai 2 27B: isolated GGUF serving on Linux and macOS
+
+[Bonsai 2's GGUF](https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf)
+requires the [Prism llama.cpp fork](https://github.com/PrismML-Eng/llama.cpp).
+The model config pins the demo's `prism-b10683-d8f26ee` release commit in
+`.engines/llama-prism`; it never replaces the shared `llama-server`.
+Build prerequisites are Git, CMake, a C++ toolchain, and OpenSSL development
+libraries (plus CUDA on NVIDIA hosts). Setup builds Metal on macOS, CUDA for
+Ada/Blackwell when the toolkit is present on Linux, or CPU-only otherwise.
+On snappy and other Macs, GGUF serving is the default rather than MLX.
+
+```bash
+./scripts/setup-llama-runtime.sh bonsai-2-27b
+./run.sh bonsai-2-27b                  # GGUF serving on port 2062, including macOS
+```
+
+This is a deliberate exception to the usual `UD-Q4_K_XL` policy: the official
+ternary `PQ2_0` pack is about 7.21 GB and is recommended for Blackwell and
+Apple Silicon. The smaller `PTQ1_0` pack (about 5.95 GB) is also available via
+`QUANT=PTQ1_0 ./run.sh bonsai-2-27b`. Both need the fork's Hadamard activation
+transform. Vision uses the publisher's explicit Q8_0 projector, not its larger
+BF16 reference. Bonsai sets `llama.image_min_tokens=1024`, passing
+`--image-min-tokens 1024` to meet Qwen-VL's minimum for grounding tasks;
+other models keep their existing image-token defaults.
+Serving uses native 262144-token context, one slot, q8_0 KV,
+and thinking-mode sampling (temperature 1.0, top-p 0.95, top-k 20).
+Thinking stays enabled with the model's default `xhigh` effort; clients can
+request `medium` for shorter reasoning. No speculative drafter is configured.
+
+The [MLX 2-bit pack](https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-mlx-2bit)
+is about 8.60 GB including vision. **MLX HTTP serving is unavailable**:
+[Prism's reference launcher](https://github.com/PrismML-Eng/Bonsai-demo/blob/main/scripts/start_mlx_server.sh)
+explicitly refuses it because stock `mlx-lm`/`mlx-vlm` servers do not apply the
+required transforms. Its source and revision are registered for future
+integration, but `--engine mlx` deliberately fails with guidance to use the
+Prism GGUF runtime instead. No MLX dependencies or shared environments change.
+
+The GGUF server downloads its selected weights into the normal llama.cpp
+cache. Setup builds the runtime only, does not start services or download
+weights, and is intentionally opt-in rather than part of the shared
+`setup.sh`. Both managed service definitions use GGUF; inspect service/port
+ownership and install them through `ktxsvc` when deploying.
 
 ### llama-server (llama.cpp)
 GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.

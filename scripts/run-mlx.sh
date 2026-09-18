@@ -7,10 +7,17 @@ ROOT="$(cd "${SCRIPTS_DIR}/.." && pwd)"
 
 # Caller environment wins over model.json, matching the PORT/HOST convention below
 TQT_ENV="${MLX_VLM_TOKEN_QUEUE_TIMEOUT:-}"
-eval "$(python3 "${SCRIPTS_DIR}/parse-config.py" "${MODEL_DIR}/model.json")"
+CONFIG="$(python3 "${SCRIPTS_DIR}/parse-config.py" "${MODEL_DIR}/model.json")"
+eval "$CONFIG"
 
 if [[ "${MLX_SUPPORTED:-}" == "false" ]]; then
     echo "Not supported: ${MODEL_NAME} is not available for MLX." >&2
+    exit 1
+fi
+
+if [[ "${MLX_BACKEND:-}" == "prism_hadamard" ]]; then
+    echo "Error: ${MODEL_NAME} requires a Hadamard-aware MLX loader; MLX serving is not supported yet." >&2
+    echo "Use --engine llama for the Prism fork (Metal on macOS, CUDA on Linux)." >&2
     exit 1
 fi
 

@@ -3,12 +3,24 @@ set -euo pipefail
 
 MODEL_DIR="$1"; shift
 SCRIPTS_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "${SCRIPTS_DIR}/.." && pwd)"
 
-eval "$(python3 "${SCRIPTS_DIR}/parse-config.py" "${MODEL_DIR}/model.json")"
+CONFIG="$(python3 "${SCRIPTS_DIR}/parse-config.py" "${MODEL_DIR}/model.json")"
+eval "$CONFIG"
 
 if [[ "${LLAMA_SUPPORTED:-}" == "false" ]]; then
     echo "Not supported: ${MODEL_NAME} has no GGUF available for llama.cpp." >&2
     exit 1
+fi
+
+LLAMA_SERVER="llama-server"
+if [[ -n "${LLAMA_RUNTIME_DIR:-}" ]]; then
+    LLAMA_SERVER="${ROOT}/${LLAMA_RUNTIME_DIR}/build/bin/llama-server"
+    if [[ ! -x "$LLAMA_SERVER" ]]; then
+        echo "Error: ${MODEL_NAME} requires its isolated llama.cpp runtime at ${LLAMA_SERVER}." >&2
+        echo "Run scripts/setup-llama-runtime.sh \"${MODEL_DIR}\" first; stock llama.cpp is not compatible." >&2
+        exit 1
+    fi
 fi
 
 PORT="${PORT:-$MODEL_PORT}"
@@ -35,6 +47,13 @@ fi
 VISION_ARGS=()
 if [[ "${MODEL_MULTIMODAL}" != "true" ]]; then
     VISION_ARGS=(--no-mmproj)
+else
+    if [[ -n "${LLAMA_MMPROJ_URL:-}" ]]; then
+        VISION_ARGS+=(--mmproj-url "$LLAMA_MMPROJ_URL")
+    fi
+    if [[ -n "${LLAMA_IMAGE_MIN_TOKENS:-}" ]]; then
+        VISION_ARGS+=(--image-min-tokens "$LLAMA_IMAGE_MIN_TOKENS")
+    fi
 fi
 
 # MTP speculative decoding: enabled when the GGUF has MTP heads (e.g. unsloth's *-MTP-GGUF).
@@ -60,7 +79,7 @@ EMBEDDING_ARGS=()
 if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
     EMBEDDING_ARGS=(--embedding)
     echo "Starting ${MODEL_NAME} (GGUF ${QUANT}) via llama-server in EMBEDDING mode on port ${PORT}..."
-    exec llama-server \
+    exec "$LLAMA_SERVER" \
         -hf "${LLAMA_REPO}:${QUANT}" \
         --alias "$MODEL_ID" \
         --host "$HOST" \
@@ -81,7 +100,7 @@ if [[ "${MODEL_EMBEDDING:-false}" == "true" ]]; then
 fi
 
 echo "Starting ${MODEL_NAME} (GGUF ${QUANT}) via llama-server on port ${PORT}..."
-exec llama-server \
+exec "$LLAMA_SERVER" \
     -hf "${LLAMA_REPO}:${QUANT}" \
     --alias "$MODEL_ID" \
     --host "$HOST" \

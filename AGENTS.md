@@ -29,6 +29,9 @@ Run `hostname` to check which machine you're on before doing anything.
   requires it, and never create a duplicate server.
 - Quantization: >= 4B → `UD-Q4_K_XL`, < 4B → `Q8_0`
 - Exception: LFM2.5 230M uses `Q4_K_M` for Pi CPU serving
+- Exception: Bonsai 2 27B uses native ternary `PQ2_0` with an isolated Prism
+  llama.cpp fork on Linux and macOS (Metal). Its MLX 2-bit source is registered
+  but serving is deferred; never route it through a stock MLX server.
 - KV cache: `q8_0` (llama.cpp) / `fp8` (vLLM) everywhere
 - Context: max supported by the model
 - Parallel: MoE → 8, dense → 1

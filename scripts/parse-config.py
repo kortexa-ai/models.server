@@ -50,6 +50,12 @@ def main():
         print(f"LLAMA_QUANT='{quote(llama['quant'])}'")
         emit("LLAMA_CONTEXT", llama.get("context", m.get("context", 65536)))
         emit("LLAMA_PARALLEL", llama.get("parallel", m.get("parallel", 1)))
+        emit("LLAMA_MMPROJ_URL", llama.get("mmproj_url", ""))
+        emit("LLAMA_IMAGE_MIN_TOKENS", llama.get("image_min_tokens", ""))
+        runtime = llama.get("runtime", {})
+        emit("LLAMA_RUNTIME_REPO", runtime.get("repo", ""))
+        emit("LLAMA_RUNTIME_REVISION", runtime.get("revision", ""))
+        emit("LLAMA_RUNTIME_DIR", runtime.get("directory", ""))
         print(
             f"LLAMA_CUDA_GRAPHS={'true' if llama.get('cuda_graphs') else 'false'}"
         )
