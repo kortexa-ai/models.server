@@ -75,6 +75,8 @@ class BonsaiRuntimeTest(unittest.TestCase):
         self.assertEqual(self.config["cache_type"], "q8_0")
         self.assertTrue(self.config["multimodal"])
         self.assertEqual(self.config["llama"]["quant"], "PQ2_0")
+        self.assertEqual(self.config["llama"]["context"], 393216)
+        self.assertEqual(self.config["llama"]["parallel"], 8)
         self.assertEqual(self.config["llama"]["image_min_tokens"], 1024)
         self.assertEqual(self.config["mlx"]["backend"], "prism_hadamard")
         self.assertEqual(self.config["mlx"]["repo"], "prism-ml/Ternary-Bonsai-2-27B-mlx-2bit")
@@ -96,8 +98,8 @@ class BonsaiRuntimeTest(unittest.TestCase):
                     ("-hf", "prism-ml/Ternary-Bonsai-2-27B-gguf:PQ2_0"),
                     ("--alias", MODEL_ID),
                     ("--port", "2062"),
-                    ("-c", "262144"),
-                    ("--parallel", "1"),
+                    ("-c", "393216"),
+                    ("--parallel", "8"),
                     ("--cache-type-k", "q8_0"),
                     ("--cache-type-v", "q8_0"),
                     ("--cors-origins", "localhost"),

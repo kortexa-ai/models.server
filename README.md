@@ -105,7 +105,7 @@ observed 600 W value: treat it as configuration drift.
 | 2059 | LFM2.5 8B-A1B | reasoning MoE | Q8_0 / MLX 8-bit / CPU Q8_0 | q8_0 | 128K | 1 |
 | 2060 | Hy-MT2 7B | translation dense | Q4_K_M | q8_0 | 8K | 1 |
 | 2061 | K2 Horizon 7B | reasoning dense | FP8 / MLX oQ6e | fp8 / MLX | 512K trained; 128K served | 1 |
-| 2062 | Bonsai 2 27B | reasoning dense / VLM | PQ2_0 (Prism fork, CUDA / Metal) | q8_0 | 262K | 1 |
+| 2062 | Bonsai 2 27B | reasoning dense / VLM | PQ2_0 (Prism fork, CUDA / Metal) | q8_0 | 393,216 shared (llama) | 8 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -213,8 +213,10 @@ transform. Vision uses the publisher's explicit Q8_0 projector, not its larger
 BF16 reference. Bonsai sets `llama.image_min_tokens=1024`, passing
 `--image-min-tokens 1024` to meet Qwen-VL's minimum for grounding tasks;
 other models keep their existing image-token defaults.
-Serving uses native 262144-token context, one slot, q8_0 KV,
-and thinking-mode sampling (temperature 1.0, top-p 0.95, top-k 20).
+GGUF serving uses a 393216-token shared KV pool across eight slots, sized at
+1.5 times the model's native 262144-token context. The slots share the pool
+dynamically. Cache precision is q8_0, with thinking-mode sampling
+(temperature 1.0, top-p 0.95, top-k 20).
 Thinking stays enabled with the model's default `xhigh` effort; clients can
 request `medium` for shorter reasoning. No speculative drafter is configured.
 
