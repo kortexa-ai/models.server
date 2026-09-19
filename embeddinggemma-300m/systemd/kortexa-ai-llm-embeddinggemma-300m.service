@@ -18,7 +18,7 @@ Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr
 
 ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/embeddinggemma-300m
 
-Restart=always
+Restart=no
 RestartSec=15
 
 TimeoutStopSec=60

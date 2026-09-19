@@ -20,7 +20,7 @@ Environment=CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6
 ExecStartPre=/usr/bin/nvidia-smi --id=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6 --query-gpu=uuid --format=csv,noheader
 ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/bonsai-2-27b
 
-Restart=always
+Restart=no
 RestartSec=15
 
 TimeoutStopSec=60

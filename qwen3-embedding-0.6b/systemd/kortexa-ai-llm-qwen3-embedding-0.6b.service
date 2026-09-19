@@ -18,7 +18,7 @@ Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr
 
 ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/qwen3-embedding-0.6b
 
-Restart=always
+Restart=no
 RestartSec=15
 
 TimeoutStopSec=60

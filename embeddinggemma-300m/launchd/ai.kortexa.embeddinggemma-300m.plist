@@ -8,7 +8,7 @@
 		<string>/Users/francip/bin:/Users/francip/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin</string>
 	</dict>
 	<key>KeepAlive</key>
-	<true/>
+	<false/>
 	<key>Label</key>
 	<string>ai.kortexa.embeddinggemma-300m</string>
 	<key>ProgramArguments</key>
@@ -17,7 +17,7 @@
 		<string>/Users/francip/src/models.server/embeddinggemma-300m</string>
 	</array>
 	<key>RunAtLoad</key>
-	<true/>
+	<false/>
 	<key>StandardErrorPath</key>
 	<string>/Users/francip/Library/Logs/embeddinggemma-300m.log</string>
 	<key>StandardOutPath</key>

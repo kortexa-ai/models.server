@@ -17,7 +17,7 @@
 		<string>/Users/francip/src/models.server/bonsai-2-27b</string>
 	</array>
 	<key>RunAtLoad</key>
-	<true/>
+	<false/>
 	<key>StandardErrorPath</key>
 	<string>/Users/francip/Library/Logs/bonsai-2-27b.log</string>
 	<key>StandardOutPath</key>
