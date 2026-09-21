@@ -25,7 +25,7 @@ startup and crash restart. `ktxsvc install` starts the service immediately:
 ```bash
 ktxsvc install models/parakeet-redux
 ktxsvc disable models/parakeet-redux
-ktxsvc keep-alive models/parakeet-redux off
+ktxsvc keep-alive off models/parakeet-redux
 ktxsvc stop models/parakeet-redux
 
 ktxsvc start models/parakeet-redux
@@ -63,5 +63,5 @@ audio models from its public catalog just as it does the standalone TTS models.
 ## Validation
 
 ```bash
-parakeet-redux/.venv/bin/python -m unittest discover -s tests
+parakeet-redux/.venv/bin/python -m unittest discover -s tests -p 'test_photon_server.py'
 ```
