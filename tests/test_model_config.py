@@ -87,6 +87,9 @@ class LlamaCapacityPolicyTest(unittest.TestCase):
 
     def test_every_model_declares_its_advertised_context_window(self):
         config_paths = sorted(ROOT.glob("*/model.json"))
+        # ASR consumes audio durations rather than a token context window.
+        config_paths = [path for path in config_paths
+                        if json.loads(path.read_text()).get("type") != "transcription"]
         self.assertEqual({path.parent.name for path in config_paths}, set(EXPECTED_CONTEXT_WINDOWS))
         for config_path in config_paths:
             with self.subTest(model_id=config_path.parent.name):

@@ -13,6 +13,7 @@ Local model serving across multiple machines. Each model gets its own directory 
 cd qwen-3.5-4b && ../run.sh             # from model dir
 ./run.sh gemma-4-26b-a4b --engine vllm  # override engine
 ./run.sh qwen3-tts-0.6b-customvoice     # MLX-Audio on macOS, vLLM-Omni on CUDA
+./run.sh parakeet-redux               # standalone CPU speech recognition
 ```
 
 ## Machines
@@ -106,6 +107,7 @@ observed 600 W value: treat it as configuration drift.
 | 2060 | Hy-MT2 7B | translation dense | Q4_K_M | q8_0 | 8K | 1 |
 | 2061 | K2 Horizon 7B | reasoning dense | FP8 / MLX oQ6e | fp8 / MLX | 512K trained; 128K served | 1 |
 | 2062 | Bonsai 2 27B | reasoning dense / VLM | PQ2_0 (Prism fork, CUDA / Metal) | q8_0 | 393,216 shared (llama) | 8 |
+| 2063 | Parakeet Redux | speech recognition | ternary, 178 MB | — | audio | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -188,6 +190,20 @@ Models may override platform auto-detection. K2 Horizon 7B selects its pinned
 `omlx` engine on macOS until native `mlx-lm` architecture support lands.
 
 ## Serving Backends
+
+### Photon speech recognition
+
+`parakeet-redux` is a standalone ASR model on port 2063. Install with
+`./scripts/setup-photon.sh`, then start with `./run.sh parakeet-redux`.
+It uses an isolated runtime in `parakeet-redux/.venv/`, eight CPU threads, and
+no GPU memory by default. It exposes `/health`, `/v1/models`, and the multipart
+`/v1/audio/transcriptions` endpoint, with optional word timestamps.
+
+The existing `whisper.cpp/` directory contains separate Whisper CLI/server
+helpers; Redux is the first ASR entry in the common model launcher. The
+Qwen/Nemotron modes in `asr.server` remain separate. See
+[Parakeet Redux](parakeet-redux/README.md) for API examples and the managed
+on-demand setup (including disabling the auto-start defaults of `ktxsvc install`).
 
 ### Bonsai 2 27B: isolated GGUF serving on Linux and macOS
 

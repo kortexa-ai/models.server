@@ -1,0 +1,20 @@
+{
+  "name": "Parakeet Redux",
+  "id": "parakeet-redux",
+  "hf_model": "moondream/parakeet-redux",
+  "type": "transcription",
+  "input_modalities": ["audio"],
+  "output_modalities": ["text"],
+  "endpoints": ["/v1/audio/transcriptions"],
+  "capabilities": { "streaming": false, "word_timestamps": true },
+  "port": 2063,
+  "host": "192.168.2.3",
+  "sample_rate": 16000,
+  "parallel": 1,
+  "default_engine": "photon",
+  "photon": {
+    "model": "moondream/parakeet-redux",
+    "device": "cpu",
+    "cpu_threads": 8
+  }
+}

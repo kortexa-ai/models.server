@@ -35,6 +35,15 @@ def main():
     print(f"MODEL_EMBEDDING={'true' if m.get('embedding') else 'false'}")
     print(f"MODEL_TTS={'true' if m.get('tts') else 'false'}")
 
+    # Photon speech recognition
+    photon = m.get("photon")
+    if photon:
+        emit("PHOTON_MODEL", photon["model"])
+        emit("PHOTON_DEVICE", photon.get("device", "cpu"))
+        emit("PHOTON_THREADS", photon.get("cpu_threads", 8))
+    else:
+        print("PHOTON_SUPPORTED=false")
+
     # Model-specific server sampling defaults. Requests can still override these.
     sampling = m.get("sampling", {})
     emit("LLAMA_TEMPERATURE", sampling.get("temperature", 0.6))

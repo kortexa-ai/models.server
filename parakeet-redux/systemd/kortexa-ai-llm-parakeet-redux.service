@@ -1,0 +1,21 @@
+[Unit]
+Description=Parakeet Redux standalone speech recognition
+After=network.target
+
+[Service]
+Type=simple
+User=francip
+Group=francip
+WorkingDirectory=/home/francip/src/models.server
+Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/francip/src/models.server/run.sh parakeet-redux
+Restart=no
+TimeoutStopSec=60
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/francip/.cache
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
