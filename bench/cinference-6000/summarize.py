@@ -15,12 +15,14 @@ def main():
               'profiles': {}, 'errors': {}}
     for path in args.run.glob('*-error.json'):
         result['errors'][path.stem] = json.loads(path.read_text())
-    for profile in ('stock', 'published', 'stock-like'):
+    for profile in sorted(p.name for p in args.run.iterdir()
+                          if p.is_dir() and (p / 'command.json').exists()):
         directory = args.run / profile
         if not directory.exists():
             continue
         data = {'requests': []}
-        for name in ('idle', 'memory-summary', 'command', 'environment', 'live-process', 'concurrency', 'canary', 'props'):
+        for name in ('idle', 'memory-summary', 'command', 'environment', 'live-process',
+                     'concurrency', 'canary', 'props', 'warm-seed', 'warm-repeat'):
             path = directory / f'{name}.json'
             if path.exists():
                 data[name] = json.loads(path.read_text())
@@ -32,6 +34,8 @@ def main():
                     data['server_start'] = event
                     break
         digest = directory / 'executable.sha256' if profile == 'stock' else args.run / 'cinference-executable.sha256'
+        if not digest.exists() and profile != 'stock':
+            digest = args.run.parent / 'cinference-executable.sha256'
         if digest.exists():
             data['executable_sha256'] = digest.read_text().split()[0]
         for path in sorted(directory.glob('*.json')):

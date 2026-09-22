@@ -35,7 +35,30 @@ six-marker recall request and a prose request capped at 512 output tokens.
 Prompt cache reuse is recorded; sizes are measured with the model tokenizer.
 The main table uses greedy, non-thinking requests. A separate medium-thinking
 request records reasoning-mode throughput. The larger profiles additionally
-probe a 500K prompt and eight simultaneous 8K requests.
+exercise eight simultaneous 8K requests. The stock baseline also probes a 500K
+request; its actual individual-request ceiling is 262K despite the 512K shared
+KV pool. Cinference comparisons use that same 262K request ceiling.
+
+The vanilla campaign uses `neroued/Qwen3.8-27B-nvfp4-NInfer` at
+`f0b43ad436b9fa8142c6ed6647c470a6fe409484`, with model SHA-256
+`74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82`.
+Download it into `.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer`, verify
+that digest, and write it to `verified.sha256` in the same directory. This is
+the original post-trained model in mixed NVFP4/FP8 form, without abliteration.
+
+After the control campaign has produced its prompt fixtures, run:
+
+```bash
+bash bench/cinference-6000/run-block.sh --vanilla-tune \
+  > bench-results/cinference-27/vanilla-block.log 2>&1
+```
+
+The bounded tuner compares 1024, 4096 and 8192 prefill chunks at fixed INT8 KV,
+eight slots and MTP-3. It selects the lowest summed 131K/260K prompt-processing
+time, then compares MTP-10 and DFlash2-7 with K8V4 and production-sized capacity.
+The winner is selected by 260K prose decode throughput and confirmed with a
+second cold trial, medium thinking, eight clients, and separate warm-prefix
+requests. The published recall workload alone does not select the winner.
 
 These are bounded performance probes, not broad model-quality evaluations.
 Recall speed can be inflated by high speculative acceptance. The 500K probe
