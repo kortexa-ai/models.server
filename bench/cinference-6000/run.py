@@ -242,8 +242,8 @@ def sized_prompt(target, nonce, workload, stock=False):
     return prompt, markers, measured
 
 
-def record_request(server, directory, name, prompt, markers=(), thinking=False):
-    result = request(prompt, thinking=thinking)
+def record_request(server, directory, name, prompt, markers=(), thinking=False, max_tokens=512):
+    result = request(prompt, thinking=thinking, max_tokens=max_tokens)
     result['name'] = name
     result['recall_expected'] = list(markers)
     result['recall_found'] = sum(m.split('=', 1)[1] in result['content'] for m in markers)
@@ -262,6 +262,7 @@ def main():
     parser.add_argument('--profiles', nargs='+', default=['stock', 'published', 'stock-like'])
     parser.add_argument('--output', default='bench-results/cinference-27')
     parser.add_argument('--vanilla-tune', action='store_true')
+    parser.add_argument('--workload-check', action='store_true')
     parser.add_argument('--fixtures')
     args = parser.parse_args()
     if socket.gethostname() != 'smarty' or os.environ.get('CUDA_VISIBLE_DEVICES') != GPU:
@@ -271,6 +272,10 @@ def main():
     if args.vanilla_tune:
         import tune_vanilla
         tune_vanilla.main(ROOT / args.output)
+        return
+    if args.workload_check:
+        import workloads
+        workloads.main(ROOT / args.output)
         return
     output = ROOT / args.output
     output.mkdir(parents=True, exist_ok=True)

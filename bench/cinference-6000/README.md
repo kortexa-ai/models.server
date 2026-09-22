@@ -67,6 +67,15 @@ stock. The Huihui control used Cinference's default non-thinking presence
 penalty of 1.5; its response style and decode figures are not a controlled
 checkpoint-only comparison.
 
+After tuning, `run-block.sh --workload-check` compares the stock launcher and
+all four tuned vanilla configurations on five short, reasoning-disabled
+conversation prompts and 131K code generation. Stock and the selected coding
+profile also process a 260K code prompt. The code context is a deterministic
+snapshot of the pinned public runtime's source files; the task produces a
+Python metrics reader, with a 1,024-token output cap. These are generation
+throughput probes, not coding pass-rate tests or full voice-pipeline latency.
+The source inventory, prompt bytes and all answers remain in the raw run.
+
 These are bounded performance probes, not broad model-quality evaluations.
 Recall speed can be inflated by high speculative acceptance. The 500K probe
 exceeds the model's native 262K context and does not qualify extended-context

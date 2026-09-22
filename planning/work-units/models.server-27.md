@@ -9,6 +9,9 @@ run and stock llama.cpp run are controls. Compare
 1024, 4096 and 8192 prefill chunks, then MTP-10 and included DFlash2 proposals.
 Continue to 16K/32K chunks only with a measured improvement and ample headroom.
 Keep cold latency separate from warm prefix reuse; confirm the selected result.
+The primary use cases are coding with long context and short, reasoning-disabled
+voice conversation. After tuning, compare those workloads against stock and
+report their latency and decode separately from archive prose and recall.
 
 Measure the pinned non-Swift Huihui Qwen3.8-27B NVFP4 artifact on the RTX PRO
 6000 at its normal 450 W power limit. Preserve the published 256K/K8V4/MTP-10

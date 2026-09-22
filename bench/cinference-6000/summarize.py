@@ -39,7 +39,7 @@ def main():
         if digest.exists():
             data['executable_sha256'] = digest.read_text().split()[0]
         for path in sorted(directory.glob('*.json')):
-            if not path.stem.startswith(('recall-', 'prose-', 'medium-thinking-', 'concurrent-')):
+            if not path.stem.startswith(('recall-', 'prose-', 'medium-thinking-', 'concurrent-', 'coding-', 'voice-')):
                 continue
             record = json.loads(path.read_text())
             for field in ('content', 'reasoning'):
