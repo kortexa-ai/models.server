@@ -35,3 +35,8 @@ Run `hostname` to check which machine you're on before doing anything.
 - KV cache: `q8_0` (llama.cpp) / `fp8` (vLLM) everywhere
 - Context: max supported by the model
 - Parallel: MoE → 8, dense → 1
+
+- Exception: `qwen-3.8-27b-fast` and `qwen-3.8-27b-fast-abliterated` use
+  Cinference NVFP4 weights, K8V4 KV, DFlash2-7, a 524288-token shared pool
+  and eight slots. They are pinned to the RTX PRO 6000 UUID, with a 262144-token
+  per-request ceiling. Registration does not authorize selecting a new default.

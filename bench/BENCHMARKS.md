@@ -10,6 +10,24 @@ arguments and safe runtime environment, GPU telemetry, and raw suite output.
 
 ## Results
 
+### 2026-09-22 Qwen3.8-27B Cinference on Smarty
+
+The [full report](cinference-6000/RESULTS.md) compares stock llama.cpp with
+Huihui and vanilla NVFP4 Cinference at 450 W on the RTX PRO 6000. With vision,
+eight slots, 512K shared KV, K8V4, DFlash2-7 and an 8192-token prefill chunk,
+vanilla used 39.77 GiB versus stock's 44.27 GiB. Cold prose TTFT fell from
+79.43 to 30.53 seconds at 131K and from 233.98 to 92.73 seconds at 260K.
+The 131K reasoning-disabled code-output probe reached 275.8 tok/s versus
+97.6 tok/s on stock; prose was about 122–124 tok/s. Median short-conversation
+TTFT was 65 ms versus 196 ms. These are bounded performance probes, not
+coding-quality or cache-precision parity evaluations.
+
+Pinned runtime/artifact identities, commands, stock configuration, prompts,
+responses, GPU samples, and restore logs are under
+`smarty:~/src/models.server/bench-results/cinference-27/`.
+Compact evidence is checked in beside the report. Individual requests remain
+limited to 262144 tokens; the 524288-token pool is shared, not per slot.
+
 ### 2026-08-27 unified-KV workload tests on smarty
 
 Qwen 3.8 27B and LFM2.5 VL 3B used llama.cpp unified KV allocation on the RTX

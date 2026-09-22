@@ -108,6 +108,8 @@ observed 600 W value: treat it as configuration drift.
 | 2061 | K2 Horizon 7B | reasoning dense | FP8 / MLX oQ6e | fp8 / MLX | 512K trained; 128K served | 1 |
 | 2062 | Bonsai 2 27B | reasoning dense / VLM | PQ2_0 (Prism fork, CUDA / Metal) | q8_0 | 393,216 shared (llama) | 8 |
 | 2063 | Parakeet Redux | speech recognition | ternary, 178 MB | — | audio | 1 |
+| 2064 | Qwen 3.8 27B Fast | dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
+| 2065 | Qwen 3.8 27B Fast Abliterated | Huihui dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -125,6 +127,85 @@ trained for 512K context, but the CUDA serving budget defaults to 128K and the
 Mac path caps requests at 128K with a 4-bit TurboQuant KV cache and an adaptive
 safe memory guard. Its GGUF is not configured while K2 Horizon architecture
 support remains pending upstream in llama.cpp.
+
+### Qwen 3.8 fast on the RTX PRO 6000
+
+`qwen-3.8-27b-fast` serves the original post-trained weights, quantized to
+mixed NVFP4/FP8. `qwen-3.8-27b-fast-abliterated` serves the publisher's Huihui
+variant. Both select Cinference automatically on Linux x86_64 and pin CUDA
+to `GPU-a71210ca-e14a-755a-88bb-77f53a2102f6`. They use DFlash2 with seven
+draft tokens, K8V4 (FP8 keys / NVFP4 values), vision, CUDA graphs, prefix reuse,
+and 8192-token prefill chunks. The 524288-token KV pool is shared across eight
+slots; each request, including output, is limited to 262144 tokens. Eight
+slots do not guarantee eight simultaneous full-length requests.
+
+The vanilla benchmark used about 39.8 GiB of process VRAM: 30.6 seconds cold
+TTFT at 131K, 92.9 seconds at 260K, and about 122–124 tok/s for prose. These
+are measured workloads, not throughput guarantees. See the
+[benchmark report](bench/cinference-6000/RESULTS.md) for coding, voice-style
+prompts, cache comparisons, and limits of the quality checks.
+
+Prepare each model explicitly on Smarty (no services are installed or started):
+
+```bash
+./scripts/setup-cinference.sh qwen-3.8-27b-fast
+./scripts/setup-cinference.sh qwen-3.8-27b-fast-abliterated
+```
+
+Setup uses the pinned upstream recipe, isolated CUDA 13.4.92 and two build
+jobs. It needs `uv`, Git, a CUDA-compatible C++20 compiler, `pkg-config`,
+FFmpeg development libraries and libcurl >=7.85. It does not install system
+packages or drivers. All runtime files and weights stay in ignored
+`.engines/cinference`. Allow about 24 GB for vanilla and 48 GB for the Huihui
+source plus upgraded artifact, in addition to build tools and caches.
+
+The exact artifact repository, revision, byte count and SHA-256 are in each
+`model.json`. Vanilla is a v3 artifact from `neroued`; the Huihui DFlash2
+artifact is `pcmaker/Huihui-Qwen3.8-27B-Uncensored-NInfer` v2. Setup verifies
+that input before the pinned runtime's weight-preserving v2-to-v3 upgrade.
+The upgrader generates a random artifact UUID, so setup records the output
+SHA-256 locally. Startup verifies the runtime and served artifact offline.
+The older Huihui artifact used in the initial MTP benchmark lacks DFlash2
+and is not the artifact registered here. Huihui provenance is the publisher's
+claim: its conversion paths identify Huihui, while some source-repository
+metadata still names the stock model. No independent weight-origin audit
+has been done.
+
+For a foreground run after checking service/port ownership and the 6000 budget:
+
+```bash
+./run.sh qwen-3.8-27b-fast
+# Or, after stopping that foreground process:
+./run.sh qwen-3.8-27b-fast-abliterated
+```
+
+The listeners use `192.168.2.6:2064` and `:2065`. `--host`, `--port`, and
+`--request-log-jsonl` are available for controlled diagnostics. They require
+50 GiB free at startup, to budget about 40 GiB plus 10 GiB headroom; launchers
+never stop another service. Check
+[the 6000 borrowing guide](../legolm/SMARTY_6000_GUIDE.md) before downtime.
+
+Managed service definitions are included for a later rollout. **They are not
+installed, enabled, or selected as the default by setup.** After a separately
+scheduled installation, switch with `ktxsvc stop models/<currently-running-id>`
+and `ktxsvc start models/<desired-id>`, then poll the desired port's `/health`.
+Record the running service first; do not start both just to switch. Updating
+client/router defaults is a separate rollout step.
+
+Thinking is on by default; clients can select `reasoning_effort: "medium"`
+for coding or `reasoning_effort: "none"` / `enable_thinking: false` for voice.
+The native Qwen template supplies the default reasoning effort. Output defaults
+to 32768 tokens, with zero presence/frequency penalties and thinking-history
+preservation. Queue admission waits up to ten minutes for shared capacity.
+Clients can override sampling and output limits per request. Prefix reuse works
+best with a stable, identical prefix, including consistent thinking history.
+
+OpenAI chat, Responses, Anthropic messages, image input and ordinary function
+tool calls are supported. This pinned runtime rejects strict/constrained JSON
+output, forced/required tool selection, and `parallel_tool_calls: false` when
+tools are enabled. Test client payloads before the default rollout. K8V4 and
+NVFP4 can change answers; the performance probes do not establish coding-quality
+parity with the stock model.
 
 ### Available and Reserved Ports
 

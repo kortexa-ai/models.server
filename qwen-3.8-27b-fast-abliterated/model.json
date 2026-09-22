@@ -1,0 +1,28 @@
+{
+  "name": "Qwen 3.8 27B Fast Abliterated",
+  "id": "qwen-3.8-27b-fast-abliterated",
+  "default_engine": "cinference",
+  "context_window": 262144,
+  "multimodal": true,
+  "port": 2065,
+  "host": "192.168.2.6",
+  "context": 524288,
+  "parallel": 8,
+  "cache_type": "k8v4",
+  "cinference": {
+    "spec": "dflash2",
+    "draft_tokens": 7,
+    "prefill_chunk": 8192,
+    "pending_timeout_ms": 600000,
+    "default_max_tokens": 32768,
+    "artifact": {
+      "repo": "pcmaker/Huihui-Qwen3.8-27B-Uncensored-NInfer",
+      "revision": "805a1423d0c367d6c2f3118aad9f3393959763c8",
+      "directory": "Huihui-Qwen3.8-27B-Uncensored-NInfer",
+      "filename": "huihui_uncensored_nvfp4.ninfer",
+      "format_version": 2,
+      "size_bytes": 23719496192,
+      "sha256": "0e4b49e96159b41c69329d2a84870883362b62beee86aca292dada39e41be8de"
+    }
+  }
+}
