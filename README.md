@@ -186,7 +186,7 @@ The listeners use `192.168.2.3:2064` and `:2065`. `--host`, `--port`, and
 `--request-log-jsonl` are available for controlled diagnostics. They require
 50 GiB free at startup, to budget about 40 GiB plus 10 GiB headroom; launchers
 never stop another service. Check
-[the 6000 borrowing guide](../legolm/SMARTY_6000_GUIDE.md) before downtime.
+[the 6000 borrowing guide](https://github.com/kortexa-ai/legolm/blob/main/SMARTY_6000_GUIDE.md) before downtime.
 
 Managed service definitions are included for a later rollout. **They are not
 installed, enabled, or selected as the default by setup.** After a separately

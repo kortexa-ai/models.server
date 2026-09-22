@@ -96,7 +96,7 @@ dated table records findings, not desired values to copy over newer settings.
 
 1. Track the rollout in a `models.server` issue and claim the affected GPU,
    service, ports and repository paths. Coordinate any active experiment. Follow
-   [the 6000 operating guide](../legolm/SMARTY_6000_GUIDE.md) for authorized
+   [the 6000 operating guide](https://github.com/kortexa-ai/legolm/blob/main/SMARTY_6000_GUIDE.md) for authorized
    downtime, a live baseline, deliberate headroom and exact restoration.
 2. Review the target manifest, artifact checksum, runtime revision, model alias,
    per-request context, cache type, concurrency, vision and speculative backend.
@@ -251,10 +251,10 @@ short voice requests should use a smaller explicit output bound.
 ## 7. API catalog, routing, radio and Realtime
 
 The authoritative implementation is in
-[models.ts](../api.server/src/routes/models.ts),
-[modelProtocols.ts](../api.server/src/routes/modelProtocols.ts),
-[upstreams.ts](../api.server/src/config/upstreams.ts), and
-[realtimeProviders.ts](../api.server/src/agent/realtimeProviders.ts).
+[models.ts](https://github.com/kortexa-ai/api.server/blob/main/src/routes/models.ts),
+[modelProtocols.ts](https://github.com/kortexa-ai/api.server/blob/main/src/routes/modelProtocols.ts),
+[upstreams.ts](https://github.com/kortexa-ai/api.server/blob/main/src/config/upstreams.ts), and
+[realtimeProviders.ts](https://github.com/kortexa-ai/api.server/blob/main/src/agent/realtimeProviders.ts).
 
 - Sync `models.server` on Smarty so the API can read the new manifest. Discovery
   uses the control service's running-model inventory and a five-minute cache;
@@ -295,7 +295,7 @@ Inspect the effective env file chain. `loadEnv()` currently loads
 `.env.<mode>.local`, `.env.<mode>`, `.env.local`, then `.env`, all with
 `override: true`: later general files win and can override process env. Review
 only relevant keys; never print whole environment or credential files. See the
-[environment audit](../api.server/docs/environment-audit.md).
+[environment audit](https://github.com/kortexa-ai/api.server/blob/main/docs/environment-audit.md).
 
 For API code changes, follow its normal build/test/deploy workflow, sync through
 Git, and stop/start the exact managed service with `ktxsvc`. For env-only changes,
@@ -318,7 +318,7 @@ underlying Qwen model ID to replace. Keep profile identity, voice, room and
 transport endpoints unless the rollout explicitly changes them. Verify a fresh
 call, non-thinking behavior where intended, one tool round trip, interruption,
 and the first audible response. LM TTFT alone excludes ASR/TTS and buffering.
-The [Hermes-LiveKit readme](../hermes-livekit/README.md) documents no-microphone,
+The [Hermes-LiveKit readme](https://github.com/kortexa-ai/hermes-livekit/blob/main/README.md) documents no-microphone,
 no-playback latency and tool probes; use bounded probes rather than real phone
 calls without separate authorization.
 
