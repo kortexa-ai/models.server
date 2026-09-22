@@ -2,6 +2,7 @@
 """Bounded cold-context comparison; owns only the server processes it starts."""
 import argparse
 import concurrent.futures
+import errno
 import hashlib
 import json
 import os
@@ -73,6 +74,20 @@ class Server:
         with socket.socket() as sock:
             if sock.connect_ex(('127.0.0.1', PORT)) == 0:
                 raise RuntimeError(f'Port {PORT} already occupied')
+        # Cinference uses SO_REUSEPORT while llama.cpp uses SO_REUSEADDR.
+        # Wait for the previous engine's TIME_WAIT sockets before switching.
+        bind_deadline = time.monotonic() + 90
+        while True:
+            try:
+                with socket.socket() as probe:
+                    probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+                    probe.bind(('127.0.0.1', PORT))
+                break
+            except OSError as exc:
+                if exc.errno != errno.EADDRINUSE or time.monotonic() > bind_deadline:
+                    raise
+                print(f'Waiting for previous socket state on {PORT}.', flush=True)
+                time.sleep(2)
         self.directory.mkdir(parents=True, exist_ok=False)
         save(self.directory / 'command.json', self.args)
         save(self.directory / 'environment.json', {k: v for k, v in self.env.items()
@@ -244,6 +259,7 @@ def main():
     parser.add_argument('--profiles', nargs='+', default=['stock', 'published', 'stock-like'])
     parser.add_argument('--output', default='bench-results/cinference-27')
     parser.add_argument('--vanilla-tune', action='store_true')
+    parser.add_argument('--fixtures')
     args = parser.parse_args()
     if socket.gethostname() != 'smarty' or os.environ.get('CUDA_VISIBLE_DEVICES') != GPU:
         raise RuntimeError('Must run through run-block.sh on the pinned Smarty 6000')
@@ -271,7 +287,7 @@ def main():
          '--query-gpu=name,uuid,driver_version,power.limit,memory.total', '--format=csv'),
          'restore_services': os.environ.get('SMARTY_GPU_RECORDED_SERVICES'),
          'host': socket.gethostname(), 'started_unix': time.time()})
-    prompts = output / 'prompts'
+    prompts = ROOT / args.fixtures if args.fixtures else output / 'prompts'
     prompts.mkdir(exist_ok=True)
     for profile in args.profiles:
         directory = output / profile
@@ -293,7 +309,7 @@ def main():
             published = profile == 'published'
             server_args = [str(RUNTIME / 'runtime/ninfer/build/apps/ninfer-serve'),
                 str(artifact), '--host', '127.0.0.1', '--port', str(PORT),
-                '--model-id', MODEL, '--max-context', '262144' if published else '524288',
+                '--model-id', MODEL, '--max-context', '262144',
                 '--kv-capacity', '262144' if published else '524288',
                 '--max-concurrency', '1' if published else '8',
                 '--kv-dtype', 'k8v4' if published else 'int8', '--prefill-chunk', '1024',
@@ -323,8 +339,9 @@ def main():
                 fixture = json.loads((prompts / 'prose-32768.json').read_text())
                 record_request(server, directory, 'medium-thinking-32768',
                                fixture['prompt'] + '\nCompare two plausible capacity plans.', thinking=True)
-                if profile != 'published':
-                    # One request may use most of the unified 512K allocation.
+                if profile == 'stock':
+                    # Check whether one request can consume the 512K pool;
+                    # the observed stock service caps individual requests at 262K.
                     path = prompts / 'recall-500000.json'
                     if not path.exists():
                         text, markers, tokens = sized_prompt(500000, 'run500000recall', 'recall',
@@ -336,6 +353,7 @@ def main():
                     except (RuntimeError, urllib.error.HTTPError) as exc:
                         save(directory / 'recall-500000-error.json', {'error': str(exc)})
                         print(f'512K ceiling probe rejected: {exc}', flush=True)
+                if profile != 'published':
                     # Exercise all eight lanes with a bounded shared-KV load.
                     fixture = json.loads((prompts / 'prose-8192.json').read_text())
                     started = time.monotonic()
