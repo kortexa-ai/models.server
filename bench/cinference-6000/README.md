@@ -55,10 +55,16 @@ bash bench/cinference-6000/run-block.sh --vanilla-tune \
 
 The bounded tuner compares 1024, 4096 and 8192 prefill chunks at fixed INT8 KV,
 eight slots and MTP-3. It selects the lowest summed 131K/260K prompt-processing
-time, then compares MTP-10 and DFlash2-7 with K8V4 and production-sized capacity.
-The winner is selected by 260K prose decode throughput and confirmed with a
+time, extending to 16K/32K only while gains exceed 5% with ample headroom. It then
+compares MTP-10 and DFlash2-7 with K8V4 and production-sized capacity. The winner
+has the lowest 260K cold prefill time, using prose decode to break ties within
+5%, and is confirmed with a
 second cold trial, medium thinking, eight clients, and separate warm-prefix
 requests. The published recall workload alone does not select the winner.
+Vanilla requests explicitly use zero presence/frequency penalties to match
+stock. The Huihui control used Cinference's default non-thinking presence
+penalty of 1.5; its response style and decode figures are not a controlled
+checkpoint-only comparison.
 
 These are bounded performance probes, not broad model-quality evaluations.
 Recall speed can be inflated by high speculative acceptance. The 500K probe

@@ -11,6 +11,10 @@ import run as bench
 
 def main(campaign):
     bench.MODEL = 'vanilla-qwen-cinference-bench'
+    # Match stock sampling; Cinference's non-thinking default presence penalty
+    # is 1.5, whereas the production llama.cpp configuration uses zero.
+    bench.SAMPLING_OVERRIDES = {'presence_penalty': 0.0, 'frequency_penalty': 0.0,
+                              'top_p': 0.95, 'top_k': 20}
     artifact_dir = bench.RUNTIME / 'models/Qwen3.8-27B-nvfp4-NInfer'
     expected = '74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82'
     if (artifact_dir / 'verified.sha256').read_text().strip() != expected:
@@ -27,6 +31,7 @@ def main(campaign):
         'model_repo': 'neroued/Qwen3.8-27B-nvfp4-NInfer',
         'model_revision': 'f0b43ad436b9fa8142c6ed6647c470a6fe409484',
         'model_sha256': expected, 'gpu_uuid': bench.GPU,
+        'sampling_overrides': bench.SAMPLING_OVERRIDES,
         'restore_services': env.get('SMARTY_GPU_RECORDED_SERVICES'),
         'started_unix': time.time(),
         'artifact_manifest': json.loads((artifact_dir / 'artifact-manifest.json').read_text())})
@@ -84,10 +89,21 @@ def main(campaign):
 
     # First establish the same advertised profile using the original checkpoint.
     profile('fast-1024', 1024, 1, 'k8v4', 'mtp', 10, False,
-        [f'{kind}-{size}' for size in (8192, 131072, 260000) for kind in ('recall', 'prose')])
+        ['prose-8192', 'prose-131072', 'prose-260000', 'recall-260000'])
     # Match the stock pool, slots, 8-bit KV and vision residency while changing only chunk size.
     chunk_times = {}
     for chunk in (1024, 4096, 8192):
+        records = profile(f'stock-like-{chunk}', chunk, 8, 'int8', 'mtp', 3, True,
+                          ['prose-131072', 'prose-260000'])
+        chunk_times[chunk] = sum(r['timings']['prompt_ms'] for r in records)
+    # Continue only while larger chunks deliver a meaningful gain and fit well
+    # inside the existing 10 GiB card reserve.
+    for chunk in (16384, 32768):
+        previous = chunk // 2
+        earlier = previous // 2
+        memory = json.loads((output / f'stock-like-{previous}' / 'memory-summary.json').read_text())
+        if chunk_times[previous] > 0.95 * chunk_times[earlier] or memory['peak_process_mib'] > 60 * 1024:
+            break
         records = profile(f'stock-like-{chunk}', chunk, 8, 'int8', 'mtp', 3, True,
                           ['prose-131072', 'prose-260000'])
         chunk_times[chunk] = sum(r['timings']['prompt_ms'] for r in records)
@@ -95,16 +111,23 @@ def main(campaign):
     bench.save(output / 'chunk-selection.json', {'sum_prompt_ms': chunk_times, 'selected': best_chunk})
     print(f'Selected prefill chunk {best_chunk}: {chunk_times}', flush=True)
     # Keep production-sized capacity while applying the faster KV and speculative profiles.
-    cases = [f'{kind}-{size}' for size in (8192, 131072, 260000) for kind in ('recall', 'prose')]
+    cases = ['prose-8192', 'prose-131072', 'prose-260000', 'recall-260000']
     for backend, drafts in (('mtp', 10), ('dflash2', 7)):
         profile(f'tuned-{backend}', best_chunk, 8, 'k8v4', backend, drafts, True, cases)
-    # Use long-context prose decode as the selection metric, not easy recall.
-    candidates = ('tuned-mtp', 'tuned-dflash2')
-    winner = max(candidates, key=lambda name: next(r['timings']['predicted_per_second']
-        for r in results[name] if r['name'] == 'prose-260000'))
-    backend, drafts = ('mtp', 10) if winner == 'tuned-mtp' else ('dflash2', 7)
+    # Franci prioritizes cold prefill. Break near-ties (within 5%) on prose decode.
+    candidates = (f'stock-like-{best_chunk}', 'tuned-mtp', 'tuned-dflash2')
+    long_results = {name: next(r for r in results[name] if r['name'] == 'prose-260000')
+                    for name in candidates}
+    fastest_prefill = min(r['timings']['prompt_ms'] for r in long_results.values())
+    eligible = [name for name, r in long_results.items()
+                if r['timings']['prompt_ms'] <= 1.05 * fastest_prefill]
+    winner = max(eligible, key=lambda name: long_results[name]['timings']['predicted_per_second'])
+    if winner.startswith('stock-like-'):
+        backend, drafts, kv = 'mtp', 3, 'int8'
+    else:
+        backend, drafts, kv = ('mtp', 10, 'k8v4') if winner == 'tuned-mtp' else ('dflash2', 7, 'k8v4')
     bench.save(output / 'backend-selection.json', {'selected': winner,
-        'criterion': 'single-request prose decode throughput at approximately 260K tokens'})
+        'criterion': 'minimum 260K cold prefill; fastest prose decode among profiles within 5%'})
     # Confirm the winning profile, eight active lanes, thinking and warm-prefix behavior.
-    profile('selected-confirmation', best_chunk, 8, 'k8v4', backend, drafts, True,
+    profile('selected-confirmation', best_chunk, 8, kv, backend, drafts, True,
             ['prose-8192', 'prose-131072', 'prose-260000', 'recall-260000'], extra=True)

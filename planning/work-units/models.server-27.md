@@ -2,10 +2,12 @@
 
 Work item: https://github.com/kortexa-ai/models.server/issues/27
 
-The primary outcome is vanilla (non-abliterated) Qwen3.8 in NVFP4/FP8 `.ninfer`
-format, approaching 250 tokens/s where the workload permits, with lower cold
-prefill latency. The Huihui run and stock llama.cpp run are controls. Compare
+The primary outcome is lower cold-prefill latency with vanilla (non-abliterated)
+Qwen3.8 in NVFP4/FP8 `.ninfer` format. Decode around 100 tokens/s is an acceptable
+tradeoff for substantially faster prefill; 250 tokens/s is desirable. The Huihui
+run and stock llama.cpp run are controls. Compare
 1024, 4096 and 8192 prefill chunks, then MTP-10 and included DFlash2 proposals.
+Continue to 16K/32K chunks only with a measured improvement and ample headroom.
 Keep cold latency separate from warm prefix reuse; confirm the selected result.
 
 Measure the pinned non-Swift Huihui Qwen3.8-27B NVFP4 artifact on the RTX PRO

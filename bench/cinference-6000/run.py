@@ -21,6 +21,7 @@ GPU = 'GPU-a71210ca-e14a-755a-88bb-77f53a2102f6'
 PORT = 18080
 URL = f'http://127.0.0.1:{PORT}'
 MODEL = 'huihui-cinference-bench'
+SAMPLING_OVERRIDES = {}
 
 
 def command(*args):
@@ -168,12 +169,14 @@ def request(prompt, thinking=False, max_tokens=512):
             'chat_template_kwargs': {'enable_thinking': thinking},
             'cache_prompt': False, 'stream': True,
             'stream_options': {'include_usage': True}}
+    body.update(SAMPLING_OVERRIDES)
     req = urllib.request.Request(URL + '/v1/chat/completions',
             data=json.dumps(body).encode(), headers={'Content-Type': 'application/json'})
     started = time.monotonic()
     first = None
     content, reasoning = '', ''
-    result = {'started_unix': time.time(), 'thinking': thinking}
+    result = {'started_unix': time.time(), 'thinking': thinking,
+              'sampling_overrides': SAMPLING_OVERRIDES.copy()}
     with urllib.request.urlopen(req, timeout=1800) as response:
         for raw in response:
             if not raw.startswith(b'data: '):
