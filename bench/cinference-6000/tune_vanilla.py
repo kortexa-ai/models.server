@@ -112,10 +112,12 @@ def main(campaign):
     print(f'Selected prefill chunk {best_chunk}: {chunk_times}', flush=True)
     # Keep production-sized capacity while applying the faster KV and speculative profiles.
     cases = ['prose-8192', 'prose-131072', 'prose-260000', 'recall-260000']
+    # Isolate the effect of cache precision from draft count and pool size.
+    profile('tuned-k8v4-mtp3', best_chunk, 8, 'k8v4', 'mtp', 3, True, cases)
     for backend, drafts in (('mtp', 10), ('dflash2', 7)):
         profile(f'tuned-{backend}', best_chunk, 8, 'k8v4', backend, drafts, True, cases)
     # Franci prioritizes cold prefill. Break near-ties (within 5%) on prose decode.
-    candidates = (f'stock-like-{best_chunk}', 'tuned-mtp', 'tuned-dflash2')
+    candidates = (f'stock-like-{best_chunk}', 'tuned-k8v4-mtp3', 'tuned-mtp', 'tuned-dflash2')
     long_results = {name: next(r for r in results[name] if r['name'] == 'prose-260000')
                     for name in candidates}
     fastest_prefill = min(r['timings']['prompt_ms'] for r in long_results.values())
@@ -124,6 +126,8 @@ def main(campaign):
     winner = max(eligible, key=lambda name: long_results[name]['timings']['predicted_per_second'])
     if winner.startswith('stock-like-'):
         backend, drafts, kv = 'mtp', 3, 'int8'
+    elif winner == 'tuned-k8v4-mtp3':
+        backend, drafts, kv = 'mtp', 3, 'k8v4'
     else:
         backend, drafts, kv = ('mtp', 10, 'k8v4') if winner == 'tuned-mtp' else ('dflash2', 7, 'k8v4')
     bench.save(output / 'backend-selection.json', {'selected': winner,

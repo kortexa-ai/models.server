@@ -56,7 +56,8 @@ bash bench/cinference-6000/run-block.sh --vanilla-tune \
 The bounded tuner compares 1024, 4096 and 8192 prefill chunks at fixed INT8 KV,
 eight slots and MTP-3. It selects the lowest summed 131K/260K prompt-processing
 time, extending to 16K/32K only while gains exceed 5% with ample headroom. It then
-compares MTP-10 and DFlash2-7 with K8V4 and production-sized capacity. The winner
+compares K8V4 at the same MTP-3 settings to isolate cache precision, then MTP-10
+and DFlash2-7 with K8V4 and production-sized capacity. The winner
 has the lowest 260K cold prefill time, using prose decode to break ties within
 5%, and is confirmed with a
 second cold trial, medium thinking, eight clients, and separate warm-prefix
