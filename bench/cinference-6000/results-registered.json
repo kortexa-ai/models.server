@@ -1,0 +1,1622 @@
+{
+  "manifest": {
+    "models_commit": "1ac701a9df9a7bae326cdd63fca1d87463a1c31d",
+    "runtime_commit": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+    "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+    "restore_services": "|comfyui.server|alt-image-gen.server/base|models/bonsai-2-27b|models/lfm2.5-vl-3b|models/hy-mt2-7b|",
+    "started_unix": 1790062841.0140197,
+    "configurations": {
+      "qwen-3.8-27b-fast": {
+        "name": "Qwen 3.8 27B Fast",
+        "id": "qwen-3.8-27b-fast",
+        "default_engine": "cinference",
+        "context_window": 262144,
+        "multimodal": true,
+        "port": 2064,
+        "host": "192.168.2.6",
+        "context": 524288,
+        "parallel": 8,
+        "cache_type": "k8v4",
+        "cinference": {
+          "spec": "dflash2",
+          "draft_tokens": 7,
+          "prefill_chunk": 8192,
+          "pending_timeout_ms": 600000,
+          "default_max_tokens": 32768,
+          "artifact": {
+            "repo": "neroued/Qwen3.8-27B-nvfp4-NInfer",
+            "revision": "f0b43ad436b9fa8142c6ed6647c470a6fe409484",
+            "directory": "Qwen3.8-27B-nvfp4-NInfer",
+            "filename": "qwen3_8_27b_nvfp4.ninfer",
+            "format_version": 3,
+            "size_bytes": 23719715844,
+            "sha256": "74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82"
+          }
+        }
+      },
+      "qwen-3.8-27b-fast-abliterated": {
+        "name": "Qwen 3.8 27B Fast Abliterated",
+        "id": "qwen-3.8-27b-fast-abliterated",
+        "default_engine": "cinference",
+        "context_window": 262144,
+        "multimodal": true,
+        "port": 2065,
+        "host": "192.168.2.6",
+        "context": 524288,
+        "parallel": 8,
+        "cache_type": "k8v4",
+        "cinference": {
+          "spec": "dflash2",
+          "draft_tokens": 7,
+          "prefill_chunk": 8192,
+          "pending_timeout_ms": 600000,
+          "default_max_tokens": 32768,
+          "artifact": {
+            "repo": "pcmaker/Huihui-Qwen3.8-27B-Uncensored-NInfer",
+            "revision": "805a1423d0c367d6c2f3118aad9f3393959763c8",
+            "directory": "Huihui-Qwen3.8-27B-Uncensored-NInfer",
+            "filename": "huihui_uncensored_nvfp4.ninfer",
+            "format_version": 2,
+            "size_bytes": 23719496192,
+            "sha256": "0e4b49e96159b41c69329d2a84870883362b62beee86aca292dada39e41be8de"
+          }
+        }
+      }
+    },
+    "verified_artifacts": {
+      "qwen-3.8-27b-fast": {
+        "source": {
+          "repo": "neroued/Qwen3.8-27B-nvfp4-NInfer",
+          "revision": "f0b43ad436b9fa8142c6ed6647c470a6fe409484",
+          "filename": "qwen3_8_27b_nvfp4.ninfer",
+          "sha256": "74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82",
+          "size_bytes": 23719715844,
+          "format_version": 3
+        },
+        "runtime_revision": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+        "served_sha256": "74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82",
+        "served_size_bytes": 23719715844,
+        "components": {
+          "text": {
+            "config": {
+              "architectures": [
+                "Qwen3_5ForCausalLM"
+              ],
+              "model_type": "qwen3_5_text",
+              "hidden_size": 5120,
+              "vocab_size": 248320,
+              "num_hidden_layers": 64,
+              "max_position_embeddings": 262144,
+              "tie_word_embeddings": false,
+              "rms_norm_eps": 9.999999974752427e-07,
+              "layer_types": [
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention"
+              ],
+              "num_attention_heads": 24,
+              "num_key_value_heads": 4,
+              "head_dim": 256,
+              "rope_parameters": {
+                "rope_theta": 10000000.0,
+                "partial_rotary_factor": 0.25,
+                "mrope_section": [
+                  11,
+                  11,
+                  10
+                ]
+              },
+              "linear_num_key_heads": 16,
+              "linear_key_head_dim": 128,
+              "linear_num_value_heads": 48,
+              "linear_value_head_dim": 128,
+              "linear_conv_kernel_dim": 4,
+              "intermediate_size": 17408
+            },
+            "resources": {
+              "tokenizer.json": "resource/text/tokenizer.json",
+              "tokenizer_config.json": "resource/text/tokenizer_config.json",
+              "chat_template.jinja": "resource/text/chat_template.jinja",
+              "generation_config.json": "resource/text/generation_config.json"
+            },
+            "proposal": {
+              "domain": "indexed",
+              "rows": 131072
+            }
+          },
+          "vision": {
+            "config": {
+              "model_type": "qwen3_5_vision",
+              "depth": 27,
+              "hidden_size": 1152,
+              "intermediate_size": 4304,
+              "num_heads": 16,
+              "patch_size": 16,
+              "temporal_patch_size": 2,
+              "spatial_merge_size": 2,
+              "num_position_embeddings": 2304
+            },
+            "target": "text",
+            "resources": {
+              "preprocessor_config.json": "resource/vision/preprocessor_config.json",
+              "video_preprocessor_config.json": "resource/vision/video_preprocessor_config.json"
+            }
+          },
+          "mtp": {
+            "config": {
+              "architectures": [
+                "Qwen3_5MTP"
+              ]
+            },
+            "target": "text"
+          },
+          "dflash2": {
+            "config": {
+              "architectures": [
+                "DFlash2DraftModel"
+              ],
+              "model_type": "qwen3",
+              "intermediate_size": 17408,
+              "num_attention_heads": 32,
+              "num_key_value_heads": 8,
+              "head_dim": 128,
+              "num_hidden_layers": 5,
+              "max_position_embeddings": 262144,
+              "rms_norm_eps": 9.999999974752427e-07,
+              "rope_parameters": {
+                "rope_theta": 10000000.0
+              },
+              "layer_types": [
+                "sliding_attention",
+                "sliding_attention",
+                "sliding_attention",
+                "sliding_attention",
+                "sliding_attention"
+              ],
+              "sliding_window": 2048,
+              "dflash_config": {
+                "target_layer_ids": [
+                  5,
+                  19,
+                  33,
+                  47,
+                  61
+                ],
+                "mask_token_id": 248070,
+                "conv_kernel_size": 2,
+                "conv_group_size": 16,
+                "selector_rank": 256,
+                "selector_top_k": 16
+              }
+            },
+            "target": "text"
+          }
+        }
+      },
+      "qwen-3.8-27b-fast-abliterated": {
+        "source": {
+          "repo": "pcmaker/Huihui-Qwen3.8-27B-Uncensored-NInfer",
+          "revision": "805a1423d0c367d6c2f3118aad9f3393959763c8",
+          "filename": "huihui_uncensored_nvfp4.ninfer",
+          "sha256": "0e4b49e96159b41c69329d2a84870883362b62beee86aca292dada39e41be8de",
+          "size_bytes": 23719496192,
+          "format_version": 2
+        },
+        "runtime_revision": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+        "served_sha256": "f65351c2866552cfe59d8dfd7f90438357719f61386917218994e536e0e5ec8d",
+        "served_size_bytes": 23719759856,
+        "components": {
+          "text": {
+            "config": {
+              "architectures": [
+                "Qwen3_5ForCausalLM"
+              ],
+              "model_type": "qwen3_5_text",
+              "hidden_size": 5120,
+              "vocab_size": 248320,
+              "tie_word_embeddings": false,
+              "num_hidden_layers": 64,
+              "layer_types": [
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention",
+                "linear_attention",
+                "linear_attention",
+                "linear_attention",
+                "full_attention"
+              ],
+              "max_position_embeddings": 262144,
+              "rms_norm_eps": 9.999999974752427e-07,
+              "num_attention_heads": 24,
+              "num_key_value_heads": 4,
+              "head_dim": 256,
+              "rope_parameters": {
+                "rope_theta": 10000000.0,
+                "partial_rotary_factor": 0.25,
+                "mrope_section": [
+                  11,
+                  11,
+                  10
+                ]
+              },
+              "linear_num_key_heads": 16,
+              "linear_key_head_dim": 128,
+              "linear_num_value_heads": 48,
+              "linear_value_head_dim": 128,
+              "linear_conv_kernel_dim": 4,
+              "intermediate_size": 17408
+            },
+            "resources": {
+              "tokenizer.json": "frontend/tokenizer.json",
+              "tokenizer_config.json": "frontend/tokenizer_config.json",
+              "chat_template.jinja": "frontend/chat_template.jinja",
+              "generation_config.json": "frontend/generation_config.json"
+            },
+            "proposal": {
+              "domain": "indexed",
+              "rows": 131072
+            }
+          },
+          "vision": {
+            "config": {
+              "model_type": "qwen3_5_vision",
+              "depth": 27,
+              "hidden_size": 1152,
+              "intermediate_size": 4304,
+              "num_heads": 16,
+              "patch_size": 16,
+              "temporal_patch_size": 2,
+              "spatial_merge_size": 2,
+              "num_position_embeddings": 2304
+            },
+            "target": "text",
+            "resources": {
+              "preprocessor_config.json": "frontend/preprocessor_config.json",
+              "video_preprocessor_config.json": "frontend/video_preprocessor_config.json"
+            }
+          },
+          "mtp": {
+            "config": {
+              "architectures": [
+                "Qwen3_5MTP"
+              ]
+            },
+            "target": "text"
+          },
+          "dflash2": {
+            "config": {
+              "architectures": [
+                "DFlash2DraftModel"
+              ],
+              "model_type": "qwen3",
+              "intermediate_size": 17408,
+              "num_attention_heads": 32,
+              "num_key_value_heads": 8,
+              "head_dim": 128,
+              "num_hidden_layers": 5,
+              "rms_norm_eps": 9.999999974752427e-07,
+              "rope_parameters": {
+                "rope_theta": 10000000.0
+              },
+              "max_position_embeddings": 262144,
+              "layer_types": [
+                "sliding_attention",
+                "sliding_attention",
+                "sliding_attention",
+                "sliding_attention",
+                "sliding_attention"
+              ],
+              "sliding_window": 2048,
+              "dflash_config": {
+                "target_layer_ids": [
+                  5,
+                  19,
+                  33,
+                  47,
+                  61
+                ],
+                "mask_token_id": 248070,
+                "conv_kernel_size": 2,
+                "conv_group_size": 16,
+                "selector_rank": 256,
+                "selector_top_k": 16
+              }
+            },
+            "target": "text"
+          }
+        }
+      }
+    }
+  },
+  "profiles": {
+    "qwen-3.8-27b-fast": {
+      "requests": [
+        {
+          "started_unix": 1790062888.5944407,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 1024,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 130991,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 132015
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1165,
+            "draft_n_accepted": 856,
+            "predicted_ms": 3507.781053,
+            "predicted_n": 1024,
+            "predicted_per_second": 291.63735835937877,
+            "predicted_per_token_ms": 3.4289159853372437,
+            "prompt_ms": 28259.56802,
+            "prompt_n": 130991,
+            "prompt_per_second": 4635.279630151968,
+            "prompt_per_token_ms": 0.21573671488880913
+          },
+          "client_seconds": 31.854647257947363,
+          "client_ttft_seconds": 28.34677866997663,
+          "client_first_content_seconds": 28.346779146930203,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "1750fad772e8c07bf6ccd6450669466f70ae46d957401de35d74e49802d37377",
+          "ended_unix": 1790062920.4496973,
+          "name": "coding-nothink-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40730.0,
+          "peak_total_mib": 55675.0,
+          "content_sha256": "65f7a96ce11c75f3c8c8621b920ca3f05ade1d6fb1972f4bcfddce727e0884f7",
+          "content_characters": 4319,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790062860.5058072,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 126,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 131034,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 131160
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 140,
+            "draft_n_accepted": 106,
+            "predicted_ms": 413.74449699999997,
+            "predicted_n": 126,
+            "predicted_per_second": 302.1188218969835,
+            "predicted_per_token_ms": 3.309955976,
+            "prompt_ms": 27624.266268,
+            "prompt_n": 131034,
+            "prompt_per_second": 4743.438204973792,
+            "prompt_per_token_ms": 0.21081754558358898
+          },
+          "client_seconds": 28.0858179529896,
+          "client_ttft_seconds": 27.67201559699606,
+          "client_first_content_seconds": 27.672015941003338,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "13355509f5ec51d6cd62b41d825473c60a35935101ffa1fbb9b3a6796d3d419d",
+          "ended_unix": 1790062888.5918586,
+          "name": "recall-131072",
+          "recall_expected": [
+            "KEY_0=VAL_run131072recall_0_7294",
+            "KEY_1=VAL_run131072recall_1_7294",
+            "KEY_2=VAL_run131072recall_2_7294",
+            "KEY_3=VAL_run131072recall_3_7294",
+            "KEY_4=VAL_run131072recall_4_7294",
+            "KEY_5=VAL_run131072recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 40730.0,
+          "peak_total_mib": 55675.0,
+          "content_sha256": "434a561e857dffefdb7a22a6066010f8b32d7ae7bff68a1af2d56c985d70fed6",
+          "content_characters": 197,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790062860.003042,
+        "process_mib": 40728.0,
+        "total_mib": 55673.0,
+        "free_mib": 41608.0,
+        "power_w": 462.15,
+        "limit_w": 450.0,
+        "utilization": 99.0,
+        "temperature_c": 51.0
+      },
+      "memory-summary": {
+        "samples": 143,
+        "monitor_error": null,
+        "peak_process_mib": 40730.0,
+        "peak_total_mib": 55675.0,
+        "minimum_free_mib": 41606.0
+      },
+      "command": [
+        "/home/francip/src/models.server/run.sh",
+        "qwen-3.8-27b-fast",
+        "--host",
+        "127.0.0.1",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast/requests.jsonl"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3529730,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--model-id",
+          "qwen-3.8-27b-fast",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "2064",
+          "--device",
+          "0",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--pending-timeout-ms",
+          "600000",
+          "--default-max-tokens",
+          "32768",
+          "--presence-penalty",
+          "0",
+          "--frequency-penalty",
+          "0",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--vision",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast/requests.jsonl",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790062860.0033126,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 7,
+          "draft_n_accepted": 1,
+          "predicted_ms": 16.787591000000003,
+          "predicted_n": 3,
+          "predicted_per_second": 119.13561630135018,
+          "predicted_per_token_ms": 8.393795500000001,
+          "prompt_ms": 58.75009,
+          "prompt_n": 26,
+          "prompt_per_second": 442.552513536575,
+          "prompt_per_token_ms": 2.2596188461538462
+        },
+        "client_seconds": 0.07685983297415078,
+        "client_ttft_seconds": 0.05981041700579226,
+        "client_first_content_seconds": 0.059810739010572433,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790062860.0801854
+      },
+      "models": {
+        "data": [
+          {
+            "created": 1790062860,
+            "id": "qwen-3.8-27b-fast",
+            "max_model_len": 262144,
+            "object": "model",
+            "owned_by": "ninfer"
+          }
+        ],
+        "object": "list"
+      },
+      "vision": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "Red",
+              "refusal": null,
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790062860,
+        "id": "chatcmpl-3c24ca857cb0a70e",
+        "model": "qwen-3.8-27b-fast",
+        "object": "chat.completion",
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 7,
+          "draft_n_accepted": 0,
+          "predicted_ms": 16.806154,
+          "predicted_n": 2,
+          "predicted_per_second": 59.50201336962639,
+          "predicted_per_token_ms": 16.806154,
+          "prompt_ms": 67.91886,
+          "prompt_n": 90,
+          "prompt_per_second": 1325.110580477941,
+          "prompt_per_token_ms": 0.7546539999999999
+        },
+        "usage": {
+          "completion_tokens": 2,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 90,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 92
+        }
+      },
+      "tool": {
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "{\"city\":\"Seattle\"}",
+                    "name": "get_weather"
+                  },
+                  "id": "call_ca74717d7e6d3bcf",
+                  "type": "function"
+                }
+              ]
+            }
+          }
+        ],
+        "created": 1790062860,
+        "id": "chatcmpl-0e5a83aa13248e36",
+        "model": "qwen-3.8-27b-fast",
+        "object": "chat.completion",
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 42,
+          "draft_n_accepted": 20,
+          "predicted_ms": 101.97247800000001,
+          "predicted_n": 26,
+          "predicted_per_second": 245.16419028279373,
+          "predicted_per_token_ms": 4.07889912,
+          "prompt_ms": 79.870125,
+          "prompt_n": 288,
+          "prompt_per_second": 3605.853878405724,
+          "prompt_per_token_ms": 0.27732682291666666
+        },
+        "usage": {
+          "completion_tokens": 26,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 288,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 314
+        }
+      },
+      "tool-followup": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "The current weather in Seattle is sunny with a temperature of 18\u00b0C.",
+              "refusal": null,
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790062860,
+        "id": "chatcmpl-70c371d29394ca97",
+        "model": "qwen-3.8-27b-fast",
+        "object": "chat.completion",
+        "timings": {
+          "cache_n": 313,
+          "draft_n": 28,
+          "draft_n_accepted": 13,
+          "predicted_ms": 68.476728,
+          "predicted_n": 17,
+          "predicted_per_second": 233.6560239852582,
+          "predicted_per_token_ms": 4.2797955,
+          "prompt_ms": 62.364079000000004,
+          "prompt_n": 33,
+          "prompt_per_second": 529.1507632141894,
+          "prompt_per_token_ms": 1.889820575757576
+        },
+        "usage": {
+          "completion_tokens": 17,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 346,
+          "prompt_tokens_details": {
+            "cached_tokens": 313
+          },
+          "total_tokens": 363
+        }
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--model-id",
+          "qwen-3.8-27b-fast",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "2064",
+          "--device",
+          "0",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--pending-timeout-ms",
+          "600000",
+          "--default-max-tokens",
+          "32768",
+          "--presence-penalty",
+          "0",
+          "--frequency-penalty",
+          "0",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--vision",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast/requests.jsonl"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 23268546705,
+          "device_object_count": 1060,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 23255132000,
+          "load_seconds": 7.898756126,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719715844,
+          "upload_seconds": 3.614884833
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 600000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "dflash2",
+          "speculative_draft_window": 7,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 43628691456,
+          "available_after_weights_bytes": 62517739520,
+          "cuda_graph_allowance_bytes": 4026531840,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 1646592,
+          "kv_payload_bytes": 13488881664,
+          "minimum_runtime_reservation_bytes": 16015239937,
+          "planned_slack_bytes": 39758058751,
+          "runtime_reservation_bytes": 22759680769,
+          "sequence": {
+            "capacity_bytes": 17285393152,
+            "peak_used_bytes": 17285393152,
+            "used_bytes": 17285393152
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 23255174144,
+            "peak_used_bytes": 23255174144,
+            "used_bytes": 23255174144
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": 0.0,
+            "min_p": null,
+            "presence_penalty": 0.0,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 32768,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 2064,
+          "public_model_id": "qwen-3.8-27b-fast",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast/requests.jsonl"
+        },
+        "server_instance_id": "serve-3529730-1790062851859430",
+        "timestamp_unix_ms": 1790062859949
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    },
+    "qwen-3.8-27b-fast-abliterated": {
+      "requests": [
+        {
+          "started_unix": 1790062971.5316575,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 1024,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 130991,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 132015
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1089,
+            "draft_n_accepted": 867,
+            "predicted_ms": 3327.094792,
+            "predicted_n": 1024,
+            "predicted_per_second": 307.47545950893965,
+            "predicted_per_token_ms": 3.2522920742913,
+            "prompt_ms": 28961.741383,
+            "prompt_n": 130991,
+            "prompt_per_second": 4522.897924808115,
+            "prompt_per_token_ms": 0.22109718517302715
+          },
+          "client_seconds": 32.36514448397793,
+          "client_ttft_seconds": 29.03796153096482,
+          "client_first_content_seconds": 29.03796206996776,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "1750fad772e8c07bf6ccd6450669466f70ae46d957401de35d74e49802d37377",
+          "ended_unix": 1790063003.8974693,
+          "name": "coding-nothink-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40730.0,
+          "peak_total_mib": 55675.0,
+          "content_sha256": "18542682d4587c880fd1d8a60664cbdb0fdbdb19f0554f86e0f59e5b10799cb4",
+          "content_characters": 4428,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790062942.5528693,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 126,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 131034,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 131160
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 140,
+            "draft_n_accepted": 106,
+            "predicted_ms": 421.96455399999996,
+            "predicted_n": 126,
+            "predicted_per_second": 296.2334130084301,
+            "predicted_per_token_ms": 3.375716432,
+            "prompt_ms": 28508.167662000003,
+            "prompt_n": 131034,
+            "prompt_per_second": 4596.366962393796,
+            "prompt_per_token_ms": 0.21756313370575578
+          },
+          "client_seconds": 28.976071713026613,
+          "client_ttft_seconds": 28.553943981067277,
+          "client_first_content_seconds": 28.553944635088556,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "13355509f5ec51d6cd62b41d825473c60a35935101ffa1fbb9b3a6796d3d419d",
+          "ended_unix": 1790062971.5292103,
+          "name": "recall-131072",
+          "recall_expected": [
+            "KEY_0=VAL_run131072recall_0_7294",
+            "KEY_1=VAL_run131072recall_1_7294",
+            "KEY_2=VAL_run131072recall_2_7294",
+            "KEY_3=VAL_run131072recall_3_7294",
+            "KEY_4=VAL_run131072recall_4_7294",
+            "KEY_5=VAL_run131072recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 40730.0,
+          "peak_total_mib": 55675.0,
+          "content_sha256": "434a561e857dffefdb7a22a6066010f8b32d7ae7bff68a1af2d56c985d70fed6",
+          "content_characters": 197,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790062942.0588558,
+        "process_mib": 40728.0,
+        "total_mib": 55673.0,
+        "free_mib": 41608.0,
+        "power_w": 464.48,
+        "limit_w": 450.0,
+        "utilization": 99.0,
+        "temperature_c": 65.0
+      },
+      "memory-summary": {
+        "samples": 144,
+        "monitor_error": null,
+        "peak_process_mib": 40730.0,
+        "peak_total_mib": 55675.0,
+        "minimum_free_mib": 41606.0
+      },
+      "command": [
+        "/home/francip/src/models.server/run.sh",
+        "qwen-3.8-27b-fast-abliterated",
+        "--host",
+        "127.0.0.1",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast-abliterated/requests.jsonl"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3531053,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-Uncensored-NInfer/huihui_uncensored_nvfp4_v3.ninfer",
+          "--model-id",
+          "qwen-3.8-27b-fast-abliterated",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "2065",
+          "--device",
+          "0",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--pending-timeout-ms",
+          "600000",
+          "--default-max-tokens",
+          "32768",
+          "--presence-penalty",
+          "0",
+          "--frequency-penalty",
+          "0",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--vision",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast-abliterated/requests.jsonl",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790062942.059154,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 7,
+          "draft_n_accepted": 1,
+          "predicted_ms": 16.805369,
+          "predicted_n": 3,
+          "predicted_per_second": 119.00958556756476,
+          "predicted_per_token_ms": 8.4026845,
+          "prompt_ms": 58.836567,
+          "prompt_n": 26,
+          "prompt_per_second": 441.9020572699287,
+          "prompt_per_token_ms": 2.2629448846153846
+        },
+        "client_seconds": 0.07677407597657293,
+        "client_ttft_seconds": 0.05978758505079895,
+        "client_first_content_seconds": 0.059787934995256364,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790062942.1359386
+      },
+      "models": {
+        "data": [
+          {
+            "created": 1790062942,
+            "id": "qwen-3.8-27b-fast-abliterated",
+            "max_model_len": 262144,
+            "object": "model",
+            "owned_by": "ninfer"
+          }
+        ],
+        "object": "list"
+      },
+      "vision": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "Red",
+              "refusal": null,
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790062942,
+        "id": "chatcmpl-b60e7556184c42cb",
+        "model": "qwen-3.8-27b-fast-abliterated",
+        "object": "chat.completion",
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 7,
+          "draft_n_accepted": 2,
+          "predicted_ms": 16.911360000000002,
+          "predicted_n": 2,
+          "predicted_per_second": 59.1318498334847,
+          "predicted_per_token_ms": 16.911360000000002,
+          "prompt_ms": 68.557577,
+          "prompt_n": 90,
+          "prompt_per_second": 1312.7651813015505,
+          "prompt_per_token_ms": 0.7617508555555556
+        },
+        "usage": {
+          "completion_tokens": 2,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 90,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 92
+        }
+      },
+      "tool": {
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "{\"city\":\"Seattle\"}",
+                    "name": "get_weather"
+                  },
+                  "id": "call_acba38880526be45",
+                  "type": "function"
+                }
+              ]
+            }
+          }
+        ],
+        "created": 1790062942,
+        "id": "chatcmpl-66bbc9550f80a406",
+        "model": "qwen-3.8-27b-fast-abliterated",
+        "object": "chat.completion",
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 42,
+          "draft_n_accepted": 20,
+          "predicted_ms": 104.443567,
+          "predicted_n": 26,
+          "predicted_per_second": 239.36371303749132,
+          "predicted_per_token_ms": 4.17774268,
+          "prompt_ms": 84.141566,
+          "prompt_n": 288,
+          "prompt_per_second": 3422.802946168128,
+          "prompt_per_token_ms": 0.29215821527777774
+        },
+        "usage": {
+          "completion_tokens": 26,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 288,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 314
+        }
+      },
+      "tool-followup": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "The current weather in Seattle is sunny with a temperature of 18\u00b0C.",
+              "refusal": null,
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790062942,
+        "id": "chatcmpl-08fe5b8edea8a4c5",
+        "model": "qwen-3.8-27b-fast-abliterated",
+        "object": "chat.completion",
+        "timings": {
+          "cache_n": 313,
+          "draft_n": 28,
+          "draft_n_accepted": 13,
+          "predicted_ms": 69.582332,
+          "predicted_n": 17,
+          "predicted_per_second": 229.94342874280215,
+          "predicted_per_token_ms": 4.34889575,
+          "prompt_ms": 63.829229,
+          "prompt_n": 33,
+          "prompt_per_second": 517.0045215492106,
+          "prompt_per_token_ms": 1.9342190606060605
+        },
+        "usage": {
+          "completion_tokens": 17,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 346,
+          "prompt_tokens_details": {
+            "cached_tokens": 313
+          },
+          "total_tokens": 363
+        }
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-Uncensored-NInfer/huihui_uncensored_nvfp4_v3.ninfer",
+          "--model-id",
+          "qwen-3.8-27b-fast-abliterated",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "2065",
+          "--device",
+          "0",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--pending-timeout-ms",
+          "600000",
+          "--default-max-tokens",
+          "32768",
+          "--presence-penalty",
+          "0",
+          "--frequency-penalty",
+          "0",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--vision",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast-abliterated/requests.jsonl"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 23268575377,
+          "device_object_count": 1060,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 23255132000,
+          "load_seconds": 7.772153694,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-Uncensored-NInfer/huihui_uncensored_nvfp4_v3.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719759856,
+          "upload_seconds": 3.608027543
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 600000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "dflash2",
+          "speculative_draft_window": 7,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 43628691456,
+          "available_after_weights_bytes": 62517739520,
+          "cuda_graph_allowance_bytes": 4026531840,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 1646592,
+          "kv_payload_bytes": 13488881664,
+          "minimum_runtime_reservation_bytes": 16015239937,
+          "planned_slack_bytes": 39758058751,
+          "runtime_reservation_bytes": 22759680769,
+          "sequence": {
+            "capacity_bytes": 17285393152,
+            "peak_used_bytes": 17285393152,
+            "used_bytes": 17285393152
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 23255174144,
+            "peak_used_bytes": 23255174144,
+            "used_bytes": 23255174144
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": 0.0,
+            "min_p": null,
+            "presence_penalty": 0.0,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 32768,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 2065,
+          "public_model_id": "qwen-3.8-27b-fast-abliterated",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/registered/qwen-3.8-27b-fast-abliterated/requests.jsonl"
+        },
+        "server_instance_id": "serve-3531053-1790062934048169",
+        "timestamp_unix_ms": 1790062942003
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    }
+  },
+  "errors": {}
+}
