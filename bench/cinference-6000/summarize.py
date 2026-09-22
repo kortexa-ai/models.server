@@ -13,6 +13,10 @@ def main():
     args = parser.parse_args()
     result = {'manifest': json.loads((args.run / 'manifest.json').read_text()),
               'profiles': {}, 'errors': {}}
+    for name in ('stock-model', 'chunk-selection', 'backend-selection', 'selection'):
+        path = args.run / f'{name}.json'
+        if path.exists():
+            result[name] = json.loads(path.read_text())
     for path in args.run.glob('*-error.json'):
         result['errors'][path.stem] = json.loads(path.read_text())
     for profile in sorted(p.name for p in args.run.iterdir()
