@@ -26,7 +26,8 @@ def main():
             continue
         data = {'requests': []}
         for name in ('idle', 'memory-summary', 'command', 'environment', 'live-process',
-                     'concurrency', 'canary', 'props', 'warm-seed', 'warm-repeat'):
+                     'concurrency', 'canary', 'props', 'warm-seed', 'warm-repeat',
+                     'models', 'vision', 'tool', 'tool-followup'):
             path = directory / f'{name}.json'
             if path.exists():
                 data[name] = json.loads(path.read_text())
