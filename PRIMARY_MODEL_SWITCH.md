@@ -270,13 +270,15 @@ The authoritative implementation is in
 - The gateway rewrites downstream IDs through `resolveHfModel`. Cinference
   expects its exact `--model-id`; its current manifests resolve to that ID.
   Do not add a Hugging Face repository ID as `hf_model` without checking this.
-- **Cinference catalog gap before default rollout:** the current API learns
-  tool/reasoning capabilities from llama.cpp `/props` and advertises extra
-  protocols only for recognized engines. Cinference has no `/props`; current
-  discovery will advertise chat/streaming and configured image input, but not
-  its full tool/reasoning/Responses/Messages capabilities. Add and test engine
-  support in `api.server` before clients depend on capability discovery. Merely
-  adding capability fields to these manifests does not fix the current builder.
+- **Cinference discovery and protocols:** deploy the API adapter from
+  [api.server#95](https://github.com/kortexa-ai/api.server/issues/95). It skips
+  llama.cpp `/props`, advertises tools/reasoning and Chat/Responses/Messages,
+  and reports unsupported constraint guarantees explicitly. Native generation
+  and token-count POST routes pass through; Responses retrieval/deletion and
+  input-item listing are not exposed by the gateway. Verify the live catalog
+  and actual native requests after starting the target. Merely adding fields
+  to a model manifest does not update an older API's catalog builder. See the
+  [API contract](https://github.com/kortexa-ai/api.server/blob/main/docs/model-catalog.md#cinference).
 - Radio has its own `KORTEXA_RADIO_PRIMARY_MODEL` and
   `KORTEXA_RADIO_FALLBACK_MODEL`. They are unset in the audited production env;
   source defaults are stock Qwen and LFM2.5-8B-A1B. Set the primary explicitly
@@ -380,3 +382,10 @@ is not part of switching a default.
 Model-level evidence: [Cinference benchmark and launcher checks](bench/cinference-6000/RESULTS.md).
 This guide's inventory is read-only; it does not claim an end-to-end fast-Qwen
 rollout through all harnesses or the public API has already happened.
+
+Tool rollout qualification is tracked in
+[models.server#31](https://github.com/kortexa-ai/models.server/issues/31).
+Actual strict-schema/JSON constraints and required/named/single-call enforcement
+are separate engine work in [#32](https://github.com/kortexa-ai/models.server/issues/32)
+and [#33](https://github.com/kortexa-ai/models.server/issues/33). Ordinary tool
+support in the catalog does not imply any of those enforced guarantees.
