@@ -5,7 +5,7 @@
   "context_window": 262144,
   "multimodal": true,
   "port": 2065,
-  "host": "192.168.2.6",
+  "host": "192.168.2.3",
   "context": 524288,
   "parallel": 8,
   "cache_type": "k8v4",

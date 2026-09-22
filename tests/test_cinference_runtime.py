@@ -91,6 +91,7 @@ class CinferenceRuntimeTest(unittest.TestCase):
             model_id = "qwen-3.8-27b-fast" + suffix
             config = json.loads((ROOT / model_id / "model.json").read_text())
             self.assertEqual(config["port"], port)
+            self.assertEqual(config["host"], "192.168.2.3")
             self.assertEqual(config["default_engine"], "cinference")
             unit = (ROOT / model_id / "systemd" / f"kortexa-ai-llm-{model_id}.service").read_text()
             self.assertIn("Environment=CUDA_VISIBLE_DEVICES=" + runtime.GPU_UUID, unit)

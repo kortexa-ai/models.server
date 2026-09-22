@@ -179,7 +179,7 @@ For a foreground run after checking service/port ownership and the 6000 budget:
 ./run.sh qwen-3.8-27b-fast-abliterated
 ```
 
-The listeners use `192.168.2.6:2064` and `:2065`. `--host`, `--port`, and
+The listeners use `192.168.2.3:2064` and `:2065`. `--host`, `--port`, and
 `--request-log-jsonl` are available for controlled diagnostics. They require
 50 GiB free at startup, to budget about 40 GiB plus 10 GiB headroom; launchers
 never stop another service. Check
