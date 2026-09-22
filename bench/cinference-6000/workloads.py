@@ -86,7 +86,7 @@ def main(campaign):
             bench.save(path, {'prompt': prompt, 'count_endpoint_tokens': tokens})
         return json.loads(path.read_text())['prompt']
 
-    def profile(name, argv, code_sizes, voice=False):
+    def profile(name, argv, code_sizes, voice=False, code_nothink=False):
         directory = output / name
         records = []
         with bench.Server(argv, directory, env | {'PORT': str(bench.PORT), 'HOST': '127.0.0.1'}) as server:
@@ -104,7 +104,10 @@ def main(campaign):
                     records.append(bench.record_request(server, directory, f'voice-{i}', prompt, max_tokens=128))
             for size in code_sizes:
                 records.append(bench.record_request(server, directory, f'coding-{size}',
-                    coding_prompt(size), max_tokens=1024))
+                    coding_prompt(size), thinking=True, max_tokens=2048))
+            if code_nothink:
+                records.append(bench.record_request(server, directory, 'coding-nothink-131072',
+                    'Direct code trial.\n' + coding_prompt(131072), max_tokens=1024))
             if server.monitor_error:
                 raise RuntimeError(server.monitor_error)
         results[name] = records
@@ -115,7 +118,7 @@ def main(campaign):
     stock_argv = ['bash', str(bench.ROOT / 'run.sh'), 'qwen-3.8-27b', '--alias', bench.MODEL,
                   '--model', str(stock_path / 'Qwen3.8-27B-UD-Q4_K_XL.gguf'),
                   '--mmproj', str(stock_path / 'mmproj-BF16.gguf'), '--offline']
-    profile('stock', stock_argv, (131072, 260000), voice=True)
+    profile('stock', stock_argv, (131072, 260000), voice=True, code_nothink=True)
     chunk = json.loads((campaign / 'vanilla/chunk-selection.json').read_text())['selected']
     candidates = (f'stock-like-{chunk}', 'tuned-k8v4-mtp3', 'tuned-mtp', 'tuned-dflash2')
 
@@ -137,4 +140,4 @@ def main(campaign):
         'criterion': 'minimum 131K cold prefill; fastest code decode among profiles within 5%',
         'voice_median_ttft_seconds': voice_latency})
     print(f'Coding selection: {winner}; voice median TTFT: {voice_latency}', flush=True)
-    profile('coding-selected-260K', native_args(winner, 'coding-selected-260K'), (260000,))
+    profile('coding-selected-260K', native_args(winner, 'coding-selected-260K'), (260000,), code_nothink=True)

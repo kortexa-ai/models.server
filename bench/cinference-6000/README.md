@@ -72,8 +72,11 @@ all four tuned vanilla configurations on five short, reasoning-disabled
 conversation prompts and 131K code generation. Stock and the selected coding
 profile also process a 260K code prompt. The code context is a deterministic
 snapshot of the pinned public runtime's source files; the task produces a
-Python metrics reader, with a 1,024-token output cap. These are generation
-throughput probes, not coding pass-rate tests or full voice-pipeline latency.
+Python metrics reader, with the configured medium reasoning and a 2,048-token
+output cap. Stock and the selected profile also run 131K coding with reasoning
+disabled and a 1,024-token cap. These are generation throughput probes, not
+coding pass-rate tests or full voice-pipeline latency. Reasoning token counts
+and finish reasons are retained alongside visible output.
 The source inventory, prompt bytes and all answers remain in the raw run.
 
 These are bounded performance probes, not broad model-quality evaluations.
