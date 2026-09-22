@@ -1,0 +1,3755 @@
+{
+  "manifest": {
+    "models_commit": "9f78ee40f75ec04ecf27d5c73f1f7cbf8c6c8170",
+    "stock_manifest": {
+      "models_commit": "45cd10631f180340f88a81974c6974b92762c66d",
+      "stock_config_sha256": "185e7cc7a5157b7e88da7007488244c0e21fcb72428152d1c521484014320658",
+      "llama_commit": "434ddbbc0e30522e897670681e503b797c12b7c1",
+      "cinference_commit": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+      "runtime_manifest": {
+        "name": "Fast Long Context - Cinference",
+        "runtime": {
+          "repo_id": "satellitedown/cinference",
+          "revision": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+          "cuda_architectures": "120a",
+          "cuda_version": "13.4.92",
+          "build_type": "Release",
+          "build_jobs": 2
+        },
+        "models": {
+          "target": {
+            "repo_id": "satellitedown/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3",
+            "revision": "12fe3b16d82541dad06288b0da629933efebb6cd",
+            "directory": "Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3",
+            "filename": "qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+            "format_version": 3,
+            "size_bytes": 21492938224,
+            "files": {
+              "qwen3_8_27b_huihui_abliterated_nvfp4.ninfer": "3876a052290d48171350a299eac3bcdbfeeac69f58efd11747d7f9509f7b54ee",
+              "LICENSE": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+              "NOTICE": "9b905665ed937f1521e4659eafc1af8743379fefe90f7cfe3a95a650351a0580",
+              "README.md": "ec16b736a2d446f2edd2bc243af98e6591573cfa6f5be6cfa0fd3dce87865cf2",
+              "provenance.json": "fecb87f68cc58844d8c82b975b754e26b8f446d50fe81ce0f99925b60570e8e9",
+              "SHA256SUMS": "3378d13f91fbaab5cb86e5ef12ac265433baf2fed866d7a74d53ebabdbe70e56",
+              "source/NOTICE": "1fc20d0b782c81159c05ef799d70e912a1941271bb74240ad3781ac1634ef9e4",
+              "source/artifact-manifest.json": "9886c2d4c3c187d2ddc19c113f8642741329837c3f1e58870af748bc6dff1c3d",
+              "source/qwen3_8_27b_nvfp4.ninfer.conversion.json": "73a2cf5860bfd039f829223cc1bbcb12ea726e4e084280a530965e436cc0a393"
+            }
+          }
+        },
+        "serving": {
+          "model_id": "qwen3.8-27b-huihui-abliterated-cinference",
+          "host": "127.0.0.1",
+          "port": 8000,
+          "max_context": 262144,
+          "kv_dtype": "k8v4",
+          "max_concurrency": 1,
+          "pending_timeout_ms": 600000,
+          "prefill_chunk": 1024,
+          "spec": "mtp",
+          "draft_tokens": 10,
+          "lm_head_draft": true,
+          "default_max_tokens": 32768,
+          "preserve_thinking": true
+        }
+      },
+      "gpu": "name, uuid, driver_version, power.limit [W], memory.total [MiB]\nNVIDIA RTX PRO 6000 Blackwell Workstation Edition, GPU-a71210ca-e14a-755a-88bb-77f53a2102f6, 610.43.02, 450.00 W, 97887 MiB",
+      "restore_services": "|comfyui.server|alt-image-gen.server/base|models/bonsai-2-27b|models/lfm2.5-vl-3b|models/hy-mt2-7b|",
+      "host": "smarty",
+      "started_unix": 1790057376.6273212
+    },
+    "vanilla_manifest": {
+      "models_commit": "db6539bfc0c5cb77642e7b589b4fae0f363f8a32",
+      "runtime_commit": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+      "model_repo": "neroued/Qwen3.8-27B-nvfp4-NInfer",
+      "model_revision": "f0b43ad436b9fa8142c6ed6647c470a6fe409484",
+      "model_sha256": "74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82",
+      "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+      "sampling_overrides": {
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "top_p": 0.95,
+        "top_k": 20
+      },
+      "restore_services": "|comfyui.server|alt-image-gen.server/base|models/bonsai-2-27b|models/lfm2.5-vl-3b|models/hy-mt2-7b|",
+      "started_unix": 1790059209.663648,
+      "artifact_manifest": {
+        "schema": "ninfer.artifact-manifest",
+        "schema_version": 2,
+        "artifact": {
+          "filename": "qwen3_8_27b_nvfp4.ninfer",
+          "bytes": 23719715844,
+          "sha256": "74d2c57145e6ff11d1d2faa79594477f9bc903a611af1fb20218189fbbb77d82",
+          "container_version": 3,
+          "architecture": "Qwen3_5ForCausalLM",
+          "name": "qwen3.8-27b",
+          "components": [
+            "text",
+            "vision",
+            "mtp",
+            "dflash2"
+          ]
+        },
+        "source": {
+          "base": {
+            "repo_id": "Qwen/Qwen3.8-27B",
+            "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+            "download_source": "https://modelscope.cn/models/Qwen/Qwen3.8-27B",
+            "license": "Apache-2.0"
+          },
+          "quantized": {
+            "repo_id": "unsloth/Qwen3.8-27B-NVFP4",
+            "revision": "60e813d4dbbdc5d64cf3f5a8caf2897bedf03679",
+            "license": "Apache-2.0"
+          },
+          "dflash2": {
+            "repo_id": "z-lab/Qwen3.8-27B-DFlash2",
+            "revision": "50307d4c4cde6860d4eee73e2547cd786fe8e8a4",
+            "license": "Apache-2.0"
+          }
+        },
+        "conversion": {
+          "recipe_id": "qwen3_8_27b_nvfp4",
+          "embedding_encoder": "fp8_row_maxabs",
+          "converter_repository": "https://github.com/Neroued/ninfer",
+          "ranking_input": {
+            "path": "tools/freq_corpus/fixtures/ranking/ranking.train.counts.i64",
+            "sha256": "c692dc76388132c910547589b4fb4a0503fbd6ad50aaac6a509bbcb192a8afa5"
+          }
+        },
+        "runtime": {
+          "repository": "https://github.com/Neroued/ninfer",
+          "minimum_revision": "98dada0e03cb073fd07f905400b5904bc6e82759",
+          "cuda_architecture": "sm_120a",
+          "dflash2_draft_tokens": {
+            "recommended": 7,
+            "minimum": 1,
+            "maximum": 15
+          }
+        },
+        "inventory": {
+          "objects": 1246,
+          "tensors": 1240,
+          "resources": 6,
+          "bindings": 1513,
+          "uses": 844,
+          "formats": {
+            "bf16": 579,
+            "fp32": 264,
+            "fp8_e4m3fn_row_bf16": 146,
+            "int32": 1,
+            "nvfp4": 112,
+            "q4_g64_fp16": 55,
+            "q5_g64_fp16": 54,
+            "q6_g64_fp16": 1,
+            "q8_g32_fp16": 28
+          },
+          "layouts": {
+            "block_scale_k16_m128x4_v1": 112,
+            "contiguous_le_v1": 844,
+            "row_scale_v1": 146,
+            "row_split_k128_v1": 138
+          },
+          "encodings": {
+            "raw_bytes_v1": 6
+          },
+          "bytes": {
+            "tensor": 23706400256,
+            "resource": 12837937,
+            "object": 23719238193,
+            "payload_span": 23719322628,
+            "alignment": 84435
+          }
+        }
+      }
+    },
+    "sampling_overrides": {
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "top_p": 0.95,
+      "top_k": 20
+    },
+    "source_corpus_sha256": "19a1241a46208ce890849a0c54c58e16424a1ca5ec25b4ef13f6a07daec7935d",
+    "restore_services": "|comfyui.server|alt-image-gen.server/base|models/bonsai-2-27b|models/lfm2.5-vl-3b|models/hy-mt2-7b|",
+    "started_unix": 1790061187.111483
+  },
+  "profiles": {
+    "coding-selected-260K": {
+      "requests": [
+        {
+          "started_unix": 1790061965.78758,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "completion_tokens_details": {
+              "reasoning_tokens": 2048
+            },
+            "prompt_tokens": 259969,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 262017
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 2645,
+            "draft_n_accepted": 1668,
+            "predicted_ms": 9540.318362,
+            "predicted_n": 2048,
+            "predicted_per_second": 214.5630703639196,
+            "predicted_per_token_ms": 4.660634275525159,
+            "prompt_ms": 91067.764272,
+            "prompt_n": 259969,
+            "prompt_per_second": 2854.676427803015,
+            "prompt_per_token_ms": 0.3503023986398378
+          },
+          "client_seconds": 100.7798926649848,
+          "client_ttft_seconds": 91.2393301470438,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 91.23933061701246,
+          "prompt_sha256": "5e9c49776842fe3ac037f4b8cf2210581dbe949dad17dabb492c2d9d87cb7184",
+          "ended_unix": 1790062066.5683296,
+          "name": "coding-260000",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40728.0,
+          "peak_total_mib": 55673.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "18eef7d3464c9b3926dcfdecd3e8b7f4c2da437c393cae6e8a74d7f244d5d85e",
+          "reasoning_characters": 8195
+        },
+        {
+          "started_unix": 1790062066.5702121,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 1024,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 130989,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 132013
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1163,
+            "draft_n_accepted": 856,
+            "predicted_ms": 3708.66042,
+            "predicted_n": 1024,
+            "predicted_per_second": 275.8408385095554,
+            "predicted_per_token_ms": 3.6252790029325515,
+            "prompt_ms": 30790.979104000002,
+            "prompt_n": 130989,
+            "prompt_per_second": 4254.135588139951,
+            "prompt_per_token_ms": 0.23506538032964602
+          },
+          "client_seconds": 34.564266324043274,
+          "client_ttft_seconds": 30.855550281936303,
+          "client_first_content_seconds": 30.85555075900629,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "d72e9287a033d6f2b9c89b183ec9ceccd7d09ba85cd88c36a33a687b2803e3c9",
+          "ended_unix": 1790062101.1348925,
+          "name": "coding-nothink-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40728.0,
+          "peak_total_mib": 55673.0,
+          "content_sha256": "a8c73c0942293a36478878b585fcff92419243ffc5def315029dffe6128ff629",
+          "content_characters": 4423,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790061965.7053947,
+        "process_mib": 40728.0,
+        "total_mib": 55673.0,
+        "free_mib": 41608.0,
+        "power_w": 460.38,
+        "limit_w": 450.0,
+        "utilization": 99.0,
+        "temperature_c": 79.0
+      },
+      "memory-summary": {
+        "samples": 258,
+        "monitor_error": null,
+        "peak_process_mib": 40728.0,
+        "peak_total_mib": 55673.0,
+        "minimum_free_mib": 41608.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "vanilla-qwen-workload-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "524288",
+        "--max-concurrency",
+        "8",
+        "--kv-dtype",
+        "k8v4",
+        "--prefill-chunk",
+        "8192",
+        "--spec",
+        "dflash2",
+        "--draft-tokens",
+        "7",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/workloads/coding-selected-260K/requests.jsonl",
+        "--vision"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3514794,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/coding-selected-260K/requests.jsonl",
+          "--vision",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790061965.7056339,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 7,
+          "draft_n_accepted": 1,
+          "predicted_ms": 16.835644000000002,
+          "predicted_n": 3,
+          "predicted_per_second": 118.79557443718814,
+          "predicted_per_token_ms": 8.417822000000001,
+          "prompt_ms": 59.013994,
+          "prompt_n": 26,
+          "prompt_per_second": 440.57346804895127,
+          "prompt_per_token_ms": 2.2697689999999997
+        },
+        "client_seconds": 0.07702142000198364,
+        "client_ttft_seconds": 0.06002377602271736,
+        "client_first_content_seconds": 0.06002424703910947,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790061965.782666
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/coding-selected-260K/requests.jsonl",
+          "--vision"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 23268546705,
+          "device_object_count": 1060,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 23255132000,
+          "load_seconds": 7.773868371,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719715844,
+          "upload_seconds": 3.640316824
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "dflash2",
+          "speculative_draft_window": 7,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 43628691456,
+          "available_after_weights_bytes": 62517739520,
+          "cuda_graph_allowance_bytes": 4026531840,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 1646592,
+          "kv_payload_bytes": 13488881664,
+          "minimum_runtime_reservation_bytes": 16015239937,
+          "planned_slack_bytes": 39758058751,
+          "runtime_reservation_bytes": 22759680769,
+          "sequence": {
+            "capacity_bytes": 17285393152,
+            "peak_used_bytes": 17285393152,
+            "used_bytes": 17285393152
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 23255174144,
+            "peak_used_bytes": 23255174144,
+            "used_bytes": 23255174144
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "vanilla-qwen-workload-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/workloads/coding-selected-260K/requests.jsonl"
+        },
+        "server_instance_id": "serve-3514794-1790061957717019",
+        "timestamp_unix_ms": 1790061965650
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    },
+    "stock": {
+      "requests": [
+        {
+          "started_unix": 1790061201.198414,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "prompt_tokens": 130979,
+            "total_tokens": 133027,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 130979,
+            "prompt_ms": 77611.719,
+            "prompt_per_token_ms": 0.5925508592980554,
+            "prompt_per_second": 1687.618850447057,
+            "predicted_n": 2048,
+            "predicted_ms": 21955.333,
+            "predicted_per_token_ms": 10.725614557889594,
+            "predicted_per_second": 93.23475075508989,
+            "draft_n": 1713,
+            "draft_n_accepted": 1476
+          },
+          "client_seconds": 99.80206411797553,
+          "client_ttft_seconds": 77.84438816399779,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 77.84438925399445,
+          "prompt_sha256": "c3dd3df563799e62681dc09db946601e02979165ede31636be308b9834979978",
+          "ended_unix": 1790061301.0008996,
+          "name": "coding-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45332.0,
+          "peak_total_mib": 60263.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "0c3c89c54bf0fbed2076d116a01289e9663bfcbbaa583f5a4f5a1e3a71ead25a",
+          "reasoning_characters": 8397
+        },
+        {
+          "started_unix": 1790061303.0555186,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "prompt_tokens": 259909,
+            "total_tokens": 261957,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 259909,
+            "prompt_ms": 237296.296,
+            "prompt_per_token_ms": 0.9129976107022073,
+            "prompt_per_second": 1095.2931182710074,
+            "predicted_n": 2048,
+            "predicted_ms": 33050.758,
+            "predicted_per_token_ms": 16.145949193942357,
+            "predicted_per_second": 61.935039432378524,
+            "draft_n": 1776,
+            "draft_n_accepted": 1454
+          },
+          "client_seconds": 272.64077951502986,
+          "client_ttft_seconds": 239.58653751702514,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 239.58653901400976,
+          "prompt_sha256": "5e9c49776842fe3ac037f4b8cf2210581dbe949dad17dabb492c2d9d87cb7184",
+          "ended_unix": 1790061575.697105,
+          "name": "coding-260000",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45332.0,
+          "peak_total_mib": 60263.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "5d4c09f3700cd1a327dcd974beed29644e8bd35664de9827801874ba85195c72",
+          "reasoning_characters": 8288
+        },
+        {
+          "started_unix": 1790061575.6989024,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 1024,
+            "prompt_tokens": 130986,
+            "total_tokens": 132010,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 130986,
+            "prompt_ms": 82703.687,
+            "prompt_per_token_ms": 0.6313933321118288,
+            "prompt_per_second": 1583.7987972652295,
+            "predicted_n": 1024,
+            "predicted_ms": 10481.191,
+            "predicted_per_token_ms": 10.245543499511243,
+            "predicted_per_second": 97.60341167334894,
+            "draft_n": 805,
+            "draft_n_accepted": 754
+          },
+          "client_seconds": 93.43986812396906,
+          "client_ttft_seconds": 82.9562944129575,
+          "client_first_content_seconds": 82.95629485789686,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "d72e9287a033d6f2b9c89b183ec9ceccd7d09ba85cd88c36a33a687b2803e3c9",
+          "ended_unix": 1790061669.139217,
+          "name": "coding-nothink-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45332.0,
+          "peak_total_mib": 60263.0,
+          "content_sha256": "d46cc8d8bb87fb3cd6556b273550c8b076574281e4d2b9adca2d5351966fb613",
+          "content_characters": 4139,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061197.498709,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 42,
+            "prompt_tokens": 27,
+            "total_tokens": 69,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 27,
+            "prompt_ms": 95.488,
+            "prompt_per_token_ms": 3.5365925925925925,
+            "prompt_per_second": 282.7580428954424,
+            "predicted_n": 42,
+            "predicted_ms": 379.652,
+            "predicted_per_token_ms": 9.25980487804878,
+            "predicted_per_second": 107.99363627743303,
+            "draft_n": 54,
+            "draft_n_accepted": 25
+          },
+          "client_seconds": 0.5725475660292432,
+          "client_ttft_seconds": 0.19251679501030594,
+          "client_first_content_seconds": 0.19251717498991638,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "06f4422a24b54cca3d04dfc655c55d96a5af1be466713ccb4e898b4d9bb0b997",
+          "ended_unix": 1790061198.0712786,
+          "name": "voice-0",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45296.0,
+          "peak_total_mib": 60227.0,
+          "content_sha256": "c9b74de8cb92d03cf5d7aa91ce954e9d3af22813ab6544993dbd720b00737287",
+          "content_characters": 241,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061198.0714943,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 25,
+            "prompt_tokens": 33,
+            "total_tokens": 58,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 33,
+            "prompt_ms": 92.025,
+            "prompt_per_token_ms": 2.788636363636364,
+            "prompt_per_second": 358.59820700896495,
+            "predicted_n": 25,
+            "predicted_ms": 310.324,
+            "predicted_per_token_ms": 12.930166666666667,
+            "predicted_per_second": 77.33852360758434,
+            "draft_n": 45,
+            "draft_n_accepted": 10
+          },
+          "client_seconds": 0.5077419889857993,
+          "client_ttft_seconds": 0.19702153000980616,
+          "client_first_content_seconds": 0.19702206295914948,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "40108c18ac8dfa5e9b2e71f249fa96444ad99bb1f8c711c2540c996a557eac67",
+          "ended_unix": 1790061198.579246,
+          "name": "voice-1",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45300.0,
+          "peak_total_mib": 60231.0,
+          "content_sha256": "fabb3cf9263b2d2f2ca20bcba4b718e50ecf13aa535645a414f79b93252b77e1",
+          "content_characters": 104,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061198.5794532,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 57,
+            "prompt_tokens": 31,
+            "total_tokens": 88,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 31,
+            "prompt_ms": 91.626,
+            "prompt_per_token_ms": 2.955677419354839,
+            "prompt_per_second": 338.3319145220789,
+            "predicted_n": 57,
+            "predicted_ms": 485.91,
+            "predicted_per_token_ms": 8.676964285714286,
+            "predicted_per_second": 115.24767961145068,
+            "draft_n": 69,
+            "draft_n_accepted": 34
+          },
+          "client_seconds": 0.6822660760954022,
+          "client_ttft_seconds": 0.19614289607852697,
+          "client_first_content_seconds": 0.19614361005369574,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "4400427c7ced4ccb7cff6bd522c43e66ecb376e7fc805140520e1dc2cdff04cf",
+          "ended_unix": 1790061199.2617273,
+          "name": "voice-2",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45300.0,
+          "peak_total_mib": 60231.0,
+          "content_sha256": "fe1dd24ce2af0b671a4b2326175eda657493182470745e4046896226df2e97dd",
+          "content_characters": 259,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061199.2619166,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 35,
+            "total_tokens": 72,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 35,
+            "prompt_ms": 92.731,
+            "prompt_per_token_ms": 2.6494571428571425,
+            "prompt_per_second": 377.4358089527774,
+            "predicted_n": 37,
+            "predicted_ms": 334.719,
+            "predicted_per_token_ms": 9.29775,
+            "predicted_per_second": 107.55290258395848,
+            "draft_n": 48,
+            "draft_n_accepted": 23
+          },
+          "client_seconds": 0.5307692060014233,
+          "client_ttft_seconds": 0.19583382306154817,
+          "client_first_content_seconds": 0.19583442900329828,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "445e8ed92a2d2d1b1b8f510923f08d381200d28381c75de4b1acacead5cefc71",
+          "ended_unix": 1790061199.7926948,
+          "name": "voice-3",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45300.0,
+          "peak_total_mib": 60231.0,
+          "content_sha256": "e29cd4f2668ec6c133c35b77ab9efc353e18e589ef86aa4aceb1d5e9119e9d7d",
+          "content_characters": 144,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061199.7928803,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 24,
+            "prompt_tokens": 32,
+            "total_tokens": 56,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 32,
+            "prompt_ms": 92.126,
+            "prompt_per_token_ms": 2.8789375,
+            "prompt_per_second": 347.35036797429603,
+            "predicted_n": 24,
+            "predicted_ms": 185.957,
+            "predicted_per_token_ms": 8.085086956521739,
+            "predicted_per_second": 123.68450770877138,
+            "draft_n": 27,
+            "draft_n_accepted": 16
+          },
+          "client_seconds": 0.37984882295131683,
+          "client_ttft_seconds": 0.19355287693906575,
+          "client_first_content_seconds": 0.19355350395198911,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "70df8d48da525eae639a985a782bb2502278c019c4865791fc7404e8669ae00d",
+          "ended_unix": 1790061200.1727405,
+          "name": "voice-4",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 45300.0,
+          "peak_total_mib": 60231.0,
+          "content_sha256": "9ece4dd1a1d5afa50217701fd4e0d0965047e01f1a27233b70ba1535d00f9c34",
+          "content_characters": 111,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790061197.198679,
+        "process_mib": 45286.0,
+        "total_mib": 60217.0,
+        "free_mib": 37064.0,
+        "power_w": 120.98,
+        "limit_w": 450.0,
+        "utilization": 0.0,
+        "temperature_c": 58.0
+      },
+      "memory-summary": {
+        "samples": 857,
+        "monitor_error": null,
+        "peak_process_mib": 45332.0,
+        "peak_total_mib": 60263.0,
+        "minimum_free_mib": 37018.0
+      },
+      "command": [
+        "bash",
+        "/home/francip/src/models.server/run.sh",
+        "qwen-3.8-27b",
+        "--alias",
+        "vanilla-qwen-workload-bench",
+        "--model",
+        "/home/francip/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+        "--mmproj",
+        "/home/francip/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/mmproj-BF16.gguf",
+        "--offline"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3501012,
+        "argv": [
+          "llama-server",
+          "-hf",
+          "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL",
+          "--alias",
+          "qwen-3.8-27b",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--cors-origins",
+          "localhost",
+          "--jinja",
+          "-c",
+          "524288",
+          "-ngl",
+          "99",
+          "--threads",
+          "-1",
+          "--parallel",
+          "8",
+          "--kv-unified",
+          "--no-context-shift",
+          "--temp",
+          "0.6",
+          "--top-k",
+          "20",
+          "--top-p",
+          "0.95",
+          "--repeat-penalty",
+          "1.0",
+          "--n-predict",
+          "-1",
+          "--load-mode",
+          "none",
+          "--flash-attn",
+          "on",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--spec-type",
+          "draft-mtp",
+          "--spec-draft-n-max",
+          "3",
+          "--reasoning-effort",
+          "medium",
+          "--alias",
+          "vanilla-qwen-workload-bench",
+          "--model",
+          "/home/francip/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+          "--mmproj",
+          "/home/francip/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/mmproj-BF16.gguf",
+          "--offline",
+          ""
+        ],
+        "executable": "/home/francip/src/llama.cpp/build/bin/llama-server",
+        "environment": [
+          "GGML_CUDA_DISABLE_GRAPHS=1",
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790061197.1989317,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "prompt_tokens": 26,
+          "total_tokens": 29,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 26,
+          "prompt_ms": 145.886,
+          "prompt_per_token_ms": 5.611,
+          "prompt_per_second": 178.22135091783997,
+          "predicted_n": 3,
+          "predicted_ms": 22.175,
+          "predicted_per_token_ms": 11.0875,
+          "predicted_per_second": 90.19165727170237,
+          "draft_n": 3,
+          "draft_n_accepted": 3
+        },
+        "client_seconds": 0.17238203494343907,
+        "client_ttft_seconds": 0.14984713797457516,
+        "client_first_content_seconds": 0.14984800189267844,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790061197.3713272
+      },
+      "props": {
+        "default_generation_settings": {
+          "params": {
+            "seed": 4294967295,
+            "temperature": 0.6000000238418579,
+            "dynatemp_range": 0.0,
+            "dynatemp_exponent": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071,
+            "min_p": 0.05000000074505806,
+            "top_n_sigma": -1.0,
+            "xtc_probability": 0.0,
+            "xtc_threshold": 0.10000000149011612,
+            "typical_p": 1.0,
+            "repeat_last_n": 64,
+            "repeat_penalty": 1.0,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "dry_multiplier": 0.0,
+            "dry_base": 1.75,
+            "dry_allowed_length": 2,
+            "dry_penalty_last_n": 64,
+            "mirostat": 0,
+            "mirostat_tau": 5.0,
+            "mirostat_eta": 0.10000000149011612,
+            "adaptive_target": -1.0,
+            "adaptive_decay": 0.8999999761581421,
+            "max_tokens": -1,
+            "n_predict": -1,
+            "n_keep": 0,
+            "n_discard": 0,
+            "ignore_eos": false,
+            "stream": false,
+            "n_probs": 0,
+            "min_keep": 0,
+            "chat_format": "Content-only",
+            "reasoning_format": "none",
+            "reasoning_in_content": false,
+            "generation_prompt": "",
+            "samplers": [
+              "penalties",
+              "dry",
+              "top_n_sigma",
+              "top_k",
+              "typ_p",
+              "top_p",
+              "min_p",
+              "xtc",
+              "temperature"
+            ],
+            "speculative.types": "none",
+            "timings_per_token": false,
+            "post_sampling_probs": false,
+            "backend_sampling": false,
+            "lora": []
+          },
+          "n_ctx": 262144
+        },
+        "total_slots": 8,
+        "model_alias": "qwen-3.8-27b",
+        "model_ftype": "Q4_K - Medium",
+        "model_path": "/home/francip/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+        "modalities": {
+          "vision": true,
+          "video": true,
+          "audio": false
+        },
+        "media_marker": "<__media_mXMxQwHTGALGcilqOuo5oHn39yTQhxxX__>",
+        "endpoint_slots": true,
+        "endpoint_props": false,
+        "endpoint_metrics": false,
+        "ui": true,
+        "ui_settings": {},
+        "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text='') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + ('\\n' if sysns.text else '') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = '' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}\n    {%- if resolved_reasoning_effort == 'high' %}\n        {%- set resolved_reasoning_effort = 'xhigh' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}\n        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == 'xhigh' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}\n    {%- elif resolved_reasoning_effort == 'low' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + (reasoning_instructions + '\\n\\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\\n' }}\n    {%- elif reasoning_instructions %}\n        {{- '<|im_start|>system\\n' + reasoning_instructions + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" or message.role == \"developer\" %}\n        {{- raise_exception('System message must be at the beginning.') }}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception('Tool call is missing a function name.') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" must be an object/mapping or a JSON string.') }}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}",
+        "chat_template_caps": {
+          "supports_object_arguments": true,
+          "supports_parallel_tool_calls": true,
+          "supports_preserve_reasoning": true,
+          "supports_reasoning_effort": true,
+          "supports_string_content": true,
+          "supports_system_role": true,
+          "supports_tool_calls": true,
+          "supports_tools": true,
+          "supports_typed_content": true
+        },
+        "bos_token": "<|endoftext|>",
+        "eos_token": "<|im_end|>",
+        "build_info": "b10884-434ddbbc0",
+        "is_sleeping": false,
+        "cors_proxy_enabled": false
+      },
+      "executable_sha256": "772ad7cef9eea4e4c488b92513e08c9d7867dc485425332f952a3bf2a83312ef"
+    },
+    "stock-like-8192": {
+      "requests": [
+        {
+          "started_unix": 1790061743.6011503,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "completion_tokens_details": {
+              "reasoning_tokens": 2048
+            },
+            "prompt_tokens": 130982,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 133030
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1823,
+            "draft_n_accepted": 1439,
+            "predicted_ms": 13855.051548000001,
+            "predicted_n": 2048,
+            "predicted_per_second": 147.74394688524185,
+            "predicted_per_token_ms": 6.768466804103567,
+            "prompt_ms": 32412.251565,
+            "prompt_n": 130982,
+            "prompt_per_second": 4041.12623084289,
+            "prompt_per_token_ms": 0.24745576922783283
+          },
+          "client_seconds": 46.35444095893763,
+          "client_ttft_seconds": 32.49923479394056,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 32.499235133989714,
+          "prompt_sha256": "c3dd3df563799e62681dc09db946601e02979165ede31636be308b9834979978",
+          "ended_unix": 1790061789.9560096,
+          "name": "coding-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42928.0,
+          "peak_total_mib": 57873.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "dc5e85a370f6f6f967789e68164c1e32a04bbbf7a7b8ddfe785f984d3f03ce91",
+          "reasoning_characters": 8393
+        },
+        {
+          "started_unix": 1790061741.8557954,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 42,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 27,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 69
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 54,
+            "draft_n_accepted": 25,
+            "predicted_ms": 321.09310800000003,
+            "predicted_n": 42,
+            "predicted_per_second": 127.68881977996237,
+            "predicted_per_token_ms": 7.831539219512196,
+            "prompt_ms": 59.537146,
+            "prompt_n": 27,
+            "prompt_per_second": 453.4983924153838,
+            "prompt_per_token_ms": 2.2050794814814814
+          },
+          "client_seconds": 0.3818239530082792,
+          "client_ttft_seconds": 0.06047573103569448,
+          "client_first_content_seconds": 0.060476034064777195,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "06f4422a24b54cca3d04dfc655c55d96a5af1be466713ccb4e898b4d9bb0b997",
+          "ended_unix": 1790061742.2376318,
+          "name": "voice-0",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "c9b74de8cb92d03cf5d7aa91ce954e9d3af22813ab6544993dbd720b00737287",
+          "content_characters": 241,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061742.2378814,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 23,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 33,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 56
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 33,
+            "draft_n_accepted": 12,
+            "predicted_ms": 200.039253,
+            "predicted_n": 23,
+            "predicted_per_second": 109.97841508636307,
+            "predicted_per_token_ms": 9.092693318181817,
+            "prompt_ms": 63.303593000000006,
+            "prompt_n": 33,
+            "prompt_per_second": 521.2974246185362,
+            "prompt_per_token_ms": 1.9182906969696971
+          },
+          "client_seconds": 0.26464863307774067,
+          "client_ttft_seconds": 0.06444394402205944,
+          "client_first_content_seconds": 0.06444443902000785,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "40108c18ac8dfa5e9b2e71f249fa96444ad99bb1f8c711c2540c996a557eac67",
+          "ended_unix": 1790061742.5025434,
+          "name": "voice-1",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42928.0,
+          "peak_total_mib": 57873.0,
+          "content_sha256": "ec429ee65f30f6949d4b95e7ca1c4166eba244729f652f73437a401f97c986c1",
+          "content_characters": 95,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061742.5028198,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 60,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 31,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 91
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 63,
+            "draft_n_accepted": 38,
+            "predicted_ms": 383.24051,
+            "predicted_n": 60,
+            "predicted_per_second": 153.9503222141104,
+            "predicted_per_token_ms": 6.495601864406779,
+            "prompt_ms": 63.154050000000005,
+            "prompt_n": 31,
+            "prompt_per_second": 490.863214631524,
+            "prompt_per_token_ms": 2.037227419354839
+          },
+          "client_seconds": 0.4476086230715737,
+          "client_ttft_seconds": 0.06417734001297504,
+          "client_first_content_seconds": 0.06417786900419742,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "4400427c7ced4ccb7cff6bd522c43e66ecb376e7fc805140520e1dc2cdff04cf",
+          "ended_unix": 1790061742.9504395,
+          "name": "voice-2",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42928.0,
+          "peak_total_mib": 57873.0,
+          "content_sha256": "68b79114bafe3dc9561f7f0a742eb7f25193861d78ea9e9366c4d309434cc1d5",
+          "content_characters": 264,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061742.9506488,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 37,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 35,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 72
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 48,
+            "draft_n_accepted": 22,
+            "predicted_ms": 291.98375799999997,
+            "predicted_n": 37,
+            "predicted_per_second": 123.29452927994716,
+            "predicted_per_token_ms": 8.110659944444443,
+            "prompt_ms": 62.941089000000005,
+            "prompt_n": 35,
+            "prompt_per_second": 556.0755391442306,
+            "prompt_per_token_ms": 1.7983168285714288
+          },
+          "client_seconds": 0.3559491019695997,
+          "client_ttft_seconds": 0.06382100994233042,
+          "client_first_content_seconds": 0.06382124603260309,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "445e8ed92a2d2d1b1b8f510923f08d381200d28381c75de4b1acacead5cefc71",
+          "ended_unix": 1790061743.3066077,
+          "name": "voice-3",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "e9002ee2711ecce5122aff42be29b22e92ed8a2ba652b99b1f1e49c8e862eb57",
+          "content_characters": 144,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061743.3067746,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 24,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 56
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 36,
+            "draft_n_accepted": 13,
+            "predicted_ms": 215.700311,
+            "predicted_n": 24,
+            "predicted_per_second": 106.62942437760324,
+            "predicted_per_token_ms": 9.378274391304348,
+            "prompt_ms": 75.878298,
+            "prompt_n": 32,
+            "prompt_per_second": 421.7279623219804,
+            "prompt_per_token_ms": 2.3711968125
+          },
+          "client_seconds": 0.29259208601433784,
+          "client_ttft_seconds": 0.07673257798887789,
+          "client_first_content_seconds": 0.0767329860245809,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "70df8d48da525eae639a985a782bb2502278c019c4865791fc7404e8669ae00d",
+          "ended_unix": 1790061743.5993764,
+          "name": "voice-4",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42928.0,
+          "peak_total_mib": 57873.0,
+          "content_sha256": "316e9085820ed07fd4efb6b0d09ca66e90d6fd8ba9e023440230ff8daca80eba",
+          "content_characters": 109,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790061741.7789645,
+        "process_mib": 42928.0,
+        "total_mib": 57873.0,
+        "free_mib": 39408.0,
+        "power_w": 245.62,
+        "limit_w": 450.0,
+        "utilization": 16.0,
+        "temperature_c": 62.0
+      },
+      "memory-summary": {
+        "samples": 100,
+        "monitor_error": null,
+        "peak_process_mib": 42928.0,
+        "peak_total_mib": 57873.0,
+        "minimum_free_mib": 39408.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "vanilla-qwen-workload-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "524288",
+        "--max-concurrency",
+        "8",
+        "--kv-dtype",
+        "int8",
+        "--prefill-chunk",
+        "8192",
+        "--spec",
+        "mtp",
+        "--draft-tokens",
+        "3",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/workloads/stock-like-8192/requests.jsonl",
+        "--vision"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3509292,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "int8",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "3",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/stock-like-8192/requests.jsonl",
+          "--vision",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790061741.7791991,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 3,
+          "draft_n_accepted": 3,
+          "predicted_ms": 15.800078,
+          "predicted_n": 3,
+          "predicted_per_second": 126.5816535842418,
+          "predicted_per_token_ms": 7.900039,
+          "prompt_ms": 59.449073999999996,
+          "prompt_n": 26,
+          "prompt_per_second": 437.3491166573932,
+          "prompt_per_token_ms": 2.286502846153846
+        },
+        "client_seconds": 0.07641969504766166,
+        "client_ttft_seconds": 0.06042524101212621,
+        "client_first_content_seconds": 0.06042550806887448,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790061741.8556292
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "int8",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "3",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/stock-like-8192/requests.jsonl",
+          "--vision"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 21493024913,
+          "device_object_count": 1006,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 21479606624,
+          "load_seconds": 6.736642209,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719715844,
+          "upload_seconds": 3.335601817
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "int8-group64",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "mtp",
+          "speculative_draft_window": 3,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 41323921408,
+          "available_after_weights_bytes": 64291930112,
+          "cuda_graph_allowance_bytes": 687865856,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 2297856,
+          "kv_payload_bytes": 18825117696,
+          "minimum_runtime_reservation_bytes": 14182570497,
+          "planned_slack_bytes": 40697341439,
+          "runtime_reservation_bytes": 23594588673,
+          "sequence": {
+            "capacity_bytes": 21458967040,
+            "peak_used_bytes": 21458967040,
+            "used_bytes": 21458967040
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 21479648768,
+            "peak_used_bytes": 21479648768,
+            "used_bytes": 21479648768
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "vanilla-qwen-workload-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/workloads/stock-like-8192/requests.jsonl"
+        },
+        "server_instance_id": "serve-3509292-1790061734737949",
+        "timestamp_unix_ms": 1790061741683
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    },
+    "tuned-dflash2": {
+      "requests": [
+        {
+          "started_unix": 1790061914.849263,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "completion_tokens_details": {
+              "reasoning_tokens": 2048
+            },
+            "prompt_tokens": 130982,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 133030
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 2822,
+            "draft_n_accepted": 1642,
+            "predicted_ms": 8885.474871,
+            "predicted_n": 2048,
+            "predicted_per_second": 230.375982118964,
+            "predicted_per_token_ms": 4.3407302740596,
+            "prompt_ms": 30111.312579,
+            "prompt_n": 130982,
+            "prompt_per_second": 4349.926615000784,
+            "prompt_per_token_ms": 0.22988893572399263
+          },
+          "client_seconds": 39.08425410906784,
+          "client_ttft_seconds": 30.198624322074465,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 30.198624868993647,
+          "prompt_sha256": "c3dd3df563799e62681dc09db946601e02979165ede31636be308b9834979978",
+          "ended_unix": 1790061953.9339848,
+          "name": "coding-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40730.0,
+          "peak_total_mib": 55675.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "779bb6d0bcea0c5f77f98b55b39ae6a8feadb1f59216fe9d49c694754873c19a",
+          "reasoning_characters": 8483
+        },
+        {
+          "started_unix": 1790061913.1104014,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 36,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 27,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 63
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 105,
+            "draft_n_accepted": 21,
+            "predicted_ms": 270.105515,
+            "predicted_n": 36,
+            "predicted_per_second": 129.5789906400097,
+            "predicted_per_token_ms": 7.71730042857143,
+            "prompt_ms": 60.529367,
+            "prompt_n": 27,
+            "prompt_per_second": 446.06446982999176,
+            "prompt_per_token_ms": 2.2418284074074073
+          },
+          "client_seconds": 0.331964174984023,
+          "client_ttft_seconds": 0.061660066014155746,
+          "client_first_content_seconds": 0.06166060792747885,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "06f4422a24b54cca3d04dfc655c55d96a5af1be466713ccb4e898b4d9bb0b997",
+          "ended_unix": 1790061913.4423795,
+          "name": "voice-0",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "ef2255dc27f06f4611ce998c81822def084a2573b36836b96288af4d20c1d9e2",
+          "content_characters": 202,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061913.442639,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 28,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 33,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 61
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 84,
+            "draft_n_accepted": 16,
+            "predicted_ms": 218.604507,
+            "predicted_n": 28,
+            "predicted_per_second": 123.51071974925017,
+            "predicted_per_token_ms": 8.096463222222223,
+            "prompt_ms": 64.222476,
+            "prompt_n": 33,
+            "prompt_per_second": 513.838799986472,
+            "prompt_per_token_ms": 1.9461356363636364
+          },
+          "client_seconds": 0.28402986004948616,
+          "client_ttft_seconds": 0.06519910204224288,
+          "client_first_content_seconds": 0.06519926700275391,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "40108c18ac8dfa5e9b2e71f249fa96444ad99bb1f8c711c2540c996a557eac67",
+          "ended_unix": 1790061913.7266786,
+          "name": "voice-1",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40728.0,
+          "peak_total_mib": 55673.0,
+          "content_sha256": "28b7e93fba70d934328c2e7312706111465c4985f6a0b24d12f223b60a4cb886",
+          "content_characters": 123,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061913.7268944,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 61,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 31,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 92
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 147,
+            "draft_n_accepted": 40,
+            "predicted_ms": 383.888198,
+            "predicted_n": 61,
+            "predicted_per_second": 156.29550559926304,
+            "predicted_per_token_ms": 6.398136633333333,
+            "prompt_ms": 64.063068,
+            "prompt_n": 31,
+            "prompt_per_second": 483.8981486181711,
+            "prompt_per_token_ms": 2.066550580645161
+          },
+          "client_seconds": 0.44918383297044784,
+          "client_ttft_seconds": 0.06512082403060049,
+          "client_first_content_seconds": 0.06512147805187851,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "4400427c7ced4ccb7cff6bd522c43e66ecb376e7fc805140520e1dc2cdff04cf",
+          "ended_unix": 1790061914.176088,
+          "name": "voice-2",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40728.0,
+          "peak_total_mib": 55673.0,
+          "content_sha256": "32b1b5cd612c60c573466112572aacd89fa486ea5f2527635304bfff7e6c1c3f",
+          "content_characters": 269,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061914.176269,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 37,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 35,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 72
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 126,
+            "draft_n_accepted": 19,
+            "predicted_ms": 328.631543,
+            "predicted_n": 37,
+            "predicted_per_second": 109.5451753394226,
+            "predicted_per_token_ms": 9.128653972222223,
+            "prompt_ms": 63.65837500000001,
+            "prompt_n": 35,
+            "prompt_per_second": 549.8098247088462,
+            "prompt_per_token_ms": 1.8188107142857144
+          },
+          "client_seconds": 0.39366681897081435,
+          "client_ttft_seconds": 0.06474816100671887,
+          "client_first_content_seconds": 0.06474859290756285,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "445e8ed92a2d2d1b1b8f510923f08d381200d28381c75de4b1acacead5cefc71",
+          "ended_unix": 1790061914.5699487,
+          "name": "voice-3",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "7f6cae5e2688349034aeaee85194036758e1857a3cda07bd51a65a3242aa5c14",
+          "content_characters": 147,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061914.5702531,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 23,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 55
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 77,
+            "draft_n_accepted": 12,
+            "predicted_ms": 198.05941199999998,
+            "predicted_n": 23,
+            "predicted_per_second": 111.07778104481095,
+            "predicted_per_token_ms": 9.002700545454545,
+            "prompt_ms": 77.593335,
+            "prompt_n": 32,
+            "prompt_per_second": 412.4065552795224,
+            "prompt_per_token_ms": 2.42479171875
+          },
+          "client_seconds": 0.2770079009933397,
+          "client_ttft_seconds": 0.07866907492280006,
+          "client_first_content_seconds": 0.07866967597510666,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "70df8d48da525eae639a985a782bb2502278c019c4865791fc7404e8669ae00d",
+          "ended_unix": 1790061914.8472753,
+          "name": "voice-4",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 40728.0,
+          "peak_total_mib": 55673.0,
+          "content_sha256": "570be263979d6472703c4b61b2e6ad91f71cd12627732cc7666d12296e9c92fc",
+          "content_characters": 102,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790061913.0328455,
+        "process_mib": 40728.0,
+        "total_mib": 55673.0,
+        "free_mib": 41608.0,
+        "power_w": 464.88,
+        "limit_w": 450.0,
+        "utilization": 99.0,
+        "temperature_c": 79.0
+      },
+      "memory-summary": {
+        "samples": 93,
+        "monitor_error": null,
+        "peak_process_mib": 40730.0,
+        "peak_total_mib": 55675.0,
+        "minimum_free_mib": 41606.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "vanilla-qwen-workload-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "524288",
+        "--max-concurrency",
+        "8",
+        "--kv-dtype",
+        "k8v4",
+        "--prefill-chunk",
+        "8192",
+        "--spec",
+        "dflash2",
+        "--draft-tokens",
+        "7",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-dflash2/requests.jsonl",
+        "--vision"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3514190,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-dflash2/requests.jsonl",
+          "--vision",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790061913.0331023,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 7,
+          "draft_n_accepted": 1,
+          "predicted_ms": 16.836337,
+          "predicted_n": 3,
+          "predicted_per_second": 118.79068469584566,
+          "predicted_per_token_ms": 8.4181685,
+          "prompt_ms": 59.027084,
+          "prompt_n": 26,
+          "prompt_per_second": 440.47576532833637,
+          "prompt_per_token_ms": 2.2702724615384615
+        },
+        "client_seconds": 0.07709117897320539,
+        "client_ttft_seconds": 0.06014108192175627,
+        "client_first_content_seconds": 0.06014150695409626,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790061913.110205
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "dflash2",
+          "--draft-tokens",
+          "7",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-dflash2/requests.jsonl",
+          "--vision"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 23268546705,
+          "device_object_count": 1060,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 23255132000,
+          "load_seconds": 10.080000587,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719715844,
+          "upload_seconds": 5.876587855
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "dflash2",
+          "speculative_draft_window": 7,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 43628691456,
+          "available_after_weights_bytes": 62517739520,
+          "cuda_graph_allowance_bytes": 4026531840,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 1646592,
+          "kv_payload_bytes": 13488881664,
+          "minimum_runtime_reservation_bytes": 16015239937,
+          "planned_slack_bytes": 39758058751,
+          "runtime_reservation_bytes": 22759680769,
+          "sequence": {
+            "capacity_bytes": 17285393152,
+            "peak_used_bytes": 17285393152,
+            "used_bytes": 17285393152
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 23255174144,
+            "peak_used_bytes": 23255174144,
+            "used_bytes": 23255174144
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "vanilla-qwen-workload-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-dflash2/requests.jsonl"
+        },
+        "server_instance_id": "serve-3514190-1790061902741441",
+        "timestamp_unix_ms": 1790061912980
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    },
+    "tuned-k8v4-mtp3": {
+      "requests": [
+        {
+          "started_unix": 1790061802.7373006,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "completion_tokens_details": {
+              "reasoning_tokens": 2048
+            },
+            "prompt_tokens": 130982,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 133030
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1787,
+            "draft_n_accepted": 1451,
+            "predicted_ms": 13344.051133,
+            "predicted_n": 2048,
+            "predicted_per_second": 153.40169035606766,
+            "predicted_per_token_ms": 6.5188329912066445,
+            "prompt_ms": 29870.818333,
+            "prompt_n": 130982,
+            "prompt_per_second": 4384.948498558431,
+            "prompt_per_token_ms": 0.22805284949840435
+          },
+          "client_seconds": 43.30421942798421,
+          "client_ttft_seconds": 29.9600993799977,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 29.960100330063142,
+          "prompt_sha256": "c3dd3df563799e62681dc09db946601e02979165ede31636be308b9834979978",
+          "ended_unix": 1790061846.041906,
+          "name": "coding-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38624.0,
+          "peak_total_mib": 53569.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "fe08914ba64ee065faba037b4ae909525e0b5185127e7de5ed693447ede7214d",
+          "reasoning_characters": 8385
+        },
+        {
+          "started_unix": 1790061800.8636796,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 43,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 27,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 70
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 60,
+            "draft_n_accepted": 25,
+            "predicted_ms": 365.725195,
+            "predicted_n": 43,
+            "predicted_per_second": 114.84032430415411,
+            "predicted_per_token_ms": 8.707742738095238,
+            "prompt_ms": 60.146326,
+            "prompt_n": 27,
+            "prompt_per_second": 448.90522490101887,
+            "prompt_per_token_ms": 2.227641703703704
+          },
+          "client_seconds": 0.427016700967215,
+          "client_ttft_seconds": 0.06116374093107879,
+          "client_first_content_seconds": 0.06116407399531454,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "06f4422a24b54cca3d04dfc655c55d96a5af1be466713ccb4e898b4d9bb0b997",
+          "ended_unix": 1790061801.2907078,
+          "name": "voice-0",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38624.0,
+          "peak_total_mib": 53569.0,
+          "content_sha256": "2366ade95bbe17a1b8ccc4a4e13445bf0015af56941a3e747795c554adecd828",
+          "content_characters": 239,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061801.2909186,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 36,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 33,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 69
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 42,
+            "draft_n_accepted": 23,
+            "predicted_ms": 260.47027699999995,
+            "predicted_n": 36,
+            "predicted_per_second": 134.37233761608817,
+            "predicted_per_token_ms": 7.442007914285713,
+            "prompt_ms": 64.535745,
+            "prompt_n": 33,
+            "prompt_per_second": 511.3445269749345,
+            "prompt_per_token_ms": 1.9556286363636366
+          },
+          "client_seconds": 0.32635930099058896,
+          "client_ttft_seconds": 0.0656188300345093,
+          "client_first_content_seconds": 0.06561908195726573,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "40108c18ac8dfa5e9b2e71f249fa96444ad99bb1f8c711c2540c996a557eac67",
+          "ended_unix": 1790061801.617288,
+          "name": "voice-1",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "e6abe0229d1311038ce44187b1fcf4bac7e55111a22bbc18a415128bc21f295a",
+          "content_characters": 160,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061801.6174664,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 60,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 31,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 91
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 63,
+            "draft_n_accepted": 38,
+            "predicted_ms": 391.72428399999995,
+            "predicted_n": 60,
+            "predicted_per_second": 150.61614102024885,
+            "predicted_per_token_ms": 6.639394644067796,
+            "prompt_ms": 64.250906,
+            "prompt_n": 31,
+            "prompt_per_second": 482.48346879342057,
+            "prompt_per_token_ms": 2.072609870967742
+          },
+          "client_seconds": 0.45715348795056343,
+          "client_ttft_seconds": 0.06518267595674843,
+          "client_first_content_seconds": 0.06518325896468014,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "4400427c7ced4ccb7cff6bd522c43e66ecb376e7fc805140520e1dc2cdff04cf",
+          "ended_unix": 1790061802.0746322,
+          "name": "voice-2",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38624.0,
+          "peak_total_mib": 53569.0,
+          "content_sha256": "c3db96dc121be6486d979df511f2b0dfd5c69a6cdc2f74dada9424cf74f808b4",
+          "content_characters": 264,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061802.0749025,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 37,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 35,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 72
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 48,
+            "draft_n_accepted": 23,
+            "predicted_ms": 298.50441900000004,
+            "predicted_n": 37,
+            "predicted_per_second": 120.60122969234835,
+            "predicted_per_token_ms": 8.291789416666667,
+            "prompt_ms": 63.85611600000001,
+            "prompt_n": 35,
+            "prompt_per_second": 548.1072478633056,
+            "prompt_per_token_ms": 1.8244604571428573
+          },
+          "client_seconds": 0.3635749939130619,
+          "client_ttft_seconds": 0.06496088893618435,
+          "client_first_content_seconds": 0.06496164901182055,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "445e8ed92a2d2d1b1b8f510923f08d381200d28381c75de4b1acacead5cefc71",
+          "ended_unix": 1790061802.4384894,
+          "name": "voice-3",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38624.0,
+          "peak_total_mib": 53569.0,
+          "content_sha256": "e29cd4f2668ec6c133c35b77ab9efc353e18e589ef86aa4aceb1d5e9119e9d7d",
+          "content_characters": 144,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061802.4386992,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 24,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 56
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 36,
+            "draft_n_accepted": 13,
+            "predicted_ms": 220.766864,
+            "predicted_n": 24,
+            "predicted_per_second": 104.18230156134301,
+            "predicted_per_token_ms": 9.598559304347827,
+            "prompt_ms": 74.855242,
+            "prompt_n": 32,
+            "prompt_per_second": 427.4917713845611,
+            "prompt_per_token_ms": 2.3392263125
+          },
+          "client_seconds": 0.2967246180633083,
+          "client_ttft_seconds": 0.07574397698044777,
+          "client_first_content_seconds": 0.07574427500367165,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "70df8d48da525eae639a985a782bb2502278c019c4865791fc7404e8669ae00d",
+          "ended_unix": 1790061802.7354329,
+          "name": "voice-4",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "316e9085820ed07fd4efb6b0d09ca66e90d6fd8ba9e023440230ff8daca80eba",
+          "content_characters": 109,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790061800.7869322,
+        "process_mib": 38624.0,
+        "total_mib": 53569.0,
+        "free_mib": 43712.0,
+        "power_w": 222.82,
+        "limit_w": 450.0,
+        "utilization": 93.0,
+        "temperature_c": 76.0
+      },
+      "memory-summary": {
+        "samples": 95,
+        "monitor_error": null,
+        "peak_process_mib": 38624.0,
+        "peak_total_mib": 53569.0,
+        "minimum_free_mib": 43712.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "vanilla-qwen-workload-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "524288",
+        "--max-concurrency",
+        "8",
+        "--kv-dtype",
+        "k8v4",
+        "--prefill-chunk",
+        "8192",
+        "--spec",
+        "mtp",
+        "--draft-tokens",
+        "3",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-k8v4-mtp3/requests.jsonl",
+        "--vision"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3510989,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "3",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-k8v4-mtp3/requests.jsonl",
+          "--vision",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790061800.787163,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 3,
+          "draft_n_accepted": 3,
+          "predicted_ms": 15.813388000000002,
+          "predicted_n": 3,
+          "predicted_per_second": 126.47511083646337,
+          "predicted_per_token_ms": 7.906694000000001,
+          "prompt_ms": 59.333031,
+          "prompt_n": 26,
+          "prompt_per_second": 438.20448006440125,
+          "prompt_per_token_ms": 2.282039653846154
+        },
+        "client_seconds": 0.07631991803646088,
+        "client_ttft_seconds": 0.06032104406040162,
+        "client_first_content_seconds": 0.06032151204999536,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790061800.8634944
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "3",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-k8v4-mtp3/requests.jsonl",
+          "--vision"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 21493024913,
+          "device_object_count": 1006,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 21479606624,
+          "load_seconds": 6.405275227,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719715844,
+          "upload_seconds": 3.337994414
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "mtp",
+          "speculative_draft_window": 3,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 45836992512,
+          "available_after_weights_bytes": 64291930112,
+          "cuda_graph_allowance_bytes": 687865856,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 1749504,
+          "kv_payload_bytes": 14332760064,
+          "minimum_runtime_reservation_bytes": 11936262657,
+          "planned_slack_bytes": 45189699071,
+          "runtime_reservation_bytes": 19102231041,
+          "sequence": {
+            "capacity_bytes": 16966609408,
+            "peak_used_bytes": 16966609408,
+            "used_bytes": 16966609408
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 21479648768,
+            "peak_used_bytes": 21479648768,
+            "used_bytes": 21479648768
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "vanilla-qwen-workload-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-k8v4-mtp3/requests.jsonl"
+        },
+        "server_instance_id": "serve-3510989-1790061793738615",
+        "timestamp_unix_ms": 1790061800317
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    },
+    "tuned-mtp": {
+      "requests": [
+        {
+          "started_unix": 1790061858.6911848,
+          "thinking": true,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 2048,
+            "completion_tokens_details": {
+              "reasoning_tokens": 2048
+            },
+            "prompt_tokens": 130982,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 133030
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 3343,
+            "draft_n_accepted": 1712,
+            "predicted_ms": 10135.183091,
+            "predicted_n": 2048,
+            "predicted_per_second": 201.96971101762605,
+            "predicted_per_token_ms": 4.951237465070836,
+            "prompt_ms": 30085.050464,
+            "prompt_n": 130982,
+            "prompt_per_second": 4353.723792377681,
+            "prompt_per_token_ms": 0.22968843401383396
+          },
+          "client_seconds": 40.31209078000393,
+          "client_ttft_seconds": 30.177031824016012,
+          "client_first_content_seconds": null,
+          "client_first_reasoning_seconds": 30.177032559993677,
+          "prompt_sha256": "c3dd3df563799e62681dc09db946601e02979165ede31636be308b9834979978",
+          "ended_unix": 1790061899.0036638,
+          "name": "coding-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38772.0,
+          "peak_total_mib": 53717.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "65d9659707ea9b05310f0937b3322638b9df7f0c8d2b59a2747bfafd1d6180f2",
+          "reasoning_characters": 8383
+        },
+        {
+          "started_unix": 1790061856.9031682,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 38,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 27,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 65
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 150,
+            "draft_n_accepted": 26,
+            "predicted_ms": 327.219118,
+            "predicted_n": 38,
+            "predicted_per_second": 113.07407778050427,
+            "predicted_per_token_ms": 8.843759945945946,
+            "prompt_ms": 64.185886,
+            "prompt_n": 27,
+            "prompt_per_second": 420.6532258509293,
+            "prompt_per_token_ms": 2.377255037037037
+          },
+          "client_seconds": 0.39266662299633026,
+          "client_ttft_seconds": 0.06526007200591266,
+          "client_first_content_seconds": 0.0652605420909822,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "06f4422a24b54cca3d04dfc655c55d96a5af1be466713ccb4e898b4d9bb0b997",
+          "ended_unix": 1790061857.2958481,
+          "name": "voice-0",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38770.0,
+          "peak_total_mib": 53715.0,
+          "content_sha256": "15cb124d7e77c6141e6c9df6bb5f9ed5de0fc969b6413f84c32754a35ad65666",
+          "content_characters": 222,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061857.2961636,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 28,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 33,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 61
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 90,
+            "draft_n_accepted": 18,
+            "predicted_ms": 198.281654,
+            "predicted_n": 28,
+            "predicted_per_second": 136.16993531837292,
+            "predicted_per_token_ms": 7.343764962962963,
+            "prompt_ms": 68.564845,
+            "prompt_n": 33,
+            "prompt_per_second": 481.2962094496093,
+            "prompt_per_token_ms": 2.077722575757576
+          },
+          "client_seconds": 0.26816186599899083,
+          "client_ttft_seconds": 0.06967350002378225,
+          "client_first_content_seconds": 0.06967390794306993,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "40108c18ac8dfa5e9b2e71f249fa96444ad99bb1f8c711c2540c996a557eac67",
+          "ended_unix": 1790061857.5643377,
+          "name": "voice-1",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "28b7e93fba70d934328c2e7312706111465c4985f6a0b24d12f223b60a4cb886",
+          "content_characters": 123,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061857.5645952,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 55,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 31,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 86
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 170,
+            "draft_n_accepted": 41,
+            "predicted_ms": 375.50427199999996,
+            "predicted_n": 55,
+            "predicted_per_second": 143.80661959552887,
+            "predicted_per_token_ms": 6.953782814814814,
+            "prompt_ms": 68.290641,
+            "prompt_n": 31,
+            "prompt_per_second": 453.94214413655897,
+            "prompt_per_token_ms": 2.2029239032258063
+          },
+          "client_seconds": 0.4451299529755488,
+          "client_ttft_seconds": 0.06944660400040448,
+          "client_first_content_seconds": 0.06944735592696816,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "4400427c7ced4ccb7cff6bd522c43e66ecb376e7fc805140520e1dc2cdff04cf",
+          "ended_unix": 1790061858.0097382,
+          "name": "voice-2",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38770.0,
+          "peak_total_mib": 53715.0,
+          "content_sha256": "72d3b4ac4bc768e05778d23a9d76aeac775ad6a048b58c02529993ba7dcfc63c",
+          "content_characters": 240,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061858.0100167,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 36,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 35,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 71
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 150,
+            "draft_n_accepted": 24,
+            "predicted_ms": 331.292733,
+            "predicted_n": 36,
+            "predicted_per_second": 105.64674836981709,
+            "predicted_per_token_ms": 9.465506657142857,
+            "prompt_ms": 67.997983,
+            "prompt_n": 35,
+            "prompt_per_second": 514.7211498905783,
+            "prompt_per_token_ms": 1.9427995142857144
+          },
+          "client_seconds": 0.40082933800294995,
+          "client_ttft_seconds": 0.06933056295383722,
+          "client_first_content_seconds": 0.06933109101373702,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "445e8ed92a2d2d1b1b8f510923f08d381200d28381c75de4b1acacead5cefc71",
+          "ended_unix": 1790061858.4108593,
+          "name": "voice-3",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 38770.0,
+          "peak_total_mib": 53715.0,
+          "content_sha256": "088e5e8d8f3684037502f41ce7d96ae65c9b278101935aa268dc2e0ec3467d60",
+          "content_characters": 137,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790061858.4111228,
+          "thinking": false,
+          "sampling_overrides": {
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "top_p": 0.95,
+            "top_k": 20
+          },
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 23,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 55
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 90,
+            "draft_n_accepted": 17,
+            "predicted_ms": 197.34189999999998,
+            "predicted_n": 23,
+            "predicted_per_second": 111.48164682715633,
+            "predicted_per_token_ms": 8.970086363636362,
+            "prompt_ms": 79.181816,
+            "prompt_n": 32,
+            "prompt_per_second": 404.1331913882854,
+            "prompt_per_token_ms": 2.47443175
+          },
+          "client_seconds": 0.27784572704695165,
+          "client_ttft_seconds": 0.08029974100645632,
+          "client_first_content_seconds": 0.08030024997424334,
+          "client_first_reasoning_seconds": null,
+          "prompt_sha256": "70df8d48da525eae639a985a782bb2502278c019c4865791fc7404e8669ae00d",
+          "ended_unix": 1790061858.6889813,
+          "name": "voice-4",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 0,
+          "peak_total_mib": 0,
+          "content_sha256": "efd48023a30d2a0ef8b4b14eeed8d80dd76f8849634853546ece79addf7d5a12",
+          "content_characters": 99,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790061856.8172169,
+        "process_mib": 38770.0,
+        "total_mib": 53715.0,
+        "free_mib": 43566.0,
+        "power_w": 259.48,
+        "limit_w": 450.0,
+        "utilization": 95.0,
+        "temperature_c": 79.0
+      },
+      "memory-summary": {
+        "samples": 90,
+        "monitor_error": null,
+        "peak_process_mib": 38772.0,
+        "peak_total_mib": 53717.0,
+        "minimum_free_mib": 43564.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "vanilla-qwen-workload-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "524288",
+        "--max-concurrency",
+        "8",
+        "--kv-dtype",
+        "k8v4",
+        "--prefill-chunk",
+        "8192",
+        "--spec",
+        "mtp",
+        "--draft-tokens",
+        "10",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-mtp/requests.jsonl",
+        "--vision"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3512649,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "10",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-mtp/requests.jsonl",
+          "--vision",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790061856.8174477,
+        "thinking": false,
+        "sampling_overrides": {
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 10,
+          "draft_n_accepted": 5,
+          "predicted_ms": 20.941575,
+          "predicted_n": 3,
+          "predicted_per_second": 95.50380045435934,
+          "predicted_per_token_ms": 10.4707875,
+          "prompt_ms": 63.237151000000004,
+          "prompt_n": 26,
+          "prompt_per_second": 411.1507174002826,
+          "prompt_per_token_ms": 2.4321981153846157
+        },
+        "client_seconds": 0.08539768191985786,
+        "client_ttft_seconds": 0.06427794799674302,
+        "client_first_content_seconds": 0.06427840900141746,
+        "client_first_reasoning_seconds": null,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790061856.9028566
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "vanilla-qwen-workload-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "8192",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "10",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-mtp/requests.jsonl",
+          "--vision"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 21493024913,
+          "device_object_count": 1006,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 21479606624,
+          "load_seconds": 6.487916158,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Qwen3.8-27B-nvfp4-NInfer/qwen3_8_27b_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 23719715844,
+          "upload_seconds": 3.390937471
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 8192,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "mtp",
+          "speculative_draft_window": 10,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 45681803264,
+          "available_after_weights_bytes": 64291930112,
+          "cuda_graph_allowance_bytes": 2063597568,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 1749504,
+          "kv_payload_bytes": 14332760064,
+          "minimum_runtime_reservation_bytes": 13441077505,
+          "planned_slack_bytes": 43684884223,
+          "runtime_reservation_bytes": 20607045889,
+          "sequence": {
+            "capacity_bytes": 17095692544,
+            "peak_used_bytes": 17095692544,
+            "used_bytes": 17095692544
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 1447755777,
+            "general_capacity_bytes": 1279983616,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 1279983616,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 21479648768,
+            "peak_used_bytes": 21479648768,
+            "used_bytes": 21479648768
+          },
+          "workspace": {
+            "capacity_bytes": 1447755777,
+            "peak_used_bytes": 1279983616,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "vanilla-qwen-workload-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/workloads/tuned-mtp/requests.jsonl"
+        },
+        "server_instance_id": "serve-3512649-1790061849773647",
+        "timestamp_unix_ms": 1790061856444
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    }
+  },
+  "errors": {},
+  "selection": {
+    "coding_selected": "tuned-dflash2",
+    "criterion": "minimum 131K cold prefill; fastest code decode among profiles within 5%",
+    "voice_median_ttft_seconds": {
+      "stock-like-8192": 0.06417734001297504,
+      "tuned-k8v4-mtp3": 0.06518267595674843,
+      "tuned-mtp": 0.06944660400040448,
+      "tuned-dflash2": 0.06512082403060049
+    }
+  }
+}
