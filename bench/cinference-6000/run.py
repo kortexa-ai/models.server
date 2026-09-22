@@ -243,11 +243,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--profiles', nargs='+', default=['stock', 'published', 'stock-like'])
     parser.add_argument('--output', default='bench-results/cinference-27')
+    parser.add_argument('--vanilla-tune', action='store_true')
     args = parser.parse_args()
     if socket.gethostname() != 'smarty' or os.environ.get('CUDA_VISIBLE_DEVICES') != GPU:
         raise RuntimeError('Must run through run-block.sh on the pinned Smarty 6000')
     if gpu_snapshot(-1)['free_mib'] < 80 * 1024:
         raise RuntimeError('Need 80 GiB free before the benchmark block')
+    if args.vanilla_tune:
+        import tune_vanilla
+        tune_vanilla.main(ROOT / args.output)
+        return
     output = ROOT / args.output
     output.mkdir(parents=True, exist_ok=True)
     model_config = json.loads((ROOT / 'qwen-3.8-27b/model.json').read_text())

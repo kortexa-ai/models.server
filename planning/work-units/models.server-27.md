@@ -2,6 +2,12 @@
 
 Work item: https://github.com/kortexa-ai/models.server/issues/27
 
+The primary outcome is vanilla (non-abliterated) Qwen3.8 in NVFP4/FP8 `.ninfer`
+format, approaching 250 tokens/s where the workload permits, with lower cold
+prefill latency. The Huihui run and stock llama.cpp run are controls. Compare
+1024, 4096 and 8192 prefill chunks, then MTP-10 and included DFlash2 proposals.
+Keep cold latency separate from warm prefix reuse; confirm the selected result.
+
 Measure the pinned non-Swift Huihui Qwen3.8-27B NVFP4 artifact on the RTX PRO
 6000 at its normal 450 W power limit. Preserve the published 256K/K8V4/MTP-10
 profile and compare a 512K shared-pool, eight-slot, INT8 KV, MTP-3, vision-enabled
