@@ -174,6 +174,8 @@ def request(prompt, thinking=False, max_tokens=512):
             data=json.dumps(body).encode(), headers={'Content-Type': 'application/json'})
     started = time.monotonic()
     first = None
+    first_content = None
+    first_reasoning = None
     content, reasoning = '', ''
     result = {'started_unix': time.time(), 'thinking': thinking,
               'sampling_overrides': SAMPLING_OVERRIDES.copy()}
@@ -193,6 +195,10 @@ def request(prompt, thinking=False, max_tokens=512):
                 thought = delta.get('reasoning_content') or delta.get('reasoning') or ''
                 if (text or thought) and first is None:
                     first = time.monotonic()
+                if text and first_content is None:
+                    first_content = time.monotonic()
+                if thought and first_reasoning is None:
+                    first_reasoning = time.monotonic()
                 content += text
                 reasoning += thought
                 if choice.get('finish_reason'):
@@ -202,6 +208,8 @@ def request(prompt, thinking=False, max_tokens=512):
                     result[key] = event[key]
     result.update(client_seconds=time.monotonic() - started,
                   client_ttft_seconds=None if first is None else first - started,
+                  client_first_content_seconds=None if first_content is None else first_content - started,
+                  client_first_reasoning_seconds=None if first_reasoning is None else first_reasoning - started,
                   content=content, reasoning=reasoning,
                   prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest(),
                   ended_unix=time.time())
