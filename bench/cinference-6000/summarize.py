@@ -20,10 +20,20 @@ def main():
         if not directory.exists():
             continue
         data = {'requests': []}
-        for name in ('idle', 'memory-summary', 'command', 'environment', 'live-process', 'concurrency', 'canary'):
+        for name in ('idle', 'memory-summary', 'command', 'environment', 'live-process', 'concurrency', 'canary', 'props'):
             path = directory / f'{name}.json'
             if path.exists():
                 data[name] = json.loads(path.read_text())
+        log = directory / 'requests.jsonl'
+        if log.exists():
+            for line in log.open():
+                event = json.loads(line)
+                if event.get('event') == 'server_start':
+                    data['server_start'] = event
+                    break
+        digest = directory / 'executable.sha256' if profile == 'stock' else args.run / 'cinference-executable.sha256'
+        if digest.exists():
+            data['executable_sha256'] = digest.read_text().split()[0]
         for path in sorted(directory.glob('*.json')):
             if not path.stem.startswith(('recall-', 'prose-', 'medium-thinking-', 'concurrent-')):
                 continue
