@@ -208,13 +208,16 @@ def make_prompt(count, nonce, workload):
     return '\n'.join(lines), list(markers.values())
 
 
-def sized_prompt(target, nonce, workload):
+def sized_prompt(target, nonce, workload, stock=False):
     count = max(1, target // 32)
     for _ in range(5):
         prompt, markers = make_prompt(count, nonce, workload)
-        measured = api('/v1/messages/count_tokens', {'model': MODEL,
-            'messages': [{'role': 'user', 'content': prompt}],
-            'thinking': {'type': 'disabled'}})['input_tokens']
+        if stock:
+            measured = len(api('/tokenize', {'content': prompt, 'add_special': True})['tokens'])
+        else:
+            measured = api('/v1/messages/count_tokens', {'model': MODEL,
+                'messages': [{'role': 'user', 'content': prompt}],
+                'thinking': {'type': 'disabled'}})['input_tokens']
         if abs(measured - target) < 100:
             return prompt, markers, measured
         count = max(1, int(count * (target - 30) / measured))
@@ -238,7 +241,7 @@ def record_request(server, directory, name, prompt, markers=(), thinking=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--profiles', nargs='+', default=['published', 'stock-like', 'stock'])
+    parser.add_argument('--profiles', nargs='+', default=['stock', 'published', 'stock-like'])
     parser.add_argument('--output', default='bench-results/cinference-27')
     args = parser.parse_args()
     if socket.gethostname() != 'smarty' or os.environ.get('CUDA_VISIBLE_DEVICES') != GPU:
@@ -269,10 +272,19 @@ def main():
         directory = output / profile
         if profile == 'stock':
             config = env | {'PORT': str(PORT), 'HOST': '127.0.0.1'}
+            stock_path = Path.home() / '.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502'
             server_args = ['bash', str(ROOT / 'run.sh'), 'qwen-3.8-27b',
-                           '--alias', MODEL]
+                           '--alias', MODEL, '--model', str(stock_path / 'Qwen3.8-27B-UD-Q4_K_XL.gguf'),
+                           '--mmproj', str(stock_path / 'mmproj-BF16.gguf'), '--offline']
         else:
             config = env
+            deadline = time.monotonic() + 1800
+            binary = RUNTIME / 'runtime/ninfer/build/apps/ninfer-serve'
+            while not (artifact.exists() and binary.exists()):
+                if time.monotonic() > deadline:
+                    raise RuntimeError('Runtime/model preparation deadline exceeded')
+                print('Waiting for the pinned runtime and model download.', flush=True)
+                time.sleep(30)
             published = profile == 'published'
             server_args = [str(RUNTIME / 'runtime/ninfer/build/apps/ninfer-serve'),
                 str(artifact), '--host', '127.0.0.1', '--port', str(PORT),
@@ -296,9 +308,8 @@ def main():
                         name = f'{workload}-{target}'
                         prompt_file = prompts / f'{name}.json'
                         if not prompt_file.exists():
-                            if profile == 'stock':
-                                raise RuntimeError('Prepare exact prompts with Cinference first')
-                            text, markers, tokens = sized_prompt(target, f'run{target}{workload}', workload)
+                            text, markers, tokens = sized_prompt(target, f'run{target}{workload}', workload,
+                                                                 stock=profile == 'stock')
                             save(prompt_file, {'prompt': text, 'markers': markers if workload == 'recall' else [],
                                                'count_endpoint_tokens': tokens})
                         fixture = json.loads(prompt_file.read_text())
@@ -311,7 +322,8 @@ def main():
                     # One request may use most of the unified 512K allocation.
                     path = prompts / 'recall-500000.json'
                     if not path.exists():
-                        text, markers, tokens = sized_prompt(500000, 'run500000recall', 'recall')
+                        text, markers, tokens = sized_prompt(500000, 'run500000recall', 'recall',
+                                                            stock=profile == 'stock')
                         save(path, {'prompt': text, 'markers': markers, 'count_endpoint_tokens': tokens})
                     fixture = json.loads(path.read_text())
                     try:
