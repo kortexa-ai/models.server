@@ -1,0 +1,1848 @@
+{
+  "manifest": {
+    "models_commit": "e22d64f3ef5c4928380e3975360c1970a377b968",
+    "stock_config_sha256": "185e7cc7a5157b7e88da7007488244c0e21fcb72428152d1c521484014320658",
+    "llama_commit": "434ddbbc0e30522e897670681e503b797c12b7c1",
+    "cinference_commit": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+    "runtime_manifest": {
+      "name": "Fast Long Context - Cinference",
+      "runtime": {
+        "repo_id": "satellitedown/cinference",
+        "revision": "b74044fb0a319cd2a737cb7108012e6344b96dac",
+        "cuda_architectures": "120a",
+        "cuda_version": "13.4.92",
+        "build_type": "Release",
+        "build_jobs": 2
+      },
+      "models": {
+        "target": {
+          "repo_id": "satellitedown/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3",
+          "revision": "12fe3b16d82541dad06288b0da629933efebb6cd",
+          "directory": "Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3",
+          "filename": "qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "format_version": 3,
+          "size_bytes": 21492938224,
+          "files": {
+            "qwen3_8_27b_huihui_abliterated_nvfp4.ninfer": "3876a052290d48171350a299eac3bcdbfeeac69f58efd11747d7f9509f7b54ee",
+            "LICENSE": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+            "NOTICE": "9b905665ed937f1521e4659eafc1af8743379fefe90f7cfe3a95a650351a0580",
+            "README.md": "ec16b736a2d446f2edd2bc243af98e6591573cfa6f5be6cfa0fd3dce87865cf2",
+            "provenance.json": "fecb87f68cc58844d8c82b975b754e26b8f446d50fe81ce0f99925b60570e8e9",
+            "SHA256SUMS": "3378d13f91fbaab5cb86e5ef12ac265433baf2fed866d7a74d53ebabdbe70e56",
+            "source/NOTICE": "1fc20d0b782c81159c05ef799d70e912a1941271bb74240ad3781ac1634ef9e4",
+            "source/artifact-manifest.json": "9886c2d4c3c187d2ddc19c113f8642741329837c3f1e58870af748bc6dff1c3d",
+            "source/qwen3_8_27b_nvfp4.ninfer.conversion.json": "73a2cf5860bfd039f829223cc1bbcb12ea726e4e084280a530965e436cc0a393"
+          }
+        }
+      },
+      "serving": {
+        "model_id": "qwen3.8-27b-huihui-abliterated-cinference",
+        "host": "127.0.0.1",
+        "port": 8000,
+        "max_context": 262144,
+        "kv_dtype": "k8v4",
+        "max_concurrency": 1,
+        "pending_timeout_ms": 600000,
+        "prefill_chunk": 1024,
+        "spec": "mtp",
+        "draft_tokens": 10,
+        "lm_head_draft": true,
+        "default_max_tokens": 32768,
+        "preserve_thinking": true
+      }
+    },
+    "gpu": "name, uuid, driver_version, power.limit [W], memory.total [MiB]\nNVIDIA RTX PRO 6000 Blackwell Workstation Edition, GPU-a71210ca-e14a-755a-88bb-77f53a2102f6, 610.43.02, 450.00 W, 97887 MiB",
+    "restore_services": "|comfyui.server|alt-image-gen.server/base|models/bonsai-2-27b|models/lfm2.5-vl-3b|models/hy-mt2-7b|",
+    "host": "smarty",
+    "started_unix": 1790058420.5209384
+  },
+  "profiles": {
+    "published": {
+      "requests": [
+        {
+          "started_unix": 1790058724.4764733,
+          "thinking": true,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 512
+            },
+            "prompt_tokens": 32780,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 33292
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 807,
+            "draft_n_accepted": 430,
+            "predicted_ms": 2009.3366330000001,
+            "predicted_n": 512,
+            "predicted_per_second": 254.31278741833398,
+            "predicted_per_token_ms": 3.932165622309198,
+            "prompt_ms": 5064.733296,
+            "prompt_n": 32780,
+            "prompt_per_second": 6472.206547556773,
+            "prompt_per_token_ms": 0.1545068119585113
+          },
+          "client_seconds": 7.1113715779501945,
+          "client_ttft_seconds": 5.101893921033479,
+          "prompt_sha256": "146f4cab37a849101c1fdba3b9f5d6f43ee396dfb6b0a803e84169cc70011a06",
+          "ended_unix": 1790058731.5878942,
+          "name": "medium-thinking-32768",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 28088.0,
+          "peak_total_mib": 43033.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "553215f824656f1b8f86fadb4f2cbae381d26217e80941f538b0535a4273d316",
+          "reasoning_characters": 1271
+        },
+        {
+          "started_unix": 1790058479.115201,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 131033,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 131545
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1902,
+            "draft_n_accepted": 319,
+            "predicted_ms": 5639.26827,
+            "predicted_n": 512,
+            "predicted_per_second": 90.61459315890997,
+            "predicted_per_token_ms": 11.035750039138943,
+            "prompt_ms": 31786.973160999998,
+            "prompt_n": 131033,
+            "prompt_per_second": 4122.223255933242,
+            "prompt_per_token_ms": 0.24258754024558699
+          },
+          "client_seconds": 37.49128299404401,
+          "client_ttft_seconds": 31.85164613206871,
+          "prompt_sha256": "58669733a06b0cfaa857c73d193f8c1b77b1e8841ccad109e7db98d88ea54d8a",
+          "ended_unix": 1790058516.6067164,
+          "name": "prose-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "cf8f10522301ae06978ca035b66bcc034a17ab58585e69e3c5ecd2203100957c",
+          "content_characters": 2594,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058616.5254793,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 259992,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 260504
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1700,
+            "draft_n_accepted": 340,
+            "predicted_ms": 6368.5907210000005,
+            "predicted_n": 512,
+            "predicted_per_second": 80.23753172189443,
+            "predicted_per_token_ms": 12.462995540117419,
+            "prompt_ms": 101429.68236800001,
+            "prompt_n": 259992,
+            "prompt_per_second": 2563.2733331128397,
+            "prompt_per_token_ms": 0.3901261668359027
+          },
+          "client_seconds": 107.94930436694995,
+          "client_ttft_seconds": 101.58032268402167,
+          "prompt_sha256": "592cfe706b933bcc24c91b46786512b088ac6ca60954c063176a6f2216f4ab51",
+          "ended_unix": 1790058724.475304,
+          "name": "prose-260000",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "acf0719d5f013cd04f9c9373f9c3cefaa92227525c45d2cd3d9db38e101a6ab0",
+          "content_characters": 2400,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058438.7093909,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32775,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 33287
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1836,
+            "draft_n_accepted": 327,
+            "predicted_ms": 4358.174061,
+            "predicted_n": 512,
+            "predicted_per_second": 117.25093877566448,
+            "predicted_per_token_ms": 8.528716362035224,
+            "prompt_ms": 4562.236876,
+            "prompt_n": 32775,
+            "prompt_per_second": 7183.975951011098,
+            "prompt_per_token_ms": 0.13919868424103737
+          },
+          "client_seconds": 8.936527861980721,
+          "client_ttft_seconds": 4.578138952027075,
+          "prompt_sha256": "94074fcf96939fa89f151ed969cd75ff36a49168f912797f60159804332bd9cf",
+          "ended_unix": 1790058447.6460009,
+          "name": "prose-32768",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "c5fb95719599a483d7ed5e8a4817cf14a9528b304af625da90736d3f00eca52e",
+          "content_characters": 2449,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058428.9021306,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8147,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8659
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 1787,
+            "draft_n_accepted": 331,
+            "predicted_ms": 3971.910806,
+            "predicted_n": 512,
+            "predicted_per_second": 128.65344287894868,
+            "predicted_per_token_ms": 7.772819581213307,
+            "prompt_ms": 987.7479940000001,
+            "prompt_n": 8147,
+            "prompt_per_second": 8248.055222069122,
+            "prompt_per_token_ms": 0.12124070136246472
+          },
+          "client_seconds": 4.96563575300388,
+          "client_ttft_seconds": 0.9937217379920185,
+          "prompt_sha256": "53cf5acbba09926e7ae9702b4d09f46a0376c4927b2282d9cf1959f7021b8eeb",
+          "ended_unix": 1790058433.8677912,
+          "name": "prose-8192",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "1b47480073686f8e59ea5b3665b0da5449d1b5c5132c91f2ed635b85eab46f21",
+          "content_characters": 2536,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058447.6473465,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 126,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 131034,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 131160
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 120,
+            "draft_n_accepted": 117,
+            "predicted_ms": 349.975288,
+            "predicted_n": 126,
+            "predicted_per_second": 357.16807524993027,
+            "predicted_per_token_ms": 2.799802304,
+            "prompt_ms": 31057.645329,
+            "prompt_n": 131034,
+            "prompt_per_second": 4219.057775047979,
+            "prompt_per_token_ms": 0.23701974547827281
+          },
+          "client_seconds": 31.466220568981953,
+          "client_ttft_seconds": 31.116034287028015,
+          "prompt_sha256": "13355509f5ec51d6cd62b41d825473c60a35935101ffa1fbb9b3a6796d3d419d",
+          "ended_unix": 1790058479.1138003,
+          "name": "recall-131072",
+          "recall_expected": [
+            "KEY_0=VAL_run131072recall_0_7294",
+            "KEY_1=VAL_run131072recall_1_7294",
+            "KEY_2=VAL_run131072recall_2_7294",
+            "KEY_3=VAL_run131072recall_3_7294",
+            "KEY_4=VAL_run131072recall_4_7294",
+            "KEY_5=VAL_run131072recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "434a561e857dffefdb7a22a6066010f8b32d7ae7bff68a1af2d56c985d70fed6",
+          "content_characters": 197,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058516.6196916,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 126,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 259993,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 260119
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 120,
+            "draft_n_accepted": 117,
+            "predicted_ms": 448.28896299999997,
+            "predicted_n": 126,
+            "predicted_per_second": 278.8380047625665,
+            "predicted_per_token_ms": 3.586311704,
+            "prompt_ms": 99332.420349,
+            "prompt_n": 259993,
+            "prompt_per_second": 2617.40325149157,
+            "prompt_per_token_ms": 0.38205805675152793
+          },
+          "client_seconds": 99.89879649505019,
+          "client_ttft_seconds": 99.45017363596708,
+          "prompt_sha256": "e4874cca1e64df0eef056365ba0af836380f7bebcd0e70d0bbda43ad84d542f2",
+          "ended_unix": 1790058616.5189335,
+          "name": "recall-260000",
+          "recall_expected": [
+            "KEY_0=VAL_run260000recall_0_7294",
+            "KEY_1=VAL_run260000recall_1_7294",
+            "KEY_2=VAL_run260000recall_2_7294",
+            "KEY_3=VAL_run260000recall_3_7294",
+            "KEY_4=VAL_run260000recall_4_7294",
+            "KEY_5=VAL_run260000recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "2eba5b8973b8e3efb98e28c7a1e6a86f12fb244ac3b65d63fb916b6e97258ae5",
+          "content_characters": 197,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058433.868522,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 120,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32776,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 32896
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 110,
+            "draft_n_accepted": 110,
+            "predicted_ms": 260.220624,
+            "predicted_n": 120,
+            "predicted_per_second": 457.30426040327995,
+            "predicted_per_token_ms": 2.1867279327731093,
+            "prompt_ms": 4564.604112,
+            "prompt_n": 32776,
+            "prompt_per_second": 7180.469367285186,
+            "prompt_per_token_ms": 0.13926666194776666
+          },
+          "client_seconds": 4.840179242077284,
+          "client_ttft_seconds": 4.57979983696714,
+          "prompt_sha256": "72017a06c95df8a9844f48755535a3de5dd9dd609a10b817db0872ee51254036",
+          "ended_unix": 1790058438.7087603,
+          "name": "recall-32768",
+          "recall_expected": [
+            "KEY_0=VAL_run32768recall_0_7294",
+            "KEY_1=VAL_run32768recall_1_7294",
+            "KEY_2=VAL_run32768recall_2_7294",
+            "KEY_3=VAL_run32768recall_3_7294",
+            "KEY_4=VAL_run32768recall_4_7294",
+            "KEY_5=VAL_run32768recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "afc2ae1f23fb17121f7232aea7ddaa5c0ab7e758df81e614b2bdcf8fc238125f",
+          "content_characters": 191,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058427.683352,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 114,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8146,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8260
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 110,
+            "draft_n_accepted": 106,
+            "predicted_ms": 243.682362,
+            "predicted_n": 114,
+            "predicted_per_second": 463.7184204575299,
+            "predicted_per_token_ms": 2.1564810796460177,
+            "prompt_ms": 969.6259670000001,
+            "prompt_n": 8146,
+            "prompt_per_second": 8401.177647091623,
+            "prompt_per_token_ms": 0.11903093137736313
+          },
+          "client_seconds": 1.2183274539420381,
+          "client_ttft_seconds": 0.974512918968685,
+          "prompt_sha256": "56fd156a35c851d232f769af932861093a53934a2b013fa48afa3a5a725ee3be",
+          "ended_unix": 1790058428.9017062,
+          "name": "recall-8192",
+          "recall_expected": [
+            "KEY_0=VAL_run8192recall_0_7294",
+            "KEY_1=VAL_run8192recall_1_7294",
+            "KEY_2=VAL_run8192recall_2_7294",
+            "KEY_3=VAL_run8192recall_3_7294",
+            "KEY_4=VAL_run8192recall_4_7294",
+            "KEY_5=VAL_run8192recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 28086.0,
+          "peak_total_mib": 43031.0,
+          "content_sha256": "928318dace20cb10b130126a2005901c46886a74b887a144a3a145a2f244543a",
+          "content_characters": 185,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790058427.5870926,
+        "process_mib": 28086.0,
+        "total_mib": 43031.0,
+        "free_mib": 54250.0,
+        "power_w": 146.27,
+        "limit_w": 450.0,
+        "utilization": 93.0,
+        "temperature_c": 51.0
+      },
+      "memory-summary": {
+        "samples": 555,
+        "monitor_error": null,
+        "peak_process_mib": 28088.0,
+        "peak_total_mib": 43033.0,
+        "minimum_free_mib": 54248.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "huihui-cinference-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "262144",
+        "--max-concurrency",
+        "1",
+        "--kv-dtype",
+        "k8v4",
+        "--prefill-chunk",
+        "1024",
+        "--spec",
+        "mtp",
+        "--draft-tokens",
+        "10",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/huihui/published/requests.jsonl"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3420598,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "huihui-cinference-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "262144",
+          "--max-concurrency",
+          "1",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "1024",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "10",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/huihui/published/requests.jsonl",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "canary": {
+        "started_unix": 1790058427.5873704,
+        "thinking": false,
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 10,
+          "draft_n_accepted": 5,
+          "predicted_ms": 21.291500000000003,
+          "predicted_n": 3,
+          "predicted_per_second": 93.93419909353497,
+          "predicted_per_token_ms": 10.645750000000001,
+          "prompt_ms": 73.125201,
+          "prompt_n": 26,
+          "prompt_per_second": 355.55457823630456,
+          "prompt_per_token_ms": 2.812507730769231
+        },
+        "client_seconds": 0.09573719196487218,
+        "client_ttft_seconds": 0.07418232900090516,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790058427.6831179
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "huihui-cinference-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "262144",
+          "--max-concurrency",
+          "1",
+          "--kv-dtype",
+          "k8v4",
+          "--prefill-chunk",
+          "1024",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "10",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/huihui/published/requests.jsonl"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 21197321610,
+          "device_object_count": 673,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 4,
+          "host_to_device_bytes": 21183894976,
+          "load_seconds": 6.528142952,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "e6eae48276e11c15c932cb90d258b51b81e144dc13fb461e7ffa202d2caa440a",
+          "size_bytes": 21492938224,
+          "upload_seconds": 3.324764598
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 1,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 2,
+            "max_shared_prefixes": 4,
+            "total_device_state_slots": 2
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "e6eae48276e11c15c932cb90d258b51b81e144dc13fb461e7ffa202d2caa440a",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "k8v4",
+          "kv_capacity": 262144,
+          "kv_capacity_max_page_groups": 4096,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 4096,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 1,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 1024,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "mtp",
+          "speculative_draft_window": 10,
+          "vision": false
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 56884789248,
+          "available_after_weights_bytes": 64587628544,
+          "cuda_graph_allowance_bytes": 257949696,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 0,
+          "kv_payload_bytes": 7166071296,
+          "minimum_runtime_reservation_bytes": 7929818624,
+          "planned_slack_bytes": 56657809920,
+          "runtime_reservation_bytes": 7929818624,
+          "sequence": {
+            "capacity_bytes": 7511887360,
+            "peak_used_bytes": 7511887360,
+            "used_bytes": 7511887360
+          },
+          "vision_workspace": null,
+          "weights": {
+            "capacity_bytes": 21183929344,
+            "peak_used_bytes": 21183929344,
+            "used_bytes": 21183929344
+          },
+          "workspace": {
+            "capacity_bytes": 159981568,
+            "peak_used_bytes": 159981568,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "huihui-cinference-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/huihui/published/requests.jsonl"
+        },
+        "server_instance_id": "serve-3420598-1790058420540402",
+        "timestamp_unix_ms": 1790058427249
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    },
+    "stock-like": {
+      "requests": [
+        {
+          "started_unix": 1790059089.7997842,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 610,
+            "draft_n_accepted": 306,
+            "predicted_ms": 12694.417008,
+            "predicted_n": 512,
+            "predicted_per_second": 40.25391632226739,
+            "predicted_per_token_ms": 24.842303342465755,
+            "prompt_ms": 1110.715164,
+            "prompt_n": 8153,
+            "prompt_per_second": 7340.315739130398,
+            "prompt_per_token_ms": 0.13623392174659635
+          },
+          "client_seconds": 13.81706667598337,
+          "client_ttft_seconds": 1.12221362197306,
+          "prompt_sha256": "aac1e7072dfd221611c05c93c131f627295072e71e483ac937c39e645fce4647",
+          "ended_unix": 1790059103.6168694,
+          "name": "concurrent-0",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "e4b26c61e8f4725b6a90b21fb9d1bfcc1a0f8038b1d4e2fde084c3f31d594088",
+          "content_characters": 2690,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.8001184,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 581,
+            "draft_n_accepted": 317,
+            "predicted_ms": 10301.323286,
+            "predicted_n": 512,
+            "predicted_per_second": 49.60527747871711,
+            "predicted_per_token_ms": 20.15914537377691,
+            "prompt_ms": 1294.5791159999999,
+            "prompt_n": 8153,
+            "prompt_per_second": 6297.7997244318285,
+            "prompt_per_token_ms": 0.15878561462038512
+          },
+          "client_seconds": 14.08040296297986,
+          "client_ttft_seconds": 3.778855397948064,
+          "prompt_sha256": "498575074ff0b21212768b4bb1e031267de04ecaf2f9b239e478ddfb8d726237",
+          "ended_unix": 1790059103.8805358,
+          "name": "concurrent-1",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "066014f9fdfa9521e84ce5a9c70b6e994cdf56f5ee623c0a3f90e2139e16b55a",
+          "content_characters": 2559,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.8004432,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 618,
+            "draft_n_accepted": 303,
+            "predicted_ms": 9573.750592,
+            "predicted_n": 512,
+            "predicted_per_second": 53.37511094418951,
+            "predicted_per_token_ms": 18.73532405479452,
+            "prompt_ms": 1315.370384,
+            "prompt_n": 8153,
+            "prompt_per_second": 6198.254194538715,
+            "prompt_per_token_ms": 0.1613357517478229
+          },
+          "client_seconds": 14.69611409807112,
+          "client_ttft_seconds": 5.121876260032877,
+          "prompt_sha256": "64438726dcdb8cc67a93e93857a8dc5460cdf0338a691dc0b6e10185a8a8e692",
+          "ended_unix": 1790059104.496581,
+          "name": "concurrent-2",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "2ffefff1fcade7c363218ec0bdff81d42e9b22b7d77b8c5fd321329ea97920ed",
+          "content_characters": 2501,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.8009427,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 605,
+            "draft_n_accepted": 309,
+            "predicted_ms": 11550.360174,
+            "predicted_n": 512,
+            "predicted_per_second": 44.24104463428484,
+            "predicted_per_token_ms": 22.603444567514675,
+            "prompt_ms": 1309.0745,
+            "prompt_n": 8153,
+            "prompt_per_second": 6228.064178165567,
+            "prompt_per_token_ms": 0.16056353489513062
+          },
+          "client_seconds": 14.007701143971644,
+          "client_ttft_seconds": 2.4570215470157564,
+          "prompt_sha256": "9c9ab3cbaf8d821cd07df27a4a40c02cf60e5e39d1c2ebf093509afc91736b73",
+          "ended_unix": 1790059103.8086922,
+          "name": "concurrent-3",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "1d24e8ae73bee19b6a8fce4b43a8b6cdfb06ac992887fcbadd16e626f8134707",
+          "content_characters": 2586,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.8014843,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 570,
+            "draft_n_accepted": 321,
+            "predicted_ms": 6910.9792529999995,
+            "predicted_n": 512,
+            "predicted_per_second": 73.94031747066511,
+            "predicted_per_token_ms": 13.524421238747554,
+            "prompt_ms": 1356.3410099999999,
+            "prompt_n": 8153,
+            "prompt_per_second": 6011.025206706683,
+            "prompt_per_token_ms": 0.16636097264810498
+          },
+          "client_seconds": 14.784355839947239,
+          "client_ttft_seconds": 7.872955697006546,
+          "prompt_sha256": "d89421ebd492e6fa2a0f298d0e5d3b7953e7679de8f43054caab02db74d60e48",
+          "ended_unix": 1790059104.585875,
+          "name": "concurrent-4",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "80c136c2717944c25c41d4f0e902628b5d48aa64adaaf671f26e9e777f417892",
+          "content_characters": 2490,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.8018742,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 633,
+            "draft_n_accepted": 300,
+            "predicted_ms": 8504.025705,
+            "predicted_n": 512,
+            "predicted_per_second": 60.08918807707202,
+            "predicted_per_token_ms": 16.64192897260274,
+            "prompt_ms": 1333.243956,
+            "prompt_n": 8153,
+            "prompt_per_second": 6115.15991751475,
+            "prompt_per_token_ms": 0.1635280210965289
+          },
+          "client_seconds": 14.98815052700229,
+          "client_ttft_seconds": 6.483787679928355,
+          "prompt_sha256": "f803cd6cfd6faec77fea2418f26fcb09c972cdc66c831b7c40c19c4c00f2cd52",
+          "ended_unix": 1790059104.7900424,
+          "name": "concurrent-5",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "65dd833a2004e64297cf26d9a910715346376304b933d9897e6cc5bcff1f3bb7",
+          "content_characters": 2535,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.8024306,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 624,
+            "draft_n_accepted": 302,
+            "predicted_ms": 4931.356314000001,
+            "predicted_n": 512,
+            "predicted_per_second": 103.62260754699138,
+            "predicted_per_token_ms": 9.65040374559687,
+            "prompt_ms": 1350.6330189999999,
+            "prompt_n": 8153,
+            "prompt_per_second": 6036.428759928015,
+            "prompt_per_token_ms": 0.16566086336317917
+          },
+          "client_seconds": 15.569054596940987,
+          "client_ttft_seconds": 10.637245691963471,
+          "prompt_sha256": "00dc4746ce223340b41b3f0aa409bdc04bc3e3cf1a8898aeaf1303976ff4da83",
+          "ended_unix": 1790059105.3715093,
+          "name": "concurrent-6",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "af7d2d7cea88ee2b6997d9fca6b4c650f78f6fd28495cfafbdab1edff9cf9f12",
+          "content_characters": 2652,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059089.802691,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8153,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8665
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 627,
+            "draft_n_accepted": 300,
+            "predicted_ms": 6136.364922000001,
+            "predicted_n": 512,
+            "predicted_per_second": 83.27405662723393,
+            "predicted_per_token_ms": 12.008541921722115,
+            "prompt_ms": 1351.307531,
+            "prompt_n": 8153,
+            "prompt_per_second": 6033.415645931156,
+            "prompt_per_token_ms": 0.16574359511836134
+          },
+          "client_seconds": 15.391568194027059,
+          "client_ttft_seconds": 9.254784888005815,
+          "prompt_sha256": "ab2c5d1984bf69f8fdba9e5332ac5664ba41fd512571926b2fd7c75f69efd7f9",
+          "ended_unix": 1790059105.1942787,
+          "name": "concurrent-7",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "0ac7c149f6fcab34dd53c62c1a7b25ddffc19a3648893cf4926f8d5b642c70f3",
+          "content_characters": 2605,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790059086.62906,
+          "thinking": true,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 512
+            },
+            "prompt_tokens": 32780,
+            "prompt_tokens_details": {
+              "cached_tokens": 32766
+            },
+            "total_tokens": 33292
+          },
+          "timings": {
+            "cache_n": 32766,
+            "draft_n": 448,
+            "draft_n_accepted": 361,
+            "predicted_ms": 3070.615029,
+            "predicted_n": 512,
+            "predicted_per_second": 166.41617238694235,
+            "predicted_per_token_ms": 6.009031367906067,
+            "prompt_ms": 69.61701500000001,
+            "prompt_n": 14,
+            "prompt_per_second": 201.1002626297608,
+            "prompt_per_token_ms": 4.972643928571429
+          },
+          "client_seconds": 3.16478684800677,
+          "client_ttft_seconds": 0.09383033693302423,
+          "prompt_sha256": "146f4cab37a849101c1fdba3b9f5d6f43ee396dfb6b0a803e84169cc70011a06",
+          "ended_unix": 1790059089.7938938,
+          "name": "medium-thinking-32768",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "content_characters": 0,
+          "reasoning_sha256": "5ba6dab001af1676058055a1ff3e6afefef8d8c1c7dbeec72b555d563ecd3bc7",
+          "reasoning_characters": 1408
+        },
+        {
+          "started_unix": 1790058802.275201,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 131033,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 131545
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 593,
+            "draft_n_accepted": 313,
+            "predicted_ms": 4618.843357000001,
+            "predicted_n": 512,
+            "predicted_per_second": 110.63375839008778,
+            "predicted_per_token_ms": 9.038832401174169,
+            "prompt_ms": 37397.402463,
+            "prompt_n": 131033,
+            "prompt_per_second": 3503.7994986320396,
+            "prompt_per_token_ms": 0.2854044588996665
+          },
+          "client_seconds": 42.07520983600989,
+          "client_ttft_seconds": 37.456123993964866,
+          "prompt_sha256": "58669733a06b0cfaa857c73d193f8c1b77b1e8841ccad109e7db98d88ea54d8a",
+          "ended_unix": 1790058844.3505795,
+          "name": "prose-131072",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "a615ae401b1fc99d783c9576fc3d77f82fb8f4f5d681c7899a2b0de6d5599f78",
+          "content_characters": 2524,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058963.0434756,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 259992,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 260504
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 621,
+            "draft_n_accepted": 303,
+            "predicted_ms": 5649.074206,
+            "predicted_n": 512,
+            "predicted_per_second": 90.457299969127,
+            "predicted_per_token_ms": 11.05493973776908,
+            "prompt_ms": 117820.944873,
+            "prompt_n": 259992,
+            "prompt_per_second": 2206.6704717081257,
+            "prompt_per_token_ms": 0.4531714240168928
+          },
+          "client_seconds": 123.58433576195966,
+          "client_ttft_seconds": 117.93480781803373,
+          "prompt_sha256": "592cfe706b933bcc24c91b46786512b088ac6ca60954c063176a6f2216f4ab51",
+          "ended_unix": 1790059086.6283398,
+          "name": "prose-260000",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "c99c1837151c0b4c70d58a547a0d097f157e29cefa1ab8b6e4f08749e06fe4bb",
+          "content_characters": 2541,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058754.9775774,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32775,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 33287
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 618,
+            "draft_n_accepted": 304,
+            "predicted_ms": 4177.737941,
+            "predicted_n": 512,
+            "predicted_per_second": 122.3149961095178,
+            "predicted_per_token_ms": 8.175612409001957,
+            "prompt_ms": 5206.81214,
+            "prompt_n": 32775,
+            "prompt_per_second": 6294.638469518511,
+            "prompt_per_token_ms": 0.15886535896262396
+          },
+          "client_seconds": 9.39850845595356,
+          "client_ttft_seconds": 5.220610824995674,
+          "prompt_sha256": "94074fcf96939fa89f151ed969cd75ff36a49168f912797f60159804332bd9cf",
+          "ended_unix": 1790058764.3761373,
+          "name": "prose-32768",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "69c483f05d22e93326231f555c2c86de4618962828586eb8566b81ca70536774",
+          "content_characters": 2569,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058744.1182714,
+          "thinking": false,
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 512,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8147,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8659
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 615,
+            "draft_n_accepted": 305,
+            "predicted_ms": 3970.891893,
+            "predicted_n": 512,
+            "predicted_per_second": 128.68645477375125,
+            "predicted_per_token_ms": 7.770825622309197,
+            "prompt_ms": 1077.590838,
+            "prompt_n": 8147,
+            "prompt_per_second": 7560.383508011971,
+            "prompt_per_token_ms": 0.13226842248680498
+          },
+          "client_seconds": 5.053397293901071,
+          "client_ttft_seconds": 1.0824235859327018,
+          "prompt_sha256": "53cf5acbba09926e7ae9702b4d09f46a0376c4927b2282d9cf1959f7021b8eeb",
+          "ended_unix": 1790058749.1716866,
+          "name": "prose-8192",
+          "recall_expected": [],
+          "recall_found": 0,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "7700bc845e4a307bb6ed303cf39f5354ac3672c3d691f58ba7f92b95cfe6389b",
+          "content_characters": 2563,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058764.3775938,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 126,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 131034,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 131160
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 96,
+            "draft_n_accepted": 96,
+            "predicted_ms": 736.2848319999999,
+            "predicted_n": 126,
+            "predicted_per_second": 169.77125504603632,
+            "predicted_per_token_ms": 5.890278656,
+            "prompt_ms": 37100.53811,
+            "prompt_n": 131034,
+            "prompt_per_second": 3531.8625193924445,
+            "prompt_per_token_ms": 0.2831367287116321
+          },
+          "client_seconds": 37.89615374209825,
+          "client_ttft_seconds": 37.1597092919983,
+          "prompt_sha256": "13355509f5ec51d6cd62b41d825473c60a35935101ffa1fbb9b3a6796d3d419d",
+          "ended_unix": 1790058802.2739139,
+          "name": "recall-131072",
+          "recall_expected": [
+            "KEY_0=VAL_run131072recall_0_7294",
+            "KEY_1=VAL_run131072recall_1_7294",
+            "KEY_2=VAL_run131072recall_2_7294",
+            "KEY_3=VAL_run131072recall_3_7294",
+            "KEY_4=VAL_run131072recall_4_7294",
+            "KEY_5=VAL_run131072recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "434a561e857dffefdb7a22a6066010f8b32d7ae7bff68a1af2d56c985d70fed6",
+          "content_characters": 197,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058844.356761,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 102,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 259993,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 260095
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 78,
+            "draft_n_accepted": 78,
+            "predicted_ms": 705.852971,
+            "predicted_n": 102,
+            "predicted_per_second": 143.08928934153343,
+            "predicted_per_token_ms": 6.988643277227723,
+            "prompt_ms": 117842.493619,
+            "prompt_n": 259993,
+            "prompt_per_second": 2206.2754445827577,
+            "prompt_per_token_ms": 0.45325256302669686
+          },
+          "client_seconds": 118.67959120904561,
+          "client_ttft_seconds": 117.97333235305268,
+          "prompt_sha256": "e4874cca1e64df0eef056365ba0af836380f7bebcd0e70d0bbda43ad84d542f2",
+          "ended_unix": 1790058963.0368457,
+          "name": "recall-260000",
+          "recall_expected": [
+            "KEY_0=VAL_run260000recall_0_7294",
+            "KEY_1=VAL_run260000recall_1_7294",
+            "KEY_2=VAL_run260000recall_2_7294",
+            "KEY_3=VAL_run260000recall_3_7294",
+            "KEY_4=VAL_run260000recall_4_7294",
+            "KEY_5=VAL_run260000recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "257a27f07a8d0ba53d6b557e9f42030da78f86b8ac1a8c6a219dc2cddf9f2009",
+          "content_characters": 161,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058749.1758487,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 120,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 32776,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 32896
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 90,
+            "draft_n_accepted": 90,
+            "predicted_ms": 602.613344,
+            "predicted_n": 120,
+            "predicted_per_second": 197.47322422385656,
+            "predicted_per_token_ms": 5.063977680672269,
+            "prompt_ms": 5187.296924,
+            "prompt_n": 32776,
+            "prompt_per_second": 6318.512412188264,
+            "prompt_per_token_ms": 0.15826510019526482
+          },
+          "client_seconds": 5.8012622479582205,
+          "client_ttft_seconds": 5.198639450944029,
+          "prompt_sha256": "72017a06c95df8a9844f48755535a3de5dd9dd609a10b817db0872ee51254036",
+          "ended_unix": 1790058754.9771614,
+          "name": "recall-32768",
+          "recall_expected": [
+            "KEY_0=VAL_run32768recall_0_7294",
+            "KEY_1=VAL_run32768recall_1_7294",
+            "KEY_2=VAL_run32768recall_2_7294",
+            "KEY_3=VAL_run32768recall_3_7294",
+            "KEY_4=VAL_run32768recall_4_7294",
+            "KEY_5=VAL_run32768recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "afc2ae1f23fb17121f7232aea7ddaa5c0ab7e758df81e614b2bdcf8fc238125f",
+          "content_characters": 191,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        },
+        {
+          "started_unix": 1790058742.4944837,
+          "thinking": false,
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 114,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 8146,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 8260
+          },
+          "timings": {
+            "cache_n": 0,
+            "draft_n": 87,
+            "draft_n_accepted": 87,
+            "predicted_ms": 557.865712,
+            "predicted_n": 114,
+            "predicted_per_second": 202.55770800984448,
+            "predicted_per_token_ms": 4.936864707964602,
+            "prompt_ms": 1057.810632,
+            "prompt_n": 8146,
+            "prompt_per_second": 7700.8112355595995,
+            "prompt_per_token_ms": 0.12985644880923153
+          },
+          "client_seconds": 1.6200131890363991,
+          "client_ttft_seconds": 1.0620998970698565,
+          "prompt_sha256": "56fd156a35c851d232f769af932861093a53934a2b013fa48afa3a5a725ee3be",
+          "ended_unix": 1790058744.1145148,
+          "name": "recall-8192",
+          "recall_expected": [
+            "KEY_0=VAL_run8192recall_0_7294",
+            "KEY_1=VAL_run8192recall_1_7294",
+            "KEY_2=VAL_run8192recall_2_7294",
+            "KEY_3=VAL_run8192recall_3_7294",
+            "KEY_4=VAL_run8192recall_4_7294",
+            "KEY_5=VAL_run8192recall_5_7294"
+          ],
+          "recall_found": 6,
+          "peak_process_mib": 42304.0,
+          "peak_total_mib": 57249.0,
+          "content_sha256": "928318dace20cb10b130126a2005901c46886a74b887a144a3a145a2f244543a",
+          "content_characters": 185,
+          "reasoning_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reasoning_characters": 0
+        }
+      ],
+      "idle": {
+        "time": 1790058742.4170442,
+        "process_mib": 42304.0,
+        "total_mib": 57249.0,
+        "free_mib": 40032.0,
+        "power_w": 275.08,
+        "limit_w": 450.0,
+        "utilization": 93.0,
+        "temperature_c": 79.0
+      },
+      "memory-summary": {
+        "samples": 663,
+        "monitor_error": null,
+        "peak_process_mib": 42304.0,
+        "peak_total_mib": 57249.0,
+        "minimum_free_mib": 40032.0
+      },
+      "command": [
+        "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18080",
+        "--model-id",
+        "huihui-cinference-bench",
+        "--max-context",
+        "262144",
+        "--kv-capacity",
+        "524288",
+        "--max-concurrency",
+        "8",
+        "--kv-dtype",
+        "int8",
+        "--prefill-chunk",
+        "1024",
+        "--spec",
+        "mtp",
+        "--draft-tokens",
+        "3",
+        "--lm-head-draft",
+        "--preserve-thinking",
+        "--request-log-jsonl",
+        "/home/francip/src/models.server/bench-results/cinference-27/huihui/stock-like/requests.jsonl",
+        "--vision"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+        "LD_LIBRARY_PATH": "/home/francip/src/models.server/.engines/cinference/.cuda-toolkit/nvidia/cu13/lib",
+        "CUDA_HOME": "/usr/local/cuda"
+      },
+      "live-process": {
+        "pid": 3437453,
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "huihui-cinference-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "int8",
+          "--prefill-chunk",
+          "1024",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "3",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/huihui/stock-like/requests.jsonl",
+          "--vision",
+          ""
+        ],
+        "executable": "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+        "environment": [
+          "CUDA_VISIBLE_DEVICES=GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "CUDA_HOME=/usr/local/cuda"
+        ]
+      },
+      "concurrency": {
+        "clients": 8,
+        "seconds": 15.578476150985807,
+        "completion_tokens": 4096,
+        "aggregate_completion_tps": 262.9268716851234
+      },
+      "canary": {
+        "started_unix": 1790058742.4174378,
+        "thinking": false,
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 3,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 29
+        },
+        "timings": {
+          "cache_n": 0,
+          "draft_n": 3,
+          "draft_n_accepted": 3,
+          "predicted_ms": 15.815452,
+          "predicted_n": 3,
+          "predicted_per_second": 126.45860516664335,
+          "predicted_per_token_ms": 7.907726,
+          "prompt_ms": 59.47430799999999,
+          "prompt_n": 26,
+          "prompt_per_second": 437.1635564048934,
+          "prompt_per_token_ms": 2.2874733846153843
+        },
+        "client_seconds": 0.07647465006448328,
+        "client_ttft_seconds": 0.06036661809775978,
+        "content": "12",
+        "reasoning": "",
+        "prompt_sha256": "7c6e24f5b2a59021f6fda1bf378d20ea6895e34088a8ed94171b3516e2230d6a",
+        "ended_unix": 1790058742.493924
+      },
+      "server_start": {
+        "argv": [
+          "/home/francip/src/models.server/.engines/cinference/runtime/ninfer/build/apps/ninfer-serve",
+          "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18080",
+          "--model-id",
+          "huihui-cinference-bench",
+          "--max-context",
+          "262144",
+          "--kv-capacity",
+          "524288",
+          "--max-concurrency",
+          "8",
+          "--kv-dtype",
+          "int8",
+          "--prefill-chunk",
+          "1024",
+          "--spec",
+          "mtp",
+          "--draft-tokens",
+          "3",
+          "--lm-head-draft",
+          "--preserve-thinking",
+          "--request-log-jsonl",
+          "/home/francip/src/models.server/bench-results/cinference-27/huihui/stock-like/requests.jsonl",
+          "--vision"
+        ],
+        "artifact": {
+          "architecture": "Qwen3_5ForCausalLM",
+          "bytes_read": 21493041297,
+          "device_object_count": 1006,
+          "formats": [
+            "bf16",
+            "fp32",
+            "fp8_e4m3fn_row_bf16",
+            "int32",
+            "nvfp4",
+            "q4_g64_fp16",
+            "q5_g64_fp16",
+            "q6_g64_fp16",
+            "q8_g32_fp16"
+          ],
+          "host_object_count": 6,
+          "host_to_device_bytes": 21479606624,
+          "load_seconds": 6.729403461,
+          "name": "qwen3.8-27b",
+          "path": "/home/francip/src/models.server/.engines/cinference/models/Huihui-Qwen3.8-27B-abliterated-NVFP4-NInfer-v3/qwen3_8_27b_huihui_abliterated_nvfp4.ninfer",
+          "peak_staging_bytes": 268435456,
+          "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+          "size_bytes": 21492938224,
+          "upload_seconds": 3.341329926
+        },
+        "artifact_type": "ninfer_serve_request_log",
+        "engine": {
+          "context_cache": {
+            "device_state_slots": 8,
+            "enabled": true,
+            "host_kv_capacity_bytes": 8589934592,
+            "host_state_slots": 8,
+            "max_long_anchors_per_continuation": 2,
+            "max_private_continuations": 16,
+            "max_shared_prefixes": 8,
+            "total_device_state_slots": 16
+          },
+          "context_cost": {
+            "hardware_class": "nvidia-rtx-pro-6000-blackwell-workstation-edition-sm120",
+            "prefill_signature": "953e22d9b9a6639c09f7389d49084b059dea07720bc0121dfd9c154002459915",
+            "prefill_source": "generic-default",
+            "preset_path": "",
+            "transfer_source": "generic-default"
+          },
+          "cuda_graph": true,
+          "device": 0,
+          "kv_cache": "int8-group64",
+          "kv_capacity": 524288,
+          "kv_capacity_max_page_groups": 32768,
+          "kv_capacity_mode": "explicit",
+          "kv_capacity_page_groups": 8192,
+          "log_stats_interval_ms": 5000,
+          "max_concurrency": 8,
+          "max_context": 262144,
+          "max_pending_requests": 16,
+          "pending_timeout_ms": 30000,
+          "prefill_chunk": 1024,
+          "prefix_reuse": true,
+          "proposal_head": "optimized",
+          "speculative_backend": "mtp",
+          "speculative_draft_window": 3,
+          "vision": true
+        },
+        "environment": {
+          "compute_capability_major": 12,
+          "compute_capability_minor": 0,
+          "cuda_compile_version": "13.4",
+          "cuda_driver_version": "13.3",
+          "cuda_runtime_version": "13.4",
+          "device": 0,
+          "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+          "gpu_uuid": "GPU-a71210ca-e14a-755a-88bb-77f53a2102f6",
+          "total_device_memory_bytes": 102005407744
+        },
+        "event": "server_start",
+        "memory": {
+          "available_after_startup_bytes": 41978232832,
+          "available_after_weights_bytes": 64291930112,
+          "cuda_graph_allowance_bytes": 687865856,
+          "host_kv_capacity_bytes": 8589934592,
+          "host_kv_occupied_bytes": 0,
+          "host_state_capacity_slots": 8,
+          "host_state_occupied_slots": 0,
+          "kv_capacity_headroom_bytes": 0,
+          "kv_capacity_increment_bytes": 2297856,
+          "kv_payload_bytes": 18825117696,
+          "minimum_runtime_reservation_bytes": 13528062465,
+          "planned_slack_bytes": 41351849471,
+          "runtime_reservation_bytes": 22940080641,
+          "sequence": {
+            "capacity_bytes": 21385566720,
+            "peak_used_bytes": 21385566720,
+            "used_bytes": 21385566720
+          },
+          "vision_workspace": {
+            "aggregate_prompt_tokens": 32768,
+            "encode_peak_bytes": 866648065,
+            "general_capacity_bytes": 159997952,
+            "handoff_active_bytes": 0,
+            "handoff_capacity_bytes": 167772160,
+            "handoff_offset_bytes": 159997952,
+            "handoff_peak_bytes": 0,
+            "max_item_tokens": 16384
+          },
+          "weights": {
+            "capacity_bytes": 21479648768,
+            "peak_used_bytes": 21479648768,
+            "used_bytes": 21479648768
+          },
+          "workspace": {
+            "capacity_bytes": 866648065,
+            "peak_used_bytes": 159997952,
+            "used_bytes": 0
+          }
+        },
+        "sampling_defaults": {
+          "greedy": false,
+          "non_thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 1.5,
+            "temperature": 0.699999988079071,
+            "top_k": 20,
+            "top_p": 0.800000011920929
+          },
+          "omitted_seed": "random",
+          "server_overrides": {
+            "frequency_penalty": null,
+            "min_p": null,
+            "presence_penalty": null,
+            "seed": null,
+            "temperature": null,
+            "top_k": null,
+            "top_p": null
+          },
+          "thinking": {
+            "frequency_penalty": 0.0,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "temperature": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071
+          }
+        },
+        "schema_version": 21,
+        "server": {
+          "api_key_configured": false,
+          "cors_enabled": false,
+          "default_output_tokens": 8192,
+          "default_preserve_thinking": true,
+          "default_thinking": null,
+          "default_thinking_budget": null,
+          "host": "127.0.0.1",
+          "max_request_bytes": 402653184,
+          "media_cache_bytes": 1073741824,
+          "media_live_bytes": 2147483648,
+          "media_preprocess_threads": 0,
+          "port": 18080,
+          "public_model_id": "huihui-cinference-bench",
+          "request_log_jsonl": "/home/francip/src/models.server/bench-results/cinference-27/huihui/stock-like/requests.jsonl"
+        },
+        "server_instance_id": "serve-3437453-1790058735389807",
+        "timestamp_unix_ms": 1790058742269
+      },
+      "executable_sha256": "630248b11ce8fa7937636c7cc1eed01a1ec50544bcc3866c96eb80f07e3f66d6"
+    }
+  },
+  "errors": {}
+}
