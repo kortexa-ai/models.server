@@ -114,6 +114,33 @@ With exact prefix reuse, a 131K repeat returned its first token in 109 ms:
 131029 tokens were reused and only nine were evaluated. The cold seed took
 31.03 s. Keep this warm-cache result separate from the cold-prefill figures.
 
+## Registered launcher validation
+
+Both `qwen-3.8-27b-fast` (2064) and `qwen-3.8-27b-fast-abliterated`
+(2065) passed arithmetic, API model alias, red-image recognition, a function
+call and tool-result round trip, and six-of-six marker recall at 131K. Each
+used 39.78 GiB at peak with no monitor errors and at least 40.6 GiB free on
+the card while the separate vision service remained running.
+
+The fresh 131K reasoning-disabled code probes measured 28.35 s TTFT and
+291.6 tok/s for vanilla, and 29.04 s / 307.5 tok/s for Huihui. Both emitted
+1024 tokens and reached the output cap. This repeats the code-generation
+throughput result, not a correctness-scored complete coding task. Prompt
+prefixes differ slightly from the earlier control and GPU temperature varies.
+
+This registered Huihui uses the DFlash2-bearing publisher artifact
+`pcmaker/Huihui-Qwen3.8-27B-Uncensored-NInfer` at
+`805a1423d0c367d6c2f3118aad9f3393959763c8`, with source SHA-256
+`0e4b49e96159b41c69329d2a84870883362b62beee86aca292dada39e41be8de`.
+The pinned runtime upgraded it from v2 to v3 without changing weight bytes.
+It is different from the initial Huihui MTP artifact. Publisher provenance
+has not been independently audited. Source identity, local conversion digest,
+API responses and memory evidence are in [registered results](results-registered.json).
+
+No fast service was installed, enabled, or selected as default. The test block
+restored ComfyUI, alt-image/base, Bonsai, VL-3B and Hy-MT2, with all five health
+checks passing; vision remained up. The 4090 services were not changed.
+
 ## Shared cache and precision
 
 Cinference's `--kv-capacity` is one shared Main Text KV pool used by active
