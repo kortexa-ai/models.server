@@ -2,6 +2,9 @@
 
 Local model serving across multiple machines. Each model gets its own directory with configuration; shared engine scripts handle the actual launching.
 
+Changing the primary model on Smarty? Follow [PRIMARY_MODEL_SWITCH.md](PRIMARY_MODEL_SWITCH.md)
+for the four-machine harness, API, voice, phone, validation and rollback checklist.
+
 ## Quick Start
 
 ```bash
