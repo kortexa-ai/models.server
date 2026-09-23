@@ -178,8 +178,11 @@ def sam_mirror(item, local_dir):
     with httpx.stream("GET", url, headers={"Range": f"bytes={offset}-"},
                       follow_redirects=True, timeout=60) as response:
         response.raise_for_status()
-        if response.status_code == 206:
-            if not response.headers.get("content-range", "").startswith(f"bytes {offset}-"):
+        content_range = response.headers.get("content-range")
+        if content_range:
+            # ModelScope's CDN also returns valid byte ranges with HTTP 200.
+            match = re.fullmatch(r"bytes (\d+)-(\d+)/(\d+)", content_range)
+            if not match or int(match[1]) != offset or int(match[3]) != item["bytes"]:
                 raise ValueError("Invalid mirror range")
         elif response.status_code == 200:
             offset = 0
@@ -192,6 +195,8 @@ def sam_mirror(item, local_dir):
                 out.write(chunk)
             out.flush()
             os.fsync(out.fileno())
+    if partial.stat().st_size < item["bytes"]:
+        raise OSError("Mirror transfer incomplete; keep bytes for resume")
     return publish_mirror(partial, path, item)
 
 

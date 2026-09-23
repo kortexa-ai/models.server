@@ -3,6 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -72,6 +73,34 @@ class VaultTests(unittest.TestCase):
             self.assertEqual(vault.load_state(root, "abc"), state)
             with self.assertRaises(ValueError):
                 vault.load_state(root, "changed")
+
+    def test_modelscope_http200_range_resumes_existing_partial(self):
+        class Response:
+            status_code = 200
+            headers = {"content-range": "bytes 2-5/6"}
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def raise_for_status(self): pass
+            def iter_bytes(self, size): return iter([b"cdef"])
+        def stream(method, url, **kwargs):
+            self.assertEqual(kwargs["headers"], {"Range": "bytes=2-"})
+            self.assertNotIn("Authorization", kwargs["headers"])
+            return Response()
+        with tempfile.TemporaryDirectory() as d, patch.dict("sys.modules", {"httpx": SimpleNamespace(stream=stream)}):
+            root = Path(d)
+            (root / "weights.bin.mirror.incomplete").write_bytes(b"ab")
+            result = vault.sam_mirror(item(b"abcdef", True), root)
+            self.assertEqual(result.read_bytes(), b"abcdef")
+
+    def test_mirror_bad_checksum_quarantines_partial_for_fresh_retry(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            partial = root / "file.incomplete"
+            partial.write_bytes(b"bad")
+            with self.assertRaises(ValueError):
+                vault.publish_mirror(partial, root / "weights.bin", item(b"yes", True))
+            self.assertFalse(partial.exists())
+            self.assertEqual(len(list(root.glob("*.corrupt-*"))), 1)
 
 
 if __name__ == "__main__":
