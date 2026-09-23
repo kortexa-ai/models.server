@@ -1,0 +1,29 @@
+[Unit]
+Description=Resumable original weights and NVFP4 archive
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=francip
+Group=francip
+WorkingDirectory=/home/francip/src/models.server/vault
+ExecStart=/home/francip/src/models.server/vault/.venv/bin/python /home/francip/src/models.server/vault/run.py run
+Environment=PYTHONUNBUFFERED=1
+Restart=no
+RestartSec=60
+TimeoutStopSec=30
+KillMode=control-group
+Nice=15
+IOSchedulingClass=idle
+CPUWeight=10
+IOWeight=10
+UMask=0022
+NoNewPrivileges=true
+PrivateTmp=true
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
