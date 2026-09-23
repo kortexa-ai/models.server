@@ -1,4 +1,6 @@
 import hashlib
+import contextlib
+import io
 import importlib.util
 import json
 from pathlib import Path
@@ -101,6 +103,38 @@ class VaultTests(unittest.TestCase):
                 vault.publish_mirror(partial, root / "weights.bin", item(b"yes", True))
             self.assertFalse(partial.exists())
             self.assertEqual(len(list(root.glob("*.corrupt-*"))), 1)
+
+    def test_failed_repo_yields_and_restart_preserves_verified_files(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            repos = [{"repo": name, "revision": "a" * 40, "files": [item(b"x")], "bytes": 1}
+                     for name in ("owner/blocked", "owner/working")]
+            vault.atomic_json(root / "manifest.json", {"repos": repos, "total_bytes": 2})
+            calls = []
+            def worker(*args, **kwargs):
+                current = json.loads((root / "current.json").read_text())
+                repo = current["repo"]
+                calls.append(repo["repo"])
+                if repo["repo"] == "owner/blocked":
+                    result = {"ok": False, "error": "GatedRepoError", "http_status": 403}
+                else:
+                    p = root / "huggingface" / repo["repo"] / repo["revision"] / "weights.bin"
+                    p.parent.mkdir(parents=True)
+                    p.write_bytes(b"x")
+                    result = {"ok": True, "receipt": vault.verify(p, item(b"x"))}
+                vault.atomic_json(root / "result.json", result)
+                return SimpleNamespace(poll=lambda: 0, wait=lambda **kw: 0)
+            with patch.object(vault, "guard"), patch.object(vault.subprocess, "Popen", side_effect=worker), \
+                 patch.object(vault.time, "sleep", side_effect=lambda _: vault.stop()), \
+                 patch.object(vault, "STOP", False), contextlib.redirect_stdout(io.StringIO()):
+                vault.run(root)
+                self.assertEqual(calls, ["owner/blocked", "owner/working"])
+                state = json.loads((root / "state.json").read_text())
+                self.assertIn("weights.bin", state["repos"]["owner/working"]["done"])
+                self.assertGreater(state["repos"]["owner/blocked"]["retry_at"], 0)
+                vault.STOP = False
+                vault.run(root)
+                self.assertEqual(len(calls), 2)
 
 
 if __name__ == "__main__":

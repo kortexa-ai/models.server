@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pinned archival queue; no inference, remote code, or shared Hub cache writes."""
 import argparse
+from datetime import datetime
 import fcntl
 import hashlib
 import json
@@ -372,7 +373,16 @@ def main():
     elif args.command == "fetch":
         return fetch(args.vault)
     elif args.command == "status":
-        print((args.vault / "status.json").read_text())
+        status = json.loads((args.vault / "status.json").read_text())
+        stamp = datetime.fromtimestamp(status["updated"]).astimezone().isoformat(timespec="seconds")
+        print(f"{status['phase']} — updated {stamp}")
+        print(f"Verified {status['verified_bytes'] / 10**9:,.2f} GB / {status['total_bytes'] / 10**12:.3f} TB; "
+              f"{status['completed_repos']} / {status['total_repos']} repositories complete")
+        if current := status.get("current"):
+            print(f"{current['repo']}: {current['file']}")
+            print(f"Current file: {status['active_bytes'] / 10**9:.3f} / {current['bytes'] / 10**9:.3f} GB")
+        for repo, failure in status["deferred"].items():
+            print(f"Retry pending: {repo}: {failure['error']} (HTTP {failure['http_status']})")
     else:
         signal.signal(signal.SIGTERM, stop)
         signal.signal(signal.SIGINT, stop)
