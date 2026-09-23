@@ -3,6 +3,7 @@ import contextlib
 import io
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -23,6 +24,32 @@ def item(data, lfs=False):
 
 
 class VaultTests(unittest.TestCase):
+    def test_xet_transport_configuration_keeps_hdd_and_cache_bounds(self):
+        with patch.dict(os.environ, {}, clear=True):
+            vault.configure(Path("/vault"), use_xet=True)
+            self.assertEqual(os.environ["HF_HUB_DISABLE_XET"], "0")
+            self.assertEqual(os.environ["HF_XET_RECONSTRUCT_WRITE_SEQUENTIALLY"], "1")
+            self.assertEqual(os.environ["HF_XET_NUM_CONCURRENT_RANGE_GETS"], "4")
+            self.assertEqual(os.environ["HF_XET_CACHE"], "/vault/.cache/xet")
+            vault.configure(Path("/vault"))
+            self.assertEqual(os.environ["HF_HUB_DISABLE_XET"], "1")
+
+    def test_sparse_partial_writes_advance_progress_without_changing_length(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            p = root / "weights.incomplete"
+            with p.open("wb") as out:
+                out.truncate(1024**3)
+            size, before = vault.partial_progress(root)
+            self.assertLess(size, p.stat().st_size)
+            with p.open("r+b") as out:
+                out.write(b"x" * 4096)
+            os.utime(p, ns=(p.stat().st_atime_ns, before[0][2] + 1000000))
+            size, after = vault.partial_progress(root)
+            self.assertNotEqual(before, after)
+            self.assertEqual(p.stat().st_size, 1024**3)
+            self.assertGreaterEqual(size, 4096)
+
     def test_checksum_rejects_corruption_with_same_size(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "weights.bin"

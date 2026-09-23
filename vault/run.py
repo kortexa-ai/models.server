@@ -20,6 +20,7 @@ VAULT = Path.home() / "storage/models/vault"
 MOUNT = Path("/mnt/storage")
 DISK = Path("/dev/disk/by-uuid/a2dcdf68-f962-4af5-bc1c-b90123cc9cf0")
 RESERVE = 512 * 1024**3
+MAX_HTTP_BYTES = 50_000_000_000  # huggingface-hub 1.31.0 transport limit.
 STOP = False
 CHILD = None
 
@@ -60,13 +61,17 @@ def guard(vault=VAULT, required=RESERVE):
         raise RuntimeError("External disk free-space reserve reached")
 
 
-def configure(vault):
+def configure(vault, use_xet=False):
     # Preserve the existing login token location. Keep every download/cache here.
     for key, value in {
         "HF_HUB_CACHE": str(vault / ".cache/hub"),
         "HF_XET_CACHE": str(vault / ".cache/xet"),
         "HF_ASSETS_CACHE": str(vault / ".cache/assets"),
-        "HF_HUB_DISABLE_XET": "1",  # HTTP range resume; sequential writes on HDD.
+        "HF_HUB_DISABLE_XET": "0" if use_xet else "1",
+        "HF_XET_RECONSTRUCT_WRITE_SEQUENTIALLY": "1",
+        "HF_XET_NUM_CONCURRENT_RANGE_GETS": "4",
+        "HF_XET_CHUNK_CACHE_SIZE_BYTES": "0",
+        "HF_XET_HIGH_PERFORMANCE": "0",
         "HF_HUB_DOWNLOAD_TIMEOUT": "60",
         "HF_HUB_ETAG_TIMEOUT": "30",
         "HF_HUB_DISABLE_PROGRESS_BARS": "1",
@@ -242,8 +247,13 @@ def fetch(vault):
     return 0
 
 
-def partial_bytes(local_dir):
-    return sum(p.stat().st_size for p in local_dir.rglob("*.incomplete") if p.is_file()) if local_dir.exists() else 0
+def partial_progress(local_dir):
+    # Xet can preallocate a sparse file at its final length. Actual writes still
+    # change mtime, so a fixed apparent size must not trigger the stall watchdog.
+    stats = [(str(p), p.stat()) for p in sorted(local_dir.rglob("*.incomplete")) if p.is_file()]
+    allocated = sum(min(s.st_size, s.st_blocks * 512) for _, s in stats)
+    fingerprint = tuple((name, s.st_size, s.st_mtime_ns) for name, s in stats)
+    return allocated, fingerprint
 
 
 def stop(signum=None, frame=None):
@@ -307,7 +317,8 @@ def run(vault):
                 continue
             rs = state["repos"][repo["repo"]]
             item = next(f for f in repo["files"] if f["path"] not in rs["done"])
-            current = {"repo": repo["repo"], "file": item["path"], "bytes": item["bytes"]}
+            current = {"repo": repo["repo"], "file": item["path"], "bytes": item["bytes"],
+                       "transport": "xet" if item["bytes"] > MAX_HTTP_BYTES else "http"}
             print("Downloading", current, flush=True)
             atomic_json(vault / "current.json", {"repo": {k: repo[k] for k in ("repo", "revision")}, "file": item})
             atomic_json(vault / "result.json", {"ok": False, "error": "WorkerInterrupted"})
@@ -315,15 +326,15 @@ def run(vault):
             directory = vault / "huggingface" / repo["repo"] / repo["revision"]
             CHILD = subprocess.Popen([sys.executable, __file__, "fetch", "--vault", str(vault)],
                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            last_bytes, last_change = -1, time.monotonic()
+            last_progress, last_change = None, time.monotonic()
             try:
                 while CHILD.poll() is None and not STOP:
                     guard(vault)
-                    count = partial_bytes(directory)
+                    count, progress = partial_progress(directory)
                     activity = json.loads((vault / "activity.json").read_text())
                     phase = activity["phase"]
-                    if count != last_bytes:
-                        last_bytes, last_change = count, time.monotonic()
+                    if progress != last_progress:
+                        last_progress, last_change = progress, time.monotonic()
                     # A 100 GB file can take a long time to read on a busy HDD.
                     timeout = 12 * 3600 if phase == "verifying" else 15 * 60
                     if time.monotonic() - last_change > timeout:
@@ -367,7 +378,10 @@ def main():
     parser.add_argument("--vault", type=Path, default=VAULT)
     parser.add_argument("--source", type=Path)
     args = parser.parse_args()
-    configure(args.vault)
+    use_xet = False
+    if args.command == "fetch":
+        use_xet = json.loads((args.vault / "current.json").read_text())["file"]["bytes"] > MAX_HTTP_BYTES
+    configure(args.vault, use_xet=use_xet)
     if args.command == "prepare":
         prepare(args.source, args.vault)
     elif args.command == "fetch":

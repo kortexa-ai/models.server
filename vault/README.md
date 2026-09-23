@@ -35,9 +35,13 @@ Stopping retains partial files. To pause across a reboot, also use
 `ktxsvc disable models/vault`; resume with `enable` and `start`.
 
 The runner downloads one file at a time, starting with smaller repositories.
-Hugging Face downloads use resumable HTTP ranges with Xet disabled, following
-the working transport on Smarty. Each file has a 60-second network read timeout;
-15 minutes without byte progress kills and retries the worker. Verification
+Hugging Face downloads up to 50 GB use resumable HTTP ranges. Larger individual
+files require Xet; these use sequential disk writes, four range requests, and
+no chunk cache. Xet keeps its small transfer state in the vault. Progress uses
+allocated file bytes, and the watchdog checks write timestamps as well as size
+so sparse preallocation does not look like a stalled download. HTTP requests
+have a 60-second read timeout; 15 minutes without file write progress kills and
+retries either transport's worker. Verification
 has a separate 12-hour limit to allow a busy mechanical disk to read a large
 file. Failed repositories yield to the rest of the queue and retry with backoff,
 capped at six hours, indefinitely. Missing disk, wrong disk, or low free space
