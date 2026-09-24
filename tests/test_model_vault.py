@@ -24,6 +24,57 @@ def item(data, lfs=False):
 
 
 class VaultTests(unittest.TestCase):
+    def manifests(self):
+        a = {"repo": "owner/old", "revision": "a" * 40, "bytes": 1,
+             "files": [item(b"a")], "categories": ["original"]}
+        b = {"repo": "owner/new", "revision": "b" * 40, "bytes": 1,
+             "files": [item(b"b")], "categories": ["original"]}
+        return {"repos": [a], "total_bytes": 1}, {"repos": [a, b], "total_bytes": 2}
+
+    def test_append_recovery_preserves_receipts_at_each_commit_stage(self):
+        before, after = self.manifests()
+        for manifest, state_manifest in ((before, before), (after, before), (after, after)):
+            with self.subTest(stage=len(manifest["repos"]), state=len(state_manifest["repos"])), tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                receipts = {"owner/old": {"done": {"weights.bin": {"bytes": 1, "sha256": "kept"}}, "retry_at": 123}}
+                state = {"manifest_sha256": vault.manifest_hash(state_manifest), "repos": receipts}
+                vault.atomic_json(root / "manifest.json", manifest)
+                vault.atomic_json(root / "state.json", state)
+                vault.atomic_json(root / "manifest-update.json", {"before": before, "after": after})
+                vault.recover_update(root)
+                self.assertEqual(json.loads((root / "manifest.json").read_text()), after)
+                saved = vault.load_state(root, vault.manifest_hash(after))
+                self.assertEqual(saved["repos"], receipts)
+                self.assertFalse((root / "manifest-update.json").exists())
+                vault.recover_update(root)  # Recovery is idempotent after completion.
+
+    def test_append_rejects_replacement_of_existing_pinned_files(self):
+        before, after = self.manifests()
+        after = json.loads(json.dumps(after))
+        after["repos"][0]["revision"] = "c" * 40
+        with self.assertRaises(ValueError):
+            vault.validate_append(before, after)
+
+    def test_append_capacity_check_and_explicit_queue_overcommit(self):
+        before, after = self.manifests()
+        additions = {"repos": [after["repos"][1]], "total_bytes": 1}
+        with tempfile.TemporaryDirectory() as d, patch.object(vault, "guard"), \
+             patch.object(vault.shutil, "disk_usage", return_value=SimpleNamespace(free=0)), \
+             contextlib.redirect_stdout(io.StringIO()):
+            root = Path(d)
+            vault.atomic_json(root / "manifest.json", before)
+            vault.atomic_json(root / "state.json", {"manifest_sha256": vault.manifest_hash(before), "repos": {}})
+            vault.atomic_json(root / "additions.json", additions)
+            with self.assertRaises(RuntimeError):
+                vault.append_queue(root, root / "additions.json")
+            self.assertEqual(json.loads((root / "manifest.json").read_text()), before)
+            vault.append_queue(root, root / "additions.json", allow_capacity_shortfall=True)
+            saved = json.loads((root / "manifest.json").read_text())
+            self.assertEqual(len(saved["repos"]), 2)
+            vault.load_state(root, vault.manifest_hash(saved))
+            vault.append_queue(root, root / "additions.json", allow_capacity_shortfall=True)
+            self.assertEqual(json.loads((root / "manifest.json").read_text()), saved)
+
     def test_xet_transport_configuration_keeps_hdd_and_cache_bounds(self):
         with patch.dict(os.environ, {}, clear=True):
             vault.configure(Path("/vault"), use_xet=True)

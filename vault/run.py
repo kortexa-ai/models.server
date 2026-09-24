@@ -37,6 +37,115 @@ def atomic_json(path, data):
     sync_dir(path.parent)
 
 
+def json_bytes(data):
+    return (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()
+
+
+def manifest_hash(manifest):
+    return hashlib.sha256(json_bytes(manifest)).hexdigest()
+
+
+def validate_manifest(manifest):
+    names = set()
+    for repo in manifest["repos"]:
+        name = safe_path(repo["repo"])
+        if len(name.split("/")) != 2 or name in names or not re.fullmatch(r"[0-9a-f]{40}", repo["revision"]):
+            raise ValueError("Invalid or duplicate pinned repository")
+        names.add(name)
+        paths = set()
+        for f in repo["files"]:
+            name = safe_path(f["path"])
+            if name in paths or not isinstance(f["bytes"], int) or f["bytes"] < 0:
+                raise ValueError("Invalid or duplicate file")
+            paths.add(name)
+            if not re.fullmatch(r"[0-9a-f]{40}", f["git_oid"]):
+                raise ValueError("Invalid Git object")
+            if f.get("sha256") is not None and not re.fullmatch(r"[0-9a-f]{64}", f["sha256"]):
+                raise ValueError("Invalid SHA-256")
+        if not paths or repo["bytes"] != sum(f["bytes"] for f in repo["files"]):
+            raise ValueError("Repository size does not match its files")
+    if manifest["total_bytes"] != sum(r["bytes"] for r in manifest["repos"]):
+        raise ValueError("Manifest total does not match its repositories")
+
+
+def validate_append(before, after):
+    validate_manifest(before)
+    validate_manifest(after)
+    new = {r["repo"]: r for r in after["repos"]}
+    for old in before["repos"]:
+        if new.get(old["repo"]) != old:
+            raise ValueError("Append cannot remove or change an existing repository")
+
+
+def recover_update(vault):
+    """Finish a committed append after power loss, before opening the queue."""
+    pending = vault / "manifest-update.json"
+    if not pending.exists():
+        return
+    tx = json.loads(pending.read_text())
+    before, after = tx["before"], tx["after"]
+    validate_append(before, after)
+    old_hash, new_hash = manifest_hash(before), manifest_hash(after)
+    current_hash = hashlib.sha256((vault / "manifest.json").read_bytes()).hexdigest()
+    state = json.loads((vault / "state.json").read_text())
+    if current_hash not in (old_hash, new_hash) or state["manifest_sha256"] not in (old_hash, new_hash):
+        raise ValueError("Queue update does not match current manifest and state")
+    atomic_json(vault / "manifest.json", after)
+    state["manifest_sha256"] = new_hash
+    atomic_json(vault / "state.json", state)
+    history = vault / "manifest-history" / new_hash
+    history.mkdir(parents=True, exist_ok=True)
+    os.replace(pending, history / "applied-update.json")
+    sync_dir(history)
+    sync_dir(vault)
+
+
+def append_queue(vault, source_path, allow_capacity_shortfall=False):
+    guard(vault)
+    with (vault / "queue.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        recover_update(vault)
+        before = json.loads((vault / "manifest.json").read_text())
+        state = load_state(vault, manifest_hash(before))
+        additions = json.loads(source_path.read_text())
+        validate_manifest(additions)
+        known = {r["repo"]: r for r in before["repos"]}
+        new_repos = []
+        for r in additions["repos"]:
+            if r["repo"] in known:
+                if known[r["repo"]] != r:
+                    raise ValueError("Conflicting repository in append")
+            else:
+                new_repos.append(r)
+        if not new_repos:
+            print("All selected repositories are already queued")
+            return
+        after = dict(before)
+        after["repos"] = sorted(before["repos"] + new_repos, key=lambda r: (r["bytes"], r["repo"]))
+        after["total_bytes"] = sum(r["bytes"] for r in after["repos"])
+        after["updates"] = before.get("updates", []) + [{"time": time.time(), "source": str(source_path),
+            "repos": [r["repo"] for r in new_repos], "previous_manifest_sha256": manifest_hash(before)}]
+        validate_append(before, after)
+        verified = sum(f["bytes"] for r in state["repos"].values() for f in r["done"].values())
+        free = shutil.disk_usage(vault).free
+        # Conservative: ignore already stored partial bytes when planning capacity.
+        shortfall = max(0, after["total_bytes"] - verified + RESERVE - free)
+        if shortfall and not allow_capacity_shortfall:
+            raise RuntimeError(f"Archive needs approximately {shortfall} more bytes of capacity")
+        report = {"checked": time.time(), "total_bytes": after["total_bytes"], "verified_bytes": verified,
+                  "free_bytes": free, "reserve_bytes": RESERVE, "approx_shortfall_bytes": shortfall}
+        history = vault / "manifest-history" / manifest_hash(after)
+        history.mkdir(parents=True, exist_ok=True)
+        atomic_json(history / "manifest-before.json", before)
+        atomic_json(history / "state-before.json", state)
+        atomic_json(vault / "capacity.json", report)
+        # This is the commit point. Startup can finish either interrupted rename.
+        atomic_json(vault / "manifest-update.json", {"before": before, "after": after})
+        recover_update(vault)
+        print(f"Added {len(new_repos)} repositories; total {after['total_bytes']} bytes; "
+              f"approximate capacity shortfall {shortfall} bytes")
+
+
 def sync_dir(path):
     fd = os.open(path, os.O_RDONLY)
     try:
@@ -280,6 +389,7 @@ def run(vault):
     guard(vault)
     with (vault / "queue.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        recover_update(vault)
         manifest_raw = (vault / "manifest.json").read_bytes()
         manifest = json.loads(manifest_raw)
         state = load_state(vault, hashlib.sha256(manifest_raw).hexdigest())
@@ -374,9 +484,10 @@ def run(vault):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("prepare", "run", "fetch", "status"))
+    parser.add_argument("command", choices=("prepare", "append", "run", "fetch", "status"))
     parser.add_argument("--vault", type=Path, default=VAULT)
     parser.add_argument("--source", type=Path)
+    parser.add_argument("--allow-capacity-shortfall", action="store_true")
     args = parser.parse_args()
     use_xet = False
     if args.command == "fetch":
@@ -384,6 +495,8 @@ def main():
     configure(args.vault, use_xet=use_xet)
     if args.command == "prepare":
         prepare(args.source, args.vault)
+    elif args.command == "append":
+        append_queue(args.vault, args.source, args.allow_capacity_shortfall)
     elif args.command == "fetch":
         return fetch(args.vault)
     elif args.command == "status":

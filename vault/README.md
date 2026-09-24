@@ -61,6 +61,34 @@ match; changed files are verified again. Invalid completed files are retained
 with a `.corrupt-*` suffix for investigation and retried. Do not modify the
 prepared manifest or move files while this queue is active.
 
+To add selected repositories, first create a pinned additions manifest with the
+same `repos` and file metadata structure. Validate its selected files against
+Hub metadata. Then stop only this service, append, and resume:
+
+```bash
+ktxsvc stop models/vault
+cd ~/src/models.server/vault
+.venv/bin/python run.py append --source /path/to/pinned-additions.json
+ktxsvc start models/vault
+```
+
+Append refuses changed versions of existing repositories. It preserves all
+receipts and partial downloads, and orders the expanded queue by repository
+size. The operation holds the queue lock and commits a durable journal before
+changing the manifest/state pair. Startup completes an interrupted committed
+append automatically. Backups and the completed journal stay under
+`manifest-history/`.
+
+Append checks capacity for the remaining queue plus the reserve. Only an explicit
+`--allow-capacity-shortfall` queues more than the disk can currently hold. This
+does not weaken the runtime free-space guard: more space is required before
+the archive can finish. `capacity.json` records the estimate; it conservatively
+ignores stored partial bytes. It is a planning snapshot, not live free space.
+
+`catalog.py` writes a grouped Markdown inventory from the exact active manifest,
+receipts, original selection notes, and capacity report. The result includes
+source URLs, pinned revisions, size, file scope and status for each repository.
+
 SAM 3 weights download directly from the public `facebook/sam3` ModelScope mirror
 at its pinned commit; the original small metadata files come from Hugging Face.
 No Hugging Face token is sent to ModelScope. All mirror files must match the
@@ -77,6 +105,8 @@ vault/
   state.json                 # durable per-file verification receipts and retries
   status.json                # progress, current file and deferred repositories
   current.json / result.json # current worker request and result
+  capacity.json              # most recent expansion capacity estimate
+  manifest-history/         # append backups and committed change journals
   huggingface/OWNER/REPO/COMMIT/...
 ```
 
