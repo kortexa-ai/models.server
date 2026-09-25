@@ -47,7 +47,7 @@ def manifest_hash(manifest):
 
 def validate_manifest(manifest):
     names = set()
-    for repo in manifest["repos"]:
+    for repo in manifest["repos"] + manifest.get("deferred_repos", []):
         name = safe_path(repo["repo"])
         if len(name.split("/")) != 2 or name in names or not re.fullmatch(r"[0-9a-f]{40}", repo["revision"]):
             raise ValueError("Invalid or duplicate pinned repository")
@@ -68,13 +68,21 @@ def validate_manifest(manifest):
         raise ValueError("Manifest total does not match its repositories")
 
 
-def validate_append(before, after):
+def validate_append(before, after, defer_repos=()):
     validate_manifest(before)
     validate_manifest(after)
-    new = {r["repo"]: r for r in after["repos"]}
-    for old in before["repos"]:
+    new = {r["repo"]: r for r in after["repos"] + after.get("deferred_repos", [])}
+    for old in before["repos"] + before.get("deferred_repos", []):
         if new.get(old["repo"]) != old:
             raise ValueError("Append cannot remove or change an existing repository")
+    expected_deferred = {r["repo"] for r in before.get("deferred_repos", [])} | set(defer_repos)
+    if not expected_deferred <= new.keys() or expected_deferred != {r["repo"] for r in after.get("deferred_repos", [])}:
+        raise ValueError("Deferred repositories must match the explicit request")
+
+
+def active_verified_bytes(manifest, state):
+    return sum(f["bytes"] for r in manifest["repos"]
+               for f in state["repos"].get(r["repo"], {}).get("done", {}).values())
 
 
 def recover_update(vault):
@@ -84,7 +92,7 @@ def recover_update(vault):
         return
     tx = json.loads(pending.read_text())
     before, after = tx["before"], tx["after"]
-    validate_append(before, after)
+    validate_append(before, after, tx.get("defer_repos", []))
     old_hash, new_hash = manifest_hash(before), manifest_hash(after)
     current_hash = hashlib.sha256((vault / "manifest.json").read_bytes()).hexdigest()
     state = json.loads((vault / "state.json").read_text())
@@ -100,16 +108,18 @@ def recover_update(vault):
     sync_dir(vault)
 
 
-def append_queue(vault, source_path, allow_capacity_shortfall=False):
+def append_queue(vault, source_path, allow_capacity_shortfall=False, defer_repos=()):
     guard(vault)
     with (vault / "queue.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         recover_update(vault)
         before = json.loads((vault / "manifest.json").read_text())
         state = load_state(vault, manifest_hash(before))
-        additions = json.loads(source_path.read_text())
+        additions = json.loads(source_path.read_text()) if source_path else {"repos": [], "total_bytes": 0}
         validate_manifest(additions)
-        known = {r["repo"]: r for r in before["repos"]}
+        if additions.get("deferred_repos"):
+            raise ValueError("Use --defer-repo to explicitly defer a selection")
+        known = {r["repo"]: r for r in before["repos"] + before.get("deferred_repos", [])}
         new_repos = []
         for r in additions["repos"]:
             if r["repo"] in known:
@@ -117,32 +127,45 @@ def append_queue(vault, source_path, allow_capacity_shortfall=False):
                     raise ValueError("Conflicting repository in append")
             else:
                 new_repos.append(r)
-        if not new_repos:
+        selected = before["repos"] + new_repos
+        deferred = before.get("deferred_repos", [])
+        defer_names = set(defer_repos)
+        if not defer_names <= {r["repo"] for r in selected + deferred}:
+            raise ValueError("Cannot defer an unknown repository")
+        newly_deferred = [r for r in selected if r["repo"] in defer_names]
+        if not new_repos and not newly_deferred:
             print("All selected repositories are already queued")
             return
         after = dict(before)
-        after["repos"] = sorted(before["repos"] + new_repos, key=lambda r: (r["bytes"], r["repo"]))
+        after["repos"] = sorted((r for r in selected if r["repo"] not in defer_names),
+                                key=lambda r: (r["bytes"], r["repo"]))
+        if deferred or newly_deferred:
+            after["deferred_repos"] = sorted(deferred + newly_deferred, key=lambda r: r["repo"])
         after["total_bytes"] = sum(r["bytes"] for r in after["repos"])
         after["updates"] = before.get("updates", []) + [{"time": time.time(), "source": str(source_path),
-            "repos": [r["repo"] for r in new_repos], "previous_manifest_sha256": manifest_hash(before)}]
-        validate_append(before, after)
-        verified = sum(f["bytes"] for r in state["repos"].values() for f in r["done"].values())
+            "repos": [r["repo"] for r in new_repos], "defer_repos": sorted(defer_names),
+            "previous_manifest_sha256": manifest_hash(before)}]
+        validate_append(before, after, defer_names)
+        verified = active_verified_bytes(after, state)
         free = shutil.disk_usage(vault).free
         # Conservative: ignore already stored partial bytes when planning capacity.
         shortfall = max(0, after["total_bytes"] - verified + RESERVE - free)
         if shortfall and not allow_capacity_shortfall:
             raise RuntimeError(f"Archive needs approximately {shortfall} more bytes of capacity")
         report = {"checked": time.time(), "total_bytes": after["total_bytes"], "verified_bytes": verified,
-                  "free_bytes": free, "reserve_bytes": RESERVE, "approx_shortfall_bytes": shortfall}
+                  "free_bytes": free, "reserve_bytes": RESERVE, "approx_shortfall_bytes": shortfall,
+                  "approx_headroom_bytes": max(0, free - (after["total_bytes"] - verified + RESERVE))}
         history = vault / "manifest-history" / manifest_hash(after)
         history.mkdir(parents=True, exist_ok=True)
         atomic_json(history / "manifest-before.json", before)
         atomic_json(history / "state-before.json", state)
         atomic_json(vault / "capacity.json", report)
         # This is the commit point. Startup can finish either interrupted rename.
-        atomic_json(vault / "manifest-update.json", {"before": before, "after": after})
+        atomic_json(vault / "manifest-update.json", {"before": before, "after": after,
+                                                    "defer_repos": sorted(defer_names)})
         recover_update(vault)
-        print(f"Added {len(new_repos)} repositories; total {after['total_bytes']} bytes; "
+        print(f"Added {len(new_repos)} selections; deferred {len(newly_deferred)}; "
+              f"active total {after['total_bytes']} bytes; "
               f"approximate capacity shortfall {shortfall} bytes")
 
 
@@ -400,14 +423,15 @@ def run(vault):
         atomic_json(vault / "state.json", state)
 
         def status(phase, current=None, active_bytes=0):
-            done_bytes = sum(f["bytes"] for rs in state["repos"].values() for f in rs["done"].values())
+            done_bytes = active_verified_bytes(manifest, state)
             complete = sum(len(state["repos"][r["repo"]]["done"]) == len(r["files"]) for r in manifest["repos"])
             atomic_json(vault / "status.json", {
                 "updated": time.time(), "phase": phase, "current": current, "active_bytes": active_bytes,
                 "verified_bytes": done_bytes, "total_bytes": manifest["total_bytes"],
                 "completed_repos": complete, "total_repos": len(manifest["repos"]),
                 "deferred": {k: {x: v.get(x) for x in ("error", "http_status", "retry_at")}
-                             for k, v in state["repos"].items() if v.get("error")},
+                             for k, v in state["repos"].items() if v.get("error")
+                             and k in {r["repo"] for r in manifest["repos"]}},
             })
 
         while not STOP:
@@ -488,6 +512,7 @@ def main():
     parser.add_argument("--vault", type=Path, default=VAULT)
     parser.add_argument("--source", type=Path)
     parser.add_argument("--allow-capacity-shortfall", action="store_true")
+    parser.add_argument("--defer-repo", action="append", default=[], help="Keep a pinned selection but exclude it from downloads")
     args = parser.parse_args()
     use_xet = False
     if args.command == "fetch":
@@ -496,7 +521,7 @@ def main():
     if args.command == "prepare":
         prepare(args.source, args.vault)
     elif args.command == "append":
-        append_queue(args.vault, args.source, args.allow_capacity_shortfall)
+        append_queue(args.vault, args.source, args.allow_capacity_shortfall, args.defer_repo)
     elif args.command == "fetch":
         return fetch(args.vault)
     elif args.command == "status":

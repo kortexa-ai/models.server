@@ -85,6 +85,57 @@ class VaultTests(unittest.TestCase):
             vault.configure(Path("/vault"))
             self.assertEqual(os.environ["HF_HUB_DISABLE_XET"], "1")
 
+    def test_deferral_recovery_preserves_pins_files_and_receipts(self):
+        _, before = self.manifests()
+        after = {"repos": [before["repos"][1]], "deferred_repos": [before["repos"][0]], "total_bytes": 1}
+        for manifest, state_manifest in ((before, before), (after, before), (after, after)):
+            with self.subTest(manifest=manifest), tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                receipts = {"owner/old": {"done": {"weights.bin": {"bytes": 1}}, "retry_at": 123}}
+                partial = root / "weights.incomplete"
+                partial.write_bytes(b"retained")
+                vault.atomic_json(root / "manifest.json", manifest)
+                vault.atomic_json(root / "state.json", {"manifest_sha256": vault.manifest_hash(state_manifest), "repos": receipts})
+                vault.atomic_json(root / "manifest-update.json", {"before": before, "after": after, "defer_repos": ["owner/old"]})
+                vault.recover_update(root)
+                state = vault.load_state(root, vault.manifest_hash(after))
+                self.assertEqual(state["repos"], receipts)
+                self.assertEqual(partial.read_bytes(), b"retained")
+                self.assertEqual(vault.active_verified_bytes(after, state), 0)
+                vault.recover_update(root)
+
+    def test_deferral_requires_exact_explicit_scope(self):
+        _, before = self.manifests()
+        after = {"repos": [before["repos"][1]], "deferred_repos": [before["repos"][0]], "total_bytes": 1}
+        with self.assertRaises(ValueError):
+            vault.validate_append(before, after)
+        with self.assertRaises(ValueError):
+            vault.validate_append(before, after, ["owner/missing"])
+        vault.validate_append(before, after, ["owner/old"])
+        after["deferred_repos"][0] = dict(after["deferred_repos"][0], revision="c" * 40)
+        with self.assertRaises(ValueError):
+            vault.validate_append(before, after, ["owner/old"])
+
+    def test_new_and_existing_deferrals_fit_without_overcommit(self):
+        before, expanded = self.manifests()
+        additions = {"repos": [expanded["repos"][1]], "total_bytes": 1}
+        with tempfile.TemporaryDirectory() as d, patch.object(vault, "guard"), \
+             patch.object(vault.shutil, "disk_usage", return_value=SimpleNamespace(free=vault.RESERVE)), \
+             contextlib.redirect_stdout(io.StringIO()):
+            root = Path(d)
+            vault.atomic_json(root / "manifest.json", before)
+            vault.atomic_json(root / "state.json", {"manifest_sha256": vault.manifest_hash(before), "repos": {}})
+            vault.atomic_json(root / "additions.json", additions)
+            with self.assertRaises(ValueError):
+                vault.append_queue(root, root / "additions.json", defer_repos=["owner/missing"])
+            vault.append_queue(root, root / "additions.json", defer_repos=["owner/old", "owner/new"])
+            saved = json.loads((root / "manifest.json").read_text())
+            self.assertEqual(saved["repos"], [])
+            self.assertEqual(saved["total_bytes"], 0)
+            self.assertEqual(len(saved["deferred_repos"]), 2)
+            vault.append_queue(root, root / "additions.json", defer_repos=["owner/old", "owner/new"])
+            self.assertEqual(json.loads((root / "manifest.json").read_text()), saved)
+
     def test_sparse_partial_writes_advance_progress_without_changing_length(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)

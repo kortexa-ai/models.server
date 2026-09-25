@@ -79,6 +79,14 @@ changing the manifest/state pair. Startup completes an interrupted committed
 append automatically. Backups and the completed journal stay under
 `manifest-history/`.
 
+Use `append --defer-repo OWNER/REPO` to retain an exact pinned selection while
+excluding it from active downloads and totals. Repeat the option for multiple
+repositories; it can be combined with `--source` to record a new selection as
+deferred immediately. No model files or verification receipts are deleted.
+Deferred inventories remain in `manifest.json` under `deferred_repos`; the
+catalog marks their formats as deferred. A later explicit queue update is required to
+reactivate them. Deferral and additions share the same recoverable transaction.
+
 Append checks capacity for the remaining queue plus the reserve. Only an explicit
 `--allow-capacity-shortfall` queues more than the disk can currently hold. This
 does not weaken the runtime free-space guard: more space is required before
