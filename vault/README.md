@@ -19,7 +19,8 @@ uv pip install --python .venv/bin/python 'huggingface-hub==1.31.0'
 ktxsvc install models/vault
 ```
 
-`ktxsvc install` enables startup at boot and process restart. Snappy, SSH, a
+`ktxsvc install` enables startup at boot. The queue retries failed transfer
+workers itself. Snappy, SSH, a
 terminal, and an agent session are not needed after installation. The checked-in
 service is inert until installed. Only this new service is managed by these
 commands. Pause, resume and inspect it on Smarty:
@@ -35,8 +36,10 @@ Stopping retains partial files. To pause across a reboot, also use
 `ktxsvc disable models/vault`; resume with `enable` and `start`.
 
 The runner downloads one file at a time, starting with smaller repositories.
-Hugging Face downloads up to 50 GB use resumable HTTP ranges. Larger individual
-files require Xet; these use sequential disk writes, four range requests, and
+Hugging Face downloads up to 50 GB initially use resumable HTTP ranges. A
+successful comparison can enable Xet for files of at least 1 MB through
+`transport-policy.json`. Larger individual files above 50 GB always require
+Xet; these use sequential disk writes, four range requests, and
 no chunk cache. Xet keeps its small transfer state in the vault. Progress uses
 allocated file bytes, and the watchdog checks write timestamps as well as size
 so sparse preallocation does not look like a stalled download. HTTP requests
@@ -93,9 +96,21 @@ does not weaken the runtime free-space guard: more space is required before
 the archive can finish. `capacity.json` records the estimate; it conservatively
 ignores stored partial bytes. It is a planning snapshot, not live free space.
 
-`catalog.py` writes a grouped Markdown inventory from the exact active manifest,
-receipts, original selection notes, and capacity report. The result includes
-source URLs, pinned revisions, size, file scope and status for each repository.
+`catalog.py` writes a compact Markdown table from the manifest and receipts,
+with one row per model combining its archive formats. It includes status,
+active size, short notes, and exact repository links to pinned revisions.
+
+`benchmark.py --report /path/in/vault/comparison.json` compares four fresh,
+similarly sized 4–6 GB shards from one pinned repository in HTTP–Xet–Xet–HTTP
+order. Stop the managed queue first; the comparison holds its lock and credits
+verified files to the normal receipts. It retains all files and partials. Each
+trial has a 15-minute limit. Timings include download, checksum verification,
+and disk flush. The report checkpoints each trial and records failures without
+changing transport policy. A complete comparison enables Xet only if aggregate
+throughput improves by at least 20% and both Xet trials beat both HTTP trials
+by at least 10%. Run it under a detached, bounded wrapper with an EXIT trap to
+`ktxsvc start models/vault`, so the queue resumes even if the caller disconnects.
+The normal queue reads the persisted decision before each file.
 
 SAM 3 weights download directly from the public `facebook/sam3` ModelScope mirror
 at its pinned commit; the original small metadata files come from Hugging Face.

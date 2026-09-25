@@ -215,6 +215,16 @@ def configure(vault, use_xet=False):
     logging.disable(logging.CRITICAL)
 
 
+def transfer_transport(vault, item):
+    if item["bytes"] > MAX_HTTP_BYTES:
+        return "xet"
+    policy = vault / "transport-policy.json"
+    if item["bytes"] >= 1_000_000 and policy.exists():
+        if json.loads(policy.read_text()).get("prefer_xet") is True:
+            return "xet"
+    return "http"
+
+
 def merged_packages(source):
     packages = {}
     inputs = [(r, "original") for g in source["original_groups"] for r in g["repos"]]
@@ -357,11 +367,13 @@ def fetch(vault):
     local_dir.mkdir(parents=True, exist_ok=True)
     guard(vault, RESERVE + item["bytes"])
     try:
+        started = time.monotonic()
         if repo["repo"] == "facebook/sam3" and item["path"] in ("sam3.pt", "model.safetensors"):
             path = sam_mirror(item, local_dir)
         else:
             path = Path(hf_hub_download(repo["repo"], item["path"], revision=repo["revision"],
                                         local_dir=local_dir))
+        downloaded = time.monotonic()
         atomic_json(vault / "activity.json", {"phase": "verifying", "time": time.time()})
         try:
             result = verify(path, item)
@@ -369,7 +381,9 @@ def fetch(vault):
             # Keep evidence and force the next attempt to fetch fresh content.
             os.replace(path, path.with_name(path.name + f".corrupt-{time.time_ns()}"))
             raise
-        atomic_json(vault / "result.json", {"ok": True, "receipt": result})
+        atomic_json(vault / "result.json", {"ok": True, "receipt": result,
+                    "download_seconds": downloaded - started,
+                    "verification_seconds": time.monotonic() - downloaded})
     except Exception as exc:
         # Avoid signed URLs/tokens and unbounded dependency tracebacks in logs.
         response = getattr(exc, "response", None)
@@ -452,9 +466,10 @@ def run(vault):
             rs = state["repos"][repo["repo"]]
             item = next(f for f in repo["files"] if f["path"] not in rs["done"])
             current = {"repo": repo["repo"], "file": item["path"], "bytes": item["bytes"],
-                       "transport": "xet" if item["bytes"] > MAX_HTTP_BYTES else "http"}
+                       "transport": transfer_transport(vault, item)}
             print("Downloading", current, flush=True)
-            atomic_json(vault / "current.json", {"repo": {k: repo[k] for k in ("repo", "revision")}, "file": item})
+            atomic_json(vault / "current.json", {"repo": {k: repo[k] for k in ("repo", "revision")},
+                                                "file": item, "transport": current["transport"]})
             atomic_json(vault / "result.json", {"ok": False, "error": "WorkerInterrupted"})
             atomic_json(vault / "activity.json", {"phase": "downloading", "time": time.time()})
             directory = vault / "huggingface" / repo["repo"] / repo["revision"]
@@ -516,7 +531,8 @@ def main():
     args = parser.parse_args()
     use_xet = False
     if args.command == "fetch":
-        use_xet = json.loads((args.vault / "current.json").read_text())["file"]["bytes"] > MAX_HTTP_BYTES
+        request = json.loads((args.vault / "current.json").read_text())
+        use_xet = request.get("transport", transfer_transport(args.vault, request["file"])) == "xet"
     configure(args.vault, use_xet=use_xet)
     if args.command == "prepare":
         prepare(args.source, args.vault)

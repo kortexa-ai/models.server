@@ -4,6 +4,7 @@ import io
 import importlib.util
 import json
 import os
+import sys
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -14,6 +15,10 @@ from unittest.mock import patch
 spec = importlib.util.spec_from_file_location("vault", Path(__file__).parents[1] / "vault/run.py")
 vault = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(vault)
+benchmark_spec = importlib.util.spec_from_file_location("vault_benchmark", Path(__file__).parents[1] / "vault/benchmark.py")
+benchmark = importlib.util.module_from_spec(benchmark_spec)
+with patch.dict(sys.modules, {"run": vault}):
+    benchmark_spec.loader.exec_module(benchmark)
 
 
 def item(data, lfs=False):
@@ -24,6 +29,58 @@ def item(data, lfs=False):
 
 
 class VaultTests(unittest.TestCase):
+    def test_transport_policy_preserves_large_file_requirement_and_small_metadata_http(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.assertEqual(vault.transfer_transport(root, {"bytes": 5_000_000_000}), "http")
+            self.assertEqual(vault.transfer_transport(root, {"bytes": vault.MAX_HTTP_BYTES + 1}), "xet")
+            vault.atomic_json(root / "transport-policy.json", {"prefer_xet": True})
+            self.assertEqual(vault.transfer_transport(root, {"bytes": 5_000_000_000}), "xet")
+            self.assertEqual(vault.transfer_transport(root, {"bytes": 999}), "http")
+
+    def test_benchmark_requires_consistent_improvement_and_complete_trials(self):
+        def trials(times):
+            return [{"transport": t, "bytes": 1000, "elapsed_seconds": s}
+                    for t, s in zip(("http", "xet", "xet", "http"), times)]
+        self.assertTrue(benchmark.evaluate(trials((10, 4, 5, 10)))["prefer_xet"])
+        self.assertFalse(benchmark.evaluate(trials((10, 9, 9, 10)))["prefer_xet"])
+        self.assertFalse(benchmark.evaluate(trials((10, 2, 11, 10)))["prefer_xet"])
+        with self.assertRaises(ValueError):
+            benchmark.evaluate(trials((10, 4, 5)))
+
+    def test_failed_benchmark_keeps_verified_progress_without_switching_transport(self):
+        files = [dict(item(b"x"), path=f"weight-{i}.bin") for i in range(4)]
+        repo = {"repo": "owner/model", "revision": "a" * 40, "files": files, "bytes": 4}
+        manifest = {"repos": [repo], "total_bytes": 4}
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            vault.atomic_json(root / "manifest.json", manifest)
+            vault.atomic_json(root / "state.json", {"manifest_sha256": vault.manifest_hash(manifest), "repos": {}})
+            calls = []
+            def worker(*args, **kwargs):
+                request = json.loads((root / "current.json").read_text())
+                calls.append(request["transport"])
+                if len(calls) == 1:
+                    f = request["file"]
+                    path = root / "huggingface" / repo["repo"] / repo["revision"] / f["path"]
+                    path.parent.mkdir(parents=True)
+                    path.write_bytes(b"x")
+                    vault.atomic_json(root / "result.json", {"ok": True, "receipt": vault.verify(path, f),
+                                      "download_seconds": 1, "verification_seconds": 0.1})
+                    code = 0
+                else:
+                    vault.atomic_json(root / "result.json", {"ok": False, "error": "TransferFailed"})
+                    code = 1
+                return SimpleNamespace(poll=lambda: code, returncode=code)
+            with patch.object(vault, "guard"), patch.object(benchmark, "fresh_shards", return_value=(repo, files)), \
+                 patch.object(benchmark.subprocess, "Popen", side_effect=worker), contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaises(RuntimeError):
+                    benchmark.compare(root, root / "benchmark.json")
+            state = vault.load_state(root, vault.manifest_hash(manifest))
+            self.assertEqual(list(state["repos"][repo["repo"]]["done"]), [files[0]["path"]])
+            self.assertFalse((root / "transport-policy.json").exists())
+            self.assertEqual(json.loads((root / "benchmark.json").read_text())["phase"], "failed")
+
     def manifests(self):
         a = {"repo": "owner/old", "revision": "a" * 40, "bytes": 1,
              "files": [item(b"a")], "categories": ["original"]}
