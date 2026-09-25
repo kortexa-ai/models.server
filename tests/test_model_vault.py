@@ -37,6 +37,9 @@ class VaultTests(unittest.TestCase):
             vault.atomic_json(root / "transport-policy.json", {"prefer_xet": True})
             self.assertEqual(vault.transfer_transport(root, {"bytes": 5_000_000_000}), "xet")
             self.assertEqual(vault.transfer_transport(root, {"bytes": 999}), "http")
+            self.assertEqual(vault.transfer_range_gets(root), 4)
+            vault.atomic_json(root / "transport-policy.json", {"prefer_xet": True, "xet_range_gets": 16})
+            self.assertEqual(vault.transfer_range_gets(root), 16)
 
     def test_benchmark_requires_consistent_improvement_and_complete_trials(self):
         def trials(times):
@@ -141,6 +144,12 @@ class VaultTests(unittest.TestCase):
             self.assertEqual(os.environ["HF_XET_CACHE"], "/vault/.cache/xet")
             vault.configure(Path("/vault"))
             self.assertEqual(os.environ["HF_HUB_DISABLE_XET"], "1")
+            vault.configure(Path("/vault"), use_xet=True, xet_range_gets=16)
+            self.assertEqual(os.environ["HF_XET_NUM_CONCURRENT_RANGE_GETS"], "16")
+            self.assertEqual(os.environ["HF_XET_RECONSTRUCT_WRITE_SEQUENTIALLY"], "1")
+            self.assertEqual(os.environ["HF_XET_HIGH_PERFORMANCE"], "0")
+            with self.assertRaises(ValueError):
+                vault.configure(Path("/vault"), use_xet=True, xet_range_gets=1000)
 
     def test_deferral_recovery_preserves_pins_files_and_receipts(self):
         _, before = self.manifests()

@@ -39,7 +39,8 @@ The runner downloads one file at a time, starting with smaller repositories.
 Hugging Face downloads up to 50 GB initially use resumable HTTP ranges. A
 successful comparison can enable Xet for files of at least 1 MB through
 `transport-policy.json`. Larger individual files above 50 GB always require
-Xet; these use sequential disk writes, four range requests, and
+Xet; these use sequential disk writes, four range requests by default (16 after
+a winning default-concurrency comparison), and
 no chunk cache. Xet keeps its small transfer state in the vault. Progress uses
 allocated file bytes, and the watchdog checks write timestamps as well as size
 so sparse preallocation does not look like a stalled download. HTTP requests
@@ -102,7 +103,8 @@ active size, short notes, and exact repository links to pinned revisions.
 
 `benchmark.py --report /path/in/vault/comparison.json` compares four fresh,
 similarly sized 4–6 GB shards from one pinned repository in HTTP–Xet–Xet–HTTP
-order. Stop the managed queue first; the comparison holds its lock and credits
+order, using Xet's default 16 parallel range requests and sequential writes.
+Stop the managed queue first; the comparison holds its lock and credits
 verified files to the normal receipts. It retains all files and partials. Each
 trial has a 15-minute limit. Timings include download, checksum verification,
 and disk flush. The report checkpoints each trial and records failures without

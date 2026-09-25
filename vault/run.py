@@ -193,7 +193,9 @@ def guard(vault=VAULT, required=RESERVE):
         raise RuntimeError("External disk free-space reserve reached")
 
 
-def configure(vault, use_xet=False):
+def configure(vault, use_xet=False, xet_range_gets=4):
+    if xet_range_gets not in (4, 16):
+        raise ValueError("Unsupported Xet range concurrency")
     # Preserve the existing login token location. Keep every download/cache here.
     for key, value in {
         "HF_HUB_CACHE": str(vault / ".cache/hub"),
@@ -201,7 +203,7 @@ def configure(vault, use_xet=False):
         "HF_ASSETS_CACHE": str(vault / ".cache/assets"),
         "HF_HUB_DISABLE_XET": "0" if use_xet else "1",
         "HF_XET_RECONSTRUCT_WRITE_SEQUENTIALLY": "1",
-        "HF_XET_NUM_CONCURRENT_RANGE_GETS": "4",
+        "HF_XET_NUM_CONCURRENT_RANGE_GETS": str(xet_range_gets),
         "HF_XET_CHUNK_CACHE_SIZE_BYTES": "0",
         "HF_XET_HIGH_PERFORMANCE": "0",
         "HF_HUB_DOWNLOAD_TIMEOUT": "60",
@@ -223,6 +225,15 @@ def transfer_transport(vault, item):
         if json.loads(policy.read_text()).get("prefer_xet") is True:
             return "xet"
     return "http"
+
+
+def transfer_range_gets(vault):
+    policy = vault / "transport-policy.json"
+    if policy.exists():
+        settings = json.loads(policy.read_text())
+        if settings.get("prefer_xet") is True:
+            return settings.get("xet_range_gets", 4)
+    return 4
 
 
 def merged_packages(source):
@@ -469,7 +480,8 @@ def run(vault):
                        "transport": transfer_transport(vault, item)}
             print("Downloading", current, flush=True)
             atomic_json(vault / "current.json", {"repo": {k: repo[k] for k in ("repo", "revision")},
-                                                "file": item, "transport": current["transport"]})
+                                                "file": item, "transport": current["transport"],
+                                                "xet_range_gets": transfer_range_gets(vault)})
             atomic_json(vault / "result.json", {"ok": False, "error": "WorkerInterrupted"})
             atomic_json(vault / "activity.json", {"phase": "downloading", "time": time.time()})
             directory = vault / "huggingface" / repo["repo"] / repo["revision"]
@@ -530,10 +542,12 @@ def main():
     parser.add_argument("--defer-repo", action="append", default=[], help="Keep a pinned selection but exclude it from downloads")
     args = parser.parse_args()
     use_xet = False
+    xet_range_gets = 4
     if args.command == "fetch":
         request = json.loads((args.vault / "current.json").read_text())
         use_xet = request.get("transport", transfer_transport(args.vault, request["file"])) == "xet"
-    configure(args.vault, use_xet=use_xet)
+        xet_range_gets = request.get("xet_range_gets", transfer_range_gets(args.vault))
+    configure(args.vault, use_xet=use_xet, xet_range_gets=xet_range_gets)
     if args.command == "prepare":
         prepare(args.source, args.vault)
     elif args.command == "append":

@@ -3,8 +3,10 @@
 Work order: https://github.com/kortexa-ai/models.server/issues/38
 
 Compare four fresh, similarly sized pinned shards in HTTP–Xet–Xet–HTTP order.
-Use the existing authentication, one file at a time, four Xet range requests,
-sequential HDD writes, checksum verification, and disk flush. Count successful
+Use the existing authentication, one file at a time, and sequential HDD writes.
+Compare the initial four-range setting and then the default 16-range setting
+when the conservative setting does not show a consistent gain. Include
+checksum verification and disk flush. Count successful
 trials as archive progress; retain all partials and receipts. Bound the detached
 comparison and resume only the managed vault service on completion or failure.
 

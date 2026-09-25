@@ -64,14 +64,15 @@ def compare(root, report_path):
         state = vault.load_state(root, vault.manifest_hash(manifest))
         repo, items = fresh_shards(root, manifest, state)
         report = {"started": time.time(), "manifest_sha256": state["manifest_sha256"],
-                  "repo": repo["repo"], "revision": repo["revision"], "trials": [], "phase": "running"}
+                  "repo": repo["repo"], "revision": repo["revision"], "trials": [], "phase": "running",
+                  "xet_range_gets": 16}
         vault.atomic_json(report_path, report)
         rs = state["repos"].setdefault(repo["repo"], {"done": {}, "attempts": 0, "retry_at": 0})
         try:
             for transport, item in zip(("http", "xet", "xet", "http"), items):
                 vault.guard(root, vault.RESERVE + item["bytes"])
                 vault.atomic_json(root / "current.json", {"repo": {k: repo[k] for k in ("repo", "revision")},
-                                                          "file": item, "transport": transport})
+                                                          "file": item, "transport": transport, "xet_range_gets": 16})
                 vault.atomic_json(root / "result.json", {"ok": False, "error": "BenchmarkInterrupted"})
                 vault.atomic_json(root / "activity.json", {"phase": "downloading", "time": time.time()})
                 report["current"] = {"transport": transport, "file": item["path"], "started": time.time()}
@@ -109,7 +110,8 @@ def compare(root, report_path):
                 vault.atomic_json(root / "state.json", state)
                 trial = {"transport": transport, "file": item["path"], "bytes": item["bytes"],
                          "elapsed_seconds": elapsed, "download_seconds": result["download_seconds"],
-                         "verification_seconds": result["verification_seconds"]}
+                         "verification_seconds": result["verification_seconds"],
+                         "xet_range_gets": 16 if transport == "xet" else None}
                 report["trials"].append(trial)
                 vault.atomic_json(report_path, report)
                 print("Verified", transport, round(item["bytes"] / elapsed / 10**6, 2), "MB/s", flush=True)
@@ -118,7 +120,8 @@ def compare(root, report_path):
             vault.atomic_json(report_path, report)
             if decision["prefer_xet"]:
                 vault.atomic_json(root / "transport-policy.json", {"prefer_xet": True, "benchmark": str(report_path),
-                                  "measured_speedup": decision["xet_speedup"], "updated": time.time()})
+                                  "measured_speedup": decision["xet_speedup"], "xet_range_gets": 16,
+                                  "updated": time.time()})
             print("Decision", json.dumps(decision), flush=True)
         except BaseException as exc:
             report.update(phase="failed", error=type(exc).__name__, finished=time.time())
