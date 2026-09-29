@@ -27,6 +27,8 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | `mlx-vlm`, `mlx-lm`, `mlx-audio` |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | — |
 | **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
+| **static** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | `vllm-spark-tp2` |
+| **shock** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | `vllm-spark-tp2` |
 | **192.168.2.144** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 | **192.168.2.145** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 
@@ -113,6 +115,7 @@ observed 600 W value: treat it as configuration drift.
 | 2063 | Parakeet Redux | speech recognition | ternary, 178 MB | — | audio | 1 |
 | 2064 | Qwen 3.8 27B Fast | dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 | 2065 | Qwen 3.8 27B Fast Abliterated | Huihui dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
+| 2066 | Qwen3.8-Flash-Next | sparse MoE / multimodal, dual DGX Spark | NVIDIA NVFP4 | fp8_e4m3 | 262K native | 6 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching

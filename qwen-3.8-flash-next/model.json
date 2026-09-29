@@ -1,0 +1,65 @@
+{
+  "name": "Qwen3.8 Flash Next NVFP4 (DGX Spark pair)",
+  "id": "qwen3.8-flash-next",
+  "default_engine": "vllm-spark-tp2",
+  "host": "0.0.0.0",
+  "port": 2066,
+  "context_window": 1000000,
+  "context": 1000000,
+  "parallel": 6,
+  "cache_type": "fp8_e4m3",
+  "multimodal": true,
+  "vllm_spark_tp2": {
+    "model": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+    "model_path": "/home/francip/models/Qwen3.8-Flash-Next-NVFP4",
+    "image": "vllm/vllm-openai:nightly-8a728663c1c3eeace834a95f5654fa653cc1998c",
+    "max_model_len": 1000000,
+    "max_num_seqs": 6,
+    "gpu_memory_utilization": 0.70,
+    "max_num_batched_tokens": 4096,
+    "kv_cache_dtype": "fp8_e4m3",
+    "tensor_parallel_size": 2,
+    "speculative_config": {
+      "method": "mtp",
+      "num_speculative_tokens": 3
+    },
+    "distributed_executor_backend": "mp",
+    "nodes": {
+      "static": {"rank": 0, "ip": "192.168.100.10"},
+      "shock": {"rank": 1, "ip": "192.168.100.11"}
+    },
+    "master_port": 29531,
+    "nccl": {
+      "hca": "rocep1s0f1,roceP2p1s0f1",
+      "gid_index": 3,
+      "roce_version": 2,
+      "socket_interface": "enp1s0f1np1"
+    },
+    "upstream_patches": {
+      "repository": "https://github.com/tonyd2wild/Qwen3.8-Flash-Next-NVFP4-DGX-Spark.git",
+      "revision": "6ad1c8f15cbab1ababd2048e8e5f94094dbfc4a0",
+      "directory": "/home/francip/src/vendor/qwen38-flash-next-dgx-spark/single-spark-vllm-tp1/patch/upstream-overlays"
+    },
+    "compile_mode": 0,
+    "cudagraph_mode": "FULL_DECODE_ONLY",
+    "trust_remote_code": true,
+    "enable_prefix_caching": false,
+    "flashinfer_autotune": false,
+    "hf_overrides": {
+      "text_config": {
+        "rope_parameters": {
+          "mrope_interleaved": true,
+          "mrope_section": [11, 11, 10],
+          "rope_type": "yarn",
+          "rope_theta": 10000000,
+          "partial_rotary_factor": 0.25,
+          "factor": 4.0,
+          "original_max_position_embeddings": 262144
+        }
+      }
+    },
+    "reasoning_parser": "qwen3",
+    "tool_call_parser": "qwen3_xml",
+    "enable_thinking": false
+  }
+}

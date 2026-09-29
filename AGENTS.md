@@ -10,6 +10,8 @@ Run `hostname` to check which machine you're on before doing anything.
 | **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | active |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | active |
 | **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
+| **static** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | active |
+| **shock** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | active |
 | **192.168.2.144** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | active |
 | **192.168.2.145** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | active |
 
@@ -20,6 +22,7 @@ Run `hostname` to check which machine you're on before doing anything.
 - Generic engine scripts live in `scripts/` — they read model.json, not hardcoded values
 - Usage: `./run.sh qwen-3.5-4b` or `cd qwen-3.5-4b && ../run.sh`
 - Override engine: `./run.sh qwen-3.5-4b --engine vllm`
+- `vllm-spark-tp2` is a model-specific distributed engine for the `static` + `shock` pair.
 
 ## Rules
 
@@ -40,3 +43,6 @@ Run `hostname` to check which machine you're on before doing anything.
   Cinference NVFP4 weights, K8V4 KV, DFlash2-7, a 524288-token shared pool
   and eight slots. They are pinned to the RTX PRO 6000 UUID, with a 262144-token
   per-request ceiling. Registration does not authorize selecting a new default.
+- Exception: `qwen-3.8-flash-next` uses the pinned `vllm-spark-tp2` engine on
+  `static` + `shock`, with NVIDIA NVFP4 weights, YaRN extension to 1M context,
+  FP8 KV, MTP-3, and six sequences.

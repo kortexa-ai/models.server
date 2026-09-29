@@ -1,0 +1,29 @@
+[Unit]
+Description=Qwen3.8-Flash-Next NVFP4 distributed LLM (DGX Spark pair)
+Wants=nvidia-persistenced.service
+After=network.target docker.service nvidia-persistenced.service
+Requires=docker.service
+
+StartLimitIntervalSec=300
+StartLimitBurst=2
+
+[Service]
+Type=simple
+User=francip
+Group=francip
+WorkingDirectory=/home/francip/src/models.server
+Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStartPre=/usr/bin/nvidia-smi
+ExecStart=/home/francip/src/models.server/run.sh qwen-3.8-flash-next
+ExecStop=/home/francip/src/models.server/scripts/run-vllm-spark-tp2.sh --stop
+Restart=no
+TimeoutStopSec=90
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/francip/.cache/qwen38fn-vllm
+
+[Install]
+WantedBy=multi-user.target
