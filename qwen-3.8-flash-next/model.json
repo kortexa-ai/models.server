@@ -12,7 +12,7 @@
   "vllm_spark_tp2": {
     "model": "nvidia/Qwen3.8-Flash-Next-NVFP4",
     "model_path": "/home/francip/models/Qwen3.8-Flash-Next-NVFP4",
-    "image": "vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e",
+    "image": "vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03",
     "max_model_len": 1000000,
     "max_num_seqs": 6,
     "gpu_memory_utilization": 0.70,

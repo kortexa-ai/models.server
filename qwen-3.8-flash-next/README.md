@@ -14,7 +14,7 @@ vault at `~/storage/models/vault/huggingface/nvidia/Qwen3.8-Flash-Next-NVFP4`.
 ## Runtime compatibility files
 
 The serving container is pinned to the official vLLM Qwen3.8 image's ARM64
-manifest, `vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e`. The
+manifest, `vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03`. The
 GB10/SM121 QSA path and this checkpoint's MTP metadata need five compatibility
 overlays. The recipe pins their Apache-2.0 source repository to commit
 `6ad1c8f15cbab1ababd2048e8e5f94094dbfc4a0`:
@@ -36,7 +36,7 @@ On both nodes, fast-forward `~/src/models.server` through Git to the same
 compatibility repository above. Pull the pinned Docker image:
 
 ```sh
-docker pull vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
+docker pull vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03
 ```
 
 Install and start the managed service on `shock` first, then on `static`:
