@@ -23,6 +23,7 @@ def main():
     # Common
     print(f"MODEL_NAME='{quote(m['name'])}'")
     print(f"MODEL_ID='{quote(m['id'])}'")
+    emit("MODEL_TYPE", m.get("type", ""))
     print(f"MODEL_PORT='{m['port']}'")
     print(f"MODEL_HOST='{m.get('host', '0.0.0.0')}'")
     print(f"MODEL_SAMPLE_RATE='{m.get('sample_rate', 0)}'")
@@ -233,6 +234,26 @@ def main():
             print(f"CPU_CHECKPOINT_MIN_STEP='{cpu['checkpoint_min_step']}'")
     else:
         print("CPU_SUPPORTED=false")
+
+    # Shingi System One decision server (type: systemone). It reuses a pinned
+    # Prism llama.cpp runtime but has no llama block or chat endpoint.
+    shingi = m.get("shingi")
+    if shingi:
+        package, weights = shingi["package"], shingi["weights"]
+        runtime, memory = shingi["runtime"], shingi["memory"]
+        emit("SHINGI_PACKAGE_REPO", package["repo"])
+        emit("SHINGI_PACKAGE_REVISION", package["revision"])
+        emit("SHINGI_WEIGHTS_REPO", weights["repo"])
+        emit("SHINGI_WEIGHTS_REVISION", weights["revision"])
+        emit("SHINGI_MODEL_FILE", weights["model"])
+        emit("SHINGI_CALIBRATION_FILE", weights["calibration"])
+        emit("SHINGI_RUNTIME_REPO", runtime["repo"])
+        emit("SHINGI_RUNTIME_REVISION", runtime["revision"])
+        emit("SHINGI_RUNTIME_DIR", runtime["directory"])
+        emit("SHINGI_PRELOAD_MIB", memory["preload_mib"])
+        emit("SHINGI_HEADROOM_MIB", memory["headroom_mib"])
+    else:
+        print("SHINGI_SUPPORTED=false")
 
     # transformers (tasks that llama.cpp does not support)
     transformers = m.get("transformers")

@@ -1,0 +1,31 @@
+{
+  "name": "Shingi 27B",
+  "id": "shingi-27b",
+  "type": "systemone",
+  "context_window": 16384,
+  "context": 16384,
+  "port": 2068,
+  "host": "0.0.0.0",
+  "default_engine": "shingi",
+  "shingi": {
+    "package": {
+      "repo": "https://github.com/kortexa-ai/shingi-27b.git",
+      "revision": "681d1ae2a7d56ce7d07871447f3c1254568a6b38"
+    },
+    "weights": {
+      "repo": "kortexa-ai/shingi-27b",
+      "revision": "d8fecd47b5a04598d3b2d20de3ef6a97c67e2d92",
+      "model": "shingi-27b.gguf",
+      "calibration": "calibration.json"
+    },
+    "runtime": {
+      "repo": "https://github.com/PrismML-Eng/llama.cpp.git",
+      "revision": "d8f26eec76da6d09bb708bcba51ef64b8cd868a3",
+      "directory": ".engines/llama-prism"
+    },
+    "memory": {
+      "preload_mib": 10240,
+      "headroom_mib": 2048
+    }
+  }
+}

@@ -116,6 +116,7 @@ observed 600 W value: treat it as configuration drift.
 | 2064 | Qwen 3.8 27B Fast | dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 | 2065 | Qwen 3.8 27B Fast Abliterated | Huihui dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 | 2066 | Qwen3.8-Flash-Next | sparse MoE / multimodal, dual DGX Spark | NVIDIA NVFP4 | fp8_e4m3 | 262K native | 6 |
+| 2068 | Shingi 27B | System One decision model (not chat) | ternary GGUF (Prism fork, CUDA) | q8_0 | 16K | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -246,6 +247,9 @@ models.server/
 │   ├── setup-sglang-omni.sh # Installs Audio8's pinned SGLang adapter
 │   ├── setup-mlx.sh         # Creates/updates .venv-mlx
 │   ├── setup-omlx.sh        # Installs the pinned K2 Horizon oMLX patch
+│   ├── run-shingi.sh        # System One launcher (Shingi decision server)
+│   ├── setup-shingi.sh      # One-time Shingi package, readout and weights setup
+│   ├── shingi-server.py     # Applies model.json memory floors, then starts Shingi
 │   └── setup-transformers.sh # Creates/updates the Transformers .venv
 ├── <model-id>/
 │   ├── model.json          # All config: ports, quants, engine settings
@@ -336,6 +340,44 @@ cache. Setup builds the runtime only, does not start services or download
 weights, and is intentionally opt-in rather than part of the shared
 `setup.sh`. Both managed service definitions use GGUF; inspect service/port
 ownership and install them through `ktxsvc` when deploying.
+
+### System One models (Shingi 27B)
+
+A model with `"type": "systemone"` is a decision model, not an OpenAI chat
+model. Clients must use the discriminator to keep it out of chat routing.
+`shingi-27b` on port 2068 serves the public
+[shingi-27b](https://github.com/kortexa-ai/shingi-27b) package:
+`POST /v1/systemone`, `GET /v1/version`, `GET /health` and `GET /v1/models`.
+It runs on Linux with CUDA only and is pinned to the RTX 4090.
+
+Its `shingi` block pins four things:
+
+| Key | Meaning |
+|-----|---------|
+| `package` | Git repository and commit of the server package and `src/native/readout.cpp` |
+| `weights` | Hugging Face repository, revision, GGUF and calibration file names |
+| `runtime` | Prism llama.cpp runtime; reuses Bonsai's `.engines/llama-prism` |
+| `memory` | Free-GPU floors in MiB before load (`preload_mib`) and while serving (`headroom_mib`) |
+
+Setup is one-time and idempotent. Serving only reads its results, so the
+systemd unit works with `ProtectHome=read-only`:
+
+```bash
+./scripts/setup-shingi.sh shingi-27b   # package venv, readout, weights (stamped; reruns skip)
+./run.sh shingi-27b                    # fails with guidance if setup is missing or stale
+```
+
+Setup installs the package into `.engines/shingi/venv` and compiles
+`.engines/shingi/bin/readout`. The readout links to `.engines/llama-prism`
+when that checkout is clean at the pinned revision and has shared libraries.
+Otherwise setup builds a separate Prism copy in `.engines/shingi/prism`. It
+never changes `.engines/llama-prism`. Weights go to the standard Hugging Face
+cache, and the server checks the package's pinned SHA-256 on every start.
+
+The public package requires 14 GiB free before load and 4 GiB headroom on
+cards up to 32 GiB. The shared 4090 cannot meet that next to TTS and ASR.
+`scripts/shingi-server.py` replaces only those two floors with the `memory`
+values. The package's UUID and 20 GiB minimum-card checks still apply.
 
 ### llama-server (llama.cpp)
 GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.

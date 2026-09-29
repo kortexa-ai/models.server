@@ -78,6 +78,7 @@ EXPECTED_CONTEXT_WINDOWS = {
     "qwen3-embedding-0.6b": 32768,
     "qwen3-tts-0.6b-customvoice": 32768,
     "qwen3-tts-1.7b-customvoice": 32768,
+    "shingi-27b": 16384,
 }
 
 

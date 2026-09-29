@@ -1,0 +1,35 @@
+[Unit]
+Description=Shingi 27B System One decision model
+Wants=nvidia-persistenced.service
+After=network.target nvidia-persistenced.service
+
+StartLimitIntervalSec=120
+StartLimitBurst=3
+
+[Service]
+Type=simple
+
+User=francip
+Group=francip
+
+WorkingDirectory=/home/francip/src/models.server
+
+Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=CUDA_VISIBLE_DEVICES=GPU-afb49bc6-cd89-6584-99cc-a0f03592a010
+
+ExecStartPre=/usr/bin/nvidia-smi --id=GPU-afb49bc6-cd89-6584-99cc-a0f03592a010 --query-gpu=uuid --format=csv,noheader
+ExecStart=/home/francip/src/models.server/run.sh /home/francip/src/models.server/shingi-27b
+
+Restart=no
+RestartSec=15
+
+TimeoutStopSec=60
+
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/francip/src/api.server /home/francip/.cache /home/francip/.config /home/francip/data
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
