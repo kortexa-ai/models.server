@@ -34,6 +34,7 @@ MAX_NUM_SEQS="$(config_value vllm_spark_tp2.max_num_seqs)"
 GPU_MEMORY_UTILIZATION="$(config_value vllm_spark_tp2.gpu_memory_utilization)"
 MAX_BATCHED_TOKENS="$(config_value vllm_spark_tp2.max_num_batched_tokens)"
 KV_CACHE_DTYPE="$(config_value vllm_spark_tp2.kv_cache_dtype)"
+ENABLE_PREFIX_CACHING="$(config_value vllm_spark_tp2.enable_prefix_caching)"
 SPECULATIVE_CONFIG="$(config_value vllm_spark_tp2.speculative_config)"
 HF_OVERRIDES="$(config_value vllm_spark_tp2.hf_overrides)"
 MASTER_ADDR="$(config_value vllm_spark_tp2.nodes.static.ip)"
@@ -67,6 +68,11 @@ CACHE_DIR="${QWEN_CACHE_DIR:-${HOME}/.cache/qwen38fn-vllm}"
 mkdir -p "$CACHE_DIR"
 GRAPH_ARGS=(--compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}')
 SPEC_ARGS=(--speculative-config "$SPECULATIVE_CONFIG")
+if [[ "$ENABLE_PREFIX_CACHING" == "true" ]]; then
+    PREFIX_CACHE_ARGS=(--enable-prefix-caching)
+else
+    PREFIX_CACHE_ARGS=(--no-enable-prefix-caching)
+fi
 
 if [[ "$RANK" == "1" ]]; then
     HEADLESS_ARGS=(--headless)
@@ -101,7 +107,7 @@ exec docker run --rm --name "$CONTAINER" --gpus all \
     --quantization modelopt --tensor-parallel-size "$(config_value vllm_spark_tp2.tensor_parallel_size)" \
     --hf-overrides "$HF_OVERRIDES" --max-model-len "$MAX_MODEL_LEN" --max-num-seqs "$MAX_NUM_SEQS" \
     --gpu-memory-utilization "$GPU_MEMORY_UTILIZATION" --max-num-batched-tokens "$MAX_BATCHED_TOKENS" \
-    --kv-cache-dtype "$KV_CACHE_DTYPE" --no-enable-flashinfer-autotune --no-enable-prefix-caching \
+    --kv-cache-dtype "$KV_CACHE_DTYPE" --no-enable-flashinfer-autotune "${PREFIX_CACHE_ARGS[@]}" \
     --reasoning-parser "$(config_value vllm_spark_tp2.reasoning_parser)" \
     --enable-auto-tool-choice --tool-call-parser "$(config_value vllm_spark_tp2.tool_call_parser)" \
     --default-chat-template-kwargs '{"enable_thinking":false}' \
