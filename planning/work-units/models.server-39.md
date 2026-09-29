@@ -28,8 +28,24 @@ Issue: <https://github.com/kortexa-ai/models.server/issues/39>
   `sha256:29339ec3eddf9131b1fbea8e49fb88dd7021755beaa0a17669b2efcff901ad0a`.
 - The source ARM64 vLLM image was pulled by manifest digest on `static` and
   mirrored to `shock` over RoCE.
-- Checkpoint transfer from Smarty to `static` is still running; afterward the
-  deployment watcher will verify the files, mirror to `shock` over RoCE, start
-  both services, and run a near-maximum-context speed test.
-- Pending: successful two-node startup, measured maximum-context request and
-  speed, and service health verification.
+- The checkpoint was copied directly from Smarty to `static` with resumable
+  `rsync`, then mirrored from `static` to `shock` over RoCE. Both file-name and
+  size manifests match the source. The direct copy sustained about 40–50 MB/s;
+  the RoCE mirror sustained about 350 MB/s.
+- The vLLM runner enables long context and prefix caching for the Qwen MTP
+  draft config. The final runner is committed on `main`; both Sparks are
+  synced to the same revision and their `ktxsvc` services are active.
+- `GET http://192.168.2.101:2066/health` returns 200. `static` is rank 0/API;
+  `shock` is rank 1 over RoCE.
+- At idle after startup, `free -h` reported about 24 GiB available on `static`
+  and 26 GiB on `shock`. vLLM reported 74.27 GiB of weights plus non-Torch
+  memory, 1.3 GiB peak activation, 0.29 GiB CUDA graph, and 9.61 GiB KV cache
+  per rank at the configured 0.70 GPU-memory target.
+- Near-maximum-context test: 998,800 prompt tokens plus 128 output tokens;
+  494.603 s time to first token (2,019.4 prompt tokens/s), 68.66 output
+  tokens/s, and 496.467 s total. This is a synthetic repeated-text stress
+  prompt; it validates throughput and the long-context path, not retrieval
+  quality. A separate 32,767-token prompt plus 64 output tokens took 11.146 s
+  to first token (2,939.72 prompt tokens/s) and decoded at 42.63 tokens/s.
+- The model is usable for shorter contexts; a full 1M-token request has an
+  approximately eight-minute first-token delay at this configuration.
