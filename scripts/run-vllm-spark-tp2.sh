@@ -68,7 +68,7 @@ CACHE_DIR="${QWEN_CACHE_DIR:-${HOME}/.cache/qwen38fn-vllm}"
 mkdir -p "$CACHE_DIR"
 GRAPH_ARGS=(--compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}')
 SPEC_ARGS=(--speculative-config "$SPECULATIVE_CONFIG")
-if [[ "$ENABLE_PREFIX_CACHING" == "true" ]]; then
+if [[ "${ENABLE_PREFIX_CACHING,,}" == "true" ]]; then
     PREFIX_CACHE_ARGS=(--enable-prefix-caching)
 else
     PREFIX_CACHE_ARGS=(--no-enable-prefix-caching)
