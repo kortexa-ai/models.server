@@ -63,7 +63,7 @@ if docker inspect "$CONTAINER" >/dev/null 2>&1; then
     exit 6
 fi
 
-CACHE_DIR="${HOME}/.cache/qwen38fn-vllm"
+CACHE_DIR="${QWEN_CACHE_DIR:-${HOME}/.cache/qwen38fn-vllm}"
 mkdir -p "$CACHE_DIR"
 VLLM_PACKAGE=/usr/local/lib/python3.12/dist-packages/vllm
 OVERLAY_ARGS=(

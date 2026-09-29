@@ -13,6 +13,9 @@ User=francip
 Group=francip
 WorkingDirectory=/home/francip/src/models.server
 Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=QWEN_CACHE_DIR=/var/lib/qwen38fn-vllm
+StateDirectory=qwen38fn-vllm
+StateDirectoryMode=0750
 ExecStartPre=/usr/bin/nvidia-smi
 ExecStart=/home/francip/src/models.server/run.sh qwen-3.8-flash-next
 ExecStop=/home/francip/src/models.server/scripts/run-vllm-spark-tp2.sh --stop
@@ -23,7 +26,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
 ProtectHome=read-only
-ReadWritePaths=/home/francip/.cache/qwen38fn-vllm
+ReadWritePaths=/var/lib/qwen38fn-vllm
 
 [Install]
 WantedBy=multi-user.target
