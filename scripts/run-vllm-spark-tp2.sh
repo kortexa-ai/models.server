@@ -28,6 +28,7 @@ HOST_IP="$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["ip"])' "$
 MODEL_ID="$(config_value id)"
 MODEL_PATH="$(config_value vllm_spark_tp2.model_path)"
 IMAGE="$(config_value vllm_spark_tp2.image)"
+IMAGE_ID="$(config_value vllm_spark_tp2.image_id)"
 MAX_MODEL_LEN="$(config_value vllm_spark_tp2.max_model_len)"
 MAX_NUM_SEQS="$(config_value vllm_spark_tp2.max_num_seqs)"
 GPU_MEMORY_UTILIZATION="$(config_value vllm_spark_tp2.gpu_memory_utilization)"
@@ -50,6 +51,11 @@ if [[ ! -f "$MODEL_PATH/config.json" || ! -f "$MODEL_PATH/model.safetensors.inde
 fi
 if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
     echo "Pinned vLLM image is not present locally: ${IMAGE}" >&2
+    exit 5
+fi
+ACTUAL_IMAGE_ID="$(docker image inspect --format '{{.Id}}' "$IMAGE")"
+if [[ "$ACTUAL_IMAGE_ID" != "$IMAGE_ID" ]]; then
+    echo "vLLM image ID mismatch: expected ${IMAGE_ID}, got ${ACTUAL_IMAGE_ID}." >&2
     exit 5
 fi
 if docker inspect "$CONTAINER" >/dev/null 2>&1; then

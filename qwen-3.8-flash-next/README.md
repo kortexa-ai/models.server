@@ -13,11 +13,12 @@ vault at `~/storage/models/vault/huggingface/nvidia/Qwen3.8-Flash-Next-NVFP4`.
 
 ## Runtime
 
-The serving container is pinned to the current vLLM nightly's ARM64 manifest,
-`vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03`.
-Its stock Qwen4Exp, QSA, PLE, and ModelOpt modules import cleanly on a DGX
-Spark. Older overlays from earlier Qwen recipes are not mounted because they
-are incompatible with this current runtime.
+The serving container uses the current vLLM nightly's ARM64 manifest,
+`sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03`.
+Its image ID is pinned in `model.json` and checked before launch. Stock Qwen4Exp,
+QSA, PLE, and ModelOpt modules import cleanly on a DGX Spark. Older overlays
+from earlier Qwen recipes are not mounted because they are incompatible with
+this current runtime.
 
 ## Install and start
 
@@ -27,6 +28,8 @@ Docker image:
 
 ```sh
 docker pull vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03
+docker tag vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03 \
+  vllm/vllm-openai:qwen38fn-arm64-c3bede35
 ```
 
 Install and start the managed service on `shock` first, then on `static`:

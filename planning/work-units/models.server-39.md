@@ -23,9 +23,11 @@ Issue: <https://github.com/kortexa-ai/models.server/issues/39>
 - Config and shell validation passed; the service unit passed
   `systemd-analyze verify` on both new machines.
 - Repo changes are committed and pushed on `main`.
-- Both Sparks have the same clean repo revision and RoCE links. The official
-  ARM64 vLLM nightly has been pulled on `static`; it will be mirrored to
-  `shock` over RoCE after the weight copy.
+- Both Sparks have the same clean repo revision, RoCE links, and local image
+  tag. The tag on each host resolves to image ID
+  `sha256:29339ec3eddf9131b1fbea8e49fb88dd7021755beaa0a17669b2efcff901ad0a`.
+- The source ARM64 vLLM image was pulled by manifest digest on `static` and
+  mirrored to `shock` over RoCE.
 - Checkpoint transfer from Smarty to `static` is still running; afterward the
   deployment watcher will verify the files, mirror to `shock` over RoCE, start
   both services, and run a near-maximum-context speed test.
