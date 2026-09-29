@@ -19,6 +19,14 @@ Issue: <https://github.com/kortexa-ai/models.server/issues/39>
 
 ## Validation and delivery
 
-- Pending: config and shell validation, remote checkout synchronization,
-  checkpoint transfer, container startup, maximum-context request, speed
-  measurement, commit/push, and per-node service verification.
+- Config and shell validation passed; the service unit passed
+  `systemd-analyze verify` on both new machines.
+- Repo changes are committed and pushed on `main`.
+- Both Sparks have the same clean repo revision, pinned overlay checkout, and
+  RoCE links. The official ARM64 vLLM image is pulled on `static`; it will be
+  mirrored to `shock` over RoCE after the weight copy.
+- Checkpoint transfer from Smarty to `static` is still running; afterward the
+  deployment watcher will verify the files, mirror to `shock` over RoCE, start
+  both services, and run a near-maximum-context speed test.
+- Pending: successful two-node startup, measured maximum-context request and
+  speed, and service health verification.

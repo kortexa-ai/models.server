@@ -13,8 +13,8 @@ vault at `~/storage/models/vault/huggingface/nvidia/Qwen3.8-Flash-Next-NVFP4`.
 
 ## Runtime compatibility files
 
-The serving container is pinned to vLLM image
-`vllm/vllm-openai:nightly-8a728663c1c3eeace834a95f5654fa653cc1998c`. The
+The serving container is pinned to the official vLLM Qwen3.8 image's ARM64
+manifest, `vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e`. The
 GB10/SM121 QSA path and this checkpoint's MTP metadata need five compatibility
 overlays. The recipe pins their Apache-2.0 source repository to commit
 `6ad1c8f15cbab1ababd2048e8e5f94094dbfc4a0`:
@@ -32,26 +32,21 @@ overlays listed in `model.json`; it does not execute the upstream launcher.
 ## Install and start
 
 On both nodes, fast-forward `~/src/models.server` through Git to the same
-`origin/main` commit, stage the local checkpoint copy, clone the pinned
-compatibility repository above, and pull the pinned Docker image:
+`origin/main` commit, stage the local checkpoint copy, and clone the pinned
+compatibility repository above. Pull the pinned Docker image:
 
 ```sh
-docker pull vllm/vllm-openai:nightly-8a728663c1c3eeace834a95f5654fa653cc1998c
+docker pull vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
 ```
 
-Install the managed service on both nodes. Start the worker first, then the
-head:
-
-```sh
-ktxsvc install qwen-3.8-flash-next
-```
+Install and start the managed service on `shock` first, then on `static`:
 
 ```sh
 # On shock (rank 1 / worker)
-ktxsvc start qwen-3.8-flash-next
+ktxsvc install qwen-3.8-flash-next
 
 # On static (rank 0 / API head)
-ktxsvc start qwen-3.8-flash-next
+ktxsvc install qwen-3.8-flash-next
 ```
 
 The model config sets `max_model_len` to 1,000,000 with the documented YaRN
