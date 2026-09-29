@@ -11,29 +11,19 @@ The checkpoint is about 124 GB per node. Keep a local copy on each Spark at
 local for its random reads. The canonical source copy is in Smarty's model
 vault at `~/storage/models/vault/huggingface/nvidia/Qwen3.8-Flash-Next-NVFP4`.
 
-## Runtime compatibility files
+## Runtime
 
-The serving container is pinned to the official vLLM Qwen3.8 image's ARM64
-manifest, `vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03`. The
-GB10/SM121 QSA path and this checkpoint's MTP metadata need five compatibility
-overlays. The recipe pins their Apache-2.0 source repository to commit
-`6ad1c8f15cbab1ababd2048e8e5f94094dbfc4a0`:
-
-```sh
-git clone https://github.com/tonyd2wild/Qwen3.8-Flash-Next-NVFP4-DGX-Spark.git \
-  ~/src/vendor/qwen38-flash-next-dgx-spark
-git -C ~/src/vendor/qwen38-flash-next-dgx-spark checkout --detach \
-  6ad1c8f15cbab1ababd2048e8e5f94094dbfc4a0
-```
-
-The launcher verifies this exact commit before it starts. It mounts only the
-overlays listed in `model.json`; it does not execute the upstream launcher.
+The serving container is pinned to the current vLLM nightly's ARM64 manifest,
+`vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03`.
+Its stock Qwen4Exp, QSA, PLE, and ModelOpt modules import cleanly on a DGX
+Spark. Older overlays from earlier Qwen recipes are not mounted because they
+are incompatible with this current runtime.
 
 ## Install and start
 
 On both nodes, fast-forward `~/src/models.server` through Git to the same
-`origin/main` commit, stage the local checkpoint copy, and clone the pinned
-compatibility repository above. Pull the pinned Docker image:
+`origin/main` commit and stage the local checkpoint copy. Pull the pinned
+Docker image:
 
 ```sh
 docker pull vllm/vllm-openai@sha256:c3bede3517c5c982e217c785fd10a8b8ef26e1641c169f5a8634c5b7aa71ca03

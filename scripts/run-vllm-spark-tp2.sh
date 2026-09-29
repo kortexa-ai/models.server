@@ -28,8 +28,6 @@ HOST_IP="$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["ip"])' "$
 MODEL_ID="$(config_value id)"
 MODEL_PATH="$(config_value vllm_spark_tp2.model_path)"
 IMAGE="$(config_value vllm_spark_tp2.image)"
-PATCH_DIR="$(config_value vllm_spark_tp2.upstream_patches.directory)"
-PATCH_REVISION="$(config_value vllm_spark_tp2.upstream_patches.revision)"
 MAX_MODEL_LEN="$(config_value vllm_spark_tp2.max_model_len)"
 MAX_NUM_SEQS="$(config_value vllm_spark_tp2.max_num_seqs)"
 GPU_MEMORY_UTILIZATION="$(config_value vllm_spark_tp2.gpu_memory_utilization)"
@@ -50,10 +48,6 @@ if [[ ! -f "$MODEL_PATH/config.json" || ! -f "$MODEL_PATH/model.safetensors.inde
     echo "Model files are missing under ${MODEL_PATH}." >&2
     exit 3
 fi
-if [[ ! -f "$PATCH_DIR/modelopt.py" || "$(git -C "${PATCH_DIR%/single-spark-vllm-tp1/patch/upstream-overlays}" rev-parse HEAD 2>/dev/null || true)" != "$PATCH_REVISION" ]]; then
-    echo "Pinned Qwen vLLM compatibility checkout is missing or has the wrong revision: ${PATCH_DIR}" >&2
-    exit 4
-fi
 if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
     echo "Pinned vLLM image is not present locally: ${IMAGE}" >&2
     exit 5
@@ -65,14 +59,6 @@ fi
 
 CACHE_DIR="${QWEN_CACHE_DIR:-${HOME}/.cache/qwen38fn-vllm}"
 mkdir -p "$CACHE_DIR"
-VLLM_PACKAGE=/usr/local/lib/python3.12/dist-packages/vllm
-OVERLAY_ARGS=(
-    -v "${PATCH_DIR}/modelopt.py:${VLLM_PACKAGE}/model_executor/layers/quantization/modelopt.py:ro"
-    -v "${PATCH_DIR}/ops_ple.py:${VLLM_PACKAGE}/models/qwen4_exp/nvidia/ops/ple.py:ro"
-    -v "${PATCH_DIR}/ops_qsa.py:${VLLM_PACKAGE}/models/qwen4_exp/nvidia/ops/qsa.py:ro"
-    -v "${PATCH_DIR}/qsa.py:${VLLM_PACKAGE}/models/qwen4_exp/nvidia/qsa.py:ro"
-    -v "${PATCH_DIR}/platforms_interface.py:${VLLM_PACKAGE}/platforms/interface.py:ro"
-)
 GRAPH_ARGS=(--compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}')
 SPEC_ARGS=(--speculative-config "$SPECULATIVE_CONFIG")
 
@@ -87,7 +73,6 @@ exec docker run --rm --name "$CONTAINER" --gpus all \
     --network host --ipc host --shm-size 32g --ulimit memlock=-1:-1 --cap-add IPC_LOCK \
     --device /dev/infiniband:/dev/infiniband \
     -v "${MODEL_PATH}:/models/qwen38fn:ro" -v "${CACHE_DIR}:/root/.cache" \
-    "${OVERLAY_ARGS[@]}" \
     -e VLLM_HOST_IP="$HOST_IP" -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 \
     -e VLLM_ENGINE_READY_TIMEOUT_S=3600 -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
     -e CUTE_DSL_ARCH=sm_121a -e TORCH_CUDA_ARCH_LIST=12.1a \

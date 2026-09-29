@@ -12,8 +12,9 @@ Issue: <https://github.com/kortexa-ai/models.server/issues/39>
 - Use the published YaRN settings to extend the 262,144-token native context
   to 1,000,000 tokens. Start with six sequences, MTP-3, FP8 KV, and 0.70 GPU
   memory utilization.
-- Pin the vLLM container image and the Apache-2.0 compatibility overlay
-  repository revision in `qwen-3.8-flash-next/model.json`.
+- Pin a vLLM nightly ARM64 image by digest in `qwen-3.8-flash-next/model.json`.
+- Use stock Qwen4Exp runtime modules; older compatibility overlays fail import
+  against the current image and are not mounted.
 - Keep the service available on the private LAN only through `static`'s
   configured interfaces. Leave other model services alone.
 
@@ -22,9 +23,9 @@ Issue: <https://github.com/kortexa-ai/models.server/issues/39>
 - Config and shell validation passed; the service unit passed
   `systemd-analyze verify` on both new machines.
 - Repo changes are committed and pushed on `main`.
-- Both Sparks have the same clean repo revision, pinned overlay checkout, and
-  RoCE links. The official ARM64 vLLM image is pulled on `static`; it will be
-  mirrored to `shock` over RoCE after the weight copy.
+- Both Sparks have the same clean repo revision and RoCE links. The official
+  ARM64 vLLM nightly has been pulled on `static`; it will be mirrored to
+  `shock` over RoCE after the weight copy.
 - Checkpoint transfer from Smarty to `static` is still running; afterward the
   deployment watcher will verify the files, mirror to `shock` over RoCE, start
   both services, and run a near-maximum-context speed test.

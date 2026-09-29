@@ -35,11 +35,6 @@
       "roce_version": 2,
       "socket_interface": "enp1s0f1np1"
     },
-    "upstream_patches": {
-      "repository": "https://github.com/tonyd2wild/Qwen3.8-Flash-Next-NVFP4-DGX-Spark.git",
-      "revision": "6ad1c8f15cbab1ababd2048e8e5f94094dbfc4a0",
-      "directory": "/home/francip/src/vendor/qwen38-flash-next-dgx-spark/single-spark-vllm-tp1/patch/upstream-overlays"
-    },
     "compile_mode": 0,
     "cudagraph_mode": "FULL_DECODE_ONLY",
     "trust_remote_code": true,
