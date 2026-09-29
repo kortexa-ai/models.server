@@ -80,7 +80,8 @@ exec docker run --rm --name "$CONTAINER" --gpus all \
     --device /dev/infiniband:/dev/infiniband \
     -v "${MODEL_PATH}:/models/qwen38fn:ro" -v "${CACHE_DIR}:/root/.cache" \
     -e VLLM_HOST_IP="$HOST_IP" -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 \
-    -e VLLM_ENGINE_READY_TIMEOUT_S=3600 -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+    -e VLLM_ENGINE_READY_TIMEOUT_S=3600 -e VLLM_ALLOW_LONG_MAX_MODEL_LEN=1 \
+    -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
     -e CUTE_DSL_ARCH=sm_121a -e TORCH_CUDA_ARCH_LIST=12.1a \
     -e FLASHINFER_CUDA_ARCH_LIST=12.1a -e FLASHINFER_DISABLE_VERSION_CHECK=1 \
     -e VLLM_USE_DEEP_GEMM=0 -e VLLM_USE_V2_MODEL_RUNNER=1 \
