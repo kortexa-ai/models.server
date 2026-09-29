@@ -25,3 +25,16 @@ unsupported. Keep the NVFP4 service config and weights for rollback.
 Install and run this model with `ktxsvc install qwen-3.8-flash-next-fast` and
 `ktxsvc start qwen-3.8-flash-next-fast` on `static`. The runner checks the
 recipe checkout against the pinned commit before launch.
+
+To switch back, stop and uninstall the fast service, then install the original
+pair service on `shock` followed by `static`:
+
+```sh
+ktxsvc stop qwen-3.8-flash-next-fast
+ktxsvc uninstall qwen-3.8-flash-next-fast
+# On shock, then on static:
+ktxsvc install qwen-3.8-flash-next
+```
+
+Uninstalling a service removes its systemd registration. It leaves the model
+config and weights in place.
