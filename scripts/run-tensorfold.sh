@@ -40,6 +40,8 @@ export PLE_ON_SSD="$(read_config tensorfold.ple_on_ssd)"
 export MTP_DRAFTS="$(read_config tensorfold.mtp_drafts)"
 export MTP_CONFIDENCE="$(read_config tensorfold.mtp_confidence)"
 export THINKING="$(read_config tensorfold.thinking)"
+export VISION="$(read_config tensorfold.vision)"
+export VISION_URLS="$(read_config tensorfold.vision_urls)"
 export CONTAINER_NAME="$(read_config tensorfold.container_name)"
 
 if [[ "$(hostname -s)" != static ]]; then

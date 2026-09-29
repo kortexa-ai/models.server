@@ -9,11 +9,11 @@
   "context": 262144,
   "parallel": 5,
   "cache_type": "int8",
-  "multimodal": false,
+  "multimodal": true,
   "tensorfold": {
     "recipe_repo": "/home/francip/src/Qwen3.8-Flash-Next-Single-DGX-Spark-TensorFold",
-    "recipe_revision": "4cd99569f00f84b397cee77900bec9cdf43287bd",
-    "tensorfold_version": "v0.3.6.2",
+    "recipe_revision": "856bb6be4b58ce6a6727e6d071fb1c52f3f80e6e",
+    "tensorfold_version": "v0.3.6.3",
     "checkpoint": "Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP",
     "parallel": 5,
     "context": 262144,
@@ -22,6 +22,8 @@
     "mtp_drafts": 6,
     "mtp_confidence": 0.6,
     "thinking": true,
-    "container_name": "qwen38-flash-next-fast-tf"
+    "container_name": "qwen38-flash-next-fast-tf",
+    "vision": true,
+    "vision_urls": false
   }
 }
