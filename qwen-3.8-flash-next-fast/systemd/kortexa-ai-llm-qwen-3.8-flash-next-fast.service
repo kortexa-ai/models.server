@@ -1,0 +1,30 @@
+[Unit]
+Description=Qwen3.8 Flash Next Fast TensorFold LLM (single DGX Spark)
+After=network.target docker.service
+Requires=docker.service
+
+StartLimitIntervalSec=300
+StartLimitBurst=2
+
+[Service]
+Type=simple
+User=francip
+Group=francip
+WorkingDirectory=/home/francip/src/models.server
+Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=HF_HOME=/home/francip/.cache/huggingface
+Environment=HF_HUB_OFFLINE=1
+ExecStartPre=/usr/bin/nvidia-smi
+ExecStart=/home/francip/src/models.server/scripts/run-tensorfold.sh /home/francip/src/models.server/qwen-3.8-flash-next-fast/model.json
+ExecStop=/home/francip/src/models.server/scripts/run-tensorfold.sh --stop /home/francip/src/models.server/qwen-3.8-flash-next-fast/model.json
+Restart=no
+TimeoutStopSec=90
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/francip/.cache/huggingface /home/francip/.cache/tensorfold-qwen38
+
+[Install]
+WantedBy=multi-user.target

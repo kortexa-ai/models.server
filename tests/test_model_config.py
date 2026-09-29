@@ -73,6 +73,8 @@ EXPECTED_CONTEXT_WINDOWS = {
     "qwen-3.8-27b-fast": 262144,
     "qwen-3.8-27b-fast-abliterated": 262144,
     "qwen-3.8-27b-uncensored": 262144,
+    "qwen-3.8-flash-next": 1000000,
+    "qwen-3.8-flash-next-fast": 262144,
     "qwen3-embedding-0.6b": 32768,
     "qwen3-tts-0.6b-customvoice": 32768,
     "qwen3-tts-1.7b-customvoice": 32768,
