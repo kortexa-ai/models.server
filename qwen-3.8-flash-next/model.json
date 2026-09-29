@@ -3,6 +3,8 @@
   "id": "qwen3.8-flash-next",
   "default_engine": "vllm-spark-tp2",
   "host": "0.0.0.0",
+  "api_host": "192.168.2.101",
+  "control_service": "ai.kortexa.llm-qwen-3.8-flash-next",
   "port": 2066,
   "context_window": 1000000,
   "context": 1000000,
