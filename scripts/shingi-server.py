@@ -7,7 +7,7 @@ so this launcher replaces only those two floors. The package's own UUID and
 20 GiB minimum-size checks still run. Weights resolve from the standard
 Hugging Face cache at a pinned revision; the server still verifies their
 pinned SHA-256. An optional vision projector resolves the same way and is
-passed as --mmproj; without --projector-file no projector flag is added.
+passed as --mmproj; without --projector-file the server runs text-only (--no-vision).
 
 Usage: shingi-server.py --preload-mib N --headroom-mib N --weights-repo REPO
        --weights-revision SHA --model-file F --calibration-file F
@@ -60,7 +60,7 @@ def main(argv=None):
     override_floors(args.preload_mib, args.headroom_mib)
     model = resolve(args.weights_repo, args.weights_revision, args.model_file)
     calibration = resolve(args.weights_repo, args.weights_revision, args.calibration_file)
-    projector_args = []
+    projector_args = ["--no-vision"]
     if args.projector_file:
         projector = resolve(args.weights_repo, args.weights_revision, args.projector_file)
         projector_args = ["--mmproj", str(projector)]

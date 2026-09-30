@@ -373,7 +373,7 @@ class ShingiLauncherTest(unittest.TestCase):
                                  ("kortexa-ai/shingi-27b", "abc", "calibration.json")])
         self.assertEqual(seen["argv"], [
             "shingi-27b", "--model", "/cache/shingi-27b.gguf", "--calibration", "/cache/calibration.json",
-            "--executable", "/engines/readout", "--host", "0.0.0.0", "--port", "2068",
+            "--no-vision", "--executable", "/engines/readout", "--host", "0.0.0.0", "--port", "2068",
         ])
 
     def test_main_passes_the_resolved_projector_as_mmproj(self):
