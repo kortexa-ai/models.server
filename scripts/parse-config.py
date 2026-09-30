@@ -247,6 +247,8 @@ def main():
         emit("SHINGI_WEIGHTS_REVISION", weights["revision"])
         emit("SHINGI_MODEL_FILE", weights["model"])
         emit("SHINGI_CALIBRATION_FILE", weights["calibration"])
+        # Optional vision projector; empty keeps the model text-only config compatible.
+        emit("SHINGI_PROJECTOR_FILE", weights.get("projector", ""))
         emit("SHINGI_RUNTIME_REPO", runtime["repo"])
         emit("SHINGI_RUNTIME_REVISION", runtime["revision"])
         emit("SHINGI_RUNTIME_DIR", runtime["directory"])

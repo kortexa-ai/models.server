@@ -30,6 +30,12 @@ if [[ ! -x "$PYTHON" || ! -x "$READOUT" \
     exit 1
 fi
 
+# The optional vision projector; without it the launcher adds no projector flag.
+projector_args=()
+if [[ -n "${SHINGI_PROJECTOR_FILE:-}" ]]; then
+    projector_args=(--projector-file "$SHINGI_PROJECTOR_FILE")
+fi
+
 PORT="${PORT:-$MODEL_PORT}"
 HOST="${HOST:-$MODEL_HOST}"
 
@@ -41,6 +47,7 @@ exec "$PYTHON" "${SCRIPTS_DIR}/shingi-server.py" \
     --weights-revision "$SHINGI_WEIGHTS_REVISION" \
     --model-file "$SHINGI_MODEL_FILE" \
     --calibration-file "$SHINGI_CALIBRATION_FILE" \
+    ${projector_args[@]+"${projector_args[@]}"} \
     --executable "$READOUT" \
     --host "$HOST" \
     --port "$PORT" \

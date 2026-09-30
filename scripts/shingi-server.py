@@ -6,11 +6,13 @@ cards up to 32 GiB. The shared RTX 4090 cannot meet that next to TTS and ASR,
 so this launcher replaces only those two floors. The package's own UUID and
 20 GiB minimum-size checks still run. Weights resolve from the standard
 Hugging Face cache at a pinned revision; the server still verifies their
-pinned SHA-256.
+pinned SHA-256. An optional vision projector resolves the same way and is
+passed as --mmproj; without --projector-file no projector flag is added.
 
 Usage: shingi-server.py --preload-mib N --headroom-mib N --weights-repo REPO
        --weights-revision SHA --model-file F --calibration-file F
-       --executable READOUT [--host H] [--port P] [server args...]
+       [--projector-file F] --executable READOUT [--host H] [--port P]
+       [server args...]
 """
 import argparse
 import sys
@@ -52,15 +54,21 @@ def main(argv=None):
     parser.add_argument("--weights-revision", required=True)
     parser.add_argument("--model-file", required=True)
     parser.add_argument("--calibration-file", required=True)
+    parser.add_argument("--projector-file")
     args, server_args = parser.parse_known_args(argv)
 
     override_floors(args.preload_mib, args.headroom_mib)
     model = resolve(args.weights_repo, args.weights_revision, args.model_file)
     calibration = resolve(args.weights_repo, args.weights_revision, args.calibration_file)
+    projector_args = []
+    if args.projector_file:
+        projector = resolve(args.weights_repo, args.weights_revision, args.projector_file)
+        projector_args = ["--mmproj", str(projector)]
 
     from shingi import server
 
-    sys.argv = ["shingi-27b", "--model", str(model), "--calibration", str(calibration), *server_args]
+    sys.argv = ["shingi-27b", "--model", str(model), "--calibration", str(calibration),
+                *projector_args, *server_args]
     server.main()
 
 

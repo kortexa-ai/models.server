@@ -10,13 +10,14 @@
   "shingi": {
     "package": {
       "repo": "https://github.com/kortexa-ai/shingi-27b.git",
-      "revision": "681d1ae2a7d56ce7d07871447f3c1254568a6b38"
+      "revision": "6a057f2a65a6e95a7099465661c6fc5e34fdfb11"
     },
     "weights": {
       "repo": "kortexa-ai/shingi-27b",
-      "revision": "d8fecd47b5a04598d3b2d20de3ef6a97c67e2d92",
+      "revision": "94b97064eae876330cca98a71fa7f74e6696d729",
       "model": "shingi-27b.gguf",
-      "calibration": "calibration.json"
+      "calibration": "calibration.json",
+      "projector": "mmproj.gguf"
     },
     "runtime": {
       "repo": "https://github.com/PrismML-Eng/llama.cpp.git",
@@ -25,7 +26,7 @@
     },
     "memory": {
       "preload_mib": 10240,
-      "headroom_mib": 2048
+      "headroom_mib": 1024
     }
   }
 }

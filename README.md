@@ -355,7 +355,7 @@ Its `shingi` block pins four things:
 | Key | Meaning |
 |-----|---------|
 | `package` | Git repository and commit of the server package and `src/native/readout.cpp` |
-| `weights` | Hugging Face repository, revision, GGUF and calibration file names |
+| `weights` | Hugging Face repository, revision, GGUF, calibration and optional vision `projector` file names |
 | `runtime` | Prism llama.cpp runtime; reuses Bonsai's `.engines/llama-prism` |
 | `memory` | Free-GPU floors in MiB before load (`preload_mib`) and while serving (`headroom_mib`) |
 
@@ -378,6 +378,12 @@ The public package requires 14 GiB free before load and 4 GiB headroom on
 cards up to 32 GiB. The shared 4090 cannot meet that next to TTS and ASR.
 `scripts/shingi-server.py` replaces only those two floors with the `memory`
 values. The package's UUID and 20 GiB minimum-card checks still apply.
+With the vision projector the readout uses about 9.2 GiB on the 4090, so
+`headroom_mib` is 1024: under concurrent TTS and ASR load only about 2 GB stays
+free, and a 2048 MiB per-request gate would reject requests spuriously.
+The readout links Prism's multimodal `mtmd` library; setup requires
+`libmtmd.so` in a reused runtime. Without a `projector`, the launcher adds no
+`--mmproj` and the package applies its own default.
 
 ### llama-server (llama.cpp)
 GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.

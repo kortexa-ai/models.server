@@ -5,8 +5,10 @@
 # - Reuses the Prism runtime in the model's runtime directory when it is at the
 #   pinned revision with shared libraries; otherwise builds its own copy under
 #   .engines/shingi/prism. It never modifies the shared runtime directory.
-# - Builds .engines/shingi/bin/readout (skipped when the stamp matches).
-# - Downloads the pinned weights into the Hugging Face cache if needed.
+# - Builds .engines/shingi/bin/readout against llama and the multimodal mtmd
+#   library (skipped when the stamp matches).
+# - Downloads the pinned weights (and vision projector, when configured) into
+#   the Hugging Face cache if needed.
 # run-shingi.sh only reads these files, so it also works under systemd.
 set -euo pipefail
 
@@ -78,7 +80,8 @@ runtime_usable() {
         && [[ -f "${dir}/include/llama.h" && -f "${dir}/ggml/include/ggml-backend.h" ]] \
         && [[ -f "${dir}/vendor/nlohmann/json.hpp" ]] \
         && [[ -f "${dir}/build/bin/libllama.so" && -f "${dir}/build/bin/libggml.so" ]] \
-        && [[ -f "${dir}/build/bin/libggml-base.so" ]]
+        && [[ -f "${dir}/build/bin/libggml-base.so" ]] \
+        && [[ -f "${dir}/tools/mtmd/mtmd.h" && -f "${dir}/build/bin/libmtmd.so" ]]
 }
 
 PRISM="${ROOT}/${SHINGI_RUNTIME_DIR}"
@@ -99,27 +102,30 @@ else
         cmake -S "$PRISM" -B "${PRISM}/build" \
             -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON -DGGML_NATIVE=OFF \
             "-DCMAKE_CUDA_ARCHITECTURES=86;89;120;121" -DBUILD_SHARED_LIBS=ON \
-            -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TOOLS=OFF
-        cmake --build "${PRISM}/build" --target llama --parallel "$jobs"
+            -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TOOLS=OFF \
+            -DLLAMA_BUILD_MTMD=ON -DMTMD_VIDEO=OFF
+        # mtmd is the image encoder library the readout links for the vision projector.
+        cmake --build "${PRISM}/build" --target llama mtmd --parallel "$jobs"
     fi
 fi
 
-# 3. Native readout, linked to the runtime with an rpath.
-stamp="${SHINGI_PACKAGE_REVISION} ${SHINGI_RUNTIME_REVISION} ${PRISM}"
+# 3. Native readout, linked to the runtime and mtmd with an rpath.
+# run-shingi.sh checks only the leading package and runtime revisions.
+stamp="${SHINGI_PACKAGE_REVISION} ${SHINGI_RUNTIME_REVISION} mtmd ${PRISM}"
 if [[ -x "$READOUT" && "$(cat "${READOUT}.stamp" 2>/dev/null || true)" == "$stamp" ]]; then
     echo "shingi: readout already built for ${stamp}"
 else
     c++ -std=c++17 -O2 -Wall -Wextra "${SRC}/src/native/readout.cpp" \
-        -I"${PRISM}/include" -I"${PRISM}/ggml/include" -I"${PRISM}/vendor" \
+        -I"${PRISM}/include" -I"${PRISM}/ggml/include" -I"${PRISM}/vendor" -I"${PRISM}/tools/mtmd" \
         -L"${PRISM}/build/bin" -Wl,-rpath,"${PRISM}/build/bin" \
-        -lllama -lggml -lggml-base -o "${READOUT}.tmp"
+        -lmtmd -lllama -lggml -lggml-base -o "${READOUT}.tmp"
     mv "${READOUT}.tmp" "$READOUT"
     printf '%s\n' "$stamp" > "${READOUT}.stamp"
     echo "shingi: built ${READOUT}"
 fi
 
-# 4. Pinned weights in the standard Hugging Face cache.
-for filename in "$SHINGI_MODEL_FILE" "$SHINGI_CALIBRATION_FILE"; do
+# 4. Pinned weights (and the optional vision projector) in the standard Hugging Face cache.
+for filename in "$SHINGI_MODEL_FILE" "$SHINGI_CALIBRATION_FILE" ${SHINGI_PROJECTOR_FILE:+"$SHINGI_PROJECTOR_FILE"}; do
     "${VENV}/bin/python" -c 'import sys; from huggingface_hub import hf_hub_download; print(hf_hub_download(sys.argv[1], sys.argv[2], revision=sys.argv[3]))' \
         "$SHINGI_WEIGHTS_REPO" "$filename" "$SHINGI_WEIGHTS_REVISION"
 done
