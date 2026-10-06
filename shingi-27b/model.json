@@ -10,7 +10,7 @@
   "shingi": {
     "package": {
       "repo": "https://github.com/kortexa-ai/shingi-27b.git",
-      "revision": "27901bdfdc8f9f9e5bf7504ace25cdaf017ce150"
+      "revision": "f26c6437bf952b8a5b97291859284a34b84f8698"
     },
     "weights": {
       "repo": "kortexa-ai/shingi-27b",
