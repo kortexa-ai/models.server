@@ -10,11 +10,11 @@
   "shingi": {
     "package": {
       "repo": "https://github.com/kortexa-ai/shingi-27b.git",
-      "revision": "6a057f2a65a6e95a7099465661c6fc5e34fdfb11"
+      "revision": "27901bdfdc8f9f9e5bf7504ace25cdaf017ce150"
     },
     "weights": {
       "repo": "kortexa-ai/shingi-27b",
-      "revision": "94b97064eae876330cca98a71fa7f74e6696d729",
+      "revision": "d02406fc8974a91ebf45b0e7d46c5381ee42e1c2",
       "model": "shingi-27b.gguf",
       "calibration": "calibration.json",
       "projector": "mmproj.gguf"
