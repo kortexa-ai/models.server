@@ -15,3 +15,8 @@ travel only through the protected process/SSH channels and private files.
 Repository files use Git. Acceptance requires fresh model requests and native
 provider/default resolution on every installed harness; absent installations
 are recorded without creating empty configuration directories.
+
+Anthropic Fable uses always-on adaptive thinking. Its pi model entry must carry
+`compat.forceAdaptiveThinking: true` and exclude unsupported off/minimal levels.
+Acceptance covers native Messages JSON, SSE and tool calls, plus fresh public
+Fable requests and unforced Codex Luna defaults in the installed harnesses.

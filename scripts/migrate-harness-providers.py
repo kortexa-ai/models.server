@@ -203,6 +203,10 @@ def migrate_models(data, harness, key, catalog):
         for model_id, entry in models.items():
             entry.setdefault("compat", {})["supportsStrictMode"] = False
             entry["compat"].setdefault("maxTokensField", "max_tokens")
+            if harness == "pi" and model_id == "claude-fable-5":
+                # Fable accepts only always-on adaptive thinking, not enabled/disabled.
+                entry["compat"]["forceAdaptiveThinking"] = True
+                entry.setdefault("thinkingLevelMap", {}).update(off=None, minimal=None)
             if harness == "omp":
                 entry.setdefault("supportsTools", True)
         public = {"baseUrl": PUBLIC_URL, "api": "openai-completions", "apiKey": key, "models": list(models.values())}
@@ -272,6 +276,16 @@ def self_test():
     assert video["input"] == ["text", "image"]
     commented = yaml.load("tiny: kortexa-alt/lfm2.5-vl-3b # Keep this role comment\n")
     assert "# Keep this role comment" in serialize("config.yml", remap(commented, ["kortexa-alt"]))
+    fable_files = {".pi/agent/models.json": json.dumps({"providers": {PUBLIC: {
+        "models": [{"id": "claude-fable-5", "api": "anthropic-messages", "compat": {"supportsStrictTools": True}}]
+    }}})}
+    adapted, _ = plan(fable_files, "synthetic-key", {})
+    fable = next(m for m in adapted[".pi/agent/models.json"]["providers"][PUBLIC]["models"] if m["id"] == "claude-fable-5")
+    assert fable["compat"]["forceAdaptiveThinking"] is True
+    assert fable["compat"]["supportsStrictTools"] is True
+    assert fable["thinkingLevelMap"] == {"off": None, "minimal": None}
+    repeated_fable = {name: serialize(name, data) for name, data in adapted.items()}
+    assert not plan(repeated_fable, "synthetic-key", {})[1]
     print("migration self-test passed")
 
 

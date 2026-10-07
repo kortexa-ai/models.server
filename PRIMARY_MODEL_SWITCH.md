@@ -45,6 +45,9 @@ edits, preserves comments/unrelated settings, and writes restrictive files.
 It requires `KORTEXA_API_KEY` in its process environment. It never logs secrets.
 OMP/pi entries include only their supported text/image modalities, even when
 the public catalog also advertises video. The script does not alter OAuth stores.
+pi's Fable entry forces adaptive thinking and disables unsupported off/minimal
+levels; use low effort for the least thinking. Fable does not accept budget-based
+`thinking.type: enabled` or `thinking.type: disabled`.
 The September inventory below remains a dated baseline, not current settings.
 
 ## 1. Record the target and rollback before changing anything
