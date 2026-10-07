@@ -10,7 +10,12 @@ owning machines before atomic writes, with concurrent-change checks.
 
 Snappy has Hermes default and Mira profiles, OMP and pi.dev. Smarty and
 Scrappy's WSL account have OMP and pi.dev. Hermes is absent on those two
-accounts; Scrappy's Windows account has none of these configuration files.
+Linux accounts. Scrappy also has native Windows Hermes at
+`C:\src\hermes-agent`, with `HERMES_HOME` set to
+`C:\Users\francip\AppData\Local\hermes`. Its registration and remote
+launch recipe are recorded in
+https://github.com/kortexa-ai/models.server/issues/48 and
+`planning/work-units/models.server-48.md`.
 
 The entry advertises the validated 262144-token served window, text input,
 reasoning and ordinary tools. OMP and Pi use Chat Completions, a 16384-token
