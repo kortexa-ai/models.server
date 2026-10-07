@@ -10,6 +10,43 @@ tested, but are not installed or enabled as services. Bonsai remains the
 installed production 27B at the audit date. Coordinate the release of any
 active experiment before a later rollout.
 
+## Public harness provider contract (2026-10-07)
+
+The authorized four-machine provider consolidation uses `kortexa.ai` at
+`https://api.kortexa.ai/v1`. The explicit local-model roster includes
+`qwen-3.8-27b`, `bonsai-2-27b`, and `qwen-3.8-flash-next-fast`; LFM provider
+entries are removed. Configured cloud models can share the same public provider
+with per-model native API selection in OMP/pi. Hermes uses the gateway's Chat
+Completions adapters. A configured model can be inactive: the public catalog
+lists running local models, so keeping the old Qwen entry does not start it.
+
+`kortexa-static` is a selectable emergency provider at
+`http://192.168.2.101:2067/v1`, with only `qwen-3.8-flash-next-fast`. It is not
+an implicit retry chain. Main harness defaults use `openai-codex/gpt-6-luna`
+with the existing native Codex authentication. LFM auxiliary roles move to
+the running Bonsai service. The unrelated reflex endpoint remains independent.
+The migration adds an explicit native Luna definition for older catalogs;
+configuration does not establish Codex login, account access, or client-version
+compatibility. Verify the requested model with a fresh, explicitly selected call.
+
+Installed scope at this migration's inventory:
+
+| Machine | Hermes | OMP | pi |
+| --- | --- | --- | --- |
+| Snappy | default and Mira | installed | installed |
+| Smarty | absent | installed | installed |
+| Scrappy | absent | installed | installed |
+| Moodymoose | absent | absent | absent |
+
+Run `scripts/migrate-harness-providers.py` on Snappy with the Hermes virtual
+environment's Python (round-trip YAML support). Preview is the default;
+`--apply` backs up only affected private files on each host, checks concurrent
+edits, preserves comments/unrelated settings, and writes restrictive files.
+It requires `KORTEXA_API_KEY` in its process environment. It never logs secrets.
+OMP/pi entries include only their supported text/image modalities, even when
+the public catalog also advertises video. The script does not alter OAuth stores.
+The September inventory below remains a dated baseline, not current settings.
+
 ## 1. Record the target and rollback before changing anything
 
 Use one change record with these values. Do not replace strings across whole
