@@ -76,6 +76,10 @@ observed 600 W value: treat it as configuration drift.
 
 ## Model Inventory
 
+The manual [Qwen3.8-Flash-Next Strata GB10 recipe](qwen-3.8-flash-next-strata/README.md)
+records the text-only UD-Q4_K_XL experiment. TensorFold on Static remains the
+selected recipe; see [Qwen3.8 Flash Next Fast](qwen-3.8-flash-next-fast/README.md).
+
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
 | 2025 | Qwen 3.5 9B | agentic dense | UD-Q4_K_XL / MLX 4-bit | q8_0 | 262K | 1 |
