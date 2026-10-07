@@ -27,8 +27,8 @@ cd qwen-3.5-4b && ../run.sh             # from model dir
 | **snappy** | Mac Mini M4 Pro | 64 GB unified | macOS | `mlx-vlm`, `mlx-lm`, `mlx-audio` |
 | **scrappy** | RTX 3070 Laptop | 8 GB VRAM | Windows 11 | — |
 | **sparky** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | offline |
-| **static** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | `vllm-spark-tp2` |
-| **shock** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | `vllm-spark-tp2` |
+| **static** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | Qwen TensorFold |
+| **shock** | DGX Spark GB10 | 128 GB unified | Ubuntu Linux | GLM TensorFold EXL3 |
 | **192.168.2.144** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 | **192.168.2.145** | Raspberry Pi 5 | 8 GB RAM | ARM Linux | `llama-server` CPU |
 
@@ -79,6 +79,8 @@ observed 600 W value: treat it as configuration drift.
 The manual [Qwen3.8-Flash-Next Strata GB10 recipe](qwen-3.8-flash-next-strata/README.md)
 records the text-only UD-Q4_K_XL experiment. TensorFold on Static remains the
 selected recipe; see [Qwen3.8 Flash Next Fast](qwen-3.8-flash-next-fast/README.md).
+The [GLM-5.3 Flash EXL3 GB10 recipe](glm-5.3-flash-exl3/README.md) pins the sxuff
+source and adds a managed text-only TensorFold launcher for Shock.
 
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
@@ -120,7 +122,9 @@ selected recipe; see [Qwen3.8 Flash Next Fast](qwen-3.8-flash-next-fast/README.m
 | 2064 | Qwen 3.8 27B Fast | dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 | 2065 | Qwen 3.8 27B Fast Abliterated | Huihui dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 | 2066 | Qwen3.8-Flash-Next | sparse MoE / multimodal, dual DGX Spark | NVIDIA NVFP4 | fp8_e4m3 | 262K native | 6 |
+| 2067 | Qwen3.8 Flash Next Fast | sparse MoE / multimodal, TensorFold on Static | MLX 4-bit | int8 | 262K/request | 5 |
 | 2068 | Shingi 27B | System One decision model (not chat) | ternary GGUF (Prism fork, CUDA) | q8_0 | 16K | 1 |
+| 2069 | GLM-5.3 Flash EXL3 | sparse MoE, TensorFold on Shock | EXL3 2.05 bpw | BF16 latent | 1M advertised; 262K served | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching

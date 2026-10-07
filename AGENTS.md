@@ -51,3 +51,9 @@ Run `hostname` to check which machine you're on before doing anything.
 - Exception: `qwen-3.8-flash-next` uses the pinned `vllm-spark-tp2` engine on
   `static` + `shock`, with NVIDIA NVFP4 weights, YaRN extension to 1M context,
   FP8 KV, MTP-3, and six sequences.
+- Exception: `glm-5.3-flash-exl3` uses the pinned patched TensorFold EXL3
+  engine on Shock's GB10: original 2.05-bpw packed weights, BF16 latent KV,
+  a 262144-token served window, one decode lane, MTP-1 and a 3-GiB prompt
+  snapshot budget. Its checkpoint advertises 1M context; that window does not
+  fit the host memory budget. Run `scripts/setup-tensorfold-exl3.sh` explicitly
+  before launch. The standard CLI path is text only.

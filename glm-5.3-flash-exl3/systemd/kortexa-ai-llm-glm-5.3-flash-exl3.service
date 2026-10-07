@@ -1,0 +1,27 @@
+[Unit]
+Description=GLM-5.3 Flash EXL3 TensorFold LLM (single GB10 on Shock)
+After=network.target docker.service
+Requires=docker.service
+StartLimitIntervalSec=300
+StartLimitBurst=2
+
+[Service]
+Type=simple
+User=francip
+Group=francip
+WorkingDirectory=/home/francip/src/models.server
+Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStartPre=/usr/bin/nvidia-smi
+ExecStart=/home/francip/src/models.server/scripts/run-tensorfold-exl3.sh /home/francip/src/models.server/glm-5.3-flash-exl3/model.json
+ExecStop=/home/francip/src/models.server/scripts/run-tensorfold-exl3.sh --stop /home/francip/src/models.server/glm-5.3-flash-exl3/model.json
+Restart=no
+TimeoutStopSec=90
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/francip/src/models.server/.engines/tensorfold-exl3/glm-5.3-flash-exl3/cache
+
+[Install]
+WantedBy=multi-user.target

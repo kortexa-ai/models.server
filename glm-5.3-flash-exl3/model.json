@@ -1,0 +1,47 @@
+{
+  "name": "GLM-5.3 Flash EXL3 (TensorFold, single GB10)",
+  "id": "glm-5.3-flash-exl3",
+  "default_engine": "tensorfold-exl3",
+  "host": "0.0.0.0",
+  "api_host": "192.168.2.102",
+  "port": 2069,
+  "context_window": 1048576,
+  "context": 262144,
+  "parallel": 1,
+  "cache_type": "bf16",
+  "multimodal": false,
+  "tensorfold_exl3": {
+    "machine": "shock",
+    "gpu_uuid": "GPU-1b5af52b-bff7-7f87-aef2-c625727320a8",
+    "recipe_url": "https://github.com/sxuff/glm53-flash-single-gb10.git",
+    "recipe_revision": "c25551cd1492a93f2e564ce1b706d821a959b91e",
+    "runtime_url": "https://github.com/ashhart/TensorFold.git",
+    "runtime_revision": "609ca419abecebdc5a059498a613680bd3aa847f",
+    "patches": [
+      {
+        "path": "patches/01-exl3-single-gpu-port.patch",
+        "sha256": "eba18758e5152c378bc698f7fc0a52ff2c6154fc9e53b57df4c9096743f39ea4"
+      },
+      {
+        "path": "patches/02-serving.patch",
+        "sha256": "9137cfdda8d57fa7702179608404c732d3f318dc4266c4fe1ce01d01ab69040d"
+      }
+    ],
+    "base_image": "nvcr.io/nvidia/pytorch@sha256:4a85d8cf6fb3a943280960b8948cf4e9b6eca77b4414c68c9b2c7bb863f79b70",
+    "checkpoint": "turboderp/GLM-5.3-Flash-exl3",
+    "checkpoint_revision": "51058cd551c7e570d87bd32a4adee720edce2349",
+    "container_name": "glm53-flash-exl3-tf",
+    "mtp_drafts": 1,
+    "thinking": true,
+    "reasoning_effort": "high",
+    "thinking_budget": 3000,
+    "max_tokens": 16384,
+    "temperature": 0.3,
+    "top_p": 0.95,
+    "min_p": 0.05,
+    "reserve_gib": 15,
+    "prefix_cache_gib": 3,
+    "startup_free_gib": 110,
+    "container_memory_gib": 100
+  }
+}
