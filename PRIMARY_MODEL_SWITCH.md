@@ -14,20 +14,23 @@ active experiment before a later rollout.
 
 The authorized four-machine provider consolidation uses `kortexa.ai` at
 `https://api.kortexa.ai/v1`. The explicit local-model roster includes
-`qwen-3.8-27b`, `bonsai-2-27b`, and `qwen-3.8-flash-next-fast`; LFM provider
-entries are removed. Configured cloud models can share the same public provider
+`qwen-3.8-27b`, `bonsai-2-27b`, `qwen-3.8-flash-next-fast`, and
+`glm-5.3-flash-exl3`; the canonical provider lists exclude LFM entries.
+Configured cloud models can share the same public provider
 with per-model native API selection in OMP/pi. Hermes uses the gateway's Chat
 Completions adapters. A configured model can be inactive: the public catalog
 lists running local models, so keeping the old Qwen entry does not start it.
 
 `kortexa-static` is a selectable emergency provider at
 `http://192.168.2.101:2067/v1`, with only `qwen-3.8-flash-next-fast`. It is not
-an implicit retry chain. Main harness defaults use `openai-codex/gpt-6-luna`
-with the existing native Codex authentication. LFM auxiliary roles move to
+an implicit retry chain. The original consolidation sets main harness defaults
+to `openai-codex/gpt-6-luna` with the existing native Codex authentication.
+LFM auxiliary roles move to
 the running Bonsai service. The unrelated reflex endpoint remains independent.
 The migration adds an explicit native Luna definition for older catalogs;
 configuration does not establish Codex login, account access, or client-version
 compatibility. Verify the requested model with a fresh, explicitly selected call.
+Native Windows provider parity preserves its existing selected main model.
 
 Installed scope at this migration's inventory:
 
@@ -35,7 +38,7 @@ Installed scope at this migration's inventory:
 | --- | --- | --- | --- |
 | Snappy | default and Mira | installed | installed |
 | Smarty | absent | installed | installed |
-| Scrappy | absent | installed | installed |
+| Scrappy | native Windows default profile only | installed in WSL2 | installed in WSL2 |
 | Moodymoose | absent | absent | absent |
 
 Run `scripts/migrate-harness-providers.py` on Snappy with the Hermes virtual
@@ -43,6 +46,9 @@ environment's Python (round-trip YAML support). Preview is the default;
 `--apply` backs up only affected private files on each host, checks concurrent
 edits, preserves comments/unrelated settings, and writes restrictive files.
 It requires `KORTEXA_API_KEY` in its process environment. It never logs secrets.
+Its Scrappy inventory covers the WSL2 home, not native Windows Hermes. Apply
+the same provider/model contract separately to the Windows configuration at
+the path below; do not create a Mira profile there.
 OMP/pi entries include only their supported text/image modalities, even when
 the public catalog also advertises video. The script does not alter OAuth stores.
 pi's Fable entry forces adaptive thinking and disables unsupported off/minimal
@@ -101,11 +107,16 @@ overrides by key and selected non-secret values; never dump their full contents.
 | Snappy, `/Users/francip` | `.hermes/config.yaml` and `.hermes/profiles/mira/config.yaml` | `.omp/agent/models.yml`, `.omp/agent/config.yml` | `.pi/agent/models.json`, `.pi/agent/settings.json` |
 | Smarty, `/home/francip` | `.hermes/config.yaml` exists, but no model/provider sections in the audit; no profile configs found | same OMP paths | same pi paths |
 | Scrappy, WSL2 `/home/francip` | `.hermes/config.yaml` exists, but no model/provider sections in the audit; no profile configs found | same OMP paths | same pi paths |
+| Scrappy, native Windows `C:\Users\francip` | one default profile at `AppData\Local\hermes\config.yaml`; install at `C:\src\hermes-agent`, venv at `C:\src\hermes-agent\venv` | WSL2 configuration above | WSL2 configuration above |
 | Moodymoose / Pi 140, `/home/pi` | no local Hermes config/profile provider files found | no local OMP provider/settings files found | no local pi provider/settings files found |
 
-Scrappy is reached with `ssh scrappy` at `192.168.2.5`; the audited environment
-is WSL2. No matching native-Windows configs were found under `/mnt/c/Users/*`
-in this audit. Check again if a Windows-native harness is installed later.
+Scrappy is reached with `ssh scrappy` at `192.168.2.5`; this shell lands in
+WSL2. Native Windows Hermes uses
+`HERMES_HOME=C:\Users\francip\AppData\Local\hermes`, verified on
+2026-10-07. From WSL2, its configuration is
+`/mnt/c/Users/francip/AppData/Local/hermes/config.yaml`. Inspect that home
+separately from `/home/francip/.hermes` and `C:\Users\francip\.hermes`.
+Scrappy has one Windows Hermes profile; Snappy's Mira profile is independent.
 Moodymoose is `ssh moodymoose`, `pi@192.168.2.140`. Its Hermes Desk client uses
 `~/.config/Hermes Desk/settings.json`, with both `realtimeBaseUrl` and
 `conferenceBaseUrl` set to `https://api.kortexa.ai`. It has no local model pin
@@ -171,7 +182,42 @@ new memory budget and measurement. The 6000 remains capped at 450 W.
 
 On each installed Hermes profile, inspect its effective configuration rather
 than only the default profile. Snappy currently runs the default gateway and
-`mira` as separate profile services.
+`mira` as separate profile services. Scrappy uses the single native Windows
+profile identified above.
+
+For the public-provider contract, keep Scrappy's `providers.kortexa.ai` and
+`providers.kortexa-static` model entries and their matching
+`model_overrides.custom:<provider>` sections aligned with Snappy. Copy model
+IDs, context limits, capabilities, URLs and explicit discovery settings;
+preserve Scrappy's valid credentials and unrelated profile settings. Do not
+copy Snappy's OAuth stores or Mira identity. The current public roster is
+`qwen-3.8-27b`, `bonsai-2-27b`, `qwen-3.8-flash-next-fast`,
+`claude-fable-5`, `gpt-5.6-luna`, `gpt-5.6-sol`, and
+`glm-5.3-flash-exl3`. The Static provider contains only
+`qwen-3.8-flash-next-fast`. GLM is text only; the other entries preserve
+Snappy's vision/tool/reasoning metadata. Configured models may be inactive.
+
+The native executable is `C:\src\hermes-agent\venv\Scripts\hermes.exe`.
+Its uv trampoline can fail when the remote Windows session cannot traverse
+the managed Python junction. The tested remote launch uses the concrete
+interpreter with the existing installation's dependencies:
+
+```powershell
+$env:HERMES_HOME = 'C:\Users\francip\AppData\Local\hermes'
+$env:PYTHONPATH = 'C:\src\hermes-agent;C:\src\hermes-agent\venv\Lib\site-packages'
+& 'C:\Users\francip\AppData\Roaming\uv\python\cpython-3.11.15-windows-x86_64-none\python.exe' `
+  -m hermes_cli.main --provider custom:kortexa.ai --model glm-5.3-flash-exl3 `
+  --usage-file "$env:TEMP\hermes-model-check.json" `
+  -t todo --ignore-rules -z 'Reply exactly with GLM_OK.'
+```
+
+Resolve the installed concrete Python version again if it changes. A
+`pyvenv.cfg` change alone does not rewrite the executable's embedded path.
+For Static, select `custom:kortexa-static` and
+`qwen-3.8-flash-next-fast` in a fresh request. Verify the requested model and
+provider in the usage record: a correct answer after fallback does not prove
+the selected backend. Arithmetic probes require Hermes's terminal tool;
+use an echo when deliberately limiting tools.
 
 Update these fields together where they refer to the local primary:
 
