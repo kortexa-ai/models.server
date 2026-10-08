@@ -123,7 +123,7 @@ source and adds a managed text-only TensorFold launcher for Shock.
 | 2065 | Qwen 3.8 27B Fast Abliterated | Huihui dense / VLM, Cinference DFlash2 | NVFP4 / FP8 | K8V4 | 512K shared; 262K/request | 8 |
 | 2066 | Qwen3.8-Flash-Next | sparse MoE / multimodal, dual DGX Spark | NVIDIA NVFP4 | fp8_e4m3 | 262K native | 6 |
 | 2067 | Qwen3.8 Flash Next Fast | sparse MoE / multimodal, TensorFold on Static | MLX 4-bit | int8 | 262K/request | 5 |
-| 2068 | Shingi 27B | System One decision model (not chat) | ternary GGUF (Prism fork, CUDA) | q8_0 | 16K | 1 |
+| 2068 | Shingi 27B | System One decision model (not chat) | ternary GGUF (Prism fork, CUDA) | q8_0 | 16K shared | 4 |
 | 2069 | GLM-5.3 Flash EXL3 | sparse MoE, TensorFold on Shock | EXL3 2.05 bpw | BF16 latent | 1M advertised; 262K served | 1 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
@@ -386,9 +386,14 @@ The public package requires 14 GiB free before load and 4 GiB headroom on
 cards up to 32 GiB. The shared 4090 cannot meet that next to TTS and ASR.
 `scripts/shingi-server.py` replaces only those two floors with the `memory`
 values. The package's UUID and 20 GiB minimum-card checks still apply.
-With the vision projector the readout uses about 9.2 GiB on the 4090, so
-`headroom_mib` is 1024: under concurrent TTS and ASR load only about 2 GB stays
-free, and a 2048 MiB per-request gate would reject requests spuriously.
+The worker serves four independent sequences with one model allocation and a shared
+16K-token context pool. It queues concurrent callers and reuses shared prefix state;
+`GET /v1/version` reports `parallel_slots: 4`. Image encoding remains serial.
+With the vision projector, sampled peak allocation was 9,769 MiB on the 4090,
+about 600 MiB above serial mode. `preload_mib` is 11536 to leave at least 1.5 GiB
+above that measured peak; `headroom_mib` stays 1024 for the colocated TTS/ASR budget.
+The approved comparison kept those services running and passed every paired winner
+check. See the package's [native and HTTP measurements](https://github.com/kortexa-ai/shingi-27b/blob/main/results/parallel-decisions/REPORT.md).
 The readout links Prism's multimodal `mtmd` library; setup requires
 `libmtmd.so` in a reused runtime. Without a `projector`, the launcher adds no
 `--mmproj` and the package applies its own default.

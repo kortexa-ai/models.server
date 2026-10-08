@@ -47,7 +47,9 @@ Run `hostname` to check which machine you're on before doing anything.
   chat LLM. It has no `llama` block; its `shingi` block pins the package,
   weights, Prism runtime and memory floors. Run `scripts/setup-shingi.sh` once
   before starting it; `run-shingi.sh` never builds or installs. Its weights
-  may declare a vision `projector`; with it Shingi uses about 9.2 GiB on the 4090.
+  may declare a vision `projector`; with it Shingi uses about 9.5 GiB on the 4090.
+  Shingi is an exception to the dense-model parallel default: its decision worker
+  uses four sequences with shared weights and a shared 16K-token context pool.
 - Exception: `qwen-3.8-flash-next` uses the pinned `vllm-spark-tp2` engine on
   `static` + `shock`, with NVIDIA NVFP4 weights, YaRN extension to 1M context,
   FP8 KV, MTP-3, and six sequences.

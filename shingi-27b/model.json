@@ -10,7 +10,7 @@
   "shingi": {
     "package": {
       "repo": "https://github.com/kortexa-ai/shingi-27b.git",
-      "revision": "f26c6437bf952b8a5b97291859284a34b84f8698"
+      "revision": "b2e1393322bab9e459ca3df6a5e744a3a5748a0d"
     },
     "weights": {
       "repo": "kortexa-ai/shingi-27b",
@@ -25,7 +25,7 @@
       "directory": ".engines/llama-prism"
     },
     "memory": {
-      "preload_mib": 10240,
+      "preload_mib": 11536,
       "headroom_mib": 1024
     }
   }

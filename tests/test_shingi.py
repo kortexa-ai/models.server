@@ -94,8 +94,8 @@ class ShingiConfigTest(unittest.TestCase):
         self.assertNotIn("llama", config)
         shingi = config["shingi"]
         self.assertEqual(shingi["runtime"]["directory"], ".engines/llama-prism")
-        self.assertEqual(shingi["memory"], {"preload_mib": 10240, "headroom_mib": 1024})
-        self.assertEqual(shingi["package"]["revision"], "f26c6437bf952b8a5b97291859284a34b84f8698")
+        self.assertEqual(shingi["memory"], {"preload_mib": 11536, "headroom_mib": 1024})
+        self.assertEqual(shingi["package"]["revision"], "b2e1393322bab9e459ca3df6a5e744a3a5748a0d")
         self.assertEqual(shingi["weights"]["revision"], "d02406fc8974a91ebf45b0e7d46c5381ee42e1c2")
         self.assertEqual(shingi["weights"]["projector"], "mmproj.gguf")
         # Shares the pinned Prism runtime with Bonsai 2 27B.
@@ -112,14 +112,14 @@ class ShingiConfigTest(unittest.TestCase):
         for assignment in (
             "MODEL_TYPE='systemone'",
             "LLAMA_SUPPORTED=false",
-            "SHINGI_PACKAGE_REVISION='f26c6437bf952b8a5b97291859284a34b84f8698'",
+            "SHINGI_PACKAGE_REVISION='b2e1393322bab9e459ca3df6a5e744a3a5748a0d'",
             "SHINGI_WEIGHTS_REPO='kortexa-ai/shingi-27b'",
             "SHINGI_WEIGHTS_REVISION='d02406fc8974a91ebf45b0e7d46c5381ee42e1c2'",
             "SHINGI_MODEL_FILE='shingi-27b.gguf'",
             "SHINGI_CALIBRATION_FILE='calibration.json'",
             "SHINGI_PROJECTOR_FILE='mmproj.gguf'",
             "SHINGI_RUNTIME_DIR='.engines/llama-prism'",
-            "SHINGI_PRELOAD_MIB='10240'",
+            "SHINGI_PRELOAD_MIB='11536'",
             "SHINGI_HEADROOM_MIB='1024'",
         ):
             self.assertIn(assignment, result.stdout)
@@ -209,7 +209,7 @@ class ShingiScriptsTest(unittest.TestCase):
         args = result.stdout.splitlines()[1:]
         self.assertEqual(args[0], str(self.root / "scripts/shingi-server.py"))
         for flag, value in (
-            ("--preload-mib", "10240"),
+            ("--preload-mib", "11536"),
             ("--headroom-mib", "1024"),
             ("--weights-repo", "kortexa-ai/shingi-27b"),
             ("--weights-revision", self.config["weights"]["revision"]),
