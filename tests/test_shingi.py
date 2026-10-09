@@ -93,14 +93,16 @@ class ShingiConfigTest(unittest.TestCase):
         self.assertEqual((config["context"], config["context_window"], config["port"]), (16384, 16384, 2068))
         self.assertNotIn("llama", config)
         shingi = config["shingi"]
-        self.assertEqual(shingi["runtime"]["directory"], ".engines/llama-prism")
+        self.assertEqual(shingi["runtime"]["directory"], ".engines/shingi/runtime/prism")
         self.assertEqual(shingi["memory"], {"preload_mib": 11536, "headroom_mib": 1024})
-        self.assertEqual(shingi["package"]["revision"], "2f7acfd151cae57f15fe4f52b2c2d3b20e3090e6")
+        self.assertEqual(shingi["package"]["revision"], "efdca285ded5770f990d7ee99b243cf7aaa359a0")
         self.assertEqual(shingi["weights"]["revision"], "d02406fc8974a91ebf45b0e7d46c5381ee42e1c2")
         self.assertEqual(shingi["weights"]["projector"], "mmproj.gguf")
-        # Shares the pinned Prism runtime with Bonsai 2 27B.
+        # Same Prism base revision as Bonsai, with Shingi's correction isolated.
         bonsai = json.loads((ROOT / "bonsai-2-27b/model.json").read_text())
-        self.assertEqual(shingi["runtime"], bonsai["llama"]["runtime"])
+        for key in ("repo", "revision"):
+            self.assertEqual(shingi["runtime"][key], bonsai["llama"]["runtime"][key])
+        self.assertNotEqual(shingi["runtime"]["directory"], bonsai["llama"]["runtime"]["directory"])
         for pinned in (shingi["package"]["revision"], shingi["weights"]["revision"]):
             self.assertRegex(pinned, r"^[0-9a-f]{40}$")
 
@@ -112,13 +114,13 @@ class ShingiConfigTest(unittest.TestCase):
         for assignment in (
             "MODEL_TYPE='systemone'",
             "LLAMA_SUPPORTED=false",
-            "SHINGI_PACKAGE_REVISION='2f7acfd151cae57f15fe4f52b2c2d3b20e3090e6'",
+            "SHINGI_PACKAGE_REVISION='efdca285ded5770f990d7ee99b243cf7aaa359a0'",
             "SHINGI_WEIGHTS_REPO='kortexa-ai/shingi-27b'",
             "SHINGI_WEIGHTS_REVISION='d02406fc8974a91ebf45b0e7d46c5381ee42e1c2'",
             "SHINGI_MODEL_FILE='shingi-27b.gguf'",
             "SHINGI_CALIBRATION_FILE='calibration.json'",
             "SHINGI_PROJECTOR_FILE='mmproj.gguf'",
-            "SHINGI_RUNTIME_DIR='.engines/llama-prism'",
+            "SHINGI_RUNTIME_DIR='.engines/shingi/runtime/prism'",
             "SHINGI_PRELOAD_MIB='11536'",
             "SHINGI_HEADROOM_MIB='1024'",
         ):
@@ -244,8 +246,12 @@ class ShingiSetupTest(unittest.TestCase):
         for name in ("scripts/parse-config.py", "scripts/setup-common.sh", "scripts/setup-shingi.sh"):
             shutil.copy2(ROOT / name, self.root / name)
         (self.root / MODEL_ID).mkdir()
-        shutil.copy2(MODEL_DIR / "model.json", self.root / MODEL_ID / "model.json")
-        config = json.loads((MODEL_DIR / "model.json").read_text())["shingi"]
+        document = json.loads((MODEL_DIR / "model.json").read_text())
+        config = document["shingi"]
+        # Exercise legacy shared-runtime reuse separately from the production
+        # config, which now names Shingi's corrected private runtime directory.
+        config["runtime"]["directory"] = ".engines/llama-prism"
+        (self.root / MODEL_ID / "model.json").write_text(json.dumps(document))
         self.prism = self.root / config["runtime"]["directory"]
         for name in ("include/llama.h", "ggml/include/ggml-backend.h", "vendor/nlohmann/json.hpp",
                      "tools/mtmd/mtmd.h", "build/bin/libllama.so", "build/bin/libggml.so",
@@ -300,6 +306,23 @@ class ShingiSetupTest(unittest.TestCase):
                                 capture_output=True, text=True, env=environment)
         self.assertNotIn("reusing the shared Prism runtime", result.stdout)
         self.assertIn("missing, stale, or static", result.stdout)
+
+    def test_device_cache_package_uses_its_own_corrected_runtime(self):
+        scripts = self.root / ".engines/shingi/src/scripts"
+        scripts.mkdir()
+        (scripts / "patch-prism.py").write_text("import sys\nassert sys.argv[-1] == '--check'\n")
+        (scripts / "build.sh").write_text('echo "private build $SHINGI_HOME" >> "$LOG"\n')
+        environment = dict(os.environ, PATH=f"{self.bin}:{os.environ['PATH']}", LOG=str(self.log))
+        result = subprocess.run(["bash", str(self.root / "scripts/setup-shingi.sh"), str(self.root / MODEL_ID)],
+                                capture_output=True, text=True, env=environment)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("reusing the shared Prism runtime", result.stdout)
+        calls = self.log.read_text().splitlines()
+        private = self.root / ".engines/shingi/runtime"
+        self.assertIn(f"private build {private}", calls)
+        compile_line = next(line for line in calls if line.startswith("c++ "))
+        self.assertIn(f"-L{private}/prism/build/bin", compile_line)
+        self.assertNotIn(f"-L{self.prism}/build/bin", compile_line)
 
 
 class ShingiLauncherTest(unittest.TestCase):

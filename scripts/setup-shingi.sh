@@ -2,7 +2,8 @@
 # One-time, idempotent setup for a Shingi System One model (Linux + CUDA only).
 # - Checks out the pinned shingi-27b package source into .engines/shingi/src
 #   and installs it into .engines/shingi/venv (skipped when the stamp matches).
-# - Reuses the Prism runtime in the model's runtime directory when it is at the
+# - Packages with device-state caching build their corrected Prism runtime in
+#   .engines/shingi/runtime. Older packages reuse the model's runtime directory when it is at the
 #   pinned revision with shared libraries; otherwise builds its own copy under
 #   .engines/shingi/prism. It never modifies the shared runtime directory.
 # - Builds .engines/shingi/bin/readout against llama and the multimodal mtmd
@@ -85,7 +86,18 @@ runtime_usable() {
 }
 
 PRISM="${ROOT}/${SHINGI_RUNTIME_DIR}"
-if runtime_usable "$PRISM"; then
+if [[ -f "${SRC}/scripts/patch-prism.py" ]]; then
+    # Quantized on-device state needs the package's exact correction. Keep the
+    # shared Bonsai runtime untouched, and let the package verify its managed patch.
+    echo "shingi: building the isolated corrected Prism runtime"
+    SHINGI_HOME="${ENGINE_DIR}/runtime" bash "${SRC}/scripts/build.sh"
+    PRISM="${ENGINE_DIR}/runtime/prism"
+    [[ "$(git -C "$PRISM" rev-parse HEAD)" == "$SHINGI_RUNTIME_REVISION" ]] || {
+        echo "Error: package and model.json Prism revisions differ." >&2
+        exit 1
+    }
+    python3 "${SRC}/scripts/patch-prism.py" "$PRISM" --check
+elif runtime_usable "$PRISM"; then
     echo "shingi: reusing the shared Prism runtime in ${PRISM}"
 else
     PRISM="${ENGINE_DIR}/prism"

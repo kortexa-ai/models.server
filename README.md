@@ -364,7 +364,7 @@ Its `shingi` block pins four things:
 |-----|---------|
 | `package` | Git repository and commit of the server package and `src/native/readout.cpp` |
 | `weights` | Hugging Face repository, revision, GGUF, calibration and optional vision `projector` file names |
-| `runtime` | Prism llama.cpp runtime; reuses Bonsai's `.engines/llama-prism` |
+| `runtime` | Pinned Prism llama.cpp base revision; corrected Shingi runtime is isolated from Bonsai |
 | `memory` | Free-GPU floors in MiB before load (`preload_mib`) and while serving (`headroom_mib`) |
 
 Setup is one-time and idempotent. Serving only reads its results, so the
@@ -376,32 +376,39 @@ systemd unit works with `ProtectHome=read-only`:
 ```
 
 Setup installs the package into `.engines/shingi/venv` and compiles
-`.engines/shingi/bin/readout`. The readout links to `.engines/llama-prism`
-when that checkout is clean at the pinned revision and has shared libraries.
-Otherwise setup builds a separate Prism copy in `.engines/shingi/prism`. It
-never changes `.engines/llama-prism`. Weights go to the standard Hugging Face
+`.engines/shingi/bin/readout`. Packages with VRAM caching build their corrected
+Prism runtime under `.engines/shingi/runtime/prism`; the readout links to those
+libraries. Setup checks the exact managed quantized-state patch. Older packages
+can reuse a clean `.engines/llama-prism` or build `.engines/shingi/prism`. Setup
+never changes the shared Bonsai runtime. Weights go to the standard Hugging Face
 cache, and the server checks the package's pinned SHA-256 on every start.
 
 The public package requires 14 GiB free before load and 4 GiB headroom on
 cards up to 32 GiB. The shared 4090 cannot meet that next to TTS and ASR.
 `scripts/shingi-server.py` replaces only those two floors with the `memory`
 values. The package's UUID and 20 GiB minimum-card checks still apply.
+The package adds its VRAM cache budget to startup admission and checks that the
+full budget fits above headroom after model load. Cache state defaults to VRAM,
+with a 1024 MiB bound and four slots. Pass `--prefix-cache host` or
+`--prefix-cache off` through `run.sh` for an explicit alternate policy.
 The worker serves four independent sequences with one model allocation and a shared
 16K-token context pool. It queues concurrent callers and reuses shared prefix state;
 `GET /v1/version` reports `parallel_slots: 4`. Image encoding remains serial.
 The serving memory guard reads NVML directly on every batch. Parallel decode timings
 include CUDA completion, and a shared prefix stays on the GPU across question waves.
-Eight requests in flight can fill the four sequences more consistently, but measure
-the actual workload: Mappity's full search was slightly faster with four callers. See
-the [throughput checks](https://github.com/kortexa-ai/shingi-27b/blob/main/results/throughput/REPORT.md).
-With the vision projector, sampled peak allocation was 9,769 MiB on the 4090,
-about 600 MiB above serial mode. `preload_mib` is 11536 to leave at least 1.5 GiB
-above that measured peak; `headroom_mib` stays 1024 for the colocated TTS/ASR budget.
-The approved comparison kept those services running and passed every paired winner
-check. See the package's [native and HTTP measurements](https://github.com/kortexa-ai/shingi-27b/blob/main/results/parallel-decisions/REPORT.md).
+Eight requests in flight can fill the four sequences more consistently. With the
+bounded tail-padding change, Mappity's full search was slightly faster with eight
+callers on both tested cards. Earlier engine measurements favored four; measure
+the actual workload when choosing concurrency.
+With the vision projector, a 1 GiB VRAM cache and 1024-token parallel batches,
+sampled peak allocation was 11,229 MiB on the 4090, leaving 1528 MiB free beside
+TTS and ASR. `preload_mib` stays 11536; the package adds the 1024 MiB cache budget
+to that admission floor. `headroom_mib` stays 1024. The cache churn and frozen
+decision checks kept those services running and preserved every paired winner.
+See the package's [device-cache measurements](https://github.com/kortexa-ai/shingi-27b/blob/main/results/vram-cache/REPORT.md).
 The readout links Prism's multimodal `mtmd` library; setup requires
-`libmtmd.so` in a reused runtime. Without a `projector`, the launcher adds no
-`--mmproj` and the package applies its own default.
+`libmtmd.so` in a reused runtime. Without a `projector`, the launcher explicitly
+selects text-only serving with `--no-vision`.
 
 ### llama-server (llama.cpp)
 GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.
