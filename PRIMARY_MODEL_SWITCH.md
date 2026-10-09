@@ -23,7 +23,22 @@ lists running local models, so keeping the old Qwen entry does not start it.
 
 `kortexa-static` is a selectable emergency provider at
 `http://192.168.2.101:2067/v1`, with only `qwen-3.8-flash-next-fast`. It is not
-an implicit retry chain. The original consolidation sets main harness defaults
+an implicit retry chain. `kortexa-shock` follows the same selectable fallback
+contract at `http://192.168.2.102:2069/v1`, with only `glm-5.3-flash-exl3`.
+Both its direct and public harness entries use the served **262144-token**
+context, a 16384-token output allowance in OMP/pi, and text-only input; do not
+copy the checkpoint's advertised 1M context into client settings.
+
+The Shock addition preserves every existing selected model and auxiliary role.
+Add its provider from the existing Static provider's authentication conventions,
+using GLM's public model metadata. In Hermes, add the matching
+`model_overrides.custom:kortexa-shock` entry and keep `discover_models: false`.
+OMP uses `auth: none` for direct access; pi retains a non-secret dummy API key.
+Include both Snappy profiles and native Windows Hermes on Scrappy. Hermes is
+not installed on Smarty in the 2026-10-08 inventory. Existing `kortexa.ai` GLM
+entries need no rewrite when their metadata already matches these limits.
+
+The original consolidation sets main harness defaults
 to `openai-codex/gpt-6-luna` with the existing native Codex authentication.
 LFM auxiliary roles move to
 the running Bonsai service. The unrelated reflex endpoint remains independent.
@@ -46,6 +61,8 @@ environment's Python (round-trip YAML support). Preview is the default;
 `--apply` backs up only affected private files on each host, checks concurrent
 edits, preserves comments/unrelated settings, and writes restrictive files.
 It requires `KORTEXA_API_KEY` in its process environment. It never logs secrets.
+This consolidation script changes selected defaults; do not rerun it for a
+provider-only addition that must preserve current selections.
 Its Scrappy inventory covers the WSL2 home, not native Windows Hermes. Apply
 the same provider/model contract separately to the Windows configuration at
 the path below; do not create a Mira profile there.
@@ -185,16 +202,17 @@ than only the default profile. Snappy currently runs the default gateway and
 `mira` as separate profile services. Scrappy uses the single native Windows
 profile identified above.
 
-For the public-provider contract, keep Scrappy's `providers.kortexa.ai` and
-`providers.kortexa-static` model entries and their matching
-`model_overrides.custom:<provider>` sections aligned with Snappy. Copy model
+For the public-provider contract, keep Scrappy's `providers.kortexa.ai`,
+`providers.kortexa-static`, and `providers.kortexa-shock` model entries and their
+matching `model_overrides.custom:<provider>` sections aligned with Snappy. Copy model
 IDs, context limits, capabilities, URLs and explicit discovery settings;
 preserve Scrappy's valid credentials and unrelated profile settings. Do not
 copy Snappy's OAuth stores or Mira identity. The current public roster is
 `qwen-3.8-27b`, `bonsai-2-27b`, `qwen-3.8-flash-next-fast`,
 `claude-fable-5`, `gpt-5.6-luna`, `gpt-5.6-sol`, and
 `glm-5.3-flash-exl3`. The Static provider contains only
-`qwen-3.8-flash-next-fast`. GLM is text only; the other entries preserve
+`qwen-3.8-flash-next-fast`; the Shock provider contains only `glm-5.3-flash-exl3`.
+GLM is text only; the other entries preserve
 Snappy's vision/tool/reasoning metadata. Configured models may be inactive.
 
 The native executable is `C:\src\hermes-agent\venv\Scripts\hermes.exe`.
@@ -214,7 +232,9 @@ $env:PYTHONPATH = 'C:\src\hermes-agent;C:\src\hermes-agent\venv\Lib\site-package
 Resolve the installed concrete Python version again if it changes. A
 `pyvenv.cfg` change alone does not rewrite the executable's embedded path.
 For Static, select `custom:kortexa-static` and
-`qwen-3.8-flash-next-fast` in a fresh request. Verify the requested model and
+`qwen-3.8-flash-next-fast` in a fresh request. For Shock, select
+`custom:kortexa-shock` and `glm-5.3-flash-exl3`. OMP/pi use the same provider
+names without the `custom:` prefix. Verify the requested model and
 provider in the usage record: a correct answer after fallback does not prove
 the selected backend. Arithmetic probes require Hermes's terminal tool;
 use an echo when deliberately limiting tools.
@@ -253,7 +273,10 @@ and provider discovery cache through its normal tooling; explicit current
 model metadata and a fresh request are the acceptance evidence.
 
 Reload the CLI selection or start a fresh CLI session. For the affected running
-gateways on Snappy, use the profile-aware Hermes manager, not raw launchctl:
+gateways on Snappy, the installed `/model` handler reads provider definitions
+from the profile config on each invocation. A provider-only addition needs no
+gateway restart. When changing an active route or auxiliary configuration, use
+the profile-aware Hermes manager, not raw launchctl:
 
 ```bash
 hermes gateway restart
