@@ -95,7 +95,7 @@ class ShingiConfigTest(unittest.TestCase):
         shingi = config["shingi"]
         self.assertEqual(shingi["runtime"]["directory"], ".engines/shingi/runtime/prism")
         self.assertEqual(shingi["memory"], {"preload_mib": 11536, "headroom_mib": 1024})
-        self.assertEqual(shingi["package"]["revision"], "efdca285ded5770f990d7ee99b243cf7aaa359a0")
+        self.assertEqual(shingi["package"]["revision"], "dafeb382688c359ac84d15625e5e74194482bab7")
         self.assertEqual(shingi["weights"]["revision"], "d02406fc8974a91ebf45b0e7d46c5381ee42e1c2")
         self.assertEqual(shingi["weights"]["projector"], "mmproj.gguf")
         # Same Prism base revision as Bonsai, with Shingi's correction isolated.
@@ -114,7 +114,7 @@ class ShingiConfigTest(unittest.TestCase):
         for assignment in (
             "MODEL_TYPE='systemone'",
             "LLAMA_SUPPORTED=false",
-            "SHINGI_PACKAGE_REVISION='efdca285ded5770f990d7ee99b243cf7aaa359a0'",
+            "SHINGI_PACKAGE_REVISION='dafeb382688c359ac84d15625e5e74194482bab7'",
             "SHINGI_WEIGHTS_REPO='kortexa-ai/shingi-27b'",
             "SHINGI_WEIGHTS_REVISION='d02406fc8974a91ebf45b0e7d46c5381ee42e1c2'",
             "SHINGI_MODEL_FILE='shingi-27b.gguf'",
