@@ -389,6 +389,10 @@ values. The package's UUID and 20 GiB minimum-card checks still apply.
 The worker serves four independent sequences with one model allocation and a shared
 16K-token context pool. It queues concurrent callers and reuses shared prefix state;
 `GET /v1/version` reports `parallel_slots: 4`. Image encoding remains serial.
+The serving memory guard reads NVML directly on every batch. Parallel decode timings
+include CUDA completion, and a shared prefix stays on the GPU across question waves.
+Sustained clients can keep eight requests in flight to fill the four sequences; see
+the [throughput checks](https://github.com/kortexa-ai/shingi-27b/blob/main/results/throughput/REPORT.md).
 With the vision projector, sampled peak allocation was 9,769 MiB on the 4090,
 about 600 MiB above serial mode. `preload_mib` is 11536 to leave at least 1.5 GiB
 above that measured peak; `headroom_mib` stays 1024 for the colocated TTS/ASR budget.

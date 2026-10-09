@@ -95,7 +95,7 @@ class ShingiConfigTest(unittest.TestCase):
         shingi = config["shingi"]
         self.assertEqual(shingi["runtime"]["directory"], ".engines/llama-prism")
         self.assertEqual(shingi["memory"], {"preload_mib": 11536, "headroom_mib": 1024})
-        self.assertEqual(shingi["package"]["revision"], "b2e1393322bab9e459ca3df6a5e744a3a5748a0d")
+        self.assertEqual(shingi["package"]["revision"], "2f7acfd151cae57f15fe4f52b2c2d3b20e3090e6")
         self.assertEqual(shingi["weights"]["revision"], "d02406fc8974a91ebf45b0e7d46c5381ee42e1c2")
         self.assertEqual(shingi["weights"]["projector"], "mmproj.gguf")
         # Shares the pinned Prism runtime with Bonsai 2 27B.
@@ -112,7 +112,7 @@ class ShingiConfigTest(unittest.TestCase):
         for assignment in (
             "MODEL_TYPE='systemone'",
             "LLAMA_SUPPORTED=false",
-            "SHINGI_PACKAGE_REVISION='b2e1393322bab9e459ca3df6a5e744a3a5748a0d'",
+            "SHINGI_PACKAGE_REVISION='2f7acfd151cae57f15fe4f52b2c2d3b20e3090e6'",
             "SHINGI_WEIGHTS_REPO='kortexa-ai/shingi-27b'",
             "SHINGI_WEIGHTS_REVISION='d02406fc8974a91ebf45b0e7d46c5381ee42e1c2'",
             "SHINGI_MODEL_FILE='shingi-27b.gguf'",
@@ -321,6 +321,11 @@ class ShingiLauncherTest(unittest.TestCase):
                                     return_value=f"{UUID}, NVIDIA GeForce RTX 4090, {total}, {free}\n")
         patcher.start()
         self.addCleanup(patcher.stop)
+        # The serving guard now reads NVML directly; these launcher tests isolate
+        # floor selection from the driver's separately tested memory interface.
+        memory = mock.patch.object(self.backend, "gpu_free_mib", return_value=free)
+        memory.start()
+        self.addCleanup(memory.stop)
 
     def test_override_replaces_only_the_floors(self):
         self.fake_nvidia_smi(24564, 11500)
