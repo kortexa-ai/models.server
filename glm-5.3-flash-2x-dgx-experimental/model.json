@@ -92,14 +92,14 @@
     "startup_free_gib": 108,
     "vllm_revision": "276fbcff2717bd934cfa37c8a2e4c391f3e7237b",
     "native_revision": "187a0eb98aa42341d703f83421d693fa7585581b",
-    "image_id": "sha256:566d9b491c1e77fc7c272026c350e57a87cf9bc7d45633d75aba61a179d8cd0a",
+    "image_id": "sha256:256adc318d5e4353197d022ed723b165e0ef0f01cba98e9a871e16e08b07ca51",
     "base_image": "vllm/vllm-openai@sha256:f853a6833fea509edf1298cad31b630003c242a8b2b70c353e831fa716c8da0b",
     "master_port": 29670,
     "cache_path": "/home/francip/.cache/glm53-main",
     "container_memory": "112g",
     "decode_context_parallel_size": 1,
     "cp_kv_cache_interleave_size": 4,
-    "kv_cache_memory_bytes": 6442450944,
+    "kv_cache_memory_bytes": 15032385536,
     "max_num_batched_tokens": 6919,
     "mamba_ssm_cache_dtype": "float32",
     "attention_backend": "FLASHINFER_MLA_SPARSE_SM120",
@@ -180,7 +180,9 @@
       "MAX_JOBS": "2",
       "TORCHINDUCTOR_COMPILE_THREADS": "1",
       "HF_HUB_OFFLINE": "1",
-      "TRANSFORMERS_OFFLINE": "1"
+      "TRANSFORMERS_OFFLINE": "1",
+      "GLM_FAST_LOAD": "1",
+      "GLM_FAST_LOAD_VERIFY": "8"
     }
   }
 }
