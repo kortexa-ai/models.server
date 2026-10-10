@@ -38,6 +38,7 @@ correctness or DFlash compatibility.
 | `--mamba-ssm-cache-dtype` | General vLLM recurrent-state control | At this pin GLM's caller does not pass this field into the KDA dtype calculator; the recurrent state remains FP32. Changing the flag alone is not a BF16 experiment. |
 | `VLLM_KV_CACHE_LAYOUT` | Selects a physical layout supported by the backend | Upstream resolves the layout before profiling. Packed grouping and padding affect bytes per block; a block count from the older recipe is not directly comparable. |
 | `--num-gpu-blocks-override` | Overrides the calculated number of blocks | This is not free capacity. Extra blocks still allocate memory and can exceed the intended pool budget. |
+| `NCCL_BUFFSIZE` | Communication buffer bytes per NCCL channel/peer | This is outside the KV pool. DCP creates another communication group; compare host and CUDA memory as well as PyTorch allocations. Smaller buffers require a separate throughput test. |
 
 Prefill workspace also depends on `--max-num-batched-tokens`. At this pin,
 the scheduler reserves seven DFlash input slots before rounding a long prefill
@@ -88,3 +89,4 @@ Source references at the pinned revision:
 - [GLM kpool and circular tail](https://github.com/vllm-project/vllm/blob/276fbcff2717bd934cfa37c8a2e4c391f3e7237b/vllm/models/glm5next/common/attention.py)
 - [SM120 sparse attention implementation](https://github.com/vllm-project/vllm/blob/276fbcff2717bd934cfa37c8a2e4c391f3e7237b/vllm/v1/attention/backends/mla/flashinfer_mla_sparse_sm120.py)
 - [Backend capability validation](https://github.com/vllm-project/vllm/blob/276fbcff2717bd934cfa37c8a2e4c391f3e7237b/vllm/v1/attention/backend.py)
+- [NCCL communication buffer control](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html#nccl-buffsize)
