@@ -129,7 +129,8 @@ def render_command(model, rank):
                                 (c["draft_path"], "/draft:ro"),
                                 (c["cache_path"], "/cache")):
         args += ["-v", source + ":" + destination]
-    env = {**c["environment"], "VLLM_HOST_IP": n["ip"], "VLLM_USE_RUST_FRONTEND": "0"}
+    env = {**c["environment"], "VLLM_HOST_IP": n["ip"], "VLLM_USE_RUST_FRONTEND": "0",
+           "GLM_EXPERIMENT_FINGERPRINT": fingerprint(model)}
     for key, value in env.items():
         args += ["-e", key + "=" + str(value)]
     args += ["--entrypoint", "vllm", c["image_id"], "serve", "/model",

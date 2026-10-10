@@ -79,7 +79,7 @@ def monitor(stop, samples, output):
             try:
                 with urllib.request.urlopen(BASE + "/metrics", timeout=5) as response:
                     metrics = response.read().decode()
-                for metric in ["num_requests_running", "num_requests_waiting", "kv_cache_usage_perc", "num_preemptions_total", "prefix_cache_hits_total", "prefix_cache_queries_total"]:
+                for metric in ["num_requests_running", "num_requests_waiting", "kv_cache_usage_perc", "num_preemptions_total", "prefix_cache_hits_total", "prefix_cache_queries_total", "spec_decode_num_drafts_total", "spec_decode_num_draft_tokens_total", "spec_decode_num_accepted_tokens_total"]:
                     match = re.search(r"^vllm:" + metric + r"\{[^\n]*\} ([^\n]+)$", metrics, re.M)
                     if match:
                         sample[metric] = float(match.group(1))
@@ -208,8 +208,11 @@ def main():
                  if r.get("first_token_monotonic") and r.get("last_token_monotonic")]
     summary["peak_overlapping_decode_intervals"] = max(
         (sum(start <= instant <= end for start, end in intervals) for instant, _ in intervals), default=0)
-    preemptions = [s["num_preemptions_total"] for s in samples if "num_preemptions_total" in s]
-    summary["preemptions_observed_delta"] = preemptions[-1] - preemptions[0] if preemptions else None
+    for metric in ("num_preemptions_total", "prefix_cache_hits_total", "prefix_cache_queries_total",
+                   "spec_decode_num_drafts_total", "spec_decode_num_draft_tokens_total",
+                   "spec_decode_num_accepted_tokens_total"):
+        values = [s[metric] for s in samples if metric in s]
+        summary[metric + "_observed_delta"] = values[-1] - values[0] if values else None
     for host in ["static", "shock"]:
         summary[host + "_minimum_available_gib"] = min((s[host]["MemAvailable"] for s in samples if host in s and "MemAvailable" in s[host]), default=None)
     (ROOT / (name + ".results.json")).write_text(json.dumps({"summary": summary, "requests": results}, indent=2))

@@ -31,8 +31,16 @@ a later decision adopts sixteen.
 The image is based on vLLM `487ecf187d3dfe74d2cf6119a92881dba403c219`
 (2026-08-25), plus the pinned Spark overlays. TP2 partitions model weights;
 the main MLA KV is replicated across Static and Shock. DCP can distribute
-token history across the same ranks. Small recurrent and tail state remains
-replicated. Savings must be measured for the complete hybrid cache layout.
+token history across the same ranks. Recurrent and tail state is not further
+sharded by DCP; speculative state reservations can be a substantial per-request
+cost. KDA heads are already partitioned by TP. Savings must be measured for the
+complete hybrid cache layout.
+
+Use the separate [experimental recipe](../glm-5.3-flash-2x-dgx-experimental/PLAN.md)
+for the pinned-main comparison. Keep this recipe's runtime and manifest as the
+recovery baseline until a later promotion decision. Evaluate cache grouping
+and temporary workspaces alongside DCP; reducing token-history duplication does
+not remove the recurrent-state reservation.
 
 Upstream changes to evaluate:
 

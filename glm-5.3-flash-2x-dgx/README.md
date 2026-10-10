@@ -79,8 +79,9 @@ ssh static 'ktxsvc install models/glm-5.3-flash-2x-dgx'
 
 `ktxsvc install` enables and starts the unit. The same unit selects its rank
 from the hostname and pins that host's GPU UUID. The attached Docker process
-keeps systemd tied to the actual rank. Services retry after failure, including
-a delayed peer boot. Neither service starts or stops processes over SSH.
+keeps systemd tied to the actual rank. A failed rank stays stopped; inspect both
+logs and coordinate a restart after fixing the cause. Neither service starts
+or stops processes over SSH.
 For maintenance, stop Static then Shock; start Shock then Static. Always
 coordinate both ranks: a single surviving rank cannot serve requests.
 
@@ -108,13 +109,16 @@ chain. Both routes depend on the same two-node model.
 
 ## Recovery and validation limits
 
-Uninstall the old Static `qwen-3.8-flash-next-fast` and Shock
-`glm-5.3-flash-exl3` service registrations after this replacement is prepared.
-Their recipes and weights remain available. To revert the cutover, stop both
-new services and start the preserved trial worker `glm53-tp2-exp-20261009-r1`
-on Shock, then `glm53-tp2-exp-20261009-r0` on Static. That experiment serves
-`glm-5.3-flash` on port 28053 and does not match the new client route; restore
-the saved private client configs when using that rollback.
+This recipe is the recovery baseline for `glm-5.3-flash-2x-dgx-experimental`.
+Keep its pinned image, verified weights, revision-specific source checkouts,
+setup receipts and stopped containers. To return from the experiment, stop
+its Static service, then its Shock service. Start this recipe on Shock, then
+Static, using the managed lifecycle above. Verify port 2070, `/health`,
+`/v1/models` and a real completion. Its existing client model ID and route are
+unchanged. No image rebuild or weight transfer is needed for that recovery.
+
+The older single-Spark recipes and the original port-28053 trial are historical
+alternatives, not the rollback for the current pinned-main experiment.
 
 The original trial passed direct streaming, tool/result continuation, empty
 tool output, two concurrent requests and 27K prompt retrieval. It did not prove
