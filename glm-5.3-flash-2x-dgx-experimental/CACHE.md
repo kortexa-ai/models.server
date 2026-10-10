@@ -65,6 +65,9 @@ pool budget while retaining the same tested workload, then compare both
 ranks' allocations and available host memory. Rank 0 also runs the API and
 vision path. On a Spark, CPU and GPU use the same physical RAM; CPU cache
 offload does not create another independent memory tier.
+Docker's memory limit is not a GPU-memory budget: its container accounting
+does not include most driver allocations on these hosts. Use the explicit
+cache budget, worker allocation records and host `MemAvailable` together.
 
 Source references at the pinned revision:
 
