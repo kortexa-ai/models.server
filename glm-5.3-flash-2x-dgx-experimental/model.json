@@ -233,7 +233,11 @@
       "HF_HUB_OFFLINE": "1",
       "TRANSFORMERS_OFFLINE": "1",
       "GLM_FAST_LOAD": "1",
-      "GLM_FAST_LOAD_VERIFY": "8"
+      "GLM_FAST_LOAD_VERIFY": "8",
+      "GLM_ROCE_ALLREDUCE": "1",
+      "GLM_ROCE_PROXY_CPUS": "auto",
+      "B12X_ROCE_HCA": "rocep1s0f1",
+      "B12X_ROCE_SPIN_LIMIT": "300000000"
     }
   }
 }
