@@ -1,0 +1,214 @@
+{
+  "name": "GLM-5.3 Flash NVFP4 DFlash2 (dual DGX Spark)",
+  "id": "glm-5.3-flash-2x-dgx",
+  "type": "language",
+  "default_engine": "vllm-glm53-tp2",
+  "host": "0.0.0.0",
+  "api_host": "192.168.2.101",
+  "port": 2070,
+  "context_window": 262144,
+  "trained_context_window": 1048576,
+  "context": 262144,
+  "parallel": 8,
+  "cache_type": "fp8_e4m3",
+  "multimodal": true,
+  "reasoning": true,
+  "reasoning_effort": true,
+  "hf_model": "nvidia/GLM-5.3-Flash-NVFP4",
+  "glm53_tp2": {
+    "recipe_url": "https://github.com/tonyd2wild/GLM-5.3-Flash-NVFP4-DFlash2-2x-DGX-Spark.git",
+    "recipe_revision": "d061f26ad3ec5c3c04f64aad7516dbe62a8aa6af",
+    "launcher": "runs/2026-09-29-knapcio-tp2/start_tp2.sh",
+    "runtime_url": "https://github.com/knapcio/GLM-5.3-Flash-4x-DGX-Spark-TP4.git",
+    "runtime_revision": "770d1153062aa916b06591411c61d5c593ea0f03",
+    "profile": "profiles/current.env",
+    "image_id": "sha256:881716c0f7d0904d3aa2c4f138a15e916c4c1aaca48070b39785032ed485863a",
+    "base_image": "ghcr.io/tonyd2wild/vllm-glm53-flash@sha256:4def0ef644cb2e9814136dcffd5e385e21bc594f48f3b292234051904abe85a6",
+    "nodes": {
+      "static": {
+        "rank": 0,
+        "ip": "192.168.100.10",
+        "gpu_uuid": "GPU-f9487b6b-9a21-6e2e-51f7-463021de7964"
+      },
+      "shock": {
+        "rank": 1,
+        "ip": "192.168.100.11",
+        "gpu_uuid": "GPU-1b5af52b-bff7-7f87-aef2-c625727320a8"
+      }
+    },
+    "model_path": "/home/francip/models/glm-5.3-flash-2x-dgx/lossless8",
+    "draft_path": "/home/francip/models/glm-5.3-flash-2x-dgx/draft-fp8",
+    "cache_path": "/home/francip/.cache/glm53-tp2",
+    "source_model": {
+      "repo": "nvidia/GLM-5.3-Flash-NVFP4",
+      "revision": "09b04e5e74bca08ca8549fc736d4cdd8624bfde3"
+    },
+    "source_draft": {
+      "repo": "incoai/GLM-5.3-Flash-DFlash2",
+      "revision": "bf582e4eacc1810f76656d1811693ff6c6737d2a"
+    },
+    "target_sha256": {
+      "model-00001-of-00033.safetensors": "5c7ee3e2a0bd7452b7ccea70bd18f7221676a709a3d4c050d1457fa7d7359125",
+      "model-00002-of-00033.safetensors": "7afab1480693d8a37faba2f092b0626b121f6fce9241478ad95cf857145ddc41",
+      "model-00003-of-00033.safetensors": "f184e8b75db437579fa571d4693d6fba7a2806e531d3b8e05d13b1dbc0a90142",
+      "model-00004-of-00033.safetensors": "dd08e62f3f86dad5ac784e68eb956fa20a18bab72d81337d3058af281ce18c93",
+      "model-00005-of-00033.safetensors": "bc763b5eec6911a7750b6e37d7f499d6226535792be5c7e7a169d1abb09875d6",
+      "model-00006-of-00033.safetensors": "c7d9597fad87af3b54dbcf994be2b65cd99fc458e392e34f22eeac4af502e4fc",
+      "model-00007-of-00033.safetensors": "3d0f68feb7fe4cee3bd87a464c845843594e0039124941c2a89e7c1ce9da9e2b",
+      "model-00008-of-00033.safetensors": "5c4d7657a3d6fe137b9de14a917d84e511fc9b206fe76bd943d1e53deedba857",
+      "model-00009-of-00033.safetensors": "4770820b433f6ca50c7d30f0b2eaa9df6fd7c095769f51ee46aa519c37e5f7d3",
+      "model-00010-of-00033.safetensors": "be92de14713dc46c0b0c8c87f1c02395b2eeb6059087c69d0a39d01dee34edd8",
+      "model-00011-of-00033.safetensors": "a3294966995e1a81525c6a9efdeb6a27c599a4d04b4e3a5342331298a527d0be",
+      "model-00012-of-00033.safetensors": "4d6f4b1a555377bfa773981a4c0d84a86ee782501613a18a3e86caefbace7f66",
+      "model-00013-of-00033.safetensors": "d1d5c86fa3566eb099f99677550f44191c77faa935491d6d2c5a7c337797eaf9",
+      "model-00014-of-00033.safetensors": "fd6c81655a572a2462dea772bed6fd5114017f12185a619ce693f6b476be5524",
+      "model-00015-of-00033.safetensors": "6ff8daa650fcfacd509e15be48f4c986ff7dae081a874fcb4c1ee67d3a66487a",
+      "model-00016-of-00033.safetensors": "286c1a635749f6364c5b4bbab0c7a9eb0916f9421b17f6ade618a5478b25be58",
+      "model-00017-of-00033.safetensors": "7be78c2466c0c5d4472c1405ff8631b1da1f0dc059e878d3f6f75bf670514b27",
+      "model-00018-of-00033.safetensors": "b5755440acc16e3a935ab60106a99bc9db6cc03d033786e7502e2010a27ff6aa",
+      "model-00019-of-00033.safetensors": "2385071e3600654014011755c97a46e1abe1d2aa988e6fdb7aa2bd4c751b9419",
+      "model-00020-of-00033.safetensors": "8597c39572caa35b1a5e4896ed7c83eb12350ca862dce875071ec2e2d70fec98",
+      "model-00021-of-00033.safetensors": "cf2923ceb37fd1dcb2772f16aa6d459e472dea3d36275f5c5580781646f27f60",
+      "model-00022-of-00033.safetensors": "8f27fac338e9960367a58f0a6ba3681148d52bf38d563d183cac5ab7092b16a6",
+      "model-00023-of-00033.safetensors": "04bbd26640bdf145da1c412aa4c01ef2d0103b2d7e8a2846f207175be461be5d",
+      "model-00024-of-00033.safetensors": "2dc1b2fdf6ba9816545ce9036c9561cd293f71c887d3d3d1590e86900548fb75",
+      "model-00025-of-00033.safetensors": "12a327e0f52b18e7feae2936ebacf33f7a5eff11c96038a06d2547f5653f0838",
+      "model-00026-of-00033.safetensors": "0eb6db2777bebcf9ea34e9b639a8497ffb0d7c520e00a4e0a0b6331cfb18ac2d",
+      "model-00027-of-00033.safetensors": "e220abe4abb6a4798b1d16fdb7d4f6121b6c6e3e8f8d9f71243ba957a7f9542d",
+      "model-00028-of-00033.safetensors": "04b44953c3a5019c4da79260b9abf39bc6fa2b9414f4ede20fea400325aaab3d",
+      "model-00029-of-00033.safetensors": "a705d67e2580270744f26135fc46fd062ea59df6260b45cd628bc2b8a74f6ab2",
+      "model-00030-of-00033.safetensors": "60c0e12a793693702303e7d0ebf16e7619fbbc7a45fe2e9e6d038459053f8e1f",
+      "model-00031-of-00033.safetensors": "5d3a07314659b264b56d84385e89abb5a0199ce944a7cb33eab556832d100075",
+      "model-00032-of-00033.safetensors": "5126cddeb35041953ad0375d926081f7d78b0b279460fa8d1afcdfbe36bca3d1",
+      "model-00033-of-00033.safetensors": "c6fa7921452627ad9d7913875d78496c60082f71b05f943b5dddb3318f0771c2",
+      "tokenizer.json": "19e773648cb4e65de8660ea6365e10acca112d42a854923df93db4a6f333a82d",
+      "tokenizer_config.json": "98b1271574f41abf89427ae2dda030d94dc9478f0edc5a8bd240db213c6fd5fc",
+      "processor_config.json": "aae38374c94b08cc9b0547c6e64f05b951bd9735cea571c6988f5ed552bed3ed",
+      "chat_template.jinja": "34d5ee66b12fa6446cdae131c352b8f68cd85369e0e6fda115583805fada3891",
+      "generation_config.json": "a07de3408f578c6a7ca8a1646aa91a41df55d539349fda15fb8b611eb007e9b7",
+      "qmix-manifest.json": "5b0912ae5b26b263b66bb93ab305e92a7bcd4f4bf2dddf144a98cdc0af3a263a",
+      "model-qmix-lossless8.safetensors": "b9cb7266132e554b5c6389421d5381f39db219bc9de5a3aaaa1344308079f2b2",
+      "config.json": "f14dc13ce3bef88a5539c9e61b3e4f3dbef6958ebc3acda4b7f05f418642c3b0",
+      "hf_quant_config.json": "fe8e7a70f31528a4629830e431e74d5415718556da08fec2f44cc1b309be832c",
+      "model-qmix-sentinel.safetensors": "3c6b2a2196f307ed42d63df8fd57a80717f2e6133c423d250de5f1ae3c5eb6d1",
+      "model.safetensors.index.json": "8ac9d03981d2029223a66bdbda51fa224cb36de8f522d8c695f0724e4f34697e"
+    },
+    "draft_sha256": {
+      "README.md": "2014434d3e3639147d35d61259690d585e7820993180e7d579e3b796dddf5a31",
+      "model.safetensors": "6cba1cff8ab4fcd657b89575f5db3debe1f5a39c78bda422953f553dc2357f8b",
+      "config.json": "15bc842939ff7ca3ccc5aad36d25fff854da05a60086a4f55672d804fc6dbe7b"
+    },
+    "startup_free_gib": 108,
+    "environment_before_profile": {
+      "PF3_ARM": "off",
+      "GATHER_ROUTE": "0",
+      "IB_HCA": "rocep1s0f1"
+    },
+    "environment": {
+      "FABRIC_IFACE": "enp1s0f1np1",
+      "IB_HCA": "rocep1s0f1",
+      "NCCL_IB_GID_INDEX": 3,
+      "MASTER_PORT": 29669,
+      "KV_BYTES": 4294967296,
+      "MAX_MODEL_LEN": 262144,
+      "MAX_SEQS": 8,
+      "BATCHED_TOKENS": 6919,
+      "GPU_UTIL": 0.85,
+      "DEFAULT_EFFORT": "low",
+      "MM_IMAGES": 2,
+      "MM_CACHE_GB": 1,
+      "CTN_MEM": "112g",
+      "COMPACT_MEM": 0,
+      "PREWARM": 0,
+      "BOOT_WARM": 0,
+      "CAPTURE_MAX": 64,
+      "CAPTURE_SIZES": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        14,
+        15,
+        16,
+        18,
+        20,
+        21,
+        22,
+        24,
+        25,
+        26,
+        27,
+        28,
+        30,
+        32,
+        33,
+        35,
+        36,
+        39,
+        40,
+        42,
+        44,
+        45,
+        48,
+        49,
+        50,
+        52,
+        54,
+        55,
+        56,
+        60,
+        63,
+        64
+      ],
+      "SPEC_TABLE": [
+        [
+          1,
+          1,
+          7
+        ],
+        [
+          2,
+          2,
+          5
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          4,
+          4,
+          6
+        ],
+        [
+          5,
+          5,
+          4
+        ],
+        [
+          6,
+          6,
+          2
+        ],
+        [
+          7,
+          8,
+          1
+        ]
+      ]
+    },
+    "extra_environment": {
+      "GLM_PREFILL_SHARD": 0,
+      "GLM_PREFILL_SHARD_PAD": 0,
+      "MAX_JOBS": 2
+    }
+  }
+}

@@ -59,3 +59,10 @@ Run `hostname` to check which machine you're on before doing anything.
   snapshot budget. Its checkpoint advertises 1M context; that window does not
   fit the host memory budget. Run `scripts/setup-tensorfold-exl3.sh` explicitly
   before launch. The standard CLI path is text only.
+
+- Exception: `glm-5.3-flash-2x-dgx` uses the pinned `vllm-glm53-tp2` engine
+  across Static (API/rank 0) and Shock (rank 1), on model port 2070. NVIDIA
+  NVFP4 experts, mixed FP8 dense weights and DFlash2 use 4 GiB FP8 KV/rank,
+  a 262144-token served window, eight shared slots and a 6919-token batch budget.
+  Run explicit setup on both hosts before installing the same service with
+  `ktxsvc`; coordinate both ranks and never run another model on either GPU.
