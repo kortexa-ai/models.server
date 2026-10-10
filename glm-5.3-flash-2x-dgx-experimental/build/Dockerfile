@@ -29,11 +29,13 @@ RUN python3 /opt/glm53-build/prepare_source.py /opt/vllm-main ${VLLM_REVISION} $
 COPY --from=transport /opt/glm-roce /opt/glm-roce
 COPY --from=transport /opt/glm-roce-b12x /opt/glm-roce-b12x
 COPY qmix.py /opt/glm53-main/qmix.py
+COPY glm_fast_load.py /opt/glm53-main/glm_fast_load.py
 COPY LICENSE.knapcio NOTICE.knapcio /opt/glm53-main/
 COPY cache_audit.py /opt/glm53-main/cache_audit.py
 COPY sitecustomize.py /opt/glm53-main/sitecustomize.py
 ENV PYTHONPATH=/opt/glm53-main \
     GLM_ROCE_ALLREDUCE=0 \
+    GLM_FAST_LOAD=0 \
     B12X_ROCE_CACHE_DIR=/opt/glm-roce-b12x/proxy-cache
 RUN python3 -c 'import torch, vllm; print("torch", torch.__version__, "cuda", torch.version.cuda, "vllm", vllm.__version__)'
 LABEL ai.kortexa.glm53.vllm-revision=${VLLM_REVISION} \

@@ -47,6 +47,11 @@ filter counts. Cache and worker observers record allocations without changing
 them. The old model, scheduler, allocator and sampling overlays are not loaded.
 The preserved RoCE collective is a separate optional arm, controlled by
 `GLM_ROCE_ALLREDUCE`; it is disabled for the first upstream baseline.
+The byte-preserving `glm_fast_load.py` from the same pinned Knapcio revision
+is also opt-in (`GLM_FAST_LOAD=1`). It stages checkpoint tensors in bounded
+anonymous/pinned memory to avoid slow file-backed host copies on GB10.
+`GLM_FAST_LOAD_VERIFY` checks sampled tensors against the original reader.
+Keep loader selection identical between memory comparison arms.
 
 ## Managed lifecycle
 
