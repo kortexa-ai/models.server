@@ -92,14 +92,14 @@
     "startup_free_gib": 108,
     "vllm_revision": "276fbcff2717bd934cfa37c8a2e4c391f3e7237b",
     "native_revision": "187a0eb98aa42341d703f83421d693fa7585581b",
-    "image_id": "sha256:256adc318d5e4353197d022ed723b165e0ef0f01cba98e9a871e16e08b07ca51",
+    "image_id": "sha256:0b8f9a4093328153bc90dbdd79833b98dca59c106de79aec379440d2985550e7",
     "base_image": "vllm/vllm-openai@sha256:f853a6833fea509edf1298cad31b630003c242a8b2b70c353e831fa716c8da0b",
     "master_port": 29670,
     "cache_path": "/home/francip/.cache/glm53-main",
     "container_memory": "112g",
     "decode_context_parallel_size": 1,
     "cp_kv_cache_interleave_size": 4,
-    "kv_cache_memory_bytes": 15032385536,
+    "kv_cache_memory_bytes": 6442450944,
     "max_num_batched_tokens": 6919,
     "mamba_ssm_cache_dtype": "float32",
     "attention_backend": "FLASHINFER_MLA_SPARSE_SM120",
@@ -151,7 +151,8 @@
           1
         ]
       ],
-      "rejection_sample_method": "standard"
+      "rejection_sample_method": "standard",
+      "attention_backend": "TRITON_ATTN"
     },
     "enforce_eager": true,
     "compilation_config": {},
