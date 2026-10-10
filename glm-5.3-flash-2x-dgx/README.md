@@ -17,9 +17,17 @@ trained for 1048576. Eight sequences share 4 GiB FP8 KV per rank. This is not
 eight independent 262K caches. Batch budget is **6919**, including draft
 lookahead; the working trial inherited this value from the pinned profile.
 All seven draft-length graph families remain available. Default effort is low;
-clients can request another supported effort. Vision is limited to two images,
-with a 1 GiB processor cache. Each container has a 112 GiB memory limit and no
+clients can request another supported effort. Vision accepts up to eight images
+across the whole request, including conversation history, with a 1 GiB processor
+cache. The encoder batch budget remains 6919 tokens; the image count is not an
+eight-image simultaneous encoder allocation. Each container has a 112 GiB memory limit and no
 extra swap allowance. Startup requires 108 GiB available host memory.
+
+OMP 18.8.7 caps custom providers at five outgoing images and drops older ones.
+Its cap is hardcoded by provider, with no per-model image-count setting. The
+previous two-image server cap rejected the third screenshot, even after
+compaction retained recent screenshots. Eight accepts OMP's existing budget;
+other clients must also bound image history. See issue #58 for validation.
 
 ## Explicit setup on each node
 

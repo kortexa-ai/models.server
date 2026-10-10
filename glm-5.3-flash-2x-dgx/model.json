@@ -115,7 +115,7 @@
       "BATCHED_TOKENS": 6919,
       "GPU_UTIL": 0.85,
       "DEFAULT_EFFORT": "low",
-      "MM_IMAGES": 2,
+      "MM_IMAGES": 8,
       "MM_CACHE_GB": 1,
       "CTN_MEM": "112g",
       "COMPACT_MEM": 0,
