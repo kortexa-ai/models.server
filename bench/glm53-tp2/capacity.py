@@ -85,7 +85,8 @@ def monitor(stop, samples, output):
                         sample[metric] = float(match.group(1))
                 if time.monotonic() - last_hosts > 10:
                     for host in ["static", "shock"]:
-                        r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=4", host,
+                        r = subprocess.run(["ssh", "-o", "ControlMaster=no", "-o", "ControlPath=none",
+                                            "-o", "BatchMode=yes", "-o", "ConnectTimeout=4", host,
                                             "cat /proc/meminfo"], capture_output=True, text=True, timeout=7)
                         values = dict(re.findall(r"^(MemAvailable|SwapFree|SwapTotal):\s+(\d+)", r.stdout, re.M))
                         sample[host] = {k: round(int(v) / 1024 ** 2, 3) for k, v in values.items()}
