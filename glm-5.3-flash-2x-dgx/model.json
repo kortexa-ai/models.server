@@ -9,7 +9,7 @@
   "context_window": 524288,
   "trained_context_window": 1048576,
   "context": 524288,
-  "parallel": 8,
+  "parallel": 16,
   "cache_type": "fp8_e4m3",
   "multimodal": true,
   "reasoning": true,
@@ -111,7 +111,7 @@
       "MASTER_PORT": 29669,
       "KV_BYTES": 6442450944,
       "MAX_MODEL_LEN": 524288,
-      "MAX_SEQS": 8,
+      "MAX_SEQS": 16,
       "BATCHED_TOKENS": 6919,
       "GPU_UTIL": 0.85,
       "DEFAULT_EFFORT": "low",
@@ -200,7 +200,7 @@
         ],
         [
           7,
-          8,
+          16,
           1
         ]
       ]
