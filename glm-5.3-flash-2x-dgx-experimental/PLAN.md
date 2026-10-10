@@ -33,7 +33,7 @@ recipe requires a later decision based on the measurements.
    Record both ranks, since rank 0 also runs the API and vision path. Report
    measured memory separately from layout estimates and allocator reservations.
 7. Explore controls one at a time: draft lookahead, cache layout/grouping,
-   recurrent-state dtype, graph capture and prefill workspace. Identify knobs
+   recurrent-state dtype, graph capture, prefill workspace and NCCL buffers. Identify knobs
    present in the pinned source versus those requiring an unmerged patch.
    Preserve each tested manifest and any applied patch with source provenance.
    Do not attribute a precision or speculation change to DCP.

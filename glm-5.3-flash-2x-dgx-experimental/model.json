@@ -99,7 +99,7 @@
     "container_memory": "112g",
     "decode_context_parallel_size": 2,
     "cp_kv_cache_interleave_size": 4,
-    "kv_cache_memory_bytes": 6442450944,
+    "kv_cache_memory_bytes": 4294967296,
     "max_num_batched_tokens": 4672,
     "mamba_ssm_cache_dtype": "float32",
     "attention_backend": "FLASHINFER_MLA_SPARSE_SM120",
