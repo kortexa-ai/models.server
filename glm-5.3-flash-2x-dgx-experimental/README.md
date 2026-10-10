@@ -41,9 +41,10 @@ It verifies the manifest, image config and every layer before writing the
 Docker archive. Loading that archive creates the local base tag accepted by
 the build; it does not start a container.
 
-The only required source modifications preserve the existing mixed FP8 dense
-weights. The loader checks the mixed checkpoint manifest and rejects unexpected
-filter counts. Cache and worker observers record allocations without changing
+The mixed-weight adapter preserves the existing FP8 dense weights. The loader
+checks the mixed checkpoint manifest and rejects unexpected filter counts.
+The draft metadata-builder adapter supplies the draft's own dimensions and
+cache precision. Cache and worker observers record allocations without changing
 them. The old model, scheduler, allocator and sampling overlays are not loaded.
 The preserved RoCE collective is a separate optional arm, controlled by
 `GLM_ROCE_ALLREDUCE`; it is disabled for the first upstream baseline.
@@ -65,7 +66,15 @@ After the image and manifest match, run explicit setup on both hosts:
 ```
 
 Setup reuses the stable recipe's still-valid artifact verification and rejects
-changed files. Install the worker, then API. `ktxsvc install` enables and starts
+changed files. It writes a separate draft `config.json` under the experimental
+receipt directory and mounts it read-only over the checkpoint metadata. This
+adds quantization exclusions for the ten BF16 DFlash2 convolution projections,
+including their global layer aliases. The original FP8 conversion did not need
+those exclusions because the old implementation kept these projections BF16
+unconditionally. Shared checkpoint files are never edited. Start verifies the
+derived metadata before creating a container.
+
+Install the worker, then API. `ktxsvc install` enables and starts
 the unit. During experiments, disable automatic crash restart so a failed rank
 stays available for inspection:
 
