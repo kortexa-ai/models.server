@@ -1,7 +1,8 @@
 # Source and native binaries are pinned separately. The native-source check
 # rejects using the older wheel when compiled inputs differ.
+ARG BASE_IMAGE=vllm/vllm-openai@sha256:f853a6833fea509edf1298cad31b630003c242a8b2b70c353e831fa716c8da0b
 FROM local/glm53-tp2:770d115-20261009 AS transport
-FROM vllm/vllm-openai@sha256:f853a6833fea509edf1298cad31b630003c242a8b2b70c353e831fa716c8da0b
+FROM ${BASE_IMAGE}
 
 ARG VLLM_REVISION=276fbcff2717bd934cfa37c8a2e4c391f3e7237b
 ARG NATIVE_REVISION=187a0eb98aa42341d703f83421d693fa7585581b
