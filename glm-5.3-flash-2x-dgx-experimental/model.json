@@ -102,7 +102,7 @@
     "kv_cache_memory_bytes": 6442450944,
     "max_num_batched_tokens": 6919,
     "mamba_ssm_cache_dtype": "float32",
-    "attention_backend": "FLASHINFER_MLA_SPARSE",
+    "attention_backend": "FLASHINFER_MLA_SPARSE_SM120",
     "moe_backend": "marlin",
     "linear_backend": "marlin",
     "image_limit": 8,
