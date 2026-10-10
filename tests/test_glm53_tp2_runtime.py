@@ -19,11 +19,11 @@ class GlmPairTest(unittest.TestCase):
     def test_port_and_capacity_contract(self):
         ports = [json.loads(p.read_text())["port"] for p in ROOT.glob("*/model.json")]
         self.assertEqual(ports.count(2070), 1)
-        self.assertEqual(self.model["context_window"], 262144)
+        self.assertEqual(self.model["context_window"], 524288)
         c = self.model["glm53_tp2"]
         env = c["environment"]
         self.assertEqual(env["BATCHED_TOKENS"], 6919)
-        self.assertEqual(env["KV_BYTES"], 4 * 1024 ** 3)
+        self.assertEqual(env["KV_BYTES"], 6 * 1024 ** 3)
         self.assertEqual(env["MAX_SEQS"], 8)
         self.assertEqual({row[2] for row in env["SPEC_TABLE"]}, set(range(1, 8)))
         for batch in range(1, 9):

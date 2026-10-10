@@ -49,7 +49,7 @@ EXPECTED_CONTEXT_WINDOWS = {
     "gemma-4-e2b": 131072,
     "gemma-4-e4b": 131072,
     "glm-5.3-flash-exl3": 1048576,
-    "glm-5.3-flash-2x-dgx": 262144,
+    "glm-5.3-flash-2x-dgx": 524288,
     "hy-mt2-7b": 8192,
     "k2-horizon-7b": 524288,
     "lfm2-350m-extract": 32768,

@@ -12,9 +12,12 @@ local profile overrides. Routed experts retain NVIDIA NVFP4. Selected dense
 weights use the upstream `lossless8` mixed FP8 conversion; the name does not
 mean mathematically lossless. The FP8 DFlash2 drafter is a local derivative.
 
-The served window is **262144 tokens**, including output, from a checkpoint
-trained for 1048576. Eight sequences share 4 GiB FP8 KV per rank. This is not
-eight independent 262K caches. Batch budget is **6919**, including draft
+The served window is **524288 tokens**, including output, from a checkpoint
+trained for 1048576. Eight sequences share 6 GiB FP8 KV per rank. This is not
+eight independent 512K caches. The token capacity of the shared pool is reported
+at startup; the context limit does not set the pool size. Eight 64K histories
+need 512K total tokens, plus room for generation and speculative lookahead.
+Batch budget is **6919**, including draft
 lookahead; the working trial inherited this value from the pinned profile.
 All seven draft-length graph families remain available. Default effort is low;
 clients can request another supported effort. Vision accepts up to eight images
@@ -28,6 +31,9 @@ Its cap is hardcoded by provider, with no per-model image-count setting. The
 previous two-image server cap rejected the third screenshot, even after
 compaction retained recent screenshots. Eight accepts OMP's existing budget;
 other clients must also bound image history. See issue #58 for validation.
+
+See [PLAN.md](PLAN.md) for the later vLLM upgrade and decode context parallelism
+experiment. The current recipe keeps the pinned runtime and replicated MLA KV.
 
 ## Explicit setup on each node
 

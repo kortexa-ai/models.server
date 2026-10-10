@@ -21,7 +21,7 @@ PUBLIC = "kortexa.ai"
 DUAL = "kortexa-dual"
 DIRECT = "http://192.168.2.101:2070/v1"
 SOL = "gpt-6.1-sol"
-WINDOW = 262144
+WINDOW = 524288
 
 READ = '''import json,pathlib
 root=pathlib.Path.home()

@@ -127,7 +127,7 @@ services with NVFP4/DFlash2 TP2 across Static and Shock, serving on Static:2070.
 | 2067 | Qwen3.8 Flash Next Fast | sparse MoE / multimodal, TensorFold on Static | MLX 4-bit | int8 | 262K/request | 5 |
 | 2068 | Shingi 27B | System One decision model (not chat) | ternary GGUF (Prism fork, CUDA) | q8_0 | 16K shared | 4 |
 | 2069 | GLM-5.3 Flash EXL3 | sparse MoE, TensorFold on Shock | EXL3 2.05 bpw | BF16 latent | 1M advertised; 262K served | 1 |
-| 2070 | GLM-5.3 Flash 2x DGX | sparse MoE / VLM, vLLM DFlash2 TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 4 GiB/rank | 262K/request | 8 |
+| 2070 | GLM-5.3 Flash 2x DGX | sparse MoE / VLM, vLLM DFlash2 TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 6 GiB/rank | 512K/request | 8 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
