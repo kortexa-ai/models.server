@@ -35,6 +35,27 @@ def model():
 
 
 class ExperimentalLifecycleTest(unittest.TestCase):
+    def test_draft_metadata_preserves_bf16_projections_without_editing_source(self):
+        m = model()
+        config = {"architectures": ["DFlash2DraftModel"], "num_hidden_layers": 5,
+                  "num_target_layers": 45, "quantization_config": {
+                      "quant_method": "fp8", "weight_block_size": [128, 128],
+                      "ignored_layers": ["model.fc", "fc"]}}
+        with tempfile.TemporaryDirectory() as temporary:
+            m["glm53_main"]["draft_path"] = temporary
+            source = Path(temporary) / "config.json"
+            original = json.dumps(config)
+            source.write_text(original)
+            corrected = json.loads(runtime.draft_config_bytes(m))
+            self.assertEqual(source.read_text(), original)
+        ignored = corrected["quantization_config"].pop("ignored_layers")
+        self.assertEqual(len(ignored), 22)
+        self.assertIn("model.layers.45.attention_conv.kernel_projection", ignored)
+        self.assertIn("model.layers.49.mlp_conv.kernel_projection", ignored)
+        self.assertIn("model.layers.0.attention_conv.kernel_projection", ignored)
+        config["quantization_config"].pop("ignored_layers")
+        self.assertEqual(corrected, config)
+
     def test_draft_builder_keeps_own_precision_and_dimensions_without_mutating_target(self):
         class Group:
             def create_metadata_builders(self, vllm_config, device):

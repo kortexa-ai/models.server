@@ -52,6 +52,28 @@ def receipt_path(model):
     return ROOT / ".engines/glm53-main" / model["id"] / "receipt.json"
 
 
+def draft_config_path(model):
+    return receipt_path(model).parent / "draft-config.json"
+
+
+def draft_config_bytes(model):
+    # The preserved FP8 conversion kept DFlash2's convolution projections in
+    # BF16. Old vLLM hardcoded that choice; main now honors quantization_config.
+    # Mount corrected metadata only in this recipe, never edit shared weights.
+    config = json.loads((Path(model["glm53_main"]["draft_path"]) / "config.json").read_text())
+    if (config["architectures"] != ["DFlash2DraftModel"]
+            or config["quantization_config"]["quant_method"] != "fp8"):
+        raise ValueError("Unexpected draft checkpoint format")
+    ignored = config["quantization_config"].setdefault("ignored_layers", [])
+    for offset in (0, config["num_target_layers"]):
+        for layer in range(config["num_hidden_layers"]):
+            for conv in ("attention_conv", "mlp_conv"):
+                name = f"model.layers.{layer + offset}.{conv}.kernel_projection"
+                if name not in ignored:
+                    ignored.append(name)
+    return (json.dumps(config, indent=2) + "\n").encode()
+
+
 def container_name(model, rank):
     return model["id"] + "-" + fingerprint(model)[:12] + f"-r{rank}"
 
@@ -95,6 +117,7 @@ def setup(model):
     Path(model["glm53_main"]["cache_path"]).mkdir(parents=True, exist_ok=True)
     destination = receipt_path(model)
     destination.parent.mkdir(parents=True, exist_ok=True)
+    draft_config_path(model).write_bytes(draft_config_bytes(model))
     receipt = {"fingerprint": fingerprint(model), "files": states}
     with tempfile.NamedTemporaryFile("w", dir=destination.parent, delete=False) as stream:
         json.dump(receipt, stream, indent=2)
@@ -110,6 +133,8 @@ def validate_ready(model):
     for path, _ in stable.artifact_files(adapter(model)):
         if receipt["files"].get(str(path)) != stable.file_state(path):
             raise ValueError(f"Artifact changed since setup: {path}")
+    if draft_config_path(model).read_bytes() != draft_config_bytes(model):
+        raise ValueError("Experimental draft metadata changed: run explicit setup again")
     image_info(model)
 
 
@@ -127,6 +152,7 @@ def render_command(model, rank):
         args += ["--label", LABEL + "." + key + "=" + value]
     for source, destination in ((c["model_path"], "/model:ro"),
                                 (c["draft_path"], "/draft:ro"),
+                                (str(draft_config_path(model)), "/draft/config.json:ro"),
                                 (c["cache_path"], "/cache")):
         args += ["-v", source + ":" + destination]
     env = {**c["environment"], "VLLM_HOST_IP": n["ip"], "VLLM_USE_RUST_FRONTEND": "0",
