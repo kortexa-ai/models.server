@@ -10,6 +10,36 @@ tested, but are not installed or enabled as services. Bonsai remains the
 installed production 27B at the audit date. Coordinate the release of any
 active experiment before a later rollout.
 
+## GLM pair and selected defaults (2026-10-09)
+
+The registered pair is `glm-5.3-flash-2x-dgx`, served by Static at
+`http://192.168.2.101:2070/v1` with Shock as its TP2 worker. The public
+`kortexa.ai` provider includes that exact ID. `kortexa-dual` is a selectable
+local fallback containing only that model. It bypasses the API gateway and
+still requires both Sparks. The old Static and Shock provider entries remain
+available for rollback; their replaced services are uninstalled.
+
+| Machine | Hermes | OMP default | pi.dev |
+| --- | --- | --- | --- |
+| Snappy | both default and Mira: `openai-codex/gpt-6.1-sol` | `kortexa.ai/glm-5.3-flash-2x-dgx:high` | `openai-codex/gpt-6.1-sol` |
+| Smarty | absent | `openai-codex/gpt-6-luna` | `openai-codex/gpt-6.1-sol` |
+| Scrappy | native Windows: `openai-codex/gpt-6.1-sol` | WSL: `openai-codex/gpt-6-luna` | WSL: `openai-codex/gpt-6.1-sol` |
+
+These defaults were explicitly selected by Franci. Preserve auxiliary roles,
+credentials, independent profiles and saved-session selections. New GLM client
+entries use the served 262144-token window, 32768 output tokens, text/image
+input and standard `reasoning_effort` with Chat Completions. Do not reuse the
+EXL3 TensorFold-specific thinking compatibility flags. The server defaults to
+low effort; Snappy OMP retains its explicit high-effort selection.
+
+Run `scripts/configure-glm53-harnesses.py` with Snappy Hermes's Python for a
+credential-free preview, then `--apply` for the authorized switch. It updates
+only installed clients, includes native Windows Hermes, keeps private backups
+on the owning machine, and checks for concurrent edits and exact readback.
+The broader consolidation script below is a separate historical migration.
+Native Sol uses Codex Responses and each client's existing OAuth login. Start
+fresh client sessions for default changes; saved sessions may keep their model.
+
 ## Public harness provider contract (2026-10-07)
 
 The authorized four-machine provider consolidation uses `kortexa.ai` at
@@ -203,16 +233,17 @@ than only the default profile. Snappy currently runs the default gateway and
 profile identified above.
 
 For the public-provider contract, keep Scrappy's `providers.kortexa.ai`,
-`providers.kortexa-static`, and `providers.kortexa-shock` model entries and their
+`providers.kortexa-static`, `providers.kortexa-shock`, and `providers.kortexa-dual` model entries and their
 matching `model_overrides.custom:<provider>` sections aligned with Snappy. Copy model
 IDs, context limits, capabilities, URLs and explicit discovery settings;
 preserve Scrappy's valid credentials and unrelated profile settings. Do not
 copy Snappy's OAuth stores or Mira identity. The current public roster is
 `qwen-3.8-27b`, `bonsai-2-27b`, `qwen-3.8-flash-next-fast`,
 `claude-fable-5`, `gpt-5.6-luna`, `gpt-5.6-sol`, and
-`glm-5.3-flash-exl3`. The Static provider contains only
+`glm-5.3-flash-exl3`, and `glm-5.3-flash-2x-dgx`. The dual provider contains only
+the new GLM. The Static provider contains only
 `qwen-3.8-flash-next-fast`; the Shock provider contains only `glm-5.3-flash-exl3`.
-GLM is text only; the other entries preserve
+The EXL3 GLM is text only; the new dual GLM supports images. Other entries preserve
 Snappy's vision/tool/reasoning metadata. Configured models may be inactive.
 
 The native executable is `C:\src\hermes-agent\venv\Scripts\hermes.exe`.
