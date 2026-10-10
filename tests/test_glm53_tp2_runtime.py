@@ -24,7 +24,7 @@ class GlmPairTest(unittest.TestCase):
         env = c["environment"]
         self.assertEqual(env["BATCHED_TOKENS"], 6919)
         self.assertEqual(env["KV_BYTES"], 6 * 1024 ** 3)
-        self.assertEqual(env["MAX_SEQS"], 16)
+        self.assertEqual(env["MAX_SEQS"], 8)
         self.assertEqual({row[2] for row in env["SPEC_TABLE"]}, set(range(1, 8)))
         for batch in range(1, 9):
             for length in range(1, 8):
@@ -39,7 +39,7 @@ class GlmPairTest(unittest.TestCase):
                 'MAX_SEQS=32\nEXTRA_ENV="GLM_PREFILL_SHARD=1 GLM_PREFILL_SHARD_PAD=1 KEEP_ME=1"\n')
             script = runtime.environment(self.model, source)
             result = subprocess.check_output(["bash", "-c", script + '\nprintf "%s\\n%s" "$MAX_SEQS" "$EXTRA_ENV"'], text=True)
-            self.assertTrue(result.startswith("16\n"))
+            self.assertTrue(result.startswith("8\n"))
             self.assertNotIn("GLM_PREFILL_SHARD=1", result)
             self.assertNotIn("GLM_PREFILL_SHARD_PAD=1", result)
             self.assertIn("KEEP_ME=1", result)
