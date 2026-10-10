@@ -12,9 +12,36 @@ def install(module):
 
     @functools.wraps(original)
     def observed(vllm_config, kv_cache_specs, available_memory):
-        configs = original(vllm_config, kv_cache_specs, available_memory)
         if not os.environ.get("GLM_EXPERIMENT_FINGERPRINT"):
-            return configs
+            return original(vllm_config, kv_cache_specs, available_memory)
+        record = {"fingerprint": os.environ["GLM_EXPERIMENT_FINGERPRINT"],
+                  "dcp": vllm_config.parallel_config.decode_context_parallel_size,
+                  "tp": vllm_config.parallel_config.tensor_parallel_size,
+                  "max_model_len": vllm_config.model_config.max_model_len,
+                  "max_num_seqs": vllm_config.scheduler_config.max_num_seqs,
+                  "cache_config": asdict(vllm_config.cache_config),
+                  "available_bytes": available_memory,
+                  "input_specs": [
+                      {name: {"type": type(spec).__name__, "fields": asdict(spec),
+                              "page_size_bytes": spec.page_size_bytes,
+                              "max_memory_usage_bytes": spec.max_memory_usage_bytes(vllm_config)}
+                       for name, spec in specs.items()}
+                      for specs in kv_cache_specs]}
+        directory = Path("/cache/layout-audit")
+        directory.mkdir(parents=True, exist_ok=True)
+        destination = directory / f"{record['fingerprint']}-{time.time_ns()}.json"
+
+        def save():
+            destination.write_text(json.dumps(record, default=str, indent=2))
+
+        save()
+        print("glm53-main: cache allocation audit " + str(destination), flush=True)
+        try:
+            configs = original(vllm_config, kv_cache_specs, available_memory)
+        except Exception as error:
+            record["error"] = str(error)
+            save()
+            raise
         workers = []
         for rank, config in enumerate(configs):
             workers.append({
@@ -25,16 +52,8 @@ def install(module):
                     vllm_config, config.kv_cache_groups),
                 "config": asdict(config),
             })
-        record = {"fingerprint": os.environ["GLM_EXPERIMENT_FINGERPRINT"],
-                  "dcp": vllm_config.parallel_config.decode_context_parallel_size,
-                  "tp": vllm_config.parallel_config.tensor_parallel_size,
-                  "max_model_len": vllm_config.model_config.max_model_len,
-                  "workers": workers}
-        directory = Path("/cache/layout-audit")
-        directory.mkdir(parents=True, exist_ok=True)
-        destination = directory / f"{record['fingerprint']}-{time.time_ns()}.json"
-        destination.write_text(json.dumps(record, default=str, indent=2))
-        print("glm53-main: cache allocation audit " + str(destination), flush=True)
+        record["workers"] = workers
+        save()
         return configs
 
     module.get_kv_cache_configs = observed
