@@ -13,10 +13,14 @@ weights use the upstream `lossless8` mixed FP8 conversion; the name does not
 mean mathematically lossless. The FP8 DFlash2 drafter is a local derivative.
 
 The served window is **524288 tokens**, including output, from a checkpoint
-trained for 1048576. Eight sequences share 6 GiB FP8 KV per rank. This is not
-eight independent 512K caches. The token capacity of the shared pool is reported
-at startup; the context limit does not set the pool size. Eight 64K histories
-need 512K total tokens, plus room for generation and speculative lookahead.
+trained for 1048576. The scheduler permits up to eight sequences, subject to
+the shared 6 GiB FP8 KV budget per rank. The context limit does not set the
+pool size. The startup token-capacity estimate uses a maximum-length request;
+it is not a token pool that can be divided evenly among shorter requests.
+Hybrid recurrent state, circular buffers, draft state and block allocation
+also consume cache for each request. Thus eight 64K histories are not guaranteed
+to fit concurrently, even though their token counts sum to 512K. Count output
+and speculative lookahead as well. See issue #59 for the measured limits.
 Batch budget is **6919**, including draft
 lookahead; the working trial inherited this value from the pinned profile.
 All seven draft-length graph families remain available. Default effort is low;

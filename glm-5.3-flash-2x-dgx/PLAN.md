@@ -8,15 +8,20 @@ batch budget, RoCE interface and model port 2070. Record validation and delivery
 in [models.server #59](https://github.com/kortexa-ai/models.server/issues/59).
 
 The context ceiling and shared KV pool are separate limits. Confirm the pool
-capacity from the engine's startup log. Test a request close to the full window
+capacity from the engine's startup log, but do not divide its token estimate
+by a smaller context size to predict concurrency. Hybrid per-request state
+and block allocation can limit admission first. Test a request close to the full window
 and eight independent requests near 64K each. Measure generation, prefill,
 preemption and host memory on both ranks. Count output and draft lookahead in
 the budget. Prefix sharing can improve capacity, but must not be required for
 these tests.
 
 A bounded sixteen-sequence experiment can use about 32K per request to keep
-the total history comparable. First check scheduler policy, draft lengths,
-CUDA graph coverage and memory. Do not infer sixteen active sequences from
+the total history comparable. First test short histories with enough output
+to overlap decode, and verify that cache capacity permits the intended active
+count. Check scheduler policy, draft lengths, CUDA graph coverage and memory.
+Skip a scheduler-limit increase if cache admission is already the bottleneck.
+Do not infer sixteen active sequences from
 sixteen submitted clients. Record peak RUNNING/WAITING, total throughput,
 per-request throughput and memory. Retain eight as the normal setting unless
 a later decision adopts sixteen.
@@ -60,8 +65,9 @@ An upgrade needs a new immutable image and compatible Spark overlays.
    Then test TP2/DCP2 with `--decode-context-parallel-size 2` and
    `--cp-kv-cache-interleave-size 4`. Verify FP8 KV, DFlash2 and the selected
    sparse MLA backend together on GB10.
-4. Measure actual KV capacity, host headroom, cold/warm prefill, decode rate,
-   prefix-cache reuse and concurrent requests. Test retrieval at several
+4. Measure actual KV capacity, per-group block demand, recurrent/speculative
+   state overhead, host headroom, cold/warm prefill, decode rate, prefix-cache
+   reuse and concurrent requests. Test retrieval at several
    depths, tool/result continuation with empty output, streamed tool calls,
    eight-image history, and long-context speculative decoding.
 5. Replay the saved OMP conversation as a bounded regression probe. Record
