@@ -47,7 +47,10 @@ def install(module):
             workers.append({
                 "rank_index": rank,
                 "available_bytes": available_memory[rank],
-                "allocated_tensor_bytes": sum(t.size for t in config.kv_cache_tensors),
+                # Tensor descriptors are aliases into the shared block pool.
+                # Summing their sizes counts the same storage more than once.
+                "planned_device_pool_bytes": config.num_blocks * module._pool_bytes_per_block(
+                    vllm_config, config.kv_cache_groups),
                 "pool_bytes_per_block": module._pool_bytes_per_block(
                     vllm_config, config.kv_cache_groups),
                 "config": asdict(config),

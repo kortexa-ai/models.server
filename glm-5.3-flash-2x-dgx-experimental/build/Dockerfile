@@ -33,6 +33,7 @@ COPY glm_fast_load.py /opt/glm53-main/glm_fast_load.py
 COPY LICENSE.knapcio NOTICE.knapcio /opt/glm53-main/
 COPY cache_audit.py /opt/glm53-main/cache_audit.py
 COPY sm120_dcp.py /opt/glm53-main/sm120_dcp.py
+COPY draft_cache.py /opt/glm53-main/draft_cache.py
 COPY sitecustomize.py /opt/glm53-main/sitecustomize.py
 ENV PYTHONPATH=/opt/glm53-main \
     GLM_ROCE_ALLREDUCE=0 \

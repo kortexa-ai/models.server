@@ -1,11 +1,13 @@
 """Enable only the mixed-weight adapter in the experimental image."""
 import qmix
 import cache_audit
+import draft_cache
 import os
 import sys
 
 qmix.Hook.targets["vllm.v1.core.kv_cache_utils"] = cache_audit.install
 qmix.Hook.targets["vllm.v1.worker.gpu_worker"] = cache_audit.install_worker
+qmix.Hook.targets["vllm.v1.worker.utils"] = draft_cache.install_builders
 if os.environ.get("GLM_SM120_DCP") == "1":
     import sm120_dcp
     qmix.Hook.targets[

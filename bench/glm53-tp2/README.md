@@ -44,3 +44,16 @@ and never executes generated tools. Keep that payload outside Git.
 `images.py` takes the same base/model/output arguments and sends eight generated
 2560×960 PNGs with distinct numeric codes. All eight codes must be returned in
 order. It uses only the Python standard library.
+
+`sm120_dcp_probe.py` runs inside the experimental image on an idle Spark. It
+checks packed-FP8 attention, LSE normalization, empty shards and the optional
+adapter against full attention. It does not load the model or establish
+distributed model correctness.
+
+`cache_plan.py AUDIT.json --output /new/estimates.json` replays the pinned
+allocator on recorded cache specs inside the same image, without a GPU or
+model weights. It checks the restored inputs against the recorded per-layer
+requirements before estimating alternatives. DCP draft replication and Triton
+draft geometry are explicit hypothetical variants; validate them in a live
+run. A descriptor can alias the shared pool, so summing descriptor sizes does
+not measure physical allocation.

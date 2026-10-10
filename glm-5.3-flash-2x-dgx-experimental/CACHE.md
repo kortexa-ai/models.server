@@ -33,6 +33,7 @@ correctness or DFlash compatibility.
 | `--cp-kv-cache-interleave-size 4` | Token distribution across DCP ranks | GLM's four-token kpool requires compatible interleave. Backend and draft compatibility must pass live tests. |
 | Speculative `num_speculative_tokens` | Maximum lookahead, draft work and state reservations | Lowering the global maximum can reduce reservations. A smaller adaptive choice for one decode step does not necessarily shrink the allocated state. |
 | Speculative `kv_cache_dtype` | Draft attention-cache precision | Set explicitly so a target FP8 cache is not compared with a BF16 draft-cache variant by accident. |
+| Speculative `attention_backend` | Draft attention kernel and supported cache-block geometry | FlashInfer's small native pages and packed-pool stride alignment can make draft reservations expensive. Compare Triton using the same FP8 precision and draft weights; its speed and correctness need separate tests. |
 | `--mamba-cache-dtype` | KDA convolution-state dtype in this GLM implementation | It is separate from the much larger recurrent state. |
 | `--mamba-ssm-cache-dtype` | General vLLM recurrent-state control | At this pin GLM's caller does not pass this field into the KDA dtype calculator; the recurrent state remains FP32. Changing the flag alone is not a BF16 experiment. |
 | `VLLM_KV_CACHE_LAYOUT` | Selects a physical layout supported by the backend | Upstream resolves the layout before profiling. Packed grouping and padding affect bytes per block; a block count from the older recipe is not directly comparable. |
@@ -43,11 +44,20 @@ divide that state a second time. The kpool tail is a circular buffer with its
 own per-request allocation. DFlash has additional cache groups. Inspect the
 whole allocation, not only the main MLA token-history tensor.
 
+The local `draft_cache.py` adapter supplies the draft model's dimensions,
+parallel configuration and explicit cache dtype to draft metadata builders.
+It keeps the resolved shared-pool layout and leaves target builders unchanged.
+Without it, the pinned V2 runner passes the target's `fp8_ds_mla` setting to
+the FlashInfer draft builder, which rejects that format.
+
 The image records the input cache specs, errors and unmodified upstream
 allocation result under `/cache/layout-audit/`. It records PyTorch allocated/reserved bytes, CUDA free
 memory and host available memory after loading, cache initialization and
 warmup under `/cache/memory-audit/`. These observers do not change the cache
 plan, scheduler or sampling. Runtime evidence belongs outside Git.
+The per-layer tensor descriptors alias the pool. Its planned device bytes are
+`num_blocks × pool_bytes_per_block`; summing descriptor sizes double-counts
+shared storage. The worker's measured allocations remain the physical check.
 
 Hold the per-rank pool budget constant for the first DCP comparison. If more
 tokens fit, that is a capacity gain. To demonstrate freed memory, reduce the

@@ -4,11 +4,15 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import glm53_main_runtime as runtime
+
+sys.path.insert(0, str(ROOT / "glm-5.3-flash-2x-dgx-experimental/build"))
+import draft_cache
 
 
 def model():
@@ -31,6 +35,34 @@ def model():
 
 
 class ExperimentalLifecycleTest(unittest.TestCase):
+    def test_draft_builder_keeps_own_precision_and_dimensions_without_mutating_target(self):
+        class Group:
+            def create_metadata_builders(self, vllm_config, device):
+                return vllm_config
+
+        module = SimpleNamespace(AttentionGroup=Group)
+        draft_cache.install_builders(module)
+        draft_model, draft_parallel = object(), object()
+        original_cache = SimpleNamespace(cache_dtype="fp8_ds_mla", kv_cache_layout="BLHNC")
+        target = SimpleNamespace(
+            speculative_config=SimpleNamespace(method="dflash", kv_cache_dtype="fp8_e4m3",
+                draft_model_config=draft_model, draft_parallel_config=draft_parallel),
+            compilation_config=SimpleNamespace(static_forward_context={
+                "draft": SimpleNamespace(is_draft_layer=True),
+                "target": SimpleNamespace(is_draft_layer=False)}),
+            cache_config=original_cache, model_config=object(), parallel_config=object())
+        group = Group()
+        group.layer_names = ["draft"]
+        selected = group.create_metadata_builders(target, "cuda")
+        self.assertEqual(selected.cache_config.cache_dtype, "fp8_e4m3")
+        self.assertEqual(selected.cache_config.kv_cache_layout, "BLHNC")
+        self.assertIs(selected.model_config, draft_model)
+        self.assertIs(selected.parallel_config, draft_parallel)
+        self.assertEqual(target.cache_config.cache_dtype, "fp8_ds_mla")
+        self.assertIs(target.cache_config, original_cache)
+        group.layer_names = ["target"]
+        self.assertIs(group.create_metadata_builders(target, "cuda"), target)
+
     def test_dcp_uses_existing_two_ranks_and_keeps_worker_headless(self):
         m = model()
         m["glm53_main"]["decode_context_parallel_size"] = 2
