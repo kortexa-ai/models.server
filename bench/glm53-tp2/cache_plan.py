@@ -39,6 +39,7 @@ def main():
     parser.add_argument("audit", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--in-flight-batches", type=int, default=2)
+    parser.add_argument("--max-num-batched-tokens", type=int, default=6919)
     args = parser.parse_args()
     audit = json.loads(args.audit.read_text())
     specs = {name: getattr(specs_module, item["type"])(**restore(item["fields"]))
@@ -58,7 +59,7 @@ def main():
         attention_config=SimpleNamespace(hisparse_config=None),
         speculative_config=SimpleNamespace(method="dflash", use_eagle=lambda: True,
                                            use_eagle_block_drop=lambda: True),
-        max_in_flight_tokens=args.in_flight_batches * 6919)
+        max_in_flight_tokens=args.in_flight_batches * args.max_num_batched_tokens)
     for name, spec in specs.items():
         assert spec.max_memory_usage_bytes(config) == audit["input_specs"][0][name]["max_memory_usage_bytes"], (
             f"Input plan mismatch for {name}; check the in-flight batch count")

@@ -57,3 +57,6 @@ requirements before estimating alternatives. DCP draft replication and Triton
 draft geometry are explicit hypothetical variants; validate them in a live
 run. A descriptor can alias the shared pool, so summing descriptor sizes does
 not measure physical allocation.
+When the measured batch budget differs from the original 6919, pass the
+matching `--max-num-batched-tokens` value. The input check rejects inconsistent
+in-flight reservation assumptions.
