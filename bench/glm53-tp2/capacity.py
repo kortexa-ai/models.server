@@ -164,6 +164,8 @@ def main():
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--clients", type=int, choices=[1, 2, 4, 8, 16], default=1)
     parser.add_argument("--prompt-tokens", type=int, default=2048)
+    parser.add_argument("--mixed-prompt-tokens", type=int, nargs="+",
+                        help="One prompt length per client for a mixed-length workload")
     parser.add_argument("--output-tokens", type=int, default=512)
     parser.add_argument("--min-tokens", type=int, default=0)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -177,9 +179,15 @@ def main():
     FIXTURES.mkdir(parents=True, exist_ok=True)
     if (ROOT / (args.tag + ".results.json")).exists():
         raise ValueError("Use a new tag; evidence must not be overwritten")
-    count, target = args.clients, args.prompt_tokens
+    count = args.clients
+    if args.mixed_prompt_tokens and len(args.mixed_prompt_tokens) != count:
+        parser.error("--mixed-prompt-tokens requires one length per --clients")
+    target = args.mixed_prompt_tokens or args.prompt_tokens
+    targets = args.mixed_prompt_tokens or [args.prompt_tokens] * count
     output_length = args.output_tokens
-    items = [prepare(f"p{target}-{i:02d}", target) for i in range(count)]
+    prefix = "mixed-" if args.mixed_prompt_tokens else ""
+    items = [prepare(f"{prefix}p{length}-{i:02d}", length)
+             for i, length in enumerate(targets)]
     if args.prepare_only:
         return
     samples, stop = [], threading.Event()

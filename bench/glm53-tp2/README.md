@@ -22,6 +22,9 @@ use a fresh fixture and verify zero cache hits. The stable server does not
 expose that endpoint. For an immediate replay verify cache-hit counters before
 calling it a warm-prefix result.
 Record any background work that could affect timing.
+For a mixed workload, use `--clients 4 --mixed-prompt-tokens 2048 16384 65536 131072`.
+This gives each client its own length and distinct fixture prefix. The same
+stream, retrieval and token-accounting checks apply to every request.
 
 The reported stream decode rate uses completion tokens minus one divided by
 the first-to-last content interval. Speculative decoding emits bursts, so

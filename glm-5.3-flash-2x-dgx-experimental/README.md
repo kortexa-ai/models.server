@@ -10,6 +10,15 @@ distributed bootstrap on the direct RoCE link. Run only one recipe on the pair.
 The weights and their hashes are the same as the stable recipe. No checkpoint
 download, conversion, image build or package installation occurs during start.
 
+The manifest sets TP2 with DCP2, a 524288-token request ceiling, eight scheduler
+slots and a 4 GiB cache budget per rank. Target and draft attention caches use
+FP8; the draft uses Triton attention and DFlash2 with up to seven draft tokens.
+The local SM120 adapter enables DCP, and NCCL buffers are limited to 1 MiB.
+The eight-slot ceiling does not guarantee eight active decoders: recurrent and
+draft reservations also consume blocks. See [CACHE.md](CACHE.md) for the
+allocation controls and [the measurements](https://github.com/kortexa-ai/models.server/issues/60)
+for observed concurrency, memory and timing.
+
 ## Reproduce the image
 
 The Dockerfile pins vLLM source `276fbcff2717bd934cfa37c8a2e4c391f3e7237b` and
@@ -91,6 +100,10 @@ A manifest or launcher change requires setup again on both nodes. A stopped
 container remains inspectable; the new fingerprint creates a separate owned
 container. Use `ktxsvc stop` on Static, then Shock, before changing a candidate.
 Start Shock before Static. Never start a duplicate manual server.
+If an immediate restart fails with `Address already in use` after both ranks
+have stopped, inspect the ports again. Closed TCP connections can remain in
+`TIME_WAIT` for about a minute and fail the strict port check; wait for them
+to clear before retrying. A live listener requires an ownership check.
 
 ## Measure and recover
 
