@@ -29,6 +29,7 @@ RUN python3 /opt/glm53-build/prepare_source.py /opt/vllm-main ${VLLM_REVISION} $
 COPY --from=transport /opt/glm-roce /opt/glm-roce
 COPY --from=transport /opt/glm-roce-b12x /opt/glm-roce-b12x
 COPY qmix.py /opt/glm53-main/qmix.py
+COPY LICENSE.knapcio NOTICE.knapcio /opt/glm53-main/
 COPY cache_audit.py /opt/glm53-main/cache_audit.py
 COPY sitecustomize.py /opt/glm53-main/sitecustomize.py
 ENV PYTHONPATH=/opt/glm53-main \
