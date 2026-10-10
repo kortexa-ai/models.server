@@ -66,3 +66,8 @@ Run `hostname` to check which machine you're on before doing anything.
   a 524288-token served window, eight shared slots and a 6919-token batch budget.
   Run explicit setup on both hosts before installing the same service with
   `ktxsvc`; coordinate both ranks and never run another model on either GPU.
+- `glm-5.3-flash-2x-dgx-experimental` is the separate pinned-main working recipe
+  on port 2071, using `vllm-glm53-main`. Preserve the stable recipe, image,
+  artifacts and setup receipts for recovery. Build explicitly, pin the image,
+  then run setup on both hosts. Keep only one of these pair services enabled.
+  Cache/DCP changes belong in the experimental manifest until promotion.

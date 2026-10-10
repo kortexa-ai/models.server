@@ -1,0 +1,26 @@
+[Unit]
+Description=GLM-5.3 Flash pinned-main experiment (Static head / Shock worker)
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=francip
+Group=francip
+WorkingDirectory=/home/francip/src/models.server
+Environment=PATH=/home/francip/.local/bin:/home/francip/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStart=/home/francip/src/models.server/run.sh glm-5.3-flash-2x-dgx-experimental
+ExecStop=/home/francip/src/models.server/run.sh glm-5.3-flash-2x-dgx-experimental --stop
+Restart=no
+RestartSec=30
+TimeoutStopSec=90
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target

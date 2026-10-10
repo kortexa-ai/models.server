@@ -116,6 +116,8 @@ its Static service, then its Shock service. Start this recipe on Shock, then
 Static, using the managed lifecycle above. Verify port 2070, `/health`,
 `/v1/models` and a real completion. Its existing client model ID and route are
 unchanged. No image rebuild or weight transfer is needed for that recovery.
+Use `ktxsvc disable` for the experimental units and `ktxsvc enable` for these
+stable units on both hosts. Keep only the selected recipe enabled at boot.
 
 The older single-Spark recipes and the original port-28053 trial are historical
 alternatives, not the rollback for the current pinned-main experiment.

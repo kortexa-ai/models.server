@@ -46,7 +46,9 @@ recipe requires a later decision based on the measurements.
 ## Recovery
 
 Stop the experimental API rank, then worker, through `ktxsvc`. Start the
-preserved stable worker, then API rank. Check both service PIDs, port 2070,
+preserved stable worker, then API rank. Disable the experimental units and
+re-enable the stable units through `ktxsvc` so boot selects only one recipe.
+Check both service PIDs, port 2070,
 `/health`, `/v1/models` and a real completion. Never run both recipes together.
 Keep stable weights, images, source directories and stopped containers.
 Use Git for repository delivery and direct Spark-to-Spark transfer for images.
