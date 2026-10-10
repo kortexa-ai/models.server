@@ -43,7 +43,9 @@ Prefill workspace also depends on `--max-num-batched-tokens`. At this pin,
 the scheduler reserves seven DFlash input slots before rounding a long prefill
 to the 4608-token Mamba boundary. A batch budget of exactly 4608 can therefore
 defer long requests indefinitely. Use at least 4615 for one aligned block with
-DFlash-7. Admission to the cache alone does not prove that long-prefill
+DFlash-7. The recipe leaves 64 slots above that block (4672 total), so
+concurrent decode work can share a step with a full prefill block. Admission
+to the cache alone does not prove that long-prefill
 temporary allocations fit the host; test the full context while watching
 host memory.
 
