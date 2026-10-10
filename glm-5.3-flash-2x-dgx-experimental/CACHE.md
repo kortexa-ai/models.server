@@ -39,6 +39,14 @@ correctness or DFlash compatibility.
 | `VLLM_KV_CACHE_LAYOUT` | Selects a physical layout supported by the backend | Upstream resolves the layout before profiling. Packed grouping and padding affect bytes per block; a block count from the older recipe is not directly comparable. |
 | `--num-gpu-blocks-override` | Overrides the calculated number of blocks | This is not free capacity. Extra blocks still allocate memory and can exceed the intended pool budget. |
 
+Prefill workspace also depends on `--max-num-batched-tokens`. At this pin,
+the scheduler reserves seven DFlash input slots before rounding a long prefill
+to the 4608-token Mamba boundary. A batch budget of exactly 4608 can therefore
+defer long requests indefinitely. Use at least 4615 for one aligned block with
+DFlash-7. Admission to the cache alone does not prove that long-prefill
+temporary allocations fit the host; test the full context while watching
+host memory.
+
 KDA's recurrent shape divides its head count by TP size already. DCP does not
 divide that state a second time. The kpool tail is a circular buffer with its
 own per-request allocation. DFlash has additional cache groups. Inspect the
