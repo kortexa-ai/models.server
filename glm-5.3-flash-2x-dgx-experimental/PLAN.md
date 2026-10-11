@@ -19,7 +19,9 @@ recipe requires a later decision based on the measurements.
 3. Use the existing verified NVFP4/mixed-FP8 target and FP8 DFlash2 weights,
    a 524288-token ceiling, eight scheduled sequences, a 6919-token batch budget
    and a 6 GiB cache per rank for the first comparison. Keep image allowance at
-   eight. Serve the experiment on its own port, 2071, with bootstrap port 29670.
+   eight. The original comparison used isolated API port 2071. After the
+   shared-identity change in models.server #62, use API port 2070 and model
+   `glm-5.3-flash-2x-dgx`; bootstrap remains on port 29670.
 4. Establish TP2/DCP1 correctness and record cold/warm prefill, decode,
    end-to-end throughput, draft acceptance, cache preemption and actual active
    concurrency. Use identical prompts and output lengths across candidates.

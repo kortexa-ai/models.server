@@ -13,7 +13,9 @@ python3 bench/glm53-tp2/capacity.py \
   --output-dir '/path/to/evidence/stable' --fixture-dir '/path/to/evidence/fixtures'
 ```
 
-For the experiment use port 2071 and model `glm-5.3-flash-2x-dgx-experimental`.
+All three recipes use port 2070 and model `glm-5.3-flash-2x-dgx`. Record the
+active recipe ID, manifest and runtime fingerprint alongside each result so
+the shared API name does not hide which configuration was measured.
 Run short canaries before large prompts. Compare 1/4/8 clients at short context,
 then single 64K/128K/near-512K prompts and eight independent near-64K histories.
 Use distinct tags for repeats. Where the server exposes its development cache

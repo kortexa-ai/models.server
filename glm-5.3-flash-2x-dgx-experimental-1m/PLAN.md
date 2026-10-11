@@ -5,7 +5,9 @@ Prior pinned-main comparison: models.server #60.
 
 1. Preserve the two exact recipes in BASELINES.md. Verify their manifests,
    runtime fingerprints, images, setup receipts and stopped containers. Keep
-   this test in its own manifest and managed service on port 2072.
+   this test in its own manifest and managed service. The original experiment
+   used API port 2072; models.server #62 unifies it with the other recipes at
+   port 2070 and model `glm-5.3-flash-2x-dgx`.
 2. Reuse the pinned image and DCP2 implementation. Change the request ceiling
    to 1048576 and the cache budget to 6 GiB/rank. Keep all other serving knobs
    fixed. Replay the observed allocator on CPU before using the GPUs.
