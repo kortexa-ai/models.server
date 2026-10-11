@@ -63,3 +63,16 @@ not measure physical allocation.
 When the measured batch budget differs from the original 6919, pass the
 matching `--max-num-batched-tokens` value. The input check rejects inconsistent
 in-flight reservation assumptions.
+
+`speed.py --base URL --model ID --contexts 2048 131072 523600 786432 1046500
+--output-dir /new/results --fixture-dir /shared/fixtures` runs one cold request
+and an immediate replay at each length, with 1024 forced output tokens. It uses
+the same retrieval and streaming checks as `capacity.py`. The endpoint must
+be idle. Each output directory and context length produces a distinct prompt
+prefix; measured zero cache hits are required for cold cases. This also works
+when the server does not expose `/reset_prefix_cache`. Server histogram deltas
+must show exactly one completed request.
+It reports client time to first token, server prefill duration, uncached input
+tokens per second, sustained stream decode and queue time separately. A warm
+prefill rate excludes cached tokens; it is not the full context divided by the
+replay latency. Small prompts may be shorter than the cache reuse granularity.

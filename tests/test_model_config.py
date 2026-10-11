@@ -51,6 +51,7 @@ EXPECTED_CONTEXT_WINDOWS = {
     "glm-5.3-flash-exl3": 1048576,
     "glm-5.3-flash-2x-dgx": 524288,
     "glm-5.3-flash-2x-dgx-experimental": 524288,
+    "glm-5.3-flash-2x-dgx-experimental-1m": 1048576,
     "hy-mt2-7b": 8192,
     "k2-horizon-7b": 524288,
     "lfm2-350m-extract": 32768,

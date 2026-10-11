@@ -84,7 +84,9 @@ source and adds a managed text-only TensorFold launcher for Shock. The
 [GLM two-Spark recipe](glm-5.3-flash-2x-dgx/README.md) replaces those individual
 services with NVFP4/DFlash2 TP2 across Static and Shock, serving on Static:2070.
 The separate [pinned-main experiment](glm-5.3-flash-2x-dgx-experimental/README.md)
-uses the same pair on port 2071. Keep only one recipe active on the pair.
+uses the same pair on port 2071. The separate
+[1M context test](glm-5.3-flash-2x-dgx-experimental-1m/README.md) uses port 2072
+and preserves both 512K recipes. Keep only one recipe active on the pair.
 
 | Port | Model | Type | Quant | KV Cache | Context | Parallel |
 |------|-------|------|-------|----------|---------|----------|
@@ -131,6 +133,7 @@ uses the same pair on port 2071. Keep only one recipe active on the pair.
 | 2069 | GLM-5.3 Flash EXL3 | sparse MoE, TensorFold on Shock | EXL3 2.05 bpw | BF16 latent | 1M advertised; 262K served | 1 |
 | 2070 | GLM-5.3 Flash 2x DGX | sparse MoE / VLM, vLLM DFlash2 TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 6 GiB/rank | 512K/request | 8 |
 | 2071 | GLM-5.3 Flash 2x DGX Experimental | sparse MoE / VLM, pinned vLLM main TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, explicit per-rank budget | 512K/request | 8 |
+| 2072 | GLM-5.3 Flash 2x DGX Experimental 1M | sparse MoE / VLM, pinned vLLM main TP2/DCP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 6 GiB/rank | 1M/request | 8 |
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching

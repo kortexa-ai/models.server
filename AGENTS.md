@@ -71,3 +71,7 @@ Run `hostname` to check which machine you're on before doing anything.
   artifacts and setup receipts for recovery. Build explicitly, pin the image,
   then run setup on both hosts. Keep only one of these pair services enabled.
   Cache/DCP changes belong in the experimental manifest until promotion.
+- `glm-5.3-flash-2x-dgx-experimental-1m` is a separate native-1M test on port
+  2072, reusing the pinned experimental image with TP2/DCP2 and 6 GiB KV/rank.
+  Preserve both existing 512K manifests and their setup receipts. Only one
+  of these three paired recipes may be active or enabled at a time.
