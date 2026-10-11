@@ -67,11 +67,14 @@ Run `hostname` to check which machine you're on before doing anything.
   Run explicit setup on both hosts before installing the same service with
   `ktxsvc`; coordinate both ranks and never run another model on either GPU.
 - `glm-5.3-flash-2x-dgx-experimental` is the separate pinned-main working recipe
-  on port 2071, using `vllm-glm53-main`. Preserve the stable recipe, image,
+  using `vllm-glm53-main`. Preserve the stable recipe, image,
   artifacts and setup receipts for recovery. Build explicitly, pin the image,
   then run setup on both hosts. Keep only one of these pair services enabled.
   Cache/DCP changes belong in the experimental manifest until promotion.
-- `glm-5.3-flash-2x-dgx-experimental-1m` is a separate native-1M test on port
-  2072, reusing the pinned experimental image with TP2/DCP2 and 6 GiB KV/rank.
-  Preserve both existing 512K manifests and their setup receipts. Only one
-  of these three paired recipes may be active or enabled at a time.
+- `glm-5.3-flash-2x-dgx-experimental-1m` is the selected native-1M recipe,
+  reusing the pinned experimental image with TP2/DCP2 and 6 GiB KV/rank.
+  Preserve both 512K inference configurations and their recovery artifacts.
+  All three recipes serve `glm-5.3-flash-2x-dgx` on Static:2070; `id` remains
+  the distinct recipe/service identity and `served_model_name` is the API alias.
+  Only one paired recipe may be active or enabled at a time. Install the 1M
+  recipe on both hosts for the default deployment; keep the other two disabled.

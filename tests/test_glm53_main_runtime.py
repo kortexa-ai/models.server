@@ -35,6 +35,36 @@ def model():
 
 
 class ExperimentalLifecycleTest(unittest.TestCase):
+    def test_shared_api_name_does_not_merge_recipe_ownership(self):
+        recipes = [runtime.load(ROOT / recipe) for recipe in (
+            "glm-5.3-flash-2x-dgx-experimental",
+            "glm-5.3-flash-2x-dgx-experimental-1m")]
+        for rank in (0, 1):
+            names = set()
+            receipts = set()
+            for m in recipes:
+                args = runtime.render_command(m, rank)
+                self.assertEqual(args[args.index("--served-model-name") + 1],
+                                 "glm-5.3-flash-2x-dgx")
+                self.assertEqual(args[args.index("--port") + 1], "2070")
+                self.assertIn(runtime.LABEL + ".model=" + m["id"], args)
+                names.add(args[args.index("--name") + 1])
+                receipts.add(runtime.receipt_path(m))
+                info = {"Image": m["glm53_main"]["image_id"], "Config": {"Labels": {
+                    runtime.LABEL + ".model": m["id"],
+                    runtime.LABEL + ".fingerprint": runtime.fingerprint(m),
+                    runtime.LABEL + ".rank": str(rank)}}}
+                self.assertTrue(runtime.owned(m, info, rank))
+                other = next(r for r in recipes if r["id"] != m["id"])
+                self.assertFalse(runtime.owned(other, info, rank))
+            self.assertEqual(len(names), 2)
+            self.assertEqual(len(receipts), 2)
+
+    def test_recipe_id_remains_default_served_name_without_alias(self):
+        m = model()
+        args = runtime.render_command(m, 0)
+        self.assertEqual(args[args.index("--served-model-name") + 1], m["id"])
+
     def test_draft_metadata_preserves_bf16_projections_without_editing_source(self):
         m = model()
         config = {"architectures": ["DFlash2DraftModel"], "num_hidden_layers": 5,

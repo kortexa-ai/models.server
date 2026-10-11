@@ -1,9 +1,15 @@
 # Preserved 512K recipes
 
-Both complete recipes and their launchers are preserved at Git commit
-`81d66be78fa990d582458d1f823475df1b7a40d4`. The 1M experiment must not edit
-their manifests, launcher files, shared weights or setup receipts. Keep their
-Docker images and stopped containers on both Sparks.
+The original two complete recipes and their launchers are preserved at Git
+commit `81d66be78fa990d582458d1f823475df1b7a40d4`. The table and hashes below
+describe those historical comparison artifacts. Keep their Docker images and
+stopped containers on both Sparks.
+
+All three current recipes share API model `glm-5.3-flash-2x-dgx` and port 2070.
+Only the experimental API alias and port changed; their inference settings and
+image pins remain as tested. The updated launcher requires fresh experimental
+setup receipts. Preserve old receipts externally before running explicit setup.
+The production baseline manifest and launcher remain byte-for-byte unchanged.
 
 | Setting | Production baseline | Memory-saving experiment |
 |---|---|---|
@@ -58,18 +64,24 @@ ssh shock 'ktxsvc disable models/glm-5.3-flash-2x-dgx-experimental-1m'
 ```
 
 For the memory-saving 512K recipe, enable both units, then start worker before
-API. These use the original unmodified setup receipts:
+API. First run explicit setup on each host if the manifest or launcher changed:
 
 ```bash
 ssh shock 'ktxsvc enable models/glm-5.3-flash-2x-dgx-experimental'
 ssh static 'ktxsvc enable models/glm-5.3-flash-2x-dgx-experimental'
 ssh shock 'ktxsvc start models/glm-5.3-flash-2x-dgx-experimental'
 ssh static 'ktxsvc start models/glm-5.3-flash-2x-dgx-experimental'
-curl -f http://192.168.2.101:2071/health
-curl -f http://192.168.2.101:2071/v1/models
+curl -f http://192.168.2.101:2070/health
+curl -f http://192.168.2.101:2070/v1/models
 ```
 
-For the production baseline, substitute `models/glm-5.3-flash-2x-dgx` and
-port 2070, and keep both experimental recipes disabled. Always verify a real
+For the production baseline, substitute `models/glm-5.3-flash-2x-dgx` and keep
+both experimental recipes disabled. Always verify a real
 streamed completion, both service PIDs and exactly one model container per
 Spark. Never start a second recipe while another occupies the pair.
+
+To return to the selected 1M default, stop and disable the active recipe on
+Static and then Shock. Install `models/glm-5.3-flash-2x-dgx-experimental-1m`
+on Shock before Static. `ktxsvc install` enables boot and crash restart. All
+recipes use port 2070 and the canonical model name for completion checks; the
+512K recipes still have their original 524288-token per-request ceilings.

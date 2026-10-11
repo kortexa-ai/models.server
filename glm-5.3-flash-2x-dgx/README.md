@@ -129,3 +129,12 @@ The recorded OMP failure can be reconstructed from its JSONL conversation, but
 its exact system prompt and tool schemas were not saved. A bounded continuation
 is useful evidence, not a replay of the complete task. See issue #57 for the
 registered-service checks and replay result.
+
+## Shared client identity
+
+The production baseline, 512K experiment and 1M experiment all serve
+`glm-5.3-flash-2x-dgx` at `http://192.168.2.101:2070/v1`. Their recipe folders,
+managed services, images and cache settings remain distinct. The selected
+default deployment is `glm-5.3-flash-2x-dgx-experimental-1m`; only that pair
+service should be enabled. See [the switch procedure](../glm-5.3-flash-2x-dgx-experimental-1m/BASELINES.md)
+to select either 512K recipe without changing client providers.

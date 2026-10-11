@@ -160,7 +160,8 @@ def render_command(model, rank):
     for key, value in env.items():
         args += ["-e", key + "=" + str(value)]
     args += ["--entrypoint", "vllm", c["image_id"], "serve", "/model",
-             "--served-model-name", model["id"], "--host", model["host"],
+             "--served-model-name", model.get("served_model_name", model["id"]),
+             "--host", model["host"],
              "--port", str(model["port"]), "--trust-remote-code", "--dtype", "bfloat16",
              "--chat-template", "/model/chat_template.jinja",
              "--gpu-memory-utilization", "0.85", "--disable-custom-all-reduce",

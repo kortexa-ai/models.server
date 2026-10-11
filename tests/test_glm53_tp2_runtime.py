@@ -17,8 +17,11 @@ class GlmPairTest(unittest.TestCase):
         self.model = runtime.load(ROOT / "glm-5.3-flash-2x-dgx")
 
     def test_port_and_capacity_contract(self):
-        ports = [json.loads(p.read_text())["port"] for p in ROOT.glob("*/model.json")]
-        self.assertEqual(ports.count(2070), 1)
+        owners = {p.parent.name for p in ROOT.glob("*/model.json")
+                  if json.loads(p.read_text())["port"] == 2070}
+        self.assertEqual(owners, {"glm-5.3-flash-2x-dgx",
+                                  "glm-5.3-flash-2x-dgx-experimental",
+                                  "glm-5.3-flash-2x-dgx-experimental-1m"})
         self.assertEqual(self.model["context_window"], 524288)
         c = self.model["glm53_tp2"]
         env = c["environment"]

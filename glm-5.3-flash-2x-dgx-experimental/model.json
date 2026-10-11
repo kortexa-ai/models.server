@@ -1,11 +1,12 @@
 {
   "name": "GLM-5.3 Flash NVFP4 DFlash2 (pinned-main Spark experiment)",
   "id": "glm-5.3-flash-2x-dgx-experimental",
+  "served_model_name": "glm-5.3-flash-2x-dgx",
   "type": "language",
   "default_engine": "vllm-glm53-main",
   "host": "0.0.0.0",
   "api_host": "192.168.2.101",
-  "port": 2071,
+  "port": 2070,
   "context_window": 524288,
   "trained_context_window": 1048576,
   "context": 524288,

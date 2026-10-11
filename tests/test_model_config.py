@@ -87,6 +87,17 @@ EXPECTED_CONTEXT_WINDOWS = {
 
 
 class LlamaCapacityPolicyTest(unittest.TestCase):
+    def test_glm_pair_recipes_share_one_client_endpoint(self):
+        base = "glm-5.3-flash-2x-dgx"
+        for suffix in ("", "-experimental", "-experimental-1m"):
+            recipe = base + suffix
+            with self.subTest(recipe=recipe):
+                config = json.loads((ROOT / recipe / "model.json").read_text())
+                self.assertEqual(config["id"], recipe)
+                self.assertEqual(config.get("served_model_name", config["id"]), base)
+                self.assertEqual((config["api_host"], config["port"]),
+                                 ("192.168.2.101", 2070))
+
     def test_family_capacity_policy(self):
         for model_id, expected in EXPECTED_LLAMA_CAPACITY.items():
             with self.subTest(model_id=model_id):

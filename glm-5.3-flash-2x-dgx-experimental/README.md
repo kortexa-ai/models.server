@@ -5,8 +5,11 @@ This is the working experiment for Static and Shock. The stable
 recovery path. Promotion is a separate decision after measurement. See
 [PLAN.md](PLAN.md) for the experiment and [CACHE.md](CACHE.md) for cache controls.
 
-Static serves port **2071**; Shock is headless. Port **29670** is private
-distributed bootstrap on the direct RoCE link. Run only one recipe on the pair.
+Static serves port **2070**; Shock is headless. Port **29670** is private
+distributed bootstrap on the direct RoCE link. All three paired recipes expose
+API model `glm-5.3-flash-2x-dgx` on this same port. The manifest `id` keeps
+service/container/receipt ownership distinct; `served_model_name` selects the
+client-facing alias. Run only one recipe on the pair.
 The weights and their hashes are the same as the stable recipe. No checkpoint
 download, conversion, image build or package installation occurs during start.
 
@@ -92,8 +95,8 @@ ssh shock 'ktxsvc install models/glm-5.3-flash-2x-dgx-experimental'
 ssh shock 'ktxsvc keep-alive off models/glm-5.3-flash-2x-dgx-experimental'
 ssh static 'ktxsvc install models/glm-5.3-flash-2x-dgx-experimental'
 ssh static 'ktxsvc keep-alive off models/glm-5.3-flash-2x-dgx-experimental'
-curl -f http://192.168.2.101:2071/health
-curl -f http://192.168.2.101:2071/v1/models
+curl -f http://192.168.2.101:2070/health
+curl -f http://192.168.2.101:2070/v1/models
 ```
 
 A manifest or launcher change requires setup again on both nodes. A stopped
