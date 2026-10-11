@@ -43,13 +43,18 @@ Run `hostname` to check which machine you're on before doing anything.
   Cinference NVFP4 weights, K8V4 KV, DFlash2-7, a 524288-token shared pool
   and eight slots. They are pinned to the RTX PRO 6000 UUID, with a 262144-token
   per-request ceiling. Registration does not authorize selecting a new default.
-- `"type": "systemone"` marks a decision model (currently `shingi-27b`), not a
-  chat LLM. It has no `llama` block; its `shingi` block pins the package,
+- `"type": "systemone"` marks a decision model (`shingi-27b` and `d1-3b`), not a
+  chat LLM. Shingi has no `llama` block; its `shingi` block pins the package,
   weights, Prism runtime and memory floors. Run `scripts/setup-shingi.sh` once
   before starting it; `run-shingi.sh` never builds or installs. Its weights
   may declare a vision `projector`; with it Shingi uses about 9.5 GiB on the 4090.
   Shingi is an exception to the dense-model parallel default: its decision worker
   uses four sequences with shared weights and a shared 16K-token context pool.
+- `d1-3b` uses official Q8_0 GGUF weights and projector, q8_0 KV, 32K context
+  and one slot. Its `llama` block pins an isolated upstream runtime with native
+  `/v1/systemone` support on Metal and CUDA. Before launch, run
+  `scripts/setup-llama-runtime.sh d1-3b`. Registration does not replace the
+  active decision service.
 - Exception: `qwen-3.8-flash-next` uses the pinned `vllm-spark-tp2` engine on
   `static` + `shock`, with NVIDIA NVFP4 weights, YaRN extension to 1M context,
   FP8 KV, MTP-3, and six sequences.

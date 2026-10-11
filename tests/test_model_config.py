@@ -42,6 +42,7 @@ EXPECTED_LLAMA_CAPACITY = {
 EXPECTED_CONTEXT_WINDOWS = {
     "audio8-tts-0.6b": 2048,
     "bonsai-2-27b": 262144,
+    "d1-3b": 32768,
     "embeddinggemma-300m": 2048,
     "gemma-4-12b": 131072,
     "gemma-4-26b-a4b": 262144,

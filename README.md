@@ -135,6 +135,12 @@ active on the pair.
 | 2070 | GLM-5.3 Flash 2x DGX | sparse MoE / VLM, vLLM DFlash2 TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 6 GiB/rank | 512K/request | 8 |
 | 2070 | GLM-5.3 Flash 2x DGX Experimental | sparse MoE / VLM, pinned vLLM main TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 4 GiB/rank | 512K/request | 8 |
 | 2070 | GLM-5.3 Flash 2x DGX Experimental 1M | sparse MoE / VLM, pinned vLLM main TP2/DCP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 6 GiB/rank | 1M/request | 8 |
+| 2071 | [Liquid d1 3B](d1-3b/README.md) | System One decision model / vision | Q8_0 (pinned upstream llama.cpp, Metal / CUDA) | q8_0 | 32K | 1 |
+
+Liquid's open `d1-3b` serves text and image decisions at `/v1/systemone`.
+Run `./scripts/setup-llama-runtime.sh d1-3b` once, then `./run.sh d1-3b`.
+See its [setup and request examples](d1-3b/README.md). Adding it to the roster
+does not replace Shingi or select a new default.
 
 Qwen 3.8 27B Uncensored uses the source repository's recommended `Q4_K_M`
 GGUF because it does not publish the standard `UD-Q4_K_XL` quant. Its matching
@@ -359,10 +365,14 @@ weights, and is intentionally opt-in rather than part of the shared
 `setup.sh`. Both managed service definitions use GGUF; inspect service/port
 ownership and install them through `ktxsvc` when deploying.
 
-### System One models (Shingi 27B)
+### System One models
 
 A model with `"type": "systemone"` is a decision model, not an OpenAI chat
 model. Clients must use the discriminator to keep it out of chat routing.
+[`d1-3b`](d1-3b/README.md) on port 2071 uses an isolated upstream llama.cpp
+runtime on Metal or CUDA. It supports text and images, with `noul`, `choice`
+and `score` questions at `/v1/systemone`.
+
 `shingi-27b` on port 2068 serves the public
 [shingi-27b](https://github.com/kortexa-ai/shingi-27b) package:
 `POST /v1/systemone`, `GET /v1/version`, `GET /health` and `GET /v1/models`.
@@ -421,7 +431,7 @@ The readout links Prism's multimodal `mtmd` library; setup requires
 selects text-only serving with `--no-vision`.
 
 ### llama-server (llama.cpp)
-GGUF-quantized models via [llama.cpp](https://github.com/ggerganov/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, or `/v1/embeddings` for embedding models. CUDA + flash attention on smarty, Metal on snappy.
+GGUF-quantized models via [llama.cpp](https://github.com/ggml-org/llama.cpp). OpenAI-compatible APIs at `/v1/chat/completions`, `/v1/embeddings` for embedding models, or `/v1/systemone` for native decision models such as d1. CUDA + flash attention on smarty, Metal on snappy.
 
 All llama-server launch paths set `--cors-origins localhost` when the installed
 binary supports it. This prevents unrelated browser origins from calling a
