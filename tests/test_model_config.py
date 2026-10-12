@@ -66,6 +66,7 @@ EXPECTED_CONTEXT_WINDOWS = {
     "lfm2.5-encoder-350m": 8192,
     "lfm2.5-vl-3b": 32768,
     "lfm2.5-vl-450m": 32768,
+    "minicpm-v-4.7-35b-a3b": 262144,
     "ornith-1.5-35b-a3b": 262144,
     "ornith-1.5-9b": 262144,
     "qwen-3.5-0.8b": 262144,

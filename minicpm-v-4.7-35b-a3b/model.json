@@ -1,0 +1,28 @@
+{
+  "name": "MiniCPM-V 4.7 35B-A3B",
+  "id": "minicpm-v-4.7-35b-a3b",
+  "context_window": 262144,
+  "multimodal": true,
+  "port": 2072,
+  "host": "0.0.0.0",
+  "default_engine": "llama",
+  "context": 262144,
+  "parallel": 8,
+  "cache_type": "q8_0",
+  "sampling": {
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 100,
+    "repeat_penalty": 1.05
+  },
+  "llama": {
+    "repo": "openbmb/MiniCPM-V-4.7-35B-A3B-gguf",
+    "quant": "Q4_K_M",
+    "mmproj_url": "https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B-gguf/resolve/77f6d8cb08b2b115ce27d2e2ac1359e126921689/mmproj-model-f16.gguf",
+    "runtime": {
+      "repo": "https://github.com/ggml-org/llama.cpp.git",
+      "revision": "69f201a2051ea9b9e9b50c3cc56afd9e2ae64414",
+      "directory": ".engines/llama-minicpm-v-4.7"
+    }
+  }
+}

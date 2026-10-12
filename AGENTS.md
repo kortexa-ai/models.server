@@ -32,6 +32,11 @@ Run `hostname` to check which machine you're on before doing anything.
   requires it, and never create a duplicate server.
 - Quantization: >= 4B → `UD-Q4_K_XL`, < 4B → `Q8_0`
 - Exception: LFM2.5 230M uses `Q4_K_M` for Pi CPU serving
+- Exception: `minicpm-v-4.7-35b-a3b` uses OpenBMB's official `Q4_K_M`
+  (no `UD-Q4_K_XL` is published), the default F16 vision projector, q8_0 KV
+  and a 262144-token pool shared by eight slots. It pins isolated upstream
+  llama.cpp with MiniCPM-V 4.7 support; run
+  `scripts/setup-llama-runtime.sh minicpm-v-4.7-35b-a3b` before launch.
 - Exception: Bonsai 2 27B uses native ternary `PQ2_0` with an isolated Prism
   llama.cpp fork on Linux and macOS (Metal). Its MLX 2-bit source is registered
   but serving is deferred; never route it through a stock MLX server.

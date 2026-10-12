@@ -136,6 +136,13 @@ active on the pair.
 | 2070 | GLM-5.3 Flash 2x DGX Experimental | sparse MoE / VLM, pinned vLLM main TP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 4 GiB/rank | 512K/request | 8 |
 | 2070 | GLM-5.3 Flash 2x DGX Experimental 1M | sparse MoE / VLM, pinned vLLM main TP2/DCP2 | NVIDIA NVFP4 / mixed FP8 | fp8_e4m3, 6 GiB/rank | 1M/request | 8 |
 | 2071 | [Liquid d1 3B](d1-3b/README.md) | System One decision model / vision | Q8_0 (pinned upstream llama.cpp, Metal / CUDA) | q8_0 | 32K | 1 |
+| 2072 | [MiniCPM-V 4.7 35B-A3B](minicpm-v-4.7-35b-a3b/README.md) | vision-language MoE | Q4_K_M (pinned upstream llama.cpp, Metal / CUDA) | q8_0 | 262K shared; 262K/request | 8 |
+
+MiniCPM-V 4.7 uses OpenBMB's official `Q4_K_M` because the source has no
+`UD-Q4_K_XL`. Its default F16 vision projector is selected explicitly, and
+the isolated runtime pins upstream MiniCPM-V 4.7 support. Run
+`./scripts/setup-llama-runtime.sh minicpm-v-4.7-35b-a3b` before first launch;
+see its [setup notes](minicpm-v-4.7-35b-a3b/README.md).
 
 Liquid's open `d1-3b` serves text and image decisions at `/v1/systemone`.
 Run `./scripts/setup-llama-runtime.sh d1-3b` once, then `./run.sh d1-3b`.
